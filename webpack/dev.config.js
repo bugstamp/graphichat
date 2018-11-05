@@ -1,20 +1,14 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 
-const paths = require('./paths');
+const devServer = require('./devServer');
 
 module.exports = merge([
+  devServer({
+    host: process.env.HOST || 'localhost',
+    port: process.env.PORT || '8000',
+  }),
   {
-    devServer: {
-      contentBase: paths.public,
-      host: 'localhost',
-      port: '8080',
-      inline: true,
-      hot: true,
-      historyApiFallback: true,
-      open: true,
-    },
-
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
     ],

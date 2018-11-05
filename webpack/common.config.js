@@ -1,6 +1,5 @@
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
 
 const paths = require('./paths');
 
@@ -14,8 +13,8 @@ module.exports = merge([
     },
 
     output: {
-      filename: '[name].[contenthash].js',
-      chunkFilename: '[name].[contenthash].js',
+      filename: '[name].[hash].js',
+      chunkFilename: '[name].[hash].js',
       path: paths.public,
       publicPath: '/',
     },
@@ -80,11 +79,15 @@ module.exports = merge([
         favicon: paths.client.assets.favicon,
         inject: 'body',
       }),
-      new WorkboxPlugin.GenerateSW({
-        clientsClaim: true,
-        skipWaiting: true,
-      }),
     ],
+
+    externals: {
+      lodash: {
+        commonjs: 'lodash',
+        amd: 'lodash',
+        root: '_', // indicates global variable
+      },
+    },
 
     resolve: {
       modules: [paths.modules],

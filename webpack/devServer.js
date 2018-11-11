@@ -1,6 +1,6 @@
 const paths = require('./paths');
 
-module.exports = ({ host, port } = {}) => ({
+module.exports = ({ host, port, proxy } = {}) => ({
   devServer: {
     contentBase: paths.public,
     inline: true,
@@ -9,7 +9,8 @@ module.exports = ({ host, port } = {}) => ({
     hot: true,
     hotOnly: true,
     historyApiFallback: true,
-    open: true,
+    open: false,
     stats: 'errors-only',
+    proxy,
   },
 });

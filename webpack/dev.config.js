@@ -5,8 +5,11 @@ const devServer = require('./devServer');
 
 module.exports = merge([
   devServer({
-    host: process.env.HOST || 'localhost',
-    port: process.env.PORT || '8000',
+    host: 'localhost',
+    port: '8000',
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
   }),
   {
     plugins: [

@@ -58,7 +58,7 @@ module.exports = merge([
             },
           },
         },
-        // Import fonts from "node_modules"
+        // Import fonts/icons from "node_modules"
         {
           test: /\.(svg|eot|ttf|otf|woff|woff2)$/,
           include: paths.modules,

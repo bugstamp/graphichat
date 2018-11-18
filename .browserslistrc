@@ -2,4 +2,4 @@ last 2 versions
 > 1%
 Firefox ESR
 not dead
-not ie < 11
+not ie <= 10

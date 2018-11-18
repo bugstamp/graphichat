@@ -9,7 +9,8 @@
     "prod": "webpack --env production",
     "server": "nodemon --exec babel-node -- ./server/index.js",
     "build-server": "rm -rf ./server-public/* && babel -d ./server-public ./server/index.js",
-    "start": "npm run build-server && node ./server-public/index.js"
+    "build": "npm run prod && npm run build-server",
+    "start": "node ./server-public/index.js"
   },
   "dependencies": {
     "@babel/node": "^7.0.0",

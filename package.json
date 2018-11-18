@@ -9,7 +9,8 @@
     "prod": "webpack --env production",
     "server": "nodemon --exec babel-node -- ./server/index.js",
     "build-server": "rm -rf ./server-public/* && babel -d ./server-public ./server/index.js",
-    "start": "npm run build-server && node ./server-public/index.js"
+    "build-all": "npm run prod && npm run build-server",
+    "start": "node ./server-public/index.js"
   },
   "dependencies": {
     "@babel/node": "^7.0.0",
@@ -23,10 +24,13 @@
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "express-graphql": "^0.7.1",
+    "graphql": "^14.0.2",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.11",
     "method-override": "^3.0.0",
     "moment": "^2.22.2",
+    "mongoose": "^5.3.12",
     "nodemon": "^1.18.6",
     "polished": "^2.3.0",
     "prop-types": "^15.6.2",

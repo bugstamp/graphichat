@@ -8,10 +8,11 @@ export const GlobalStyle = createGlobalStyle`
   html,
   body {
     width: 100%;
-    min-height: 100%;
+    height: 100%;
   }
 
   body {
+    min-height: 100%;
     color: #000;
     background-color: #fff;
     overflow-y: auto;

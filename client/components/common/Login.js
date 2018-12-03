@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { backgrounds } from 'polished';
 
 import LoginForm from './LoginForm';
-
 import bgImage from '../../assets/images/login-bg.jpg';
 
 const Wrapper = styled(Grid)`

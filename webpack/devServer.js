@@ -10,7 +10,6 @@ module.exports = ({ host, port, proxy } = {}) => ({
     hotOnly: true,
     historyApiFallback: true,
     open: false,
-    stats: 'errors-only',
     proxy,
   },
 });

@@ -1,6 +1,16 @@
 import { createGlobalStyle } from 'styled-components';
-import { size } from 'polished';
+import { createMuiTheme } from '@material-ui/core/styles';
 import reset from 'styled-reset';
+import { size } from 'polished';
+import { get } from 'lodash';
+
+export const getStyledProps = path => props => get(props, path);
+
+export const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+});
 
 export const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -13,17 +23,15 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     min-height: 100%;
+    font-family: ${getStyledProps('theme.typography.fontFamily')};
+    font-size: ${getStyledProps('theme.typography.fontSize')}px;
+    font-weight: ${getStyledProps('theme.typography.fontWeightRegular')};
     color: #000;
     background-color: #fff;
     overflow-y: auto;
 
     #root {
       ${size('inherit')}
-      display: flex;
     }
   }
 `;
-
-export const theme = {};
-
-// export const getThemeHelper = (props, path) => _.get(props.theme, path);

@@ -81,14 +81,6 @@ module.exports = merge([
       }),
     ],
 
-    externals: {
-      lodash: {
-        commonjs: 'lodash',
-        amd: 'lodash',
-        root: '_', // indicates global variable
-      },
-    },
-
     resolve: {
       modules: [paths.modules],
       extensions: ['.js', '.jsx', '.json', '*'],

@@ -11,7 +11,7 @@ class Home extends Component {
 
   render() {
     return (
-      <Wrapper>Home</Wrapper>
+      <Wrapper>Home!</Wrapper>
     );
   }
 }

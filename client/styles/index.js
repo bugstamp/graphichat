@@ -5,6 +5,12 @@ import { size } from 'polished';
 import { get } from 'lodash';
 
 export const getStyledProps = path => props => get(props, path);
+export const getPadding = (num = 1) => (props) => {
+  const defaultPadding = getStyledProps('theme.spacing.unit')(props);
+  const padding = defaultPadding * num;
+
+  return `${padding}px`;
+};
 
 export const theme = createMuiTheme({
   typography: {

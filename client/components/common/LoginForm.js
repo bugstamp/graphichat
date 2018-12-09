@@ -7,14 +7,18 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircleRounded';
-import Visibility from '@material-ui/icons/VisibilityRounded';
-import VisibilityOff from '@material-ui/icons/VisibilityOffRounded';
+import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
+import VisibilityIcon from '@material-ui/icons/VisibilityRounded';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOffRounded';
 import Button from '@material-ui/core/Button';
+import SvgIcon from '@material-ui/core/SvgIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 import styled from 'styled-components';
 import { map } from 'lodash';
-import { position } from 'polished';
+import { position, rgba } from 'polished';
 
 import { getStyledProps, getPadding } from '../../styles';
 
@@ -33,9 +37,9 @@ const Title = styled(Typography)`
 `;
 
 const AccountIconWrapper = styled.div`
-${position('absolute', '0', null, null, '20%')}
-  height: ${getStyledProps('theme.typography.h3.fontSize')};
-  font-size: ${getStyledProps('theme.typography.h3.fontSize')};
+  ${position('absolute', '0', null, null, '20%')}
+  height: 100%;
+  font-size: inherit;
 `;
 
 const Form = styled.form`
@@ -62,6 +66,32 @@ const SignUpButton = styled(Button)`
 
 const BrandIconsWrapper = styled.div`
   width: 100%;
+  height: 62px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 2em;
+`;
+
+const BrandIconElement = styled.div`
+  display: inline-flex;
+
+  :nth-child(2) {
+    align-self: flex-end;
+  }
+
+  :not(:last-child) {
+    margin-right: 2em;
+  }
+
+  button {
+    color: #fff;
+    background-color: ${({ brandColor }) => brandColor};
+
+    :hover {
+      background-color: ${({ brandColor }) => rgba(brandColor, 0.7)};
+    }
+  }
 `;
 
 const formFields = {
@@ -85,6 +115,24 @@ const formFields = {
   ],
 };
 
+const brandIcons = [
+  {
+    id: 'facebook',
+    color: 'blue',
+    iconElement: faFacebook,
+  },
+  {
+    id: 'google',
+    color: 'red',
+    iconElement: faGoogle,
+  },
+  {
+    id: 'github',
+    color: 'black',
+    iconElement: faGithub,
+  },
+];
+
 class LoginForm extends Component {
   state = {
     showPassword: false,
@@ -98,7 +146,7 @@ class LoginForm extends Component {
     const { showPassword } = this.state;
 
     return (
-      <Wrapper elevation={8}>
+      <Wrapper brandColor="piska" elevation={8}>
         <Title
           color="primary"
           variant="h3"
@@ -106,9 +154,9 @@ class LoginForm extends Component {
           gutterBottom
         >
           <AccountIconWrapper>
-            <AccountCircle fontSize="inherit" color="primary" />
+            <AccountCircleIcon fontSize="inherit" color="primary" />
           </AccountIconWrapper>
-          {'Log In'}
+          {'Sign In'}
         </Title>
         <Form onSubmit={(event) => { event.preventDefault(); }}>
           {
@@ -147,10 +195,10 @@ class LoginForm extends Component {
                             <IconButton onClick={this.toggleShowPassword}>
                               <Choose>
                                 <When condition={showPassword}>
-                                  <Visibility />
+                                  <VisibilityIcon />
                                 </When>
                                 <Otherwise>
-                                  <VisibilityOff />
+                                  <VisibilityOffIcon />
                                 </Otherwise>
                               </Choose>
                             </IconButton>
@@ -170,7 +218,7 @@ class LoginForm extends Component {
             variant="contained"
             fullWidth
           >
-            Log In
+            {'Sign In'}
           </SubmitButton>
           <SignUpButton
             color="primary"
@@ -178,9 +226,22 @@ class LoginForm extends Component {
             variant="outlined"
             fullWidth
           >
-            Sign Up
+            {'Sign Up'}
           </SignUpButton>
           <BrandIconsWrapper>
+            {
+              map(brandIcons, ({ id, color, iconElement }) => (
+                <BrandIconElement
+                  key={id}
+                  brand={id}
+                  brandColor={color}
+                >
+                  <Fab size="large">
+                    <FontAwesomeIcon icon={iconElement} size="lg" />
+                  </Fab>
+                </BrandIconElement>
+              ))
+            }
           </BrandIconsWrapper>
         </Form>
       </Wrapper>

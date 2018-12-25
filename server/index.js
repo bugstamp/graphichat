@@ -1,31 +1,25 @@
+// import path from 'path';
 import express from 'express';
-import path from 'path';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import methodOverride from 'method-override';
-import cors from 'cors';
+import { ApolloServer } from 'apollo-server-express';
+import paths from '../webpack/paths';
 
-import api from './api';
+import db from './db';
+import typeDefs from './schema';
+import resolvers from './resolvers';
 
-const PUBLIC_PATH = path.resolve(__dirname, '../public');
-const HTML_PATH = path.resolve(PUBLIC_PATH, './index.html');
-const PORT = process.env.PORT || 3000;
+// const HTML_PATH = path.resolve(PUBLIC_PATH, './index.html');
+db.connection();
 
-const server = express();
-
-server.use(express.static(PUBLIC_PATH));
-server.use(bodyParser.json());
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(cookieParser());
-server.use(methodOverride());
-server.use(cors({ credentials: true }));
-
-server.use('/api', api);
-
-server.get('*', (req, res) => {
-  res.sendFile(HTML_PATH);
+const app = express();
+const port = process.env.PORT || 3000;
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
 });
 
-server.listen(PORT, () => {
-  console.log(`Server is listening on port - ${PORT}`);
+app.use(express.static(paths.public));
+server.applyMiddleware({ app });
+
+app.listen({ port }, () => {
+  console.log(`Server is listening on port - ${port}`);
 });

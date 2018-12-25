@@ -13,7 +13,6 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 import VisibilityIcon from '@material-ui/icons/VisibilityRounded';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOffRounded';
 import Button from '@material-ui/core/Button';
-import SvgIcon from '@material-ui/core/SvgIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 import styled from 'styled-components';
@@ -70,18 +69,18 @@ const BrandIconsWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 2em;
+  margin-top: 3em;
 `;
 
 const BrandIconElement = styled.div`
   display: inline-flex;
 
-  :nth-child(2) {
-    align-self: flex-end;
-  }
-
   :not(:last-child) {
     margin-right: 2em;
+  }
+
+  :nth-child(2) {
+    align-self: flex-end;
   }
 
   button {
@@ -169,12 +168,9 @@ class LoginForm extends Component {
               required,
             }) => {
               const isPasswordField = type === 'password';
-              const getType = () => {
-                if (isPasswordField && showPassword) {
-                  return 'text';
-                }
-                return type;
-              };
+              const verifiedType = (isPasswordField && showPassword)
+                ? 'text'
+                : type;
 
               return (
                 <TextField
@@ -185,7 +181,7 @@ class LoginForm extends Component {
                   <InputLabel htmlFor={id}>{label}</InputLabel>
                   <Input
                     id={id}
-                    type={getType()}
+                    type={verifiedType}
                     placeholder={placeholder}
                     autoComplete={autocomplete}
                     endAdornment={(

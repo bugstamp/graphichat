@@ -84,6 +84,9 @@ module.exports = merge([
     resolve: {
       modules: [paths.modules],
       extensions: ['.js', '.jsx', '.json', '*'],
+      alias: {
+        $config: paths.config,
+      },
     },
   },
 ]);

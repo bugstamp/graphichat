@@ -1,21 +1,31 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import registerServiceWorker from './registerServiceWorker';
+import { ApolloProvider } from 'react-apollo';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+// import registerServiceWorker from './registerServiceWorker';
 
 import App from './components/App';
-import store from './store';
+
+const httpLink = createHttpLink({
+  uri: 'http://localhost:3000',
+});
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+});
 
 const renderApp = (Component) => {
   render(
-    <Provider store={store}>
+    <ApolloProvider client={client}>
       <BrowserRouter>
         <Component />
       </BrowserRouter>
-    </Provider>, document.getElementById('root'),
+    </ApolloProvider>, document.getElementById('root'),
   );
 };
 
 renderApp(App);
-registerServiceWorker();
+// registerServiceWorker();

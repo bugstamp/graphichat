@@ -1,36 +1,48 @@
-type Step {
-  title: String!
-  completed: Boolean!
-}
-
-type Todo {
-  id: ID!
-  title: String!
-  completed: Boolean!
-  steps: [Step]
-}
+scalar Date
 
 enum Status {
-  COMPLETED
-  UNCOMPLETED
+  OFFLINE
+  ONLINE
+}
+
+type Friend {
+  userId: ID!
+  name: String
+}
+
+type User {
+  id: ID!
+  login: String!
+  email: String!
+  firstName: String
+  lastName: String
+  birthday: Date
+  status: Status
+  createDate: Date!
+  lastDate: Date!
+  friends: [Friend]
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+input RegForm {
+  login: String!
+  email: String!
+  password: String!
+  firstName: String
+  lastName: String
+  birthday: Date
 }
 
 type Query {
-  todo(id: ID!): Todo!
-  todos(status: Status): [Todo]
-}
-
-input StepInput {
-  title: String!
-  completed: Boolean = false
-}
-
-input TodoInput {
-  title: String!
-  completed: Boolean = false
-  steps: [StepInput]
+  user(id: ID!): User
+  users: [User]
 }
 
 type Mutation {
-  createTodo(input: TodoInput): Todo!
+  signIn(login: String!, password: String!): AuthPayload
+  signUp(form: RegForm!): User  
 }

@@ -14,4 +14,5 @@ module.exports = {
   },
   public: path.resolve(__dirname, '../public'),
   modules: path.resolve(__dirname, '../node_modules'),
+  config: path.resolve(__dirname, '../dev-config'),
 };

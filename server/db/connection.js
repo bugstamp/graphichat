@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 mongoose.Promise = Promise;
 
 const connection = () => {
-  mongoose.connect('mongodb://admin:chatzilla$11@ds243054.mlab.com:43054/chatzilla', {
+  mongoose.connect('mongodb://admin:chtkll2018@ds013475.mlab.com:13475/chatkilla', {
     useNewUrlParser: true,
     useCreateIndex: true,
   }, (err) => {

@@ -9,6 +9,7 @@ export default {
   },
   Mutation: {
     signIn: async (parent, { login, password }) => await db.User.find({ login, password }),
-    signUp: async (parent, { form }) => await db.User.create(form),
+    signUp: db.User.signUp,
+    delAccount: db.User.delAccount,
   },
 };

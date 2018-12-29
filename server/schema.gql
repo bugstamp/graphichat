@@ -5,14 +5,20 @@ enum Status {
   ONLINE
 }
 
+enum regStatus {
+  UNCOMPLETED
+  COMPLETED
+}
+
 type Friend {
   userId: ID!
   name: String
 }
 
 type User {
+  isAdmin: Boolean!
   id: ID!
-  login: String!
+  username: String!
   email: String!
   firstName: String
   lastName: String
@@ -21,6 +27,8 @@ type User {
   createDate: Date!
   lastDate: Date!
   friends: [Friend]
+  refreshToken: String
+  regStatus: regStatus
 }
 
 type AuthPayload {
@@ -29,7 +37,7 @@ type AuthPayload {
 }
 
 input RegForm {
-  login: String!
+  username: String!
   email: String!
   password: String!
   firstName: String
@@ -43,6 +51,7 @@ type Query {
 }
 
 type Mutation {
-  signIn(login: String!, password: String!): AuthPayload
-  signUp(form: RegForm!): User  
+  signIn(username: String!, password: String!): AuthPayload
+  signUp(form: RegForm!): Boolean
+  delAccount(id: ID!): User
 }

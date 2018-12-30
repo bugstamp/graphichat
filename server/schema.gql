@@ -33,7 +33,7 @@ type User {
 
 type AuthPayload {
   token: String
-  user: User
+  refreshToken: String
 }
 
 input RegForm {
@@ -54,4 +54,5 @@ type Mutation {
   signIn(username: String!, password: String!): AuthPayload
   signUp(form: RegForm!): Boolean
   delAccount(id: ID!): User
+  singOut(id: ID!): User
 }

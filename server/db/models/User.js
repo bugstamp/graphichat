@@ -176,7 +176,7 @@ userSchema.pre('save', async function preSaving(next) {
 });
 
 userSchema.methods = {
-  async checkPassword(password) {
+  async comparePassword(password) {
     try {
       const result = await bcrypt.compare(password, this.password);
 
@@ -289,17 +289,17 @@ userSchema.statics = {
   },
   async signInValidation(username, password) {
     try {
-      const login = EmailValidator(username) ? 'email' : 'username';
-      const user = this.getUser(login, username);
+      const login = EmailValidator.validate(username) ? 'email' : 'username';
+      const user = await this.getUser(login, username);
 
       if (!user) {
         throw new AuthenticationError('Specified username can\'t be found');
       }
       const { password: hash, regStatus } = user;
-      const incorrectPassword = !user.comparePassword(password, hash);
+      const correctPassword = await user.comparePassword(password, hash);
       const invalidRegistration = regStatus === UNCOMPLETED;
 
-      if (incorrectPassword) {
+      if (!correctPassword) {
         throw new AuthenticationError('Specified password is incorrect');
       }
       if (invalidRegistration) {
@@ -315,9 +315,19 @@ userSchema.statics = {
     try {
       const user = await db.User.signInValidation(username, password);
       await user.logActivity();
-      const tokens = genTokens(user);
+      const tokens = await genTokens(user);
 
       return tokens;
+    } catch (err) {
+      throw err;
+    }
+  },
+  async singOut(parent, { id }, { db }) {
+    try {
+      const user = await db.User.getUserById(id);
+      await user.logActivity(true);
+
+      return user;
     } catch (err) {
       throw err;
     }

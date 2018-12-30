@@ -8,8 +8,9 @@ export default {
     users: async () => await db.User.find(),
   },
   Mutation: {
-    signIn: async (parent, { login, password }) => await db.User.find({ login, password }),
+    signIn: db.User.signIn,
     signUp: db.User.signUp,
+    singOut: db.User.singOut,
     delAccount: db.User.delAccount,
   },
 };

@@ -53,6 +53,6 @@ type Query {
 type Mutation {
   signIn(username: String!, password: String!): AuthPayload
   signUp(form: RegForm!): Boolean
+  signOut(id: ID!): User
   delAccount(id: ID!): User
-  singOut(id: ID!): User
 }

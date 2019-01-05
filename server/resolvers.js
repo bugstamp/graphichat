@@ -10,7 +10,7 @@ export default {
   Mutation: {
     signIn: db.User.signIn,
     signUp: db.User.signUp,
-    singOut: db.User.singOut,
+    signOut: db.User.signOut,
     delAccount: db.User.delAccount,
   },
 };

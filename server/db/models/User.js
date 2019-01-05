@@ -138,7 +138,7 @@ const genTokens = async (user) => {
   try {
     const token = await genToken(user);
     const refreshToken = await genRefreshToken(user);
-    await user.update({ refreshToken });
+    await user.updateOne({ refreshToken });
 
     return {
       token,
@@ -187,7 +187,7 @@ userSchema.methods = {
   },
   async logCreation() {
     try {
-      await this.update({
+      await this.updateOne({
         createDate: new Date(),
         lastDate: new Date(),
       });
@@ -195,10 +195,10 @@ userSchema.methods = {
       throw err;
     }
   },
-  async logActivity(logout = false) {
+  async logActivity(phase = 'login') {
     try {
-      await this.update({
-        status: logout ? OFFLINE : ONLINE,
+      await this.updateOne({
+        status: phase === 'logout' ? OFFLINE : ONLINE,
         lastDate: new Date(),
       });
     } catch (err) {
@@ -207,7 +207,7 @@ userSchema.methods = {
   },
   async confirmRegistration() {
     try {
-      await this.update({ regStatus: COMPLETED });
+      await this.updateOne({ regStatus: COMPLETED });
     } catch (err) {
       throw err;
     }
@@ -271,6 +271,25 @@ userSchema.statics = {
       throw err;
     }
   },
+  async verifyTokens(token, refreshToken) {
+    try {
+      const { data } = await verifyToken(token, TOKEN_SECRET);
+
+      return {
+        user: data,
+      };
+    } catch (err) {
+      const { data } = await verifyToken(refreshToken, REFRESH_TOKEN_SECRET);
+      const { id } = data;
+      const user = await this.getUserById(id);
+      const newTokens = await genTokens(user);
+
+      return {
+        user: data,
+        newTokens,
+      };
+    }
+  },
   async verifySignUp(regToken) {
     try {
       const { data } = await verifyToken(regToken, REGISTER_TOKEN_SECRET);
@@ -279,8 +298,7 @@ userSchema.statics = {
       const user = await this.getUserById(id);
       await user.confirmRegistration();
       await user.logActivity();
-
-      const tokens = genTokens(user);
+      const tokens = await genTokens(user);
 
       return tokens;
     } catch (err) {
@@ -322,10 +340,10 @@ userSchema.statics = {
       throw err;
     }
   },
-  async singOut(parent, { id }, { db }) {
+  async signOut(parent, { id }, { db }) {
     try {
       const user = await db.User.getUserById(id);
-      await user.logActivity(true);
+      await user.logActivity('logout');
 
       return user;
     } catch (err) {

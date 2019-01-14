@@ -2,10 +2,10 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const { GenerateSW } = require('workbox-webpack-plugin');
+// const { GenerateSW } = require('workbox-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 
-const paths = require('./paths');
+const paths = require('../paths');
 
 module.exports = merge([
   {
@@ -35,29 +35,29 @@ module.exports = merge([
     },
 
     plugins: [
-      new CleanWebpackPlugin([`${paths.public}/*`], {
-        root: __dirname,
+      new CleanWebpackPlugin([`${paths.public.root}/*`], {
+        root: paths.root,
         exclude: [],
       }),
       new webpack.HashedModuleIdsPlugin(),
-      new GenerateSW({
-        clientsClaim: true,
-        skipWaiting: true,
-        runtimeCaching: [
-          {
-            urlPattern: /assets/,
-            handler: 'cacheFirst',
-          },
-          {
-            urlPattern: new RegExp('^https://fonts.(?:googleapis|gstatic).com/(.*)'),
-            handler: 'cacheFirst',
-          },
-          {
-            urlPattern: /.*/,
-            handler: 'networkFirst',
-          },
-        ],
-      }),
+      // new GenerateSW({
+      //   clientsClaim: true,
+      //   skipWaiting: true,
+      //   runtimeCaching: [
+      //     {
+      //       urlPattern: /assets/,
+      //       handler: 'cacheFirst',
+      //     },
+      //     {
+      //       urlPattern: new RegExp('^https://fonts.(?:googleapis|gstatic).com/(.*)'),
+      //       handler: 'cacheFirst',
+      //     },
+      //     {
+      //       urlPattern: /.*/,
+      //       handler: 'networkFirst',
+      //     },
+      //   ],
+      // }),
       new Visualizer(),
     ],
 

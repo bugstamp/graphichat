@@ -1,4 +1,4 @@
-const paths = require('./paths');
+const paths = require('../paths');
 
 module.exports = ({ host, port, proxy } = {}) => ({
   devServer: {

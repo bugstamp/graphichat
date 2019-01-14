@@ -1,7 +1,7 @@
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const paths = require('./paths');
+const paths = require('../paths');
 
 module.exports = merge([
   {
@@ -15,7 +15,7 @@ module.exports = merge([
     output: {
       filename: '[name].[hash].js',
       chunkFilename: '[name].[hash].js',
-      path: paths.public,
+      path: paths.public.root,
       publicPath: '/',
     },
 
@@ -25,7 +25,7 @@ module.exports = merge([
           test: /\.js(x)?$/,
           exclude: [
             paths.modules,
-            paths.public,
+            paths.public.root,
           ],
           use: [
             'babel-loader',
@@ -58,7 +58,6 @@ module.exports = merge([
             },
           },
         },
-        // Import fonts from "node_modules"
         {
           test: /\.(svg|eot|ttf|otf|woff|woff2)$/,
           include: paths.modules,

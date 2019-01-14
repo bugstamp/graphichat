@@ -1,0 +1,57 @@
+enum Status {
+  OFFLINE
+  ONLINE
+}
+
+enum regStatus {
+  UNCOMPLETED
+  COMPLETED
+}
+
+type Friend {
+  userId: ID!
+  name: String
+}
+
+type User {
+  isAdmin: Boolean!
+  id: ID!
+  username: String!
+  email: String!
+  firstName: String
+  lastName: String
+  birthday: Date
+  status: Status
+  createDate: Date!
+  lastDate: Date!
+  friends: [Friend]
+  refreshToken: String
+  regStatus: regStatus
+}
+
+type AuthPayload {
+  token: String
+  refreshToken: String
+}
+
+input RegForm {
+  username: String!
+  email: String!
+  password: String!
+  firstName: String
+  lastName: String
+  birthday: Date
+}
+
+type Query {
+  getUser(id: ID!): User
+  getUsers: [User]
+}
+
+type Mutation {
+  signIn(username: String!, password: String!): AuthPayload
+  signUp(form: RegForm!): Boolean
+  signUpAsyncValidation(field: String!, value: String!): Boolean
+  signOut(id: ID!): User
+  removeUser(id: ID!): User
+}

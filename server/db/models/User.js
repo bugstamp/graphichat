@@ -6,12 +6,12 @@ import EmailValidator from 'email-validator';
 
 import mongoose from '../mongoose';
 
-const TOKEN_SECRET = 'chtkll_scrt_1_jhasdgljkahdg';
-const TOKEN_EXPIRES = '5m';
-const REFRESH_TOKEN_SECRET = 'chtkll_scrt_2_;lkasdjg;lk';
-const REFRESH_TOKEN_EXPIRES = '10m';
-const REGISTER_TOKEN_SECRET = 'chtkll_scrt_3_ookjasd;lgalsdg';
-const REGISTER_TOKEN_EXPIRES = '10m';
+const tokenSecret = process.env.TOKEN_SECRET;
+const tokenExpires = process.env.TOKEN_EXPIRES;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+const refreshTokenExpires = process.env.REFRESH_TOKEN_EXPIRES;
+const registerTokenSecret = process.env.REGISTER_TOKEN_SECRET;
+const registerTokenExpires = process.env.REGISTER_TOKEN_EXPIRES;
 
 const UNCOMPLETED = 'UNCOMPLETED';
 const COMPLETED = 'COMPLETED';
@@ -126,7 +126,7 @@ userSchema.methods = {
       const token = await jwt.sign({
         type: 'token',
         data: pick(this, ['id', 'isAdmin']),
-      }, TOKEN_SECRET, { expiresIn: TOKEN_EXPIRES });
+      }, tokenSecret, { expiresIn: tokenExpires });
 
       return token;
     } catch (e) {
@@ -138,7 +138,7 @@ userSchema.methods = {
       const refreshToken = await jwt.sign({
         type: 'refreshToken',
         data: pick(this, ['id']),
-      }, REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRES });
+      }, refreshTokenSecret, { expiresIn: refreshTokenExpires });
       await this.updateOne({ refreshToken });
 
       return refreshToken;
@@ -151,7 +151,7 @@ userSchema.methods = {
       const registerToken = await jwt.sign({
         type: 'registerToken',
         data: pick(this, ['id']),
-      }, REGISTER_TOKEN_SECRET, { expiresIn: REGISTER_TOKEN_EXPIRES });
+      }, registerTokenSecret, { expiresIn: registerTokenExpires });
 
       return registerToken;
     } catch (e) {
@@ -230,13 +230,13 @@ userSchema.statics = {
   },
   async verifyTokens(token, refreshToken) {
     try {
-      const { data } = await this.verifyToken(token, TOKEN_SECRET);
+      const { data } = await this.verifyToken(token, tokenSecret);
 
       return {
         user: data,
       };
     } catch (e) {
-      const { data } = await this.verifyToken(refreshToken, REFRESH_TOKEN_SECRET);
+      const { data } = await this.verifyToken(refreshToken, refreshTokenSecret);
       const { id } = data;
       const user = await this.getUserById(id);
       const newTokens = await user.genTokens();
@@ -262,7 +262,7 @@ userSchema.statics = {
   },
   async verifySignUp(regToken) {
     try {
-      const { data } = await this.verifyToken(regToken, REGISTER_TOKEN_SECRET);
+      const { data } = await this.verifyToken(regToken, registerTokenSecret);
       const { id } = data;
 
       const user = await this.getUserById(id);

@@ -8,14 +8,14 @@ module.exports = merge([
     entry: {
       app: [
         '@babel/polyfill',
-        paths.client.index,
+        paths.index,
       ],
     },
 
     output: {
       filename: '[name].[hash].js',
       chunkFilename: '[name].[hash].js',
-      path: paths.public.root,
+      path: paths.public,
       publicPath: '/',
     },
 
@@ -25,7 +25,7 @@ module.exports = merge([
           test: /\.js(x)?$/,
           exclude: [
             paths.modules,
-            paths.public.root,
+            paths.public,
           ],
           use: [
             'babel-loader',
@@ -38,22 +38,22 @@ module.exports = merge([
         },
         {
           test: /\.(png|jpeg|jpg|gif)$/,
-          include: paths.client.assets.root,
+          include: paths.assets,
           use: {
             loader: 'file-loader',
             options: {
-              context: paths.client.assets.images,
+              context: paths.images,
               name: 'assets/images/[path][name].[ext]',
             },
           },
         },
         {
           test: /\.(svg|eot|ttf|otf|woff|woff2)$/,
-          include: paths.client.assets.root,
+          include: paths.assets,
           use: {
             loader: 'file-loader',
             options: {
-              context: paths.client.assets.fonts,
+              context: paths.fonts,
               name: 'assets/fonts/[path][name].[ext]',
             },
           },
@@ -74,8 +74,8 @@ module.exports = merge([
 
     plugins: [
       new HtmlWebpackPlugin({
-        template: paths.client.assets.html,
-        favicon: paths.client.assets.favicon,
+        template: paths.template,
+        favicon: paths.favicon,
         inject: 'body',
       }),
     ],
@@ -83,9 +83,6 @@ module.exports = merge([
     resolve: {
       modules: [paths.modules],
       extensions: ['.js', '.jsx', '.json', '*'],
-      alias: {
-        $config: paths.config,
-      },
     },
   },
 ]);

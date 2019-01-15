@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 
-mongoose.Promise = Promise;
-
-mongoose.connect('mongodb://admin:chtkll2018@ds013475.mlab.com:13475/chatkilla', {
+const uri = process.env.MONGOLAB_URI;
+const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
-}, (err) => {
+};
+
+mongoose.Promise = Promise;
+mongoose.connect(uri, options, (err) => {
   if (err) {
     console.log('Couldn\'t connected to db', err);
   }

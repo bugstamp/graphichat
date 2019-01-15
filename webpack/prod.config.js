@@ -35,7 +35,7 @@ module.exports = merge([
     },
 
     plugins: [
-      new CleanWebpackPlugin([`${paths.public.root}/*`], {
+      new CleanWebpackPlugin([`${paths.public}/*`], {
         root: paths.root,
         exclude: [],
       }),

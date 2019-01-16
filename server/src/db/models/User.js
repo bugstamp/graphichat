@@ -85,25 +85,13 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const genHash = async (password) => {
-  try {
-    const salt = await bcrypt.genSalt(Math.random());
-    const hash = await bcrypt.hash(password, salt);
-
-    return hash;
-  } catch (e) {
-    throw e;
-  }
-};
-
 userSchema.pre('save', async function prevSave(next) {
   if (!this.isModified('password')) {
     return next();
   }
 
   try {
-    const hash = await genHash(this.password);
-    this.password = hash;
+    await this.genHash();
 
     return next();
   } catch (e) {
@@ -112,6 +100,16 @@ userSchema.pre('save', async function prevSave(next) {
 });
 
 userSchema.methods = {
+  async genHash() {
+    try {
+      const salt = await bcrypt.genSalt(Math.random());
+      const hash = await bcrypt.hash(this.password, salt);
+
+      this.password = hash;
+    } catch (e) {
+      throw e;
+    }
+  },
   async comparePassword(password) {
     try {
       const result = await bcrypt.compare(password, this.password);
@@ -201,15 +199,6 @@ userSchema.methods = {
 };
 
 userSchema.statics = {
-  async getUserById(id) {
-    try {
-      const user = await this.findById(id);
-
-      return user;
-    } catch (e) {
-      throw e;
-    }
-  },
   async getUserByField(field, value) {
     try {
       const user = await this.findOne({ [field]: value });
@@ -238,7 +227,7 @@ userSchema.statics = {
     } catch (e) {
       const { data } = await this.verifyToken(refreshToken, refreshTokenSecret);
       const { id } = data;
-      const user = await this.getUserById(id);
+      const user = await this.findById(id);
       const newTokens = await user.genTokens();
 
       return {
@@ -265,7 +254,7 @@ userSchema.statics = {
       const { data } = await this.verifyToken(regToken, registerTokenSecret);
       const { id } = data;
 
-      const user = await this.getUserById(id);
+      const user = await this.findById(id);
       await user.confirmRegistration();
       await user.logActivity();
       const tokens = await user.genTokens(user);

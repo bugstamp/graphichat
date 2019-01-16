@@ -16,7 +16,6 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    console.log(req.user);
     return {
       db,
       user: req.user,

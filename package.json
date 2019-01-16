@@ -13,12 +13,17 @@
   },
   "nodemonConfig": {
     "watch": [
-      "server/"
+      "server/",
+      "public/",
+      "/.env"
     ],
     "ignore": [
       "server/build/*"
     ],
-    "ext": "js,json,gql"
+    "ext": "js,json,gql",
+    "env": {
+      "NODE_ENV": "development"
+    }
   },
   "dependencies": {
     "@babel/node": "^7.0.0",

@@ -4,7 +4,7 @@ export default {
   Query: {
     async getUser(parent, { id }, { db }) {
       try {
-        const user = db.User.getUserById(id);
+        const user = db.User.findById(id);
 
         return user;
       } catch (e) {
@@ -61,7 +61,7 @@ export default {
     },
     async signOut(parent, { id }, { db }) {
       try {
-        const user = await db.User.getUserById(id);
+        const user = await db.User.findById(id);
         await user.logActivity('logout');
 
         return user;

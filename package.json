@@ -82,7 +82,6 @@
     "babel-loader": "^8.0.4",
     "babel-plugin-jsx-control-statements": "^4.0.0",
     "babel-plugin-lodash": "^3.3.4",
-    "babel-plugin-polished": "^1.1.0",
     "babel-plugin-styled-components": "^1.8.0",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.1",

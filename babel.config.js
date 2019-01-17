@@ -8,7 +8,6 @@ module.exports = (api) => {
   ];
   const plugins = [
     'lodash',
-    'polished',
     'jsx-control-statements',
     'babel-plugin-styled-components',
     '@babel/plugin-syntax-dynamic-import',

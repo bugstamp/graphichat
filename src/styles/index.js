@@ -37,7 +37,8 @@ export const GlobalStyle = createGlobalStyle`
     overflow-y: auto;
 
     #root {
-      ${size('inherit')}
+      ${size('inherit')};
+      display: flex;
     }
   }
 `;

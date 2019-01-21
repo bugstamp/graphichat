@@ -22,6 +22,7 @@ const server = new ApolloServer({
     };
   },
 });
+server.applyMiddleware({ app });
 
 app.use(express.static(paths.public));
 app.use(tokenVerification);
@@ -31,7 +32,6 @@ app.get('*', (req, res) => {
   res.sendFile(paths.html);
 });
 
-server.applyMiddleware({ app });
 
 app.listen({ port }, () => {
   console.log(`Server is listening on port - ${port}`);

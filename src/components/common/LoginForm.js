@@ -22,7 +22,19 @@ import VisibilityIcon from '@material-ui/icons/VisibilityRounded';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOffRounded';
 import Button from '@material-ui/core/Button';
 
+import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
+
 import { getStyledProps, getPadding } from '../../styles';
+
+const SIGN_IN = gql`
+  mutation SignIn($username: String!, $password: String!) {
+    signIn(username: $username, password: $password) {
+      token
+      refreshToken
+    }
+  }
+`;
 
 const Wrapper = styled(Paper)`
   && {
@@ -185,127 +197,134 @@ class LoginForm extends Component {
     const { showPassword } = this.state;
 
     return (
-      <Wrapper elevation={8}>
-        <Title
-          color="primary"
-          variant="h3"
-          align="center"
-          gutterBottom
-        >
-          <AccountIconWrapper>
-            <AccountCircleIcon fontSize="inherit" color="primary" />
-          </AccountIconWrapper>
-          {'Sign In'}
-        </Title>
-        <Formik
-          initialValues={this.initialValues}
-          validationSchema={this.formValidationSchema}
-          onSubmit={(values, actions) => {
-            console.log(values, actions);
-          }}
-          render={({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-          }) => {
-            return (
-              <Form onSubmit={(event) => { event.preventDefault(); }}>
-                {
-                  map(this.formFields, ({
-                    name,
-                    label,
-                    type,
-                    placeholder,
-                    autocomplete,
-                    required,
-                  }) => {
-                    const isError = errors[name] && touched[name];
-                    const isPasswordField = type === 'password';
-                    const error = errors[name];
-                    const verifiedType = (isPasswordField && showPassword)
-                      ? 'text'
-                      : type;
+      <Mutation mutation={SIGN_IN}>
+        {(signIn, { data }) => {
+          console.log(data);
+          return (
+            <Wrapper elevation={8}>
+              <Title
+                color="primary"
+                variant="h3"
+                align="center"
+                gutterBottom
+              >
+                <AccountIconWrapper>
+                  <AccountCircleIcon fontSize="inherit" color="primary" />
+                </AccountIconWrapper>
+                {'Sign In'}
+              </Title>
+              <Formik
+                initialValues={this.initialValues}
+                validationSchema={this.formValidationSchema}
+                onSubmit={({ username, password }, actions) => {
+                  signIn({ variables: { username, password }});
+                }}
+                render={({
+                  values,
+                  errors,
+                  touched,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                }) => {
+                  return (
+                    <Form onSubmit={(event) => { event.preventDefault(); }}>
+                      {
+                        map(this.formFields, ({
+                          name,
+                          label,
+                          type,
+                          placeholder,
+                          autocomplete,
+                          required,
+                        }) => {
+                          const isError = errors[name] && touched[name];
+                          const isPasswordField = type === 'password';
+                          const error = errors[name];
+                          const verifiedType = (isPasswordField && showPassword)
+                            ? 'text'
+                            : type;
 
-                    return (
-                      <TextField key={name} fullWidth>
-                        <InputLabel htmlFor={name}>{label}</InputLabel>
-                        <Input
-                          id={name}
-                          type={verifiedType}
-                          value={values[name]}
-                          error={errors[name] && touched[name]}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          placeholder={placeholder}
-                          required={required}
-                          autoComplete={autocomplete}
-                          endAdornment={(
-                            <Choose>
-                              <When condition={isPasswordField}>
-                                <InputAdornment position="end">
-                                  <IconButton onClick={this.toggleShowPassword}>
-                                    <Choose>
-                                      <When condition={showPassword}>
-                                        <VisibilityIcon />
-                                      </When>
-                                      <Otherwise>
-                                        <VisibilityOffIcon />
-                                      </Otherwise>
-                                    </Choose>
-                                  </IconButton>
-                                </InputAdornment>
-                              </When>
-                              <Otherwise>{null}</Otherwise>
-                            </Choose>
-                          )}
-                        />
-                        <If condition={isError}>
-                          <FormHelperText error={isError}>{error}</FormHelperText>
-                        </If>
-                      </TextField>
-                    );
-                  })
-                }
-                <SubmitButton
-                  color="primary"
-                  size="large"
-                  variant="contained"
-                  onClick={handleSubmit}
-                  fullWidth
-                >
-                  {'Sign In'}
-                </SubmitButton>
-                <SignUpButton
-                  color="primary"
-                  size="large"
-                  variant="outlined"
-                  fullWidth
-                >
-                  {'Sign Up'}
-                </SignUpButton>
-                <BrandIconContainer>
-                  {
-                    map(brandIcons, ({ id, color, iconElement }) => (
-                      <BrandIcon
-                        key={id}
-                        brand={id}
-                        brandColor={color}
+                          return (
+                            <TextField key={name} fullWidth>
+                              <InputLabel htmlFor={name}>{label}</InputLabel>
+                              <Input
+                                id={name}
+                                type={verifiedType}
+                                value={values[name]}
+                                error={errors[name] && touched[name]}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                placeholder={placeholder}
+                                required={required}
+                                autoComplete={autocomplete}
+                                endAdornment={(
+                                  <Choose>
+                                    <When condition={isPasswordField}>
+                                      <InputAdornment position="end">
+                                        <IconButton onClick={this.toggleShowPassword}>
+                                          <Choose>
+                                            <When condition={showPassword}>
+                                              <VisibilityIcon />
+                                            </When>
+                                            <Otherwise>
+                                              <VisibilityOffIcon />
+                                            </Otherwise>
+                                          </Choose>
+                                        </IconButton>
+                                      </InputAdornment>
+                                    </When>
+                                    <Otherwise>{null}</Otherwise>
+                                  </Choose>
+                                )}
+                              />
+                              <If condition={isError}>
+                                <FormHelperText error={isError}>{error}</FormHelperText>
+                              </If>
+                            </TextField>
+                          );
+                        })
+                      }
+                      <SubmitButton
+                        color="primary"
+                        size="large"
+                        variant="contained"
+                        onClick={handleSubmit}
+                        fullWidth
                       >
-                        <BrandIconButton size="large">
-                          <FontAwesomeIcon icon={iconElement} size="lg" />
-                        </BrandIconButton>
-                      </BrandIcon>
-                    ))
-                  }
-                </BrandIconContainer>
-              </Form>
-            );
-          }}
-        />
-      </Wrapper>
+                        {'Sign In'}
+                      </SubmitButton>
+                      <SignUpButton
+                        color="primary"
+                        size="large"
+                        variant="outlined"
+                        fullWidth
+                      >
+                        {'Sign Up'}
+                      </SignUpButton>
+                      <BrandIconContainer>
+                        {
+                          map(brandIcons, ({ id, color, iconElement }) => (
+                            <BrandIcon
+                              key={id}
+                              brand={id}
+                              brandColor={color}
+                            >
+                              <BrandIconButton size="large">
+                                <FontAwesomeIcon icon={iconElement} size="lg" />
+                              </BrandIconButton>
+                            </BrandIcon>
+                          ))
+                        }
+                      </BrandIconContainer>
+                    </Form>
+                  );
+                }}
+              />
+            </Wrapper>
+          )
+        }}
+      </Mutation>
     );
   }
 }

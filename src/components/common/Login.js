@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 // import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
@@ -14,11 +14,19 @@ const Wrapper = styled(Grid)`
 `;
 
 class Login extends Component {
-  state = {}
+  constructor(props) {
+    super(props);
+
+    this.ref = createRef();
+  }
+
 
   render() {
+    console.log(this.ref.current);
+
     return (
       <Wrapper
+        ref={this.createRef}
         justify="center"
         alignItems="center"
         container

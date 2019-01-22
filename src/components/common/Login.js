@@ -14,16 +14,7 @@ const Wrapper = styled(Grid)`
 `;
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.ref = createRef();
-  }
-
-
   render() {
-    console.log(this.ref.current);
-
     return (
       <Wrapper
         ref={this.createRef}

@@ -217,7 +217,7 @@ class LoginForm extends Component {
                 initialValues={this.initialValues}
                 validationSchema={this.formValidationSchema}
                 onSubmit={({ username, password }, actions) => {
-                  signIn({ variables: { username, password }});
+                  signIn({ variables: { username, password } });
                 }}
                 render={({
                   values,

@@ -1,3 +1,5 @@
+import { AuthenticationError } from 'apollo-server-express';
+
 import nodemailer from '../utils/nodemailer';
 
 export default {
@@ -16,6 +18,18 @@ export default {
         const users = await db.User.find({});
 
         return users;
+      } catch (e) {
+        throw e;
+      }
+    },
+    async getMe(parent, args, { db, user }) {
+      try {
+        if (!user) {
+          throw new AuthenticationError();
+        }
+        const me = db.User.findById(user.id);
+
+        return me;
       } catch (e) {
         throw e;
       }

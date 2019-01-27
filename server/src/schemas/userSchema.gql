@@ -8,9 +8,19 @@ enum regStatus {
   COMPLETED
 }
 
-type Friend {
-  userId: ID!
+type UserFriend {
+  id: ID!
   name: String
+}
+
+type UserSocial {
+  id: ID
+}
+
+type UserSocials {
+  google: UserSocial
+  facebook: UserSocial
+  github: UserSocial
 }
 
 type User {
@@ -18,15 +28,18 @@ type User {
   id: ID!
   username: String!
   email: String!
+  displayName: String
   firstName: String
   lastName: String
+  gender: String
   birthday: Date
   status: Status
   createDate: Date!
   lastDate: Date!
-  friends: [Friend]
   refreshToken: String
   regStatus: regStatus
+  friends: [UserFriend]
+  socials: UserSocials
 }
 
 type AuthPayload {
@@ -46,6 +59,7 @@ input RegForm {
 type Query {
   getUser(id: ID!): User
   getUsers: [User]
+  getMe: [User]
 }
 
 type Mutation {

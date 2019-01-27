@@ -1,7 +1,7 @@
 import db from '../db';
 import { getHeaderTokens, setHeaderTokens } from '../helpers';
 
-export default async function (req, res, next) {
+export default async (req, res, next) => {
   const { token, refreshToken } = getHeaderTokens(req);
 
   if (token) {

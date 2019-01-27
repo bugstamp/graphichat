@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
+const isAuth = localStorage.getItem('chatkilla_token');
+
 const AppRoute = ({
   component: Component,
   layout: Layout,
@@ -12,7 +14,7 @@ const AppRoute = ({
     {...rest}
     render={props => (
       <Choose>
-        <When condition={privateRoute}>
+        <When condition={privateRoute && !isAuth}>
           <Redirect to="login" />
         </When>
         <When condition={!Layout}>

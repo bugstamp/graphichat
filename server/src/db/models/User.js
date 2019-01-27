@@ -18,14 +18,27 @@ const COMPLETED = 'COMPLETED';
 const ONLINE = 'ONLINE';
 const OFFLINE = 'OFFLINE';
 
-const friendSchema = new mongoose.Schema({
-  userId: {
-    type: Number,
+const userFriendSchema = new mongoose.Schema({
+  id: {
+    type: mongoose.Schema.Types.ObjectId,
     require: true,
   },
   name: {
     type: String,
   },
+});
+
+const userSocialSchema = new mongoose.Schema({
+  id: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: null,
+  },
+});
+
+const userSocialsSchema = new mongoose.Schema({
+  google: userSocialSchema,
+  facebook: userSocialSchema,
+  github: userSocialSchema,
 });
 
 const userSchema = new mongoose.Schema({
@@ -49,6 +62,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  displayName: {
+    type: String,
+  },
   firstName: {
     type: String,
   },
@@ -57,6 +73,9 @@ const userSchema = new mongoose.Schema({
   },
   birthday: {
     type: Date,
+  },
+  gender: {
+    type: String,
   },
   status: {
     type: String,
@@ -73,7 +92,6 @@ const userSchema = new mongoose.Schema({
     require: true,
     default: new Date(),
   },
-  friends: [friendSchema],
   refreshToken: {
     type: String,
   },
@@ -83,6 +101,8 @@ const userSchema = new mongoose.Schema({
     require: true,
     default: UNCOMPLETED,
   },
+  friends: [userFriendSchema],
+  socials: userSocialsSchema,
 });
 
 userSchema.pre('save', async function prevSave(next) {

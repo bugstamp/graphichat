@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import styled from 'styled-components';
@@ -21,6 +22,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 import VisibilityIcon from '@material-ui/icons/VisibilityRounded';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOffRounded';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
@@ -66,16 +68,13 @@ const TextField = styled(FormControl)`
   }
 `;
 
-const SubmitButton = styled(Button)`
-  && {
-    margin-top: 1em;
-  }
+const CircularProgressIcon = styled(CircularProgress)`
+  display: block;
 `;
 
-const SignUpButton = styled(Button)`
-  && {
-    margin-top: 1em;
-  }
+const SubmitButtonWrapper = styled.div`
+  position: relative;
+  margin-top: 1em;
 `;
 
 const BrandIconContainer = styled.div`
@@ -193,13 +192,25 @@ class LoginForm extends Component {
     this.setState(({ showPassword }) => ({ showPassword: !showPassword }));
   }
 
+  signInConfirmed = ({ token, refreshToken }) => {
+    const { history } = this.props;
+
+    localStorage.setItem('chatkilla_token', token);
+    localStorage.setItem('chatkilla_refresh_token', refreshToken);
+    history.push('/');
+  }
+
   render() {
     const { showPassword } = this.state;
 
     return (
-      <Mutation mutation={SIGN_IN}>
-        {(signIn, { data }) => {
-          console.log(data);
+      <Mutation
+        mutation={SIGN_IN}
+        update={(cache, { data: { signIn } }) => {
+          this.signInConfirmed(signIn);
+        }}
+      >
+        {(signIn, { loading }) => {
           return (
             <Wrapper elevation={8}>
               <Title
@@ -285,23 +296,35 @@ class LoginForm extends Component {
                           );
                         })
                       }
-                      <SubmitButton
-                        color="primary"
-                        size="large"
-                        variant="contained"
-                        onClick={handleSubmit}
-                        fullWidth
-                      >
-                        {'Sign In'}
-                      </SubmitButton>
-                      <SignUpButton
-                        color="primary"
-                        size="large"
-                        variant="outlined"
-                        fullWidth
-                      >
-                        {'Sign Up'}
-                      </SignUpButton>
+                      <SubmitButtonWrapper>
+                        <Button
+                          color="primary"
+                          size="large"
+                          variant="contained"
+                          onClick={handleSubmit}
+                          disabled={loading}
+                          fullWidth
+                        >
+                          <Choose>
+                            <When condition={loading}>
+                              <CircularProgress size={26} />
+                            </When>
+                            <Otherwise>
+                              {'Sign In'}
+                            </Otherwise>
+                          </Choose>
+                        </Button>
+                      </SubmitButtonWrapper>
+                      <SubmitButtonWrapper>
+                        <Button
+                          color="primary"
+                          size="large"
+                          variant="outlined"
+                          fullWidth
+                        >
+                          {'Sign Up'}
+                        </Button>
+                      </SubmitButtonWrapper>
                       <BrandIconContainer>
                         {
                           map(brandIcons, ({ id, color, iconElement }) => (
@@ -329,4 +352,4 @@ class LoginForm extends Component {
   }
 }
 
-export default LoginForm;
+export default withRouter(LoginForm);

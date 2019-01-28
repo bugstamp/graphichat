@@ -10,11 +10,8 @@ import resolvers from './resolvers';
 import routers from './routers';
 import middlewares from './middlewares';
 
-const { passport } = routers;
-const {
-  tokenVerification,
-  emailVerification,
-} = middlewares;
+const { passport, verification } = routers;
+const { tokenVerification } = middlewares;
 
 const app = express();
 const port = process.env.PORT;
@@ -34,9 +31,9 @@ apollo.applyMiddleware({ app });
 app.use(express.static(paths.public));
 app.use(bodyParser.json());
 app.use(passport);
+app.use(verification);
 app.use(tokenVerification);
 
-app.get('/verification/:regToken', emailVerification);
 app.get('*', (req, res) => {
   res.sendFile(paths.html);
 });

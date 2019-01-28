@@ -36,6 +36,7 @@
     "@material-ui/core": "^3.6.1",
     "@material-ui/icons": "^3.0.1",
     "apollo-boost": "^0.1.23",
+    "apollo-link-context": "^1.0.12",
     "apollo-resolvers": "^1.4.1",
     "apollo-server-express": "^2.3.1",
     "axios": "^0.18.0",

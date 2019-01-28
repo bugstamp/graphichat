@@ -18,7 +18,8 @@ const port = process.env.PORT;
 const apollo = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
+  context: ({ req, res }) => {
+    console.log(res.getHeaders());
     console.log(req.user);
     return {
       db,

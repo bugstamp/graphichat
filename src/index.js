@@ -5,6 +5,8 @@ import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink, from } from 'apollo-link';
+import { setContext } from 'apollo-link-context';
+import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 // import registerServiceWorker from './registerServiceWorker';
 
@@ -14,21 +16,15 @@ const httpLink = createHttpLink({
   uri: 'http://localhost:3000/graphql',
 });
 
-const authMiddleware = new ApolloLink((operation, forward) => {
-  operation.setContext(({ headers = {} }) => ({
-    headers: {
-      ...headers,
-      'x-token': localStorage.getItem('chatkilla_token') || null,
-      'x-refresh-token': localStorage.getItem('chatkilla_refresh_token') || null,
-    },
-  }));
-  console.log('before', operation);
+const authLink = setContext(() => ({
+  headers: {
+    'x-token': localStorage.getItem('chatkilla_token') || null,
+    'x-refresh-token': localStorage.getItem('chatkilla_refresh_token') || null,
+  },
+}));
 
-  return forward(operation);
-});
-
-const afterwareMiddleware = new ApolloLink((operation, forward) => {
-  forward(operation).map((response) => {
+const afterwareLink = new ApolloLink((operation, forward) => {
+  return forward(operation).map((response) => {
     const { response: { headers } } = operation.getContext();
     console.log('after', operation);
 
@@ -45,13 +41,27 @@ const afterwareMiddleware = new ApolloLink((operation, forward) => {
   });
 });
 
+const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
+  console.log(graphQLErrors);
+});
+
+const logger = new ApolloLink((operation, forward) => {
+  console.log(`operation: ${operation.operationName}`);
+  console.log(operation);
+  return forward(operation).map((result) => {
+    console.log(`Result from ${operation.operationName}:`, result);
+    return result;
+  })
+});
+
 const client = new ApolloClient({
-  link: afterwareMiddleware.concat(
-    from([
-      authMiddleware,
-      httpLink,
-    ]),
-  ),
+  link: from([
+    logger,
+    authLink,
+    errorLink,
+    afterwareLink,
+    httpLink,
+  ]),
   cache: new InMemoryCache(),
 });
 

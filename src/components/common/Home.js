@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const Wrapper = styled.div`
   flex: 1 auto;
 `;
 
 const GET_ME = gql`
-  {
+  query GetMe {
     getMe {
       username
       email
@@ -20,21 +20,6 @@ const GET_ME = gql`
       gender
       status
       lastDate
-      friends {
-        id
-        name
-      }
-      socials {
-        google {
-          id
-        }
-        facebook {
-          id
-        }
-        github {
-          id
-        }
-      }
     }
   }
 `;
@@ -49,11 +34,10 @@ class Home extends Component {
           {({ loading, error, data }) => {
             if (loading) return 'Loading...';
             if (error) {
-              console.log(error);
               return 'Error...';
             }
             console.log(data);
-
+            
             return 'Home';
           }}
         </Query>

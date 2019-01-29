@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import styled from 'styled-components';
 import { position, rgba } from 'polished';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { map, transform } from 'lodash';
 
 import Typography from '@material-ui/core/Typography';
@@ -24,8 +24,8 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOffRounded';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 
 import { getStyledProps, getPadding } from '../../styles';
 
@@ -41,8 +41,8 @@ const SIGN_IN = gql`
 const Wrapper = styled(Paper)`
   && {
     width: 100%;
-    max-width: 450px;
-    min-width: 375px;
+    max-width: 375px;
+    min-width: 320px;
     padding: ${getPadding(5)} ${getPadding(3)};
   }
 `;
@@ -53,7 +53,7 @@ const Title = styled(Typography)`
 `;
 
 const AccountIconWrapper = styled.div`
-  ${position('absolute', '0', null, null, '20%')}
+  ${position('absolute', '0', null, null, '15%')}
   height: 100%;
   font-size: inherit;
 `;
@@ -79,7 +79,6 @@ const SubmitButtonWrapper = styled.div`
 
 const BrandIconContainer = styled.div`
   width: 100%;
-  height: 62px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -198,7 +197,13 @@ class LoginForm extends Component {
     localStorage.setItem('chatkilla_tkn', token);
     localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
 
-    return history.push('/');
+    history.push('/');
+  }
+
+  signUp = () => {
+    const { history } = this.props;
+
+    history.push('/login/new');
   }
 
   render() {
@@ -318,6 +323,7 @@ class LoginForm extends Component {
                       </SubmitButtonWrapper>
                       <SubmitButtonWrapper>
                         <Button
+                          onClick={this.signUp}
                           color="primary"
                           size="large"
                           variant="outlined"
@@ -334,8 +340,8 @@ class LoginForm extends Component {
                               brand={id}
                               brandColor={color}
                             >
-                              <BrandIconButton size="large">
-                                <FontAwesomeIcon icon={iconElement} size="lg" />
+                              <BrandIconButton size="medium">
+                                <FontAwesomeIcon icon={iconElement} size="md" />
                               </BrandIconButton>
                             </BrandIcon>
                           ))

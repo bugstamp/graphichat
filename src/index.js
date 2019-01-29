@@ -5,7 +5,6 @@ import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink, from } from 'apollo-link';
-import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 // import registerServiceWorker from './registerServiceWorker';
@@ -16,25 +15,27 @@ const httpLink = createHttpLink({
   uri: 'http://localhost:3000/graphql',
 });
 
-const authLink = setContext(() => ({
-  headers: {
-    'x-token': localStorage.getItem('chatkilla_token') || null,
-    'x-refresh-token': localStorage.getItem('chatkilla_refresh_token') || null,
-  },
-}));
+const authLink = new ApolloLink((operation, forward) => {
+  operation.setContext({
+    headers: {
+      'x-token': localStorage.getItem('chatkilla_tkn') || null,
+      'x-refresh-token': localStorage.getItem('chatkilla_rfrsh_tkn') || null,
+    },
+  });
+  return forward(operation);
+});
 
-const afterwareLink = new ApolloLink((operation, forward) => {
+const tokenLink = new ApolloLink((operation, forward) => {
   return forward(operation).map((response) => {
     const { response: { headers } } = operation.getContext();
-    console.log('after', operation);
 
     if (headers) {
       const token = headers.get('x-token');
       const refreshToken = headers.get('x-refresh-token');
 
-      if (token) {
-        localStorage.setItem('chatkilla_token', token);
-        localStorage.setItem('chatkilla_refresh_token', refreshToken);
+      if (token && refreshToken) {
+        localStorage.setItem('chatkilla_tkn', token);
+        localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
       }
     }
     return response;
@@ -42,12 +43,11 @@ const afterwareLink = new ApolloLink((operation, forward) => {
 });
 
 const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
-  console.log(graphQLErrors);
+  console.log('error', graphQLErrors);
 });
 
 const logger = new ApolloLink((operation, forward) => {
-  console.log(`operation: ${operation.operationName}`);
-  console.log(operation);
+  console.log(`operation: ${operation.operationName}`, operation);
   return forward(operation).map((result) => {
     console.log(`Result from ${operation.operationName}:`, result);
     return result;
@@ -56,12 +56,13 @@ const logger = new ApolloLink((operation, forward) => {
 
 const client = new ApolloClient({
   link: from([
-    logger,
-    authLink,
     errorLink,
-    afterwareLink,
+    tokenLink,
+    authLink,
+    logger,
     httpLink,
   ]),
+  credentials: 'include',
   cache: new InMemoryCache(),
 });
 

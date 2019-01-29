@@ -6,16 +6,9 @@ export const getHeaderTokens = (req) => {
 };
 
 export const setHeaderTokens = (res, { token, refreshToken }) => {
-  res.set('Access-Control-Expose-Headers', '*');
+  res.set('Access-Control-Expose-Headers', 'x-token', 'x-refresh-token');
   res.set('x-token', token);
   res.set('x-refresh-token', refreshToken);
-
-  return res;
-};
-
-export const removeHeaderTokens = (res) => {
-  res.set('x-token', null);
-  res.set('x-refresh-token', null);
 
   return res;
 };

@@ -234,7 +234,7 @@ userSchema.statics = {
 
       return result;
     } catch (e) {
-      return e;
+      throw e;
     }
   },
   async verifyTokens(token, refreshToken) {

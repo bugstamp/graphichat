@@ -195,9 +195,10 @@ class LoginForm extends Component {
   signInConfirmed = ({ token, refreshToken }) => {
     const { history } = this.props;
 
-    localStorage.setItem('chatkilla_token', token);
-    localStorage.setItem('chatkilla_refresh_token', refreshToken);
-    history.push('/');
+    localStorage.setItem('chatkilla_tkn', token);
+    localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
+
+    return history.push('/');
   }
 
   render() {
@@ -227,7 +228,7 @@ class LoginForm extends Component {
               <Formik
                 initialValues={this.initialValues}
                 validationSchema={this.formValidationSchema}
-                onSubmit={({ username, password }, actions) => {
+                onSubmit={({ username, password }) => {
                   signIn({ variables: { username, password } });
                 }}
                 render={({

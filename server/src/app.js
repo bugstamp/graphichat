@@ -1,6 +1,6 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import bodyParser from 'body-parser';
+import cors from 'cors';
 
 import paths from '../../paths';
 
@@ -19,21 +19,25 @@ const apollo = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req, res }) => {
-    console.log(res.getHeaders());
-    console.log(req.user);
+    const { user } = req;
+
     return {
       db,
-      user: req.user,
+      user,
     };
   },
 });
-apollo.applyMiddleware({ app });
+const corsOptions = {
+  origin: 'http://localhost:8000',
+};
 
 app.use(express.static(paths.public));
-app.use(bodyParser.json());
+app.use(cors(corsOptions));
 app.use(passport);
 app.use(verification);
 app.use(tokenVerification);
+
+apollo.applyMiddleware({ app });
 
 app.get('*', (req, res) => {
   res.sendFile(paths.html);

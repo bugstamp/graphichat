@@ -36,8 +36,8 @@ class Home extends Component {
             if (error) {
               return 'Error...';
             }
-            console.log(data);
-            
+            console.log(data.getMe);
+
             return 'Home';
           }}
         </Query>

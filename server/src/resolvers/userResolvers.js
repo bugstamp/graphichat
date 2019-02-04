@@ -47,6 +47,17 @@ export default {
         throw e;
       }
     },
+    async signInBySocial(parent, { social, profile }, { db }) {
+      try {
+        const user = await db.User.signInBySocialValidation(social, profile);
+        const tokens = await user.genTokens();
+        await user.logActivity();
+
+        return tokens;
+      } catch (e) {
+        throw e;
+      }
+    },
     async signUp(parent, { form }, { db }) {
       try {
         const { email, username } = form;

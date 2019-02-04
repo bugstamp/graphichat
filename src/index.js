@@ -1,3 +1,4 @@
+import 'whatwg-fetch';
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -12,7 +13,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import App from './components/App';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'http://localhost:3000/api/graphql',
 });
 
 const authLink = new ApolloLink((operation, forward) => {
@@ -28,6 +29,7 @@ const authLink = new ApolloLink((operation, forward) => {
 const tokenLink = new ApolloLink((operation, forward) => {
   return forward(operation).map((response) => {
     const { response: { headers } } = operation.getContext();
+    console.log(response);
 
     if (headers) {
       const token = headers.get('x-token');
@@ -43,6 +45,7 @@ const tokenLink = new ApolloLink((operation, forward) => {
 });
 
 const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
+  console.log('networkerrors', networkError);
   console.log('error', graphQLErrors);
 });
 

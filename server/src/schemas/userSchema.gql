@@ -14,7 +14,8 @@ type UserFriend {
 }
 
 type UserSocial {
-  id: ID
+  id: ID!
+  email: String
 }
 
 type UserSocials {
@@ -62,8 +63,14 @@ type Query {
   getMe: User
 }
 
+input SocialProfile {
+  id: ID!
+  email: String
+}
+
 type Mutation {
   signIn(username: String!, password: String!): AuthPayload
+  signInBySocial(social: String!, profile: SocialProfile!): AuthPayload
   signUp(form: RegForm!): Boolean
   signUpAsyncValidation(field: String!, value: String!): Boolean
   signOut(id: ID!): User

@@ -1,5 +1,6 @@
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 const paths = require('../paths');
 
@@ -73,6 +74,10 @@ module.exports = merge([
     },
 
     plugins: [
+      new Dotenv({
+        // path: paths.env,
+        expand: true,
+      }),
       new HtmlWebpackPlugin({
         template: paths.template,
         favicon: paths.favicon,

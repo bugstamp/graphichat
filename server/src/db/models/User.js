@@ -228,6 +228,21 @@ userSchema.statics = {
       throw e;
     }
   },
+  async getUserBySocial(social, { email, id }) {
+    try {
+      let user;
+
+      if (email) {
+        user = await this.getUserByField('email', email);
+      } else {
+        user = await this.getUserByField(`socials.${social}.id`, id);
+      }
+
+      return user;
+    } catch (e) {
+      throw e;
+    }
+  },
   async verifyToken(token, secret) {
     try {
       const result = await jwt.verify(token, secret);
@@ -303,6 +318,18 @@ userSchema.statics = {
         throw new AuthenticationError('Registration isn\'t completed');
       }
 
+      return user;
+    } catch (e) {
+      throw e;
+    }
+  },
+  async signInBySocialValidation(social, profile) {
+    try {
+      const user = await this.getUserBySocial(social, profile);
+
+      if (!user) {
+        throw new AuthenticationError('User not found');
+      }
       return user;
     } catch (e) {
       throw e;

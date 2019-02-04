@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { Mutation } from 'react-apollo';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import GoogleLogin from 'react-google-login';
 import gql from 'graphql-tag';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -27,11 +29,22 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 
+// import Notification from './Notification';
+
 import { getStyledProps, getPadding } from '../../styles';
 
 const SIGN_IN = gql`
   mutation SignIn($username: String!, $password: String!) {
     signIn(username: $username, password: $password) {
+      token
+      refreshToken
+    }
+  }
+`;
+
+const SIGN_IN_BY_SOCIAL = gql`
+  mutation SignInBySocial($social: String!, $profile: SocialProfile!) {
+    signInBySocial(social: $social, profile: $profile) {
       token
       refreshToken
     }
@@ -50,12 +63,7 @@ const Wrapper = styled(Paper)`
 const Title = styled(Typography)`
   width: 100%;
   position: relative;
-`;
-
-const AccountIconWrapper = styled.div`
-  ${position('absolute', '0', null, null, '15%')}
-  height: 100%;
-  font-size: inherit;
+  text-align: center;
 `;
 
 const Form = styled.form`
@@ -80,8 +88,8 @@ const SubmitButtonWrapper = styled.div`
 const BrandIconContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
   align-items: flex-start;
+  justify-content: center;
   margin-top: 3em;
 `;
 
@@ -110,9 +118,8 @@ const BrandIcon = styled.div`
 const formConfig = {
   signin: [{
     name: 'username',
-    label: 'Username',
+    label: 'User name / Email',
     type: 'text',
-    placeholder: 'username or email',
     autocomplete: 'on',
     required: true,
     initial: '',
@@ -120,7 +127,6 @@ const formConfig = {
     name: 'password',
     label: 'Password',
     type: 'password',
-    placeholder: '******',
     autocomplete: 'on',
     required: true,
     initial: '',
@@ -132,10 +138,7 @@ const formValidationSchemas = {
     // eslint-disable-next-line
     switch (name) {
       case 'username': {
-        res[name] = yup.string()
-          .min(2)
-          .max(20)
-          .required('*required');
+        res[name] = yup.string().required('*required');
         break;
       }
       case 'password': {
@@ -165,11 +168,6 @@ const brandIcons = [
     id: 'google',
     color: '#ff3232',
     iconElement: faGoogle,
-  },
-  {
-    id: 'github',
-    color: '#000',
-    iconElement: faGithub,
   },
 ];
 
@@ -206,6 +204,11 @@ class LoginForm extends Component {
     history.push('/login/new');
   }
 
+  socialSignInResponse = (social, response) => {
+    console.log(social);
+    console.log(response);
+  }
+
   render() {
     const { showPassword } = this.state;
 
@@ -219,16 +222,8 @@ class LoginForm extends Component {
         {(signIn, { loading }) => {
           return (
             <Wrapper elevation={8}>
-              <Title
-                color="primary"
-                variant="h3"
-                align="center"
-                gutterBottom
-              >
-                <AccountIconWrapper>
-                  <AccountCircleIcon fontSize="inherit" color="primary" />
-                </AccountIconWrapper>
-                {'Sign In'}
+              <Title variant="h1" color="primary" align="center">
+                <AccountCircleIcon fontSize="inherit" color="primary" />
               </Title>
               <Formik
                 initialValues={this.initialValues}
@@ -332,27 +327,79 @@ class LoginForm extends Component {
                           {'Sign Up'}
                         </Button>
                       </SubmitButtonWrapper>
-                      <BrandIconContainer>
-                        {
-                          map(brandIcons, ({ id, color, iconElement }) => (
-                            <BrandIcon
-                              key={id}
-                              brand={id}
-                              brandColor={color}
-                            >
-                              <BrandIconButton size="medium">
-                                <FontAwesomeIcon icon={iconElement} size="md" />
-                              </BrandIconButton>
-                            </BrandIcon>
-                          ))
-                        }
-                      </BrandIconContainer>
+                      <Mutation
+                        mutation={SIGN_IN_BY_SOCIAL}
+                        update={(cache, { data: { signInBySocial } }) => {
+                          this.signInConfirmed(signInBySocial);
+                        }}
+                      >
+                        {(signInBySocial, { loading: socialLoading }) => (
+                          <BrandIconContainer>
+                            {
+                              map(brandIcons, ({ id, color, iconElement }) => (
+                                <BrandIcon
+                                  key={id}
+                                  brand={id}
+                                  brandColor={color}
+                                >
+                                  <Choose>
+                                    <When condition={id === 'google'}>
+                                      <GoogleLogin
+                                        scope="email profile"
+                                        clientId={process.env.GOOGLE_APP_ID}
+                                        onSuccess={({ profileObj: { googleId, email } }) => signInBySocial({
+                                          variables: {
+                                            social: id,
+                                            profile: {
+                                              id: googleId,
+                                              email,
+                                            },
+                                          },
+                                        })}
+                                        render={({ onClick, isProcessing }) => (
+                                          <BrandIconButton disabled={isProcessing || socialLoading} size="large" onClick={onClick}>
+                                            <FontAwesomeIcon icon={iconElement} size="lg" />
+                                          </BrandIconButton>
+                                        )}
+                                      />
+                                    </When>
+                                    <When condition={id === 'facebook'}>
+                                      <FacebookLogin
+                                        fields="id,email"
+                                        appId={process.env.FACEBOOK_APP_ID}
+                                        callback={({ userID, email }) => signInBySocial({
+                                          variables: {
+                                            social: id,
+                                            profile: {
+                                              id: userID,
+                                              email,
+                                            },
+                                          },
+                                        })}
+                                        render={({ onClick, isProcessing }) => (
+                                          <BrandIconButton disabled={isProcessing || socialLoading} size="large" onClick={onClick}>
+                                            <FontAwesomeIcon icon={iconElement} size="lg" />
+                                          </BrandIconButton>
+                                        )}
+                                      />
+                                    </When>
+                                    <Otherwise>
+                                      {null}
+                                    </Otherwise>
+                                  </Choose>
+                                </BrandIcon>
+                              ))
+                            }
+                          </BrandIconContainer>
+                        )}
+                      </Mutation>
                     </Form>
                   );
                 }}
               />
+              {/* <Notification open={!!error} type="warning" /> */}
             </Wrapper>
-          )
+          );
         }}
       </Mutation>
     );

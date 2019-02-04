@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   root: path.resolve(__dirname),
-  env: path.resolve(__dirname),
+  env: path.resolve(__dirname, '/.env'),
   src: path.resolve(__dirname, 'src'),
   index: path.resolve(__dirname, 'src/index.js'),
   assets: path.resolve(__dirname, 'src/assets'),

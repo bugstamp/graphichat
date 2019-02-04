@@ -7,6 +7,9 @@ module.exports = merge([
   devServer({
     host: 'localhost',
     port: '8000',
+    proxy: {
+      '/api/**': 'http://localhost:3000',
+    },
   }),
   {
     plugins: [

@@ -18,7 +18,7 @@ const port = process.env.PORT;
 const apollo = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req, res }) => {
+  context: ({ req }) => {
     const { user } = req;
 
     return {
@@ -27,9 +27,7 @@ const apollo = new ApolloServer({
     };
   },
 });
-const corsOptions = {
-  origin: 'http://localhost:8000',
-};
+const corsOptions = {};
 
 app.use(express.static(paths.public));
 app.use(cors(corsOptions));
@@ -37,7 +35,7 @@ app.use(passport);
 app.use(verification);
 app.use(tokenVerification);
 
-apollo.applyMiddleware({ app });
+apollo.applyMiddleware({ app, path: '/api/graphql' });
 
 app.get('*', (req, res) => {
   res.sendFile(paths.html);

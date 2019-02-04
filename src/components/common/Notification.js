@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 // import {} from 'polished';
 
@@ -9,22 +9,37 @@ import IconButton from '@material-ui/core/IconButton';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import CloseIcon from '@material-ui/icons/Close';
+import amber from '@material-ui/core/colors/amber';
+
+import { getStyledProps } from '../../styles';
 
 const NotificationMessageWrapper = styled.span`
   color: #fff;
+  background-color: ${(props) => {
+    const { type } = props;
+
+    if (type === 'error') {
+      return getStyledProps('theme.palette.error.dark')(props);
+    }
+    return amber[500];
+  }}
 `;
 
+const NotificationMessageIcon = ({ type }) => (
+  <Choose>
+    <When condition={type === 'error'}>
+      <ErrorIcon />
+    </When>
+    <When condition={type === 'warning'}>
+      <WarningIcon />
+    </When>
+    <Otherwise>{null}</Otherwise>
+  </Choose>
+);
+
 const NotificationMessage = ({ type, message }) => (
-  <NotificationMessageWrapper>
-    <Choose>
-      <When condition={type === 'error'}>
-        <ErrorIcon />
-      </When>
-      <When condition={type === 'warning'}>
-        <WarningIcon />
-      </When>
-      <Otherwise>{null}</Otherwise>
-    </Choose>
+  <NotificationMessageWrapper type={type}>
+    <NotificationMessageIcon type={type} />
     {message}
   </NotificationMessageWrapper>
 );
@@ -42,19 +57,18 @@ const NotificationClose = () => (
 const NotificationContent = ({ type, message }) => (
   <SnackbarContent
     aria-describedby="alert-notification"
-    message={<NotificationMessage />}
+    message={<NotificationMessage type={type} message={message} />}
     action={[<NotificationClose />]}
   />
 );
 
-class Notification extends Component {
+class Notification extends PureComponent {
   state = {
-    open: false,
+    // open: false,
   }
 
   render() {
-    const { open } = this.state;
-    const { type, message } = this.props;
+    const { type, message, open } = this.props;
 
     return (
       <Snackbar

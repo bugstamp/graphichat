@@ -13,18 +13,6 @@ import amber from '@material-ui/core/colors/amber';
 
 import { getStyledProps } from '../../styles';
 
-const NotificationMessageWrapper = styled.span`
-  color: #fff;
-  background-color: ${(props) => {
-    const { type } = props;
-
-    if (type === 'error') {
-      return getStyledProps('theme.palette.error.dark')(props);
-    }
-    return amber[500];
-  }}
-`;
-
 const NotificationMessageIcon = ({ type }) => (
   <Choose>
     <When condition={type === 'error'}>
@@ -37,52 +25,75 @@ const NotificationMessageIcon = ({ type }) => (
   </Choose>
 );
 
+const NotificationMessageWrapper = styled.p`
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+
+  span {
+    margin-left: 1em;
+  }
+`;
+
+const NotificationContentWrapper = styled(SnackbarContent)`
+  && {
+    background-color: ${(props) => {
+    const { type } = props;
+
+    if (type === 'error') {
+      return getStyledProps('theme.palette.error.dark')(props);
+    }
+    return amber[500];
+  }}}
+`;
+
 const NotificationMessage = ({ type, message }) => (
-  <NotificationMessageWrapper type={type}>
+  <NotificationMessageWrapper>
     <NotificationMessageIcon type={type} />
-    {message}
+    <span>
+      {message}
+    </span>
   </NotificationMessageWrapper>
 );
 
-const NotificationClose = () => (
+const NotificationClose = ({ toggle }) => (
   <IconButton
     key="close"
     aria-label="Close"
     color="inherit"
+    onClick={toggle}
   >
     <CloseIcon />
   </IconButton>
 );
 
-const NotificationContent = ({ type, message }) => (
-  <SnackbarContent
+const NotificationContent = ({ type, message, toggle }) => (
+  <NotificationContentWrapper
+    type={type}
     aria-describedby="alert-notification"
-    message={<NotificationMessage type={type} message={message} />}
-    action={[<NotificationClose />]}
+    message={<NotificationMessage key="message" type={type} message={message} />}
+    action={[<NotificationClose key="close" toggle={toggle} />]}
   />
 );
 
-class Notification extends PureComponent {
-  state = {
-    // open: false,
-  }
-
-  render() {
-    const { type, message, open } = this.props;
-
-    return (
-      <Snackbar
-        open={open}
-        anchorOrigin={{
-          horizontal: 'center',
-          vertical: 'top',
-        }}
-        autoHideDuration={5000}
-      >
-        <NotificationContent type={type} message={message} />
-      </Snackbar>
-    );
-  }
-}
+const Notification = ({ type, message, open, toggle, ...rest }) => (
+  <Snackbar
+    open={open}
+    onClose={(event, reason) => {
+      if (reason === 'timeout' && !open) {
+        return;
+      }
+      toggle();
+    }}
+    anchorOrigin={{
+      horizontal: 'center',
+      vertical: 'top',
+    }}
+    autoHideDuration={4000}
+    {...rest}
+  >
+    <NotificationContent type={type} message={message} toggle={toggle} />
+  </Snackbar>
+);
 
 export default Notification;

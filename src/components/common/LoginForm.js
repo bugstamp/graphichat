@@ -29,7 +29,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 
-// import Notification from './Notification';
+import Notification from './Notification';
 
 import { getStyledProps, getPadding } from '../../styles';
 
@@ -60,7 +60,7 @@ const Wrapper = styled(Paper)`
   }
 `;
 
-const Title = styled(Typography)`
+const Header = styled(Typography)`
   width: 100%;
   position: relative;
   text-align: center;
@@ -85,28 +85,33 @@ const SubmitButtonWrapper = styled.div`
   margin-top: 1em;
 `;
 
-const BrandIconContainer = styled.div`
+const SocialContainer = styled.div`
   width: 100%;
   display: flex;
-  align-items: flex-start;
   justify-content: center;
+  align-items: center;
   margin-top: 3em;
 `;
 
-const BrandIconButton = styled(Fab)`
+const SocialNote = styled.p`
+  display: inline-flex;
+  margin-right: 1em;
+`;
+
+const SocialButton = styled(Fab)`
   && {
     color: #fff;
   }
 `;
 
-const BrandIcon = styled.div`
+const Social = styled.div`
   display: inline-flex;
 
   :not(:last-child) {
-    margin-right: 2em;
+    margin-right: 1em;
   }
 
-  ${BrandIconButton} {
+  ${SocialButton} {
     background-color: ${({ brandColor }) => brandColor};
 
     :hover {
@@ -118,7 +123,7 @@ const BrandIcon = styled.div`
 const formConfig = {
   signin: [{
     name: 'username',
-    label: 'User name / Email',
+    label: 'User name / Email address',
     type: 'text',
     autocomplete: 'on',
     required: true,
@@ -158,14 +163,14 @@ const formInitialValues = transform(formConfig, (form, val, key) => {
   }, {});
 }, {});
 
-const brandIcons = [
+const socialIcons = [
   {
-    id: 'facebook',
+    brand: 'facebook',
     color: '#3232ff',
     iconElement: faFacebook,
   },
   {
-    id: 'google',
+    brand: 'google',
     color: '#ff3232',
     iconElement: faGoogle,
   },
@@ -177,6 +182,10 @@ class LoginForm extends Component {
 
     this.state = {
       showPassword: false,
+      alert: {
+        open: false,
+        message: '',
+      },
     };
 
     this.formId = 'signin';
@@ -189,12 +198,20 @@ class LoginForm extends Component {
     this.setState(({ showPassword }) => ({ showPassword: !showPassword }));
   }
 
-  signInConfirmed = ({ token, refreshToken }) => {
+  toggleAlert = (message = '') => {
+    this.setState(({ alert }) => ({
+      alert: {
+        open: !alert.open,
+        message,
+      },
+    }));
+  }
+
+  signInSuccess = ({ token, refreshToken }) => {
     const { history } = this.props;
 
     localStorage.setItem('chatkilla_tkn', token);
     localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
-
     history.push('/');
   }
 
@@ -204,33 +221,29 @@ class LoginForm extends Component {
     history.push('/login/new');
   }
 
-  socialSignInResponse = (social, response) => {
-    console.log(social);
-    console.log(response);
-  }
-
   render() {
-    const { showPassword } = this.state;
+    const { showPassword, alert } = this.state;
 
     return (
       <Mutation
         mutation={SIGN_IN}
         update={(cache, { data: { signIn } }) => {
-          this.signInConfirmed(signIn);
+          this.signInSuccess(signIn);
+        }}
+        onError={() => {
+          this.toggleAlert('User name or password is incorrect.');
         }}
       >
         {(signIn, { loading }) => {
           return (
             <Wrapper elevation={8}>
-              <Title variant="h1" color="primary" align="center">
+              <Header variant="h1" color="primary" align="center">
                 <AccountCircleIcon fontSize="inherit" color="primary" />
-              </Title>
+              </Header>
               <Formik
                 initialValues={this.initialValues}
                 validationSchema={this.formValidationSchema}
-                onSubmit={({ username, password }) => {
-                  signIn({ variables: { username, password } });
-                }}
+                onSubmit={({ username, password }) => signIn({ variables: { username, password } })}
                 render={({
                   values,
                   errors,
@@ -330,74 +343,87 @@ class LoginForm extends Component {
                       <Mutation
                         mutation={SIGN_IN_BY_SOCIAL}
                         update={(cache, { data: { signInBySocial } }) => {
-                          this.signInConfirmed(signInBySocial);
+                          this.signInSuccess(signInBySocial);
+                        }}
+                        onError={() => {
+                          this.toggleAlert('User not found.');
                         }}
                       >
-                        {(signInBySocial, { loading: socialLoading }) => (
-                          <BrandIconContainer>
-                            {
-                              map(brandIcons, ({ id, color, iconElement }) => (
-                                <BrandIcon
-                                  key={id}
-                                  brand={id}
-                                  brandColor={color}
-                                >
-                                  <Choose>
-                                    <When condition={id === 'google'}>
-                                      <GoogleLogin
-                                        scope="email profile"
-                                        clientId={process.env.GOOGLE_APP_ID}
-                                        onSuccess={({ profileObj: { googleId, email } }) => signInBySocial({
-                                          variables: {
-                                            social: id,
-                                            profile: {
-                                              id: googleId,
-                                              email,
+                        {(signInBySocial, { loading: socialLoading }) => {
+                          return (
+                            <SocialContainer>
+                              <SocialNote>
+                                {'Sign in with social media:'}
+                              </SocialNote>
+                              {
+                                map(socialIcons, ({ brand, color, iconElement }) => (
+                                  <Social
+                                    key={brand}
+                                    brand={brand}
+                                    brandColor={color}
+                                  >
+                                    <Choose>
+                                      <When condition={brand === 'google'}>
+                                        <GoogleLogin
+                                          scope="email profile"
+                                          clientId={process.env.GOOGLE_APP_ID}
+                                          onSuccess={({ profileObj: { googleId, email } }) => signInBySocial({
+                                            variables: {
+                                              social: brand,
+                                              profile: {
+                                                id: googleId,
+                                                email,
+                                              },
                                             },
-                                          },
-                                        })}
-                                        render={({ onClick, isProcessing }) => (
-                                          <BrandIconButton disabled={isProcessing || socialLoading} size="large" onClick={onClick}>
-                                            <FontAwesomeIcon icon={iconElement} size="lg" />
-                                          </BrandIconButton>
-                                        )}
-                                      />
-                                    </When>
-                                    <When condition={id === 'facebook'}>
-                                      <FacebookLogin
-                                        fields="id,email"
-                                        appId={process.env.FACEBOOK_APP_ID}
-                                        callback={({ userID, email }) => signInBySocial({
-                                          variables: {
-                                            social: id,
-                                            profile: {
-                                              id: userID,
-                                              email,
+                                          })}
+                                          render={({ onClick }) => (
+                                            <SocialButton disabled={socialLoading} size="small" onClick={onClick}>
+                                              <FontAwesomeIcon icon={iconElement} size="lg" />
+                                            </SocialButton>
+                                          )}
+                                        />
+                                      </When>
+                                      <When condition={brand === 'facebook'}>
+                                        <FacebookLogin
+                                          fields="id,email"
+                                          appId={process.env.FACEBOOK_APP_ID}
+                                          callback={({ userID, email }) => signInBySocial({
+                                            variables: {
+                                              social: brand,
+                                              profile: {
+                                                id: userID,
+                                                email,
+                                              },
                                             },
-                                          },
-                                        })}
-                                        render={({ onClick, isProcessing }) => (
-                                          <BrandIconButton disabled={isProcessing || socialLoading} size="large" onClick={onClick}>
-                                            <FontAwesomeIcon icon={iconElement} size="lg" />
-                                          </BrandIconButton>
-                                        )}
-                                      />
-                                    </When>
-                                    <Otherwise>
-                                      {null}
-                                    </Otherwise>
-                                  </Choose>
-                                </BrandIcon>
-                              ))
-                            }
-                          </BrandIconContainer>
-                        )}
+                                          })}
+                                          render={({ onClick }) => (
+                                            <SocialButton disabled={socialLoading} size="small" onClick={onClick}>
+                                              <FontAwesomeIcon icon={iconElement} size="lg" />
+                                            </SocialButton>
+                                          )}
+                                        />
+                                      </When>
+                                      <Otherwise>
+                                        {null}
+                                      </Otherwise>
+                                    </Choose>
+                                  </Social>
+                                ))
+                              }
+                            </SocialContainer>
+                          );
+                        }}
                       </Mutation>
                     </Form>
                   );
                 }}
               />
-              {/* <Notification open={!!error} type="warning" /> */}
+              <Notification
+                type="error"
+                open={alert.open}
+                message={alert.message}
+                toggle={() => this.toggleAlert()}
+              />
             </Wrapper>
           );
         }}

@@ -10,12 +10,12 @@ import resolvers from './resolvers';
 import routers from './routers';
 import middlewares from './middlewares';
 
-const { passport, verification } = routers;
+const { verification } = routers;
 const { tokenVerification } = middlewares;
 
 const app = express();
 const port = process.env.PORT;
-const apollo = new ApolloServer({
+const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
@@ -31,11 +31,10 @@ const corsOptions = {};
 
 app.use(express.static(paths.public));
 app.use(cors(corsOptions));
-app.use(passport);
 app.use(verification);
 app.use(tokenVerification);
 
-apollo.applyMiddleware({ app, path: '/api/graphql' });
+apolloServer.applyMiddleware({ app, path: '/api/graphql' });
 
 app.get('*', (req, res) => {
   res.sendFile(paths.html);

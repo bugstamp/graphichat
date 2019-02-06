@@ -39,8 +39,8 @@ export default {
     async signIn(parent, { username, password }, { db }) {
       try {
         const user = await db.User.signInValidation(username, password);
-        const tokens = await user.genTokens();
         await user.logActivity();
+        const tokens = await user.genTokens();
 
         return tokens;
       } catch (e) {
@@ -50,8 +50,8 @@ export default {
     async signInBySocial(parent, { social, profile }, { db }) {
       try {
         const user = await db.User.signInBySocialValidation(social, profile);
-        const tokens = await user.genTokens();
         await user.logActivity();
+        const tokens = await user.genTokens();
 
         return tokens;
       } catch (e) {
@@ -75,11 +75,29 @@ export default {
         throw e;
       }
     },
+    async signUpCompletion(parent, { id, form }, { db }) {
+      try {
+        const { firstName, lastName } = form;
+        const displayName = `${firstName} ${lastName}`;
+        const user = await db.User.findOneAndUpdate({ id }, {
+          $set: { displayName, ...form },
+        }, { new: true });
+        await user.confirmSignUp();
+        const tokens = await user.genTokens();
+
+        return tokens;
+      } catch (e) {
+        throw e;
+      }
+    },
     async signUpAsyncValidation(parent, { field, value }, { db }) {
       try {
         const result = await db.User.verifyInputData(field, value);
 
-        return result;
+        return {
+          field,
+          valid: result,
+        };
       } catch (e) {
         throw e;
       }
@@ -94,7 +112,7 @@ export default {
         throw e;
       }
     },
-    async removeUser(parent, { id }, { db }) {
+    async deleteUser(parent, { id }, { db }) {
       try {
         const result = db.User.findByIdAndDelete(id);
 

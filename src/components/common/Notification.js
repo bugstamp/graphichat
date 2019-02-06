@@ -41,7 +41,7 @@ const NotificationContentWrapper = styled(SnackbarContent)`
     const { type } = props;
 
     if (type === 'error') {
-      return getStyledProps('theme.palette.error.dark')(props);
+      return getStyledProps('theme.palette.error.main')(props);
     }
     return amber[500];
   }}}
@@ -86,10 +86,13 @@ const Notification = ({ type, message, open, toggle, ...rest }) => (
       toggle();
     }}
     anchorOrigin={{
-      horizontal: 'center',
+      horizontal: 'right',
       vertical: 'top',
     }}
     autoHideDuration={4000}
+    TransitionProps={{
+      direction: 'left',
+    }}
     {...rest}
   >
     <NotificationContent type={type} message={message} toggle={toggle} />

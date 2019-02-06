@@ -1,26 +1,21 @@
 import { createTransport } from 'nodemailer';
 
-const EMAIL_HOST = 'smtp.gmail.com';
-const EMAIL_PORT = 587;
-const EMAIL_ADRRESS = 'chatkilla2018@gmail.com';
-const EMAIL_PASSWORD = 'chtkll2018';
-
 const transporter = createTransport({
-  host: EMAIL_HOST,
-  port: EMAIL_PORT,
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
   auth: {
-    user: EMAIL_ADRRESS,
-    pass: EMAIL_PASSWORD,
+    user: process.env.EMAIL_ADRRESS,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
 const sendEmailVerification = async (email, registerToken) => {
   try {
     const mailOptions = {
-      from: EMAIL_ADRRESS,
+      from: process.env.EMAIL_ADRRESS,
       to: email,
-      subject: 'Go to the link for confirm registration!',
-      text: `http://localhost:3000/verification/${registerToken}`,
+      subject: 'Go to the link for confirm registration.',
+      text: `${process.env.API_URL}/verification/${registerToken}`,
     };
     const result = await transporter.sendMail(mailOptions);
 

@@ -5,7 +5,7 @@ import { setHeaderTokens } from '../helpers';
 
 const router = express.Router();
 
-router.get('/verification/:regToken', async (reg, res) => {
+router.get('/api/verification/:regToken', async (reg, res) => {
   const { regToken } = reg.params;
 
   try {
@@ -14,7 +14,7 @@ router.get('/verification/:regToken', async (reg, res) => {
     res = setHeaderTokens(res, tokens);
     res.redirect('/');
   } catch (err) {
-    res.sendStatus(404);
+    res.status(404).send('Verification token was expired');
   }
 });
 

@@ -14,7 +14,9 @@ const registerTokenSecret = process.env.REGISTER_TOKEN_SECRET;
 const registerTokenExpires = process.env.REGISTER_TOKEN_EXPIRES;
 
 const UNCOMPLETED = 'UNCOMPLETED';
+const EMAIL_UNCONFIRMED = 'EMAIL_NOT_CONFIRMED';
 const COMPLETED = 'COMPLETED';
+
 const ONLINE = 'ONLINE';
 const OFFLINE = 'OFFLINE';
 
@@ -97,9 +99,9 @@ const userSchema = new mongoose.Schema({
   },
   regStatus: {
     type: String,
-    enum: [UNCOMPLETED, COMPLETED],
+    enum: [EMAIL_UNCONFIRMED, UNCOMPLETED, COMPLETED],
     require: true,
-    default: UNCOMPLETED,
+    default: EMAIL_UNCONFIRMED,
   },
   friends: [userFriendSchema],
   socials: userSocialsSchema,
@@ -143,7 +145,7 @@ userSchema.methods = {
     try {
       const token = await jwt.sign({
         type: 'token',
-        data: pick(this, ['id', 'isAdmin']),
+        data: pick(this, ['id', 'regStatus']),
       }, tokenSecret, { expiresIn: tokenExpires });
 
       return token;
@@ -209,7 +211,14 @@ userSchema.methods = {
       throw e;
     }
   },
-  async confirmRegistration() {
+  async confirmEmail() {
+    try {
+      await this.updateOne({ regStatus: UNCOMPLETED });
+    } catch (e) {
+      throw e;
+    }
+  },
+  async confirmSignUp() {
     try {
       await this.updateOne({ regStatus: COMPLETED });
     } catch (e) {
@@ -274,12 +283,13 @@ userSchema.statics = {
   async verifyInputData(field, value) {
     try {
       const user = await this.getUserByField(field, value);
-      const isExist = !!user;
 
-      if (isExist) {
-        throw new UserInputError(`Specified ${field} is already exist!`);
+      if (user) {
+        throw new UserInputError(`Specified ${field} is already exist.`, {
+          invalidField: field,
+        });
       }
-      return isExist;
+      return !user;
     } catch (e) {
       throw e;
     }
@@ -290,7 +300,7 @@ userSchema.statics = {
       const { id } = data;
 
       const user = await this.findById(id);
-      await user.confirmRegistration();
+      await user.confirmEmail();
       await user.logActivity();
       const tokens = await user.genTokens(user);
 
@@ -305,17 +315,17 @@ userSchema.statics = {
       const user = await this.getUserByField(login, username);
 
       if (!user) {
-        throw new AuthenticationError('Specified username can\'t be found');
+        throw new AuthenticationError('Specified username can\'t be found.');
       }
       const { password: hash, regStatus } = user;
       const correctPassword = await user.comparePassword(password, hash);
       const invalidRegistration = regStatus === UNCOMPLETED;
 
       if (!correctPassword) {
-        throw new AuthenticationError('Specified password is incorrect');
+        throw new AuthenticationError('Specified password is incorrect.');
       }
       if (invalidRegistration) {
-        throw new AuthenticationError('Registration isn\'t completed');
+        throw new AuthenticationError('Registration isn\'t completed.');
       }
 
       return user;
@@ -328,7 +338,7 @@ userSchema.statics = {
       const user = await this.getUserBySocial(social, profile);
 
       if (!user) {
-        throw new AuthenticationError('User not found');
+        throw new AuthenticationError('User not found.');
       }
       return user;
     } catch (e) {

@@ -51,12 +51,21 @@ const SIGN_IN_BY_SOCIAL = gql`
   }
 `;
 
+const SIGN_UP_ASYNC_VALIDATION = gql`
+  mutation SignUpAsyncValidation($field: String!, $value: String!) {
+    signUpAsyncValidation(field: $field, value: $value) {
+      field
+      valid
+    }
+  }
+`;
+
 const Wrapper = styled(Paper)`
   && {
     width: 100%;
     max-width: 375px;
     min-width: 320px;
-    padding: ${getPadding(5)} ${getPadding(3)};
+  padding: ${getPadding(5)} ${getPadding(3)};
   }
 `;
 
@@ -76,13 +85,17 @@ const TextField = styled(FormControl)`
   }
 `;
 
-const CircularProgressIcon = styled(CircularProgress)`
-  display: block;
+const SubmitButton = styled(Button)`
+  && {
+    position: relative;
+    margin-top: 1em;
+  }
 `;
 
-const SubmitButtonWrapper = styled.div`
-  position: relative;
-  margin-top: 1em;
+const SignUpButton = styled(Button)`
+  && {
+    margin-top: 1em;
+  }
 `;
 
 const SocialContainer = styled.div`
@@ -112,10 +125,10 @@ const Social = styled.div`
   }
 
   ${SocialButton} {
-    background-color: ${({ brandColor }) => brandColor};
+  background-color: ${({ brandColor }) => brandColor};
 
     :hover {
-      background-color: ${({ brandColor }) => rgba(brandColor, 0.8)};
+  background-color: ${({ brandColor }) => rgba(brandColor, 0.8)};
     }
   }
 `;
@@ -148,9 +161,9 @@ const formValidationSchemas = {
       }
       case 'password': {
         res[name] = yup.string()
-          .min(6)
-          .max(20)
-          .required('*required');
+        .min(6)
+        .max(20)
+        .required('*required');
         break;
       }
     }
@@ -230,14 +243,14 @@ class LoginForm extends Component {
         update={(cache, { data: { signIn } }) => {
           this.signInSuccess(signIn);
         }}
-        onError={() => {
-          this.toggleAlert('User name or password is incorrect.');
+        onError={({ graphQLErrors }) => {
+          this.toggleAlert(graphQLErrors[0].message);
         }}
       >
         {(signIn, { loading }) => {
           return (
             <Wrapper elevation={8}>
-              <Header variant="h1" color="primary" align="center">
+              <Header variant="h1" color="primary" align="center" gutterBottom>
                 <AccountCircleIcon fontSize="inherit" color="primary" />
               </Header>
               <Formik
@@ -251,173 +264,187 @@ class LoginForm extends Component {
                   handleChange,
                   handleBlur,
                   handleSubmit,
+                  setFieldError,
                 }) => {
                   return (
-                    <Form onSubmit={(event) => { event.preventDefault(); }}>
-                      {
-                        map(this.formFields, ({
-                          name,
-                          label,
-                          type,
-                          placeholder,
-                          autocomplete,
-                          required,
-                        }) => {
-                          const isError = errors[name] && touched[name];
-                          const isPasswordField = type === 'password';
-                          const error = errors[name];
-                          const verifiedType = (isPasswordField && showPassword)
-                            ? 'text'
-                            : type;
+                    <Mutation
+                      mutation={SIGN_UP_ASYNC_VALIDATION}
+                      update={(cache, { data: { signUpAsyncValidation } }) => {
+                        console.log(signUpAsyncValidation);
+                      }}
+                      onError={({ graphQLErrors }) => {
+                        const { message, extensions } = graphQLErrors[0];
+                        const { exception: { invalidField } } = extensions;
+                        setFieldError(invalidField, message);
+                      }}
+                    >
+                      {(signUpAsyncValidation, { loading: asyncValidationProcessing }) => (
+                        <Form onSubmit={(event) => { event.preventDefault(); }}>
+                          {
+                            map(this.formFields, ({
+                              name,
+                              label,
+                              type,
+                              placeholder,
+                              autocomplete,
+                              required,
+                            }) => {
+                              const isError = errors[name] && touched[name];
+                              const isPasswordField = type === 'password';
+                              const error = errors[name];
+                              const verifiedType = (isPasswordField && showPassword)
+                                ? 'text'
+                                : type;
 
-                          return (
-                            <TextField key={name} fullWidth>
-                              <InputLabel htmlFor={name}>{label}</InputLabel>
-                              <Input
-                                id={name}
-                                type={verifiedType}
-                                value={values[name]}
-                                error={errors[name] && touched[name]}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                placeholder={placeholder}
-                                required={required}
-                                autoComplete={autocomplete}
-                                endAdornment={(
-                                  <Choose>
-                                    <When condition={isPasswordField}>
-                                      <InputAdornment position="end">
-                                        <IconButton onClick={this.toggleShowPassword}>
-                                          <Choose>
-                                            <When condition={showPassword}>
-                                              <VisibilityIcon />
-                                            </When>
-                                            <Otherwise>
-                                              <VisibilityOffIcon />
-                                            </Otherwise>
-                                          </Choose>
-                                        </IconButton>
-                                      </InputAdornment>
-                                    </When>
-                                    <Otherwise>{null}</Otherwise>
-                                  </Choose>
-                                )}
-                              />
-                              <If condition={isError}>
-                                <FormHelperText error={isError}>{error}</FormHelperText>
-                              </If>
-                            </TextField>
-                          );
-                        })
-                      }
-                      <SubmitButtonWrapper>
-                        <Button
-                          color="primary"
-                          size="large"
-                          variant="contained"
-                          onClick={handleSubmit}
-                          disabled={loading}
-                          fullWidth
-                        >
-                          <Choose>
-                            <When condition={loading}>
-                              <CircularProgress size={26} />
-                            </When>
-                            <Otherwise>
-                              {'Sign In'}
-                            </Otherwise>
-                          </Choose>
-                        </Button>
-                      </SubmitButtonWrapper>
-                      <SubmitButtonWrapper>
-                        <Button
-                          onClick={this.signUp}
-                          color="primary"
-                          size="large"
-                          variant="outlined"
-                          fullWidth
-                        >
-                          {'Sign Up'}
-                        </Button>
-                      </SubmitButtonWrapper>
-                      <Mutation
-                        mutation={SIGN_IN_BY_SOCIAL}
-                        update={(cache, { data: { signInBySocial } }) => {
-                          this.signInSuccess(signInBySocial);
-                        }}
-                        onError={() => {
-                          this.toggleAlert('User not found.');
-                        }}
-                      >
-                        {(signInBySocial, { loading: socialLoading }) => {
-                          return (
-                            <SocialContainer>
-                              <SocialNote>
-                                {'Sign in with social media:'}
-                              </SocialNote>
-                              {
-                                map(socialIcons, ({ brand, color, iconElement }) => (
-                                  <Social
-                                    key={brand}
-                                    brand={brand}
-                                    brandColor={color}
-                                  >
-                                    <Choose>
-                                      <When condition={brand === 'google'}>
-                                        <GoogleLogin
-                                          scope="email profile"
-                                          clientId={process.env.GOOGLE_APP_ID}
-                                          onSuccess={({ profileObj: { googleId, email } }) => signInBySocial({
-                                            variables: {
-                                              social: brand,
-                                              profile: {
-                                                id: googleId,
-                                                email,
-                                              },
-                                            },
-                                          })}
-                                          render={({ onClick }) => (
-                                            <SocialButton disabled={socialLoading} size="small" onClick={onClick}>
-                                              <FontAwesomeIcon icon={iconElement} size="lg" />
-                                            </SocialButton>
-                                          )}
-                                        />
-                                      </When>
-                                      <When condition={brand === 'facebook'}>
-                                        <FacebookLogin
-                                          fields="id,email"
-                                          appId={process.env.FACEBOOK_APP_ID}
-                                          callback={({ userID, email }) => signInBySocial({
-                                            variables: {
-                                              social: brand,
-                                              profile: {
-                                                id: userID,
-                                                email,
-                                              },
-                                            },
-                                          })}
-                                          render={({ onClick }) => (
-                                            <SocialButton disabled={socialLoading} size="small" onClick={onClick}>
-                                              <FontAwesomeIcon icon={iconElement} size="lg" />
-                                            </SocialButton>
-                                          )}
-                                        />
-                                      </When>
-                                      <Otherwise>
-                                        {null}
-                                      </Otherwise>
-                                    </Choose>
-                                  </Social>
-                                ))
-                              }
-                            </SocialContainer>
-                          );
-                        }}
-                      </Mutation>
-                    </Form>
+                              return (
+                                <TextField key={name} fullWidth>
+                                  <InputLabel htmlFor={name}>{label}</InputLabel>
+                                  <Input
+                                    id={name}
+                                    type={verifiedType}
+                                    value={values[name]}
+                                    error={errors[name] && touched[name]}
+                                    onChange={handleChange}
+                                    onBlur={(event) => {
+                                      handleBlur(event);
+                                      signUpAsyncValidation({ variables: { field: name, value: event.target.value }})
+                                    }}
+                                    placeholder={placeholder}
+                                    required={required}
+                                    autoComplete={autocomplete}
+                                    endAdornment={(
+                                      <Choose>
+                                        <When condition={isPasswordField}>
+                                          <InputAdornment position="end">
+                                            <IconButton onClick={this.toggleShowPassword}>
+                                              <Choose>
+                                                <When condition={showPassword}>
+                                                  <VisibilityIcon />
+                                                </When>
+                                                <Otherwise>
+                                                  <VisibilityOffIcon />
+                                                </Otherwise>
+                                              </Choose>
+                                            </IconButton>
+                                          </InputAdornment>
+                                        </When>
+                                        <Otherwise>{null}</Otherwise>
+                                      </Choose>
+                                    )}
+                                  />
+                                  <If condition={isError}>
+                                    <FormHelperText error={isError}>{error}</FormHelperText>
+                                  </If>
+                                </TextField>
+                              );
+                            })
+                          }
+                          <SubmitButton
+                            color="primary"
+                            size="large"
+                            variant="contained"
+                            onClick={handleSubmit}
+                            disabled={loading}
+                            fullWidth
+                          >
+                            <Choose>
+                              <When condition={loading}>
+                                <CircularProgress size={26} />
+                              </When>
+                              <Otherwise>
+                                {'Sign In'}
+                              </Otherwise>
+                            </Choose>
+                          </SubmitButton>
+                        </Form>
+                      )}
+                    </Mutation>
                   );
                 }}
               />
+              <SignUpButton
+                onClick={this.signUp}
+                color="primary"
+                size="large"
+                variant="outlined"
+                fullWidth
+              >
+                {'Sign Up'}
+              </SignUpButton>
+              <Mutation
+                mutation={SIGN_IN_BY_SOCIAL}
+                update={(cache, { data: { signInBySocial } }) => {
+                  this.signInSuccess(signInBySocial);
+                }}
+                onError={({ graphQLErrors }) => {
+                  this.toggleAlert(graphQLErrors[0].message);
+                }}
+              >
+                {(signInBySocial, { loading: socialLoading }) => {
+                  return (
+                    <SocialContainer>
+                      <SocialNote>
+                        {'Sign in with social media:'}
+                      </SocialNote>
+                      {
+                        map(socialIcons, ({ brand, color, iconElement }) => (
+                          <Social
+                            key={brand}
+                            brand={brand}
+                            brandColor={color}
+                          >
+                            <Choose>
+                              <When condition={brand === 'google'}>
+                                <GoogleLogin
+                                  scope="email profile"
+                                  clientId={process.env.GOOGLE_APP_ID}
+                                  onSuccess={({ profileObj: { googleId, email } }) => signInBySocial({
+                                    variables: {
+                                      social: brand,
+                                      profile: {
+                                        id: googleId,
+                                        email,
+                                      },
+                                    },
+                                  })}
+                                  render={({ onClick }) => (
+                                    <SocialButton disabled={socialLoading} size="small" onClick={onClick}>
+                                      <FontAwesomeIcon icon={iconElement} size="lg" />
+                                    </SocialButton>
+                                  )}
+                                />
+                              </When>
+                              <When condition={brand === 'facebook'}>
+                                <FacebookLogin
+                                  fields="id,email"
+                                  appId={process.env.FACEBOOK_APP_ID}
+                                  callback={({ userID, email }) => signInBySocial({
+                                    variables: {
+                                      social: brand,
+                                      profile: {
+                                        id: userID,
+                                        email,
+                                      },
+                                    },
+                                  })}
+                                  render={({ onClick }) => (
+                                    <SocialButton disabled={socialLoading} size="small" onClick={onClick}>
+                                      <FontAwesomeIcon icon={iconElement} size="lg" />
+                                    </SocialButton>
+                                  )}
+                                />
+                              </When>
+                              <Otherwise>
+                                {null}
+                              </Otherwise>
+                            </Choose>
+                          </Social>
+                        ))
+                      }
+                    </SocialContainer>
+                  );
+                }}
+              </Mutation>
               <Notification
                 type="error"
                 open={alert.open}

@@ -13,7 +13,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import App from './components/App';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/api/graphql',
+  uri: process.env.APOLLO_URL,
 });
 
 const authLink = new ApolloLink((operation, forward) => {

@@ -15,6 +15,7 @@ const { tokenVerification } = middlewares;
 
 const app = express();
 const port = process.env.PORT;
+const path = process.env.APOLLO_PATH;
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
@@ -34,7 +35,7 @@ app.use(cors(corsOptions));
 app.use(verification);
 app.use(tokenVerification);
 
-apolloServer.applyMiddleware({ app, path: '/api/graphql' });
+apolloServer.applyMiddleware({ app, path });
 
 app.get('*', (req, res) => {
   res.sendFile(paths.html);

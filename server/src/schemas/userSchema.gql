@@ -48,13 +48,16 @@ type AuthPayload {
   refreshToken: String
 }
 
-input RegForm {
+input SignUpForm {
   username: String!
   email: String!
   password: String!
-  firstName: String
-  lastName: String
-  birthday: Date
+}
+
+input SignUpCompletionForm {
+  firstName: String!
+  lastName: String!
+  gender: String!
 }
 
 type Query {
@@ -68,11 +71,17 @@ input SocialProfile {
   email: String
 }
 
+type AsyncValidationResult {
+  field: String!
+  valid: Boolean!
+}
+
 type Mutation {
   signIn(username: String!, password: String!): AuthPayload
   signInBySocial(social: String!, profile: SocialProfile!): AuthPayload
-  signUp(form: RegForm!): Boolean
-  signUpAsyncValidation(field: String!, value: String!): Boolean
+  signUp(form: SignUpForm!): Boolean
+  signUpCompletion(id: ID!, form: SignUpCompletionForm): AuthPayload
+  signUpAsyncValidation(field: String!, value: String!): AsyncValidationResult
   signOut(id: ID!): User
-  removeUser(id: ID!): User
+  deleteUser(id: ID!): User
 }

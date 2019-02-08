@@ -6,7 +6,7 @@ import Loadable from 'react-loadable';
 // import ChatLayout from '../components/layouts/ChatLayout';
 
 import Home from '../components/common/Home';
-import Login from '../components/common/Login';
+import Login from '../components/dumb/Login/Login';
 import NotFound from '../components/common/NotFound';
 import PageLoader from '../components/ui/PageLoader';
 

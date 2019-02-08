@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { position } from 'polished';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -9,7 +10,14 @@ import InputLabel from '@material-ui/core/InputLabel';
 
 const InputWrapper = styled(FormControl)`
   && {
-    margin-bottom: 1em;
+    position: relative;
+    margin-bottom: 1.5em;
+  }
+`;
+
+const InputError = styled(FormHelperText)`
+  && {
+    ${position('absolute', null, 0, '-1em', 0)}
   }
 `;
 
@@ -40,11 +48,18 @@ const FormInput = ({
         error={isError}
         onChange={onChange}
         onBlur={onBlur}
+        inputProps={{
+          onKeyDown: (event) => {
+            const { key, target } = event;
+
+            if (key === 'Enter' || key === 'Escape') {
+              target.blur();
+            }
+          },
+        }}
         {...rest}
       />
-      <If condition={isError}>
-        <FormHelperText error={isError}>{error}</FormHelperText>
-      </If>
+      <InputError error={isError}>{error}</InputError>
     </InputWrapper>
   );
 };

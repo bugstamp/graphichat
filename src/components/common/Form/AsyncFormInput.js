@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import CheckIcon from '@material-ui/icons/CheckRounded';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import green from '@material-ui/core/colors/green';
 
 import FormInput from './FormInput';
 

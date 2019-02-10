@@ -4,8 +4,8 @@ import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
 import { backgrounds } from 'polished';
 
-import LoginForm from './LoginForm';
-import bgImage from '../../assets/images/reg-bg.jpg';
+import RegForm from './RegForm';
+import bgImage from '../../../assets/images/reg-bg.jpg';
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
@@ -14,6 +14,13 @@ const Wrapper = styled(Grid)`
 `;
 
 class SignUp extends Component {
+  state = {
+    activeStep: 0,
+  }
+
+  componentDidMount() {
+  }
+
   render() {
     return (
       <Wrapper

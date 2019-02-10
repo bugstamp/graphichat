@@ -20,7 +20,15 @@ const SocialMediaNote = styled.p`
 
 class SocialMedia extends Component {
   componentDidUpdate(prevProps) {
-    const { result: { error, data }, setFieldError, onSuccess, onError } = this.props;
+    const {
+      result: {
+        error,
+        data
+      },
+      setFieldError,
+      onSuccess,
+      onError,
+    } = this.props;
 
     if (!prevProps.result.error && error) {
       const { graphQLErrors } = error;
@@ -30,7 +38,7 @@ class SocialMedia extends Component {
     }
 
     if (!prevProps.result.data && data) {
-      onSuccess(data[keys(data)[0]]);
+      onSuccess(data);
     }
   }
 

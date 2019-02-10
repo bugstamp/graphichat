@@ -23,7 +23,7 @@ const Wrapper = styled(Paper)`
     width: 100%;
     max-width: 375px;
     min-width: 320px;
-  padding: ${getPadding(5)} ${getPadding(3)};
+    padding: ${getPadding(5)} ${getPadding(3)};
   }
 `;
 
@@ -39,7 +39,7 @@ const SignUpButton = styled(Button)`
   }
 `;
 
-class LoginForm extends Component {
+class SignUp extends Component {
   constructor(props) {
     super(props);
 
@@ -50,7 +50,7 @@ class LoginForm extends Component {
       },
     };
 
-    this.formId = 'signIn';
+    this.formId = 'signUp';
     this.formFields = formFields[this.formId];
     this.formValidationSchema = formValidationSchemas[this.formId];
   }
@@ -85,7 +85,7 @@ class LoginForm extends Component {
   signUp = () => {
     const { history } = this.props;
 
-    history.push('/reg');
+    history.push('/login/new');
   }
 
   render() {
@@ -151,4 +151,4 @@ class LoginForm extends Component {
   }
 }
 
-export default withRouter(LoginForm);
+export default withRouter(SignUp);

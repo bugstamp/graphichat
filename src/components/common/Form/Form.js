@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {
-  get, map, includes, keys,
-} from 'lodash';
+import { get, map, includes, keys } from 'lodash';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
@@ -16,7 +14,15 @@ const FormWrapper = styled.form`
 
 class Form extends Component {
   componentDidUpdate(prevProps) {
-    const { result: { error, data }, setFieldError, onSuccess, onError } = this.props;
+    const {
+      result: {
+        error,
+        data
+      },
+      setFieldError,
+      onSuccess,
+      onError,
+    } = this.props;
 
     if (!prevProps.result.error && error) {
       const { graphQLErrors } = error;
@@ -31,7 +37,7 @@ class Form extends Component {
     }
 
     if (!prevProps.result.data && data) {
-      onSuccess(data[keys(data)[0]]);
+      onSuccess(data);
     }
   }
 
@@ -96,10 +102,7 @@ class Form extends Component {
             );
           })
         }
-        <FormSubmit
-          loading={loading}
-          text="Sign In"
-        />
+        <FormSubmit loading={loading} text="Sign In" />
       </FormWrapper>
     );
   }

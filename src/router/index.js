@@ -6,7 +6,7 @@ import Loadable from 'react-loadable';
 // import ChatLayout from '../components/layouts/ChatLayout';
 
 import Home from '../components/common/Home';
-import Login from '../components/dumb/Login/Login';
+import LoginContainer from '../components/smart/LoginContainer';
 import NotFound from '../components/common/NotFound';
 import PageLoader from '../components/ui/PageLoader';
 
@@ -29,7 +29,7 @@ const ChatLayout = Loadable({
 
 const Routes = () => (
   <Switch>
-    <AppRoute exact path="/login" layout={LoginLayout} component={Login} />
+    <AppRoute exact path="/login" layout={LoginLayout} component={LoginContainer} />
     <AppRoute exact path="/" layout={ChatLayout} component={Home} privateRoute />
     <AppRoute component={NotFound} />
   </Switch>

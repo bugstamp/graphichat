@@ -11,12 +11,12 @@ const SubmitButton = styled(Button)`
   }
 `;
 
-const FormSubmit = ({ onClick, loading, text }) => (
+const FormSubmit = ({ loading, text }) => (
   <SubmitButton
-    color="primary"
+    type="submit"
     size="large"
+    color="primary"
     variant="contained"
-    onClick={onClick}
     disabled={loading}
     fullWidth
   >

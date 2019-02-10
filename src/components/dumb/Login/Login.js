@@ -15,14 +15,15 @@ const Wrapper = styled(Grid)`
 
 class Login extends Component {
   render() {
+    const { signIn, signInBySocial } = this.props;
+
     return (
       <Wrapper
-        ref={this.createRef}
         justify="center"
         alignItems="center"
         container
       >
-        <LoginForm />
+        <LoginForm signIn={signIn} signInBySocial={signInBySocial} />
       </Wrapper>
     );
   }

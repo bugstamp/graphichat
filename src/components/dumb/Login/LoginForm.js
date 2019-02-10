@@ -7,6 +7,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import styled from 'styled-components';
 // import {} from 'polished';
+import { get } from 'lodash';
 
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -93,12 +94,22 @@ class LoginForm extends Component {
     }));
   }
 
-  signInSuccess = ({ token, refreshToken }) => {
+  handleSubmit = ({ username, password }) => {
+    const { signIn, signInBySocial } = this.props;
+
+    signIn.mutation({ variables: { username, password } });
+  }
+
+  handleSuccess = ({ token, refreshToken }) => {
     const { history } = this.props;
 
     localStorage.setItem('chatkilla_tkn', token);
     localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
     history.push('/');
+  }
+
+  handleError = (message) => {
+    this.toggleAlert(message);
   }
 
   signUp = () => {
@@ -109,98 +120,63 @@ class LoginForm extends Component {
 
   render() {
     const { alert } = this.state;
+    const { signIn, signInBySocial } = this.props;
 
     return (
-      <Mutation
-        mutation={SIGN_IN}
-        update={(cache, { data: { signIn } }) => {
-          this.signInSuccess(signIn);
-        }}
-        onError={({ graphQLErrors }) => {
-          this.toggleAlert(graphQLErrors[0].message);
-        }}
-      >
-        {(signIn, { loading }) => {
-          return (
-            <Wrapper elevation={8}>
-              <Header variant="h1" color="primary" align="center" gutterBottom>
-                <AccountCircleIcon fontSize="inherit" color="primary" />
-              </Header>
-              <Formik
-                validationSchema={this.formValidationSchema}
-                onSubmit={({ username, password }) => signIn({ variables: { username, password } })}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  setFieldError,
-                }) => {
-                  return (
-                    <Mutation
-                      mutation={SIGN_UP_ASYNC_VALIDATION}
-                      onError={({ graphQLErrors }) => {
-                        const { message, extensions } = graphQLErrors[0];
-                        const { exception: { invalidField } } = extensions;
-
-                        setFieldError(invalidField, message);
-                      }}
-                    >
-                      {(signUpAsyncValidation, { loading: asyncValidationProcessing, data }) => (
-                        <Form
-                          formFields={this.formFields}
-                          loading={loading}
-                          values={values}
-                          errors={errors}
-                          touched={touched}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          onSubmit={handleSubmit}
-                          mutation={signUpAsyncValidation}
-                          asyncFields={['username']}
-                          asyncResult={data}
-                          asyncProcessing={asyncValidationProcessing}
-                        />
-                      )}
-                    </Mutation>
-                  );
-                }}
-              </Formik>
-              <SignUpButton
-                onClick={this.signUp}
-                color="primary"
-                size="large"
-                variant="outlined"
-                fullWidth
-              >
-                {'Sign Up'}
-              </SignUpButton>
-              <Mutation
-                mutation={SIGN_IN_BY_SOCIAL}
-                update={(cache, { data: { signInBySocial } }) => {
-                  this.signInSuccess(signInBySocial);
-                }}
-                onError={({ graphQLErrors }) => {
-                  this.toggleAlert(graphQLErrors[0].message);
-                }}
-              >
-                {(signInBySocial, { loading: socialLoading }) => {
-                  return (<SocialMedia loading={socialLoading} mutation={signInBySocial} />);
-                }}
-              </Mutation>
-              <Notification
-                type="error"
-                open={alert.open}
-                message={alert.message}
-                toggle={() => this.toggleAlert()}
-              />
-            </Wrapper>
-          );
-        }}
-      </Mutation>
+      <Wrapper elevation={8}>
+        <Header variant="h1" color="primary" align="center" gutterBottom>
+          <AccountCircleIcon fontSize="inherit" color="primary" />
+        </Header>
+        <Formik
+          validationSchema={this.formValidationSchema}
+          onSubmit={this.handleSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldError,
+          }) => (
+            <Form
+              formFields={this.formFields}
+              values={values}
+              errors={errors}
+              touched={touched}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onSubmit={handleSubmit}
+              onSuccess={this.handleSuccess}
+              onError={this.handleError}
+              result={signIn.result}
+              setFieldError={setFieldError}
+            />
+          )}
+        </Formik>
+        <SignUpButton
+          onClick={this.signUp}
+          color="primary"
+          size="large"
+          variant="outlined"
+          fullWidth
+        >
+          {'Sign Up'}
+        </SignUpButton>
+        <SocialMedia
+          mutation={signInBySocial.mutation}
+          result={signInBySocial.result}
+          onSuccess={this.handleSuccess}
+          onError={this.handleError}
+        />
+        <Notification
+          type="error"
+          open={alert.open}
+          message={alert.message}
+          toggle={() => this.toggleAlert()}
+        />
+      </Wrapper>
     );
   }
 }

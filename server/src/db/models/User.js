@@ -13,8 +13,8 @@ const refreshTokenExpires = process.env.REFRESH_TOKEN_EXPIRES;
 const registerTokenSecret = process.env.REGISTER_TOKEN_SECRET;
 const registerTokenExpires = process.env.REGISTER_TOKEN_EXPIRES;
 
-const UNCOMPLETED = 'UNCOMPLETED';
 const EMAIL_UNCONFIRMED = 'EMAIL_NOT_CONFIRMED';
+const UNCOMPLETED = 'UNCOMPLETED';
 const COMPLETED = 'COMPLETED';
 
 const ONLINE = 'ONLINE';
@@ -315,17 +315,25 @@ userSchema.statics = {
       const user = await this.getUserByField(login, username);
 
       if (!user) {
-        throw new AuthenticationError('Specified username can\'t be found.');
+        throw new UserInputError('Specified username can\'t be found.', {
+          invalidField: 'username',
+        });
       }
       const { password: hash, regStatus } = user;
       const correctPassword = await user.comparePassword(password, hash);
+      const emailUnconfirmed = regStatus === EMAIL_UNCONFIRMED;
       const invalidRegistration = regStatus === UNCOMPLETED;
 
       if (!correctPassword) {
-        throw new AuthenticationError('Specified password is incorrect.');
+        throw new UserInputError('Specified password is incorrect.', {
+          invalidField: 'password',
+        });
+      }
+      if (emailUnconfirmed) {
+        throw new UserInputError('Registration isn\'t completed.You need to confirm your email');
       }
       if (invalidRegistration) {
-        throw new AuthenticationError('Registration isn\'t completed.');
+        throw new UserInputError('Registration isn\'t completed.');
       }
 
       return user;

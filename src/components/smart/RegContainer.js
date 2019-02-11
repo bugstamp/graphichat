@@ -22,8 +22,21 @@ const signUpAsyncValidation = ({ render }) => (
   </Mutation>
 );
 
+const SIGN_UP = gql`
+  mutation SignUp($form: SignUpForm!) {
+    signUp(field: $form)
+  }
+`;
+
+const signUp = ({ render }) => (
+  <Mutation mutation={SIGN_UP}>
+    {mapMutationProps(render, 'signUp')}
+  </Mutation>
+);
+
 const Composed = adopt({
   signUpAsyncValidation,
+  signUp,
 });
 
 const RegContainer = () => (

@@ -4,12 +4,13 @@ import { withRouter } from 'react-router';
 import { Formik } from 'formik';
 import styled from 'styled-components';
 // import {} from 'polished';
-// import {} from 'lodash';
+import { map } from 'lodash';
 
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
-import Button from '@material-ui/core/Button';
 
 import Form from '../../common/Form/Form';
 import { formFields, formValidationSchemas } from '../../common/Form/config';
@@ -31,12 +32,6 @@ const Header = styled(Typography)`
   width: 100%;
   position: relative;
   text-align: center;
-`;
-
-const SignUpButton = styled(Button)`
-  && {
-    margin-top: 1em;
-  }
 `;
 
 class SignUp extends Component {
@@ -64,82 +59,85 @@ class SignUp extends Component {
     }));
   }
 
-  handleSubmit = ({ username, password }) => {
-    const { signIn, signInBySocial } = this.props;
+  handleSubmit = (form) => {
+    const { signUp } = this.props;
 
-    signIn.mutation({ variables: { username, password } });
+    signUp.mutation({ variables: { form } });
   }
 
-  handleSuccess = ({ token, refreshToken }) => {
-    const { history } = this.props;
-
-    localStorage.setItem('chatkilla_tkn', token);
-    localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
-    history.push('/');
+  handleSuccess = () => {
   }
 
   handleError = (message) => {
     this.toggleAlert(message);
   }
 
-  signUp = () => {
-    const { history } = this.props;
-
-    history.push('/login/new');
-  }
-
   render() {
     const { alert } = this.state;
-    const { signIn, signInBySocial } = this.props;
+    const { steps, activeStep, signUp, signUpAsyncValidation } = this.props;
+    console.log(signUp);
 
     return (
       <Wrapper elevation={8}>
         <Header variant="h1" color="primary" align="center" gutterBottom>
-          <AccountCircleIcon fontSize="inherit" color="primary" />
+          <Stepper>
+            {
+              map(steps, (label, index) => (
+                <Step
+                  key={index}
+                  active={activeStep === index}
+                  completed={index < activeStep}
+                >
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))
+            }
+          </Stepper>
         </Header>
-        <Formik
-          validationSchema={this.formValidationSchema}
-          onSubmit={this.handleSubmit}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            setFieldError,
-          }) => (
-            <Form
-              formFields={this.formFields}
-              values={values}
-              errors={errors}
-              touched={touched}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              onSubmit={handleSubmit}
+        <Choose>
+          <When condition={activeStep === 0}>
+            <Formik
+              validationSchema={this.formValidationSchema}
+              onSubmit={this.handleSubmit}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setFieldError,
+              }) => (
+                <Form
+                  formFields={this.formFields}
+                  values={values}
+                  errors={errors}
+                  touched={touched}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  onSubmit={handleSubmit}
+                  onSuccess={this.handleSuccess}
+                  onError={this.handleError}
+                  result={signUp.result}
+                  setFieldError={setFieldError}
+                  asyncValidationFields={['username', 'email']}
+                  asyncValidationMutation={signUpAsyncValidation.mutation}
+                  asyncValidationResultMutation={signUpAsyncValidation.result}
+                />
+              )}
+            </Formik>
+            {/* <SocialMedia
+              mutation={signInBySocial.mutation}
+              result={signInBySocial.result}
               onSuccess={this.handleSuccess}
               onError={this.handleError}
-              result={signIn.result}
-              setFieldError={setFieldError}
-            />
-          )}
-        </Formik>
-        <SignUpButton
-          onClick={this.signUp}
-          color="primary"
-          size="large"
-          variant="outlined"
-          fullWidth
-        >
-          {'Sign Up'}
-        </SignUpButton>
-        <SocialMedia
-          mutation={signInBySocial.mutation}
-          result={signInBySocial.result}
-          onSuccess={this.handleSuccess}
-          onError={this.handleError}
-        />
+            /> */}
+          </When>
+          <Otherwise>
+            {null}
+          </Otherwise>
+        </Choose>
         <Notification
           type="error"
           open={alert.open}

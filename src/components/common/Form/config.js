@@ -102,13 +102,6 @@ export const formValidationSchemas = {
           .required('*required');
         break;
       }
-      case 'confirmPassword': {
-        res[name] = yup.string()
-          .min(6)
-          .max(20)
-          .required('*required');
-        break;
-      }
     }
   }), {}),
   signUpStepTwo: yup.object().shape(transform(formFields.signUpStepTwo, (res, { name }) => {

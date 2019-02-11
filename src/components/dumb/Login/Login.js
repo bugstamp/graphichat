@@ -23,7 +23,10 @@ class Login extends Component {
         alignItems="center"
         container
       >
-        <LoginForm signIn={signIn} signInBySocial={signInBySocial} />
+        <LoginForm
+          signIn={signIn}
+          signInBySocial={signInBySocial}
+        />
       </Wrapper>
     );
   }

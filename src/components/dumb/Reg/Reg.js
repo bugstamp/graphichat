@@ -18,10 +18,15 @@ class SignUp extends Component {
     activeStep: 0,
   }
 
-  componentDidMount() {
-  }
+  steps = [
+    'Step 1. Create your account.',
+    'Step 2. Tell us a little about yourself.',
+  ];
 
   render() {
+    const { activeStep } = this.state;
+    const { signUp, signUpAsyncValidation } = this.props;
+
     return (
       <Wrapper
         ref={this.createRef}
@@ -29,7 +34,12 @@ class SignUp extends Component {
         alignItems="center"
         container
       >
-        {null}
+        <RegForm
+          signUp={signUp}
+          signUpAsyncValidation={signUpAsyncValidation}
+          activeStep={activeStep}
+          steps={this.steps}
+        />
       </Wrapper>
     );
   }

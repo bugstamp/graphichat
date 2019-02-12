@@ -20,12 +20,12 @@ class SignUp extends Component {
 
   steps = [
     'Step 1. Create your account.',
-    'Step 2. Tell us a little about yourself.',
+    'Step 2. Tell us a bit about yourself.',
   ];
 
   render() {
     const { activeStep } = this.state;
-    const { signUp, signUpAsyncValidation } = this.props;
+    const { signUp, signUpAsyncValidationUsername, signUpAsyncValidationEmail } = this.props;
 
     return (
       <Wrapper
@@ -36,7 +36,8 @@ class SignUp extends Component {
       >
         <RegForm
           signUp={signUp}
-          signUpAsyncValidation={signUpAsyncValidation}
+          signUpAsyncValidationUsername={signUpAsyncValidationUsername}
+          signUpAsyncValidationEmail={signUpAsyncValidationEmail}
           activeStep={activeStep}
           steps={this.steps}
         />

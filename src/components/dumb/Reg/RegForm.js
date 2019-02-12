@@ -45,7 +45,7 @@ class SignUp extends Component {
       },
     };
 
-    this.formId = 'signUp';
+    this.formId = 'signUpStepOne';
     this.formFields = formFields[this.formId];
     this.formValidationSchema = formValidationSchemas[this.formId];
   }
@@ -74,8 +74,13 @@ class SignUp extends Component {
 
   render() {
     const { alert } = this.state;
-    const { steps, activeStep, signUp, signUpAsyncValidation } = this.props;
-    console.log(signUp);
+    const {
+      steps,
+      activeStep,
+      signUp,
+      signUpAsyncValidationUsername,
+      signUpAsyncValidationEmail,
+    } = this.props;
 
     return (
       <Wrapper elevation={8}>
@@ -99,6 +104,7 @@ class SignUp extends Component {
             <Formik
               validationSchema={this.formValidationSchema}
               onSubmit={this.handleSubmit}
+              validateOnChange={false}
             >
               {({
                 values,
@@ -110,20 +116,25 @@ class SignUp extends Component {
                 setFieldError,
               }) => (
                 <Form
-                  formFields={this.formFields}
+                  fields={this.formFields}
                   values={values}
                   errors={errors}
                   touched={touched}
+                  setFieldError={setFieldError}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   onSubmit={handleSubmit}
                   onSuccess={this.handleSuccess}
                   onError={this.handleError}
                   result={signUp.result}
-                  setFieldError={setFieldError}
-                  asyncValidationFields={['username', 'email']}
-                  asyncValidationMutation={signUpAsyncValidation.mutation}
-                  asyncValidationResultMutation={signUpAsyncValidation.result}
+                  submitButtonText="Confirm"
+                  asyncValidationFields={[{
+                    name: 'username',
+                    validation: signUpAsyncValidationUsername,
+                  }, {
+                    name: 'email',
+                    validation: signUpAsyncValidationEmail,
+                  }]}
                 />
               )}
             </Formik>

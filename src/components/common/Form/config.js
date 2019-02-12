@@ -19,50 +19,44 @@ export const formFields = {
     name: 'username',
     label: 'User Name',
     type: 'text',
-    autoComplete: 'off',
+    autoComplete: 'no',
     required: true,
   }, {
     name: 'email',
     label: 'Email Address',
     type: 'email',
-    autoComplete: 'off',
+    autoComplete: 'no',
     required: true,
   }, {
     name: 'password',
     label: 'Password',
     type: 'password',
-    autoComplete: 'off',
-    required: true,
-  }, {
-    name: 'confirmPassword',
-    label: 'Confirm Password',
-    type: 'password',
-    autoComplete: 'off',
+    autoComplete: 'no',
     required: true,
   }],
   signUpStepTwo: [{
     name: 'firstName',
     label: 'First Name',
     type: 'text',
-    autoComplete: 'off',
+    autoComplete: 'no',
     required: true,
   }, {
     name: 'lastName',
     label: 'Last name',
     type: 'text',
-    autoComplete: 'off',
+    autoComplete: 'no',
     required: true,
   }, {
     name: 'gender',
     label: 'Gender',
     type: 'text',
-    autoComplete: 'off',
+    autoComplete: 'no',
     required: true,
   }, {
     name: 'birthday',
     label: 'Birthday',
     type: 'date',
-    autoComplete: 'off',
+    autoComplete: 'no',
     required: true,
   }],
 };
@@ -72,14 +66,14 @@ export const formValidationSchemas = {
     // eslint-disable-next-line
     switch (name) {
       case 'username': {
-        res[name] = yup.string().required('*required');
+        res[name] = yup.string().required('');
         break;
       }
       case 'password': {
         res[name] = yup.string()
           .min(6)
           .max(20)
-          .required('*required');
+          .required('');
         break;
       }
     }
@@ -88,18 +82,18 @@ export const formValidationSchemas = {
     // eslint-disable-next-line
     switch (name) {
       case 'username': {
-        res[name] = yup.string().required('*required');
+        res[name] = yup.string().required('');
         break;
       }
       case 'email': {
-        res[name] = yup.string().email().required('*required');
+        res[name] = yup.string().email().required('');
         break;
       }
       case 'password': {
         res[name] = yup.string()
           .min(6)
           .max(20)
-          .required('*required');
+          .required('');
         break;
       }
     }
@@ -108,19 +102,19 @@ export const formValidationSchemas = {
     // eslint-disable-next-line
     switch (name) {
       case 'firstName': {
-        res[name] = yup.string().required('*required');
+        res[name] = yup.string().required('');
         break;
       }
       case 'lastName': {
-        res[name] = yup.string().required('*required');
+        res[name] = yup.string().required('');
         break;
       }
       case 'gender': {
-        res[name] = yup.string().required('*required');
+        res[name] = yup.string().required('');
         break;
       }
       case 'birthday': {
-        res[name] = yup.date().required('*required');
+        res[name] = yup.date().required('');
         break;
       }
     }

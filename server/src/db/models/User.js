@@ -13,7 +13,7 @@ const refreshTokenExpires = process.env.REFRESH_TOKEN_EXPIRES;
 const registerTokenSecret = process.env.REGISTER_TOKEN_SECRET;
 const registerTokenExpires = process.env.REGISTER_TOKEN_EXPIRES;
 
-const EMAIL_UNCONFIRMED = 'EMAIL_NOT_CONFIRMED';
+const EMAIL_UNCONFIRMED = 'EMAIL_UNCONFIRMED';
 const UNCOMPLETED = 'UNCOMPLETED';
 const COMPLETED = 'COMPLETED';
 

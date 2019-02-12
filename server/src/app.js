@@ -10,12 +10,12 @@ import resolvers from './resolvers';
 import routers from './routers';
 import middlewares from './middlewares';
 
-const { verification } = routers;
 const { tokenVerification } = middlewares;
+const { verification } = routers;
 
 const app = express();
 const port = process.env.PORT;
-const path = process.env.APOLLO_PATH;
+const apolloPath = process.env.APOLLO_PATH;
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
@@ -32,10 +32,10 @@ const corsOptions = {};
 
 app.use(express.static(paths.public));
 app.use(cors(corsOptions));
-app.use(verification);
 app.use(tokenVerification);
+app.use(verification);
 
-apolloServer.applyMiddleware({ app, path });
+apolloServer.applyMiddleware({ app, path: apolloPath });
 
 app.get('*', (req, res) => {
   res.sendFile(paths.html);

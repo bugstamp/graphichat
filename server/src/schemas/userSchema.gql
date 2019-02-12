@@ -4,6 +4,7 @@ enum Status {
 }
 
 enum regStatus {
+  EMAIL_UNCONFIRMED
   UNCOMPLETED
   COMPLETED
 }
@@ -60,12 +61,6 @@ input SignUpCompletionForm {
   gender: String!
 }
 
-type Query {
-  getUser(id: ID!): User
-  getUsers: [User]
-  getMe: User
-}
-
 input SocialProfile {
   id: ID!
   email: String
@@ -74,6 +69,12 @@ input SocialProfile {
 type AsyncValidationResult {
   field: String!
   valid: Boolean!
+}
+
+type Query {
+  getUser(id: ID!): User
+  getUsers: [User]
+  getMe: User
 }
 
 type Mutation {

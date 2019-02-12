@@ -23,7 +23,7 @@ const Wrapper = styled(Paper)`
     width: 100%;
     max-width: 375px;
     min-width: 320px;
-  padding: ${getPadding(5)} ${getPadding(3)};
+    padding: ${getPadding(5)} ${getPadding(3)};
   }
 `;
 
@@ -122,6 +122,7 @@ class LoginForm extends Component {
               onError={this.handleError}
               result={signIn.result}
               setFieldError={setFieldError}
+              submitButtonText="Sign In"
             />
           )}
         </Formik>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { get, map, includes, keys } from 'lodash';
+import { get, map, find, pick, isEmpty, set } from 'lodash';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
@@ -13,6 +13,10 @@ const FormWrapper = styled.form`
 `;
 
 class Form extends Component {
+  state = {
+    asyncErrors: {},
+  }
+
   componentDidUpdate(prevProps) {
     const {
       result: {
@@ -41,43 +45,76 @@ class Form extends Component {
     }
   }
 
+  onSubmit = (e) => {
+    e.preventDefault();
+    const { asyncErrors } = this.state;
+    const { setFieldError, onSubmit } = this.props;
+
+    if (!isEmpty(asyncErrors)) {
+      map(asyncErrors, (val, key) => setFieldError(key, val));
+    } else {
+      onSubmit();
+    }
+  }
+
+  setAsyncError = (field, error) => {
+    this.setState(({ asyncErrors }) => ({ asyncErrors: set(asyncErrors, field, error) }));
+  }
+
+  clearAsyncError = (field) => {
+    this.setState(({ asyncErrors }) => ({ asyncErrors: pick(asyncErrors, field) }));
+  }
+
   render() {
+    const { asyncErrors } = this.state;
     const {
-      formFields,
+      values,
+      fields,
       errors,
+      setFieldError,
       touched,
       onChange,
       onBlur,
       onSubmit,
       result,
+      submitButtonText,
       asyncValidationFields,
-      asyncValidationMutation,
-      asyncValidationResult,
     } = this.props;
     const { loading } = result;
+    console.log(asyncErrors);
 
     return (
-      <FormWrapper onSubmit={onSubmit}>
+      <FormWrapper onSubmit={this.onSubmit}>
         {
-          map(formFields, (field) => {
+          map(fields, (field) => {
             const { name, type } = field;
             const isError = errors[name] && touched[name];
             const error = errors[name];
+            const asyncValidationField = find(asyncValidationFields, { name });
+
+            if (asyncValidationField) {
+              const isAsyncError = !!asyncErrors[name];
+              const asyncError = asyncErrors[name];
+
+              return (
+                <AsyncFormInput
+                  {...field}
+                  key={name}
+                  isError={isError || isAsyncError}
+                  error={error}
+                  asyncError={asyncError}
+                  setAsyncError={this.setAsyncError}
+                  clearAsyncError={this.clearAsyncError}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  mutation={asyncValidationField.validation.mutation}
+                  result={asyncValidationField.validation.result}
+                />
+              );
+            }
 
             return (
               <Choose>
-                <When condition={includes(asyncValidationFields, name)}>
-                  <AsyncFormInput
-                    {...field}
-                    key={name}
-                    isError={isError}
-                    error={error}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    mutation={asyncValidationMutation}
-                    result={asyncValidationResult}
-                  />
-                </When>
                 <When condition={type === 'password'}>
                   <FormInputPassword
                     {...field}
@@ -102,7 +139,7 @@ class Form extends Component {
             );
           })
         }
-        <FormSubmit loading={loading} text="Sign In" />
+        <FormSubmit loading={loading} text={submitButtonText} />
       </FormWrapper>
     );
   }

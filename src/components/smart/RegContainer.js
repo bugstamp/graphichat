@@ -16,7 +16,13 @@ const SIGN_UP_ASYNC_VALIDATION = gql`
   }
 `;
 
-const signUpAsyncValidation = ({ render }) => (
+const signUpAsyncValidationUsername = ({ render }) => (
+  <Mutation mutation={SIGN_UP_ASYNC_VALIDATION}>
+    {mapMutationProps(render, 'signUpAsyncValidation')}
+  </Mutation>
+);
+
+const signUpAsyncValidationEmail = ({ render }) => (
   <Mutation mutation={SIGN_UP_ASYNC_VALIDATION}>
     {mapMutationProps(render, 'signUpAsyncValidation')}
   </Mutation>
@@ -24,7 +30,7 @@ const signUpAsyncValidation = ({ render }) => (
 
 const SIGN_UP = gql`
   mutation SignUp($form: SignUpForm!) {
-    signUp(field: $form)
+    signUp(form: $form)
   }
 `;
 
@@ -35,7 +41,8 @@ const signUp = ({ render }) => (
 );
 
 const Composed = adopt({
-  signUpAsyncValidation,
+  signUpAsyncValidationUsername,
+  signUpAsyncValidationEmail,
   signUp,
 });
 

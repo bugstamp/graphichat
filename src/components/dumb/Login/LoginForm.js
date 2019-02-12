@@ -111,7 +111,7 @@ class LoginForm extends Component {
             setFieldError,
           }) => (
             <Form
-              formFields={this.formFields}
+              fields={this.formFields}
               values={values}
               errors={errors}
               touched={touched}

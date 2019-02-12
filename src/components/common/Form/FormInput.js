@@ -52,7 +52,7 @@ const FormInput = ({
           onKeyDown: (event) => {
             const { key, target } = event;
 
-            if (key === 'Enter' || key === 'Escape') {
+            if (key === 'Escape') {
               target.blur();
             }
           },

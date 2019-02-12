@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { get, map, find, pick, isEmpty, set } from 'lodash';
+import { get, map, find, omit, isEmpty, set } from 'lodash';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
@@ -62,7 +62,7 @@ class Form extends Component {
   }
 
   clearAsyncError = (field) => {
-    this.setState(({ asyncErrors }) => ({ asyncErrors: pick(asyncErrors, field) }));
+    this.setState(({ asyncErrors }) => ({ asyncErrors: omit(asyncErrors, field) }));
   }
 
   render() {
@@ -79,9 +79,9 @@ class Form extends Component {
       result,
       submitButtonText,
       asyncValidationFields,
+      isValidating,
     } = this.props;
     const { loading } = result;
-    console.log(asyncErrors);
 
     return (
       <FormWrapper onSubmit={this.onSubmit}>

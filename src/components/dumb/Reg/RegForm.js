@@ -114,8 +114,10 @@ class SignUp extends Component {
                 handleBlur,
                 handleSubmit,
                 setFieldError,
+                isValidating,
               }) => (
                 <Form
+                  isValidating={isValidating}
                   fields={this.formFields}
                   values={values}
                   errors={errors}

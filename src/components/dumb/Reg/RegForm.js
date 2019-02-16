@@ -43,6 +43,7 @@ class SignUp extends Component {
         open: false,
         message: '',
       },
+      completed: false,
     };
 
     this.formId = 'signUpStepOne';
@@ -66,6 +67,7 @@ class SignUp extends Component {
   }
 
   handleSuccess = () => {
+    this.setState({ completed: true });
   }
 
   handleError = (message) => {
@@ -73,7 +75,7 @@ class SignUp extends Component {
   }
 
   render() {
-    const { alert } = this.state;
+    const { alert, completed } = this.state;
     const {
       steps,
       activeStep,
@@ -90,8 +92,8 @@ class SignUp extends Component {
               map(steps, (label, index) => (
                 <Step
                   key={index}
-                  active={activeStep === index}
-                  completed={index < activeStep}
+                  active={activeStep === (index + 1)}
+                  completed={(index + 1) < activeStep}
                 >
                   <StepLabel>{label}</StepLabel>
                 </Step>
@@ -100,7 +102,10 @@ class SignUp extends Component {
           </Stepper>
         </Header>
         <Choose>
-          <When condition={activeStep === 0}>
+          <When condition={completed}>
+            {'Your account had been successfuly completed.Check your email and confirm your email.'}
+          </When>
+          <When condition={activeStep === 1}>
             <Formik
               validationSchema={this.formValidationSchema}
               onSubmit={this.handleSubmit}

@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import queryString from 'query-string';
 import styled from 'styled-components';
 import { backgrounds } from 'polished';
 
 import RegForm from './RegForm';
 import bgImage from '../../../assets/images/reg-bg.jpg';
+
+import { checkAuth } from '../../../router/PrivateRoute';
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
@@ -15,7 +18,7 @@ const Wrapper = styled(Grid)`
 
 class SignUp extends Component {
   state = {
-    activeStep: 0,
+    activeStep: 1,
   }
 
   steps = [
@@ -23,9 +26,28 @@ class SignUp extends Component {
     'Step 2. Tell us a bit about yourself.',
   ];
 
+  async componentDidMount() {
+    const { location: { search } } = this.props;
+    const { step, token } = queryString.parse(search);
+
+    if (step && token) {
+      try {
+        await checkAuth(token);
+
+        this.setState({ activeStep: step });
+      } catch (e) {
+        throw e;
+      }
+    }
+  }
+
   render() {
     const { activeStep } = this.state;
-    const { signUp, signUpAsyncValidationUsername, signUpAsyncValidationEmail } = this.props;
+    const {
+      signUp,
+      signUpAsyncValidationUsername,
+      signUpAsyncValidationEmail,
+    } = this.props;
 
     return (
       <Wrapper

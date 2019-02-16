@@ -46,9 +46,9 @@ const Composed = adopt({
   signUp,
 });
 
-const RegContainer = () => (
+const RegContainer = ownProps => (
   <Composed>
-    {props => (<Reg {...props} />)}
+    {props => (<Reg {...props} {...ownProps} />)}
   </Composed>
 );
 

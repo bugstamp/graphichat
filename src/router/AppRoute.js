@@ -1,6 +1,8 @@
-import React, { Fragment } from 'react';
-// import PropTypes from 'prop-types';
-import { Route, Redirect } from 'react-router-dom';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Route } from 'react-router-dom';
+
+import PrivateRoute from './PrivateRoute';
 
 const AppRoute = ({
   component: Component,
@@ -12,13 +14,15 @@ const AppRoute = ({
     {...rest}
     render={props => (
       <Choose>
-        <When condition={privateRoute && !localStorage.getItem('chatkilla_tkn')}>
-          <Redirect to="login" />
+        <When condition={privateRoute}>
+          <PrivateRoute>
+            <Layout>
+              <Component {...props} />
+            </Layout>
+          </PrivateRoute>
         </When>
         <When condition={!Layout}>
-          <Fragment>
-            <Component {...props} />
-          </Fragment>
+          <Component {...props} />
         </When>
         <Otherwise>
           <Layout>
@@ -29,5 +33,15 @@ const AppRoute = ({
     )}
   />
 );
+
+AppRoute.defaultProps = {
+  layout: null,
+  privateRoute: false,
+};
+AppRoute.propTypes = {
+  component: PropTypes.oneOfType([PropTypes.element, PropTypes.node, PropTypes.func]).isRequired,
+  layout: PropTypes.oneOfType([PropTypes.element, PropTypes.node, PropTypes.func]),
+  privateRoute: PropTypes.bool,
+};
 
 export default AppRoute;

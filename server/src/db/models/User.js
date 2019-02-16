@@ -332,9 +332,9 @@ userSchema.statics = {
       if (emailUnconfirmed) {
         throw new UserInputError('Registration isn\'t completed.You need to confirm your email');
       }
-      if (invalidRegistration) {
-        throw new UserInputError('Registration isn\'t completed.');
-      }
+      // if (invalidRegistration) {
+      //   throw new UserInputError('Registration isn\'t completed.');
+      // }
 
       return user;
     } catch (e) {

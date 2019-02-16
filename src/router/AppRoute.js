@@ -9,38 +9,38 @@ const AppRoute = ({
   layout: Layout,
   privateRoute,
   ...rest
-}) => (
-  <Route
-    {...rest}
-    render={props => (
-      <Choose>
-        <When condition={privateRoute}>
-          <PrivateRoute>
-            <Layout>
-              <Component {...props} />
-            </Layout>
-          </PrivateRoute>
-        </When>
-        <When condition={!Layout}>
-          <Component {...props} />
-        </When>
-        <Otherwise>
-          <Layout>
-            <Component {...props} />
-          </Layout>
-        </Otherwise>
-      </Choose>
-    )}
-  />
-);
+}) => {
+  const render = props => (
+    <Layout>
+      <Component {...props} />
+    </Layout>
+  );
+
+  return (
+    <Route
+      {...rest}
+      render={props => (
+        <Choose>
+          <When condition={privateRoute}>
+            <PrivateRoute>
+              {render(props)}
+            </PrivateRoute>
+          </When>
+          <Otherwise>
+            {render(props)}
+          </Otherwise>
+        </Choose>
+      )}
+    />
+  );
+};
 
 AppRoute.defaultProps = {
-  layout: null,
   privateRoute: false,
 };
 AppRoute.propTypes = {
   component: PropTypes.oneOfType([PropTypes.element, PropTypes.node, PropTypes.func]).isRequired,
-  layout: PropTypes.oneOfType([PropTypes.element, PropTypes.node, PropTypes.func]),
+  layout: PropTypes.oneOfType([PropTypes.element, PropTypes.node, PropTypes.func]).isRequired,
   privateRoute: PropTypes.bool,
 };
 

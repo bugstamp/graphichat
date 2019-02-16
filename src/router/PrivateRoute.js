@@ -12,7 +12,7 @@ export const checkAuth = async (token) => {
 
     return regStatus;
   } catch (e) {
-    throw e;
+    throw new Error(e.message);
   }
 };
 

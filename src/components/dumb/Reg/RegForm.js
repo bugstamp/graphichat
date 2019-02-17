@@ -11,6 +11,9 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
+import InfoIcon from '@material-ui/icons/InfoRounded';
+import CheckCircleIcon from '@material-ui/icons/CheckCircleRounded';
 
 import Form from '../../common/Form/Form';
 import { formFields, formValidationSchemas } from '../../common/Form/config';
@@ -32,6 +35,12 @@ const Header = styled(Typography)`
   width: 100%;
   position: relative;
   text-align: center;
+`;
+
+const StepLabelStyled = styled(StepLabel)`
+  p {
+    width: 100%;
+  }
 `;
 
 class SignUp extends Component {
@@ -87,17 +96,45 @@ class SignUp extends Component {
     return (
       <Wrapper elevation={8}>
         <Header variant="h1" color="primary" align="center" gutterBottom>
-          <Stepper>
+          <Stepper
+            alternativeLabel
+            activeStep={activeStep}
+          >
             {
-              map(steps, (label, index) => (
-                <Step
-                  key={index}
-                  active={activeStep === (index + 1)}
-                  completed={(index + 1) < activeStep}
-                >
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))
+              map(steps, (label, index) => {
+                const isActive = activeStep === index;
+                const isCompleted = index < activeStep;
+                const iconColor = (!isCompleted && !isActive)
+                  ? 'disabled'
+                  : 'primary';
+
+                return (
+                  <Step
+                    key={index}
+                    active={isActive}
+                    completed={isCompleted}
+                  >
+                    <StepLabelStyled
+                      icon={(
+                        <Choose>
+                          <When condition={isCompleted}>
+                            <CheckCircleIcon color={iconColor} />
+                          </When>
+                          <When condition={index === 0}>
+                            <AccountCircleIcon color={iconColor} />
+                          </When>
+                          <Otherwise>
+                            <InfoIcon color={iconColor} />
+                          </Otherwise>
+                        </Choose>
+                      )}
+                    >
+                      <span>{`Step ${index + 1}.`}</span>
+                      <p>{label}</p>
+                    </StepLabelStyled>
+                  </Step>
+                );
+              })
             }
           </Stepper>
         </Header>
@@ -105,11 +142,10 @@ class SignUp extends Component {
           <When condition={completed}>
             {'Your account had been successfuly completed.Check your email and confirm your email.'}
           </When>
-          <When condition={activeStep === 1}>
+          <When condition={activeStep === 0}>
             <Formik
               validationSchema={this.formValidationSchema}
               onSubmit={this.handleSubmit}
-              validateOnChange={false}
             >
               {({
                 values,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 
-export const checkAuth = async (token) => {
+export const checkToken = async (token) => {
   try {
     if (!token) {
       throw new Error('Token wasn\'t found');
@@ -26,7 +26,7 @@ class PrivateRoute extends Component {
   async componentDidMount() {
     try {
       const token = localStorage.getItem('chatkilla_tkn');
-      const status = await checkAuth(token);
+      const status = await checkToken(token);
 
       this.setState({
         render: true,

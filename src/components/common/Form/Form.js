@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { get, map, find, omit, isEmpty, set } from 'lodash';
+import {
+  get, map, forEach, find, omit, isEmpty, set,
+} from 'lodash';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
@@ -19,17 +21,14 @@ class Form extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      result: {
-        error,
-        data
-      },
+      result,
       setFieldError,
       onSuccess,
       onError,
     } = this.props;
 
-    if (!prevProps.result.error && error) {
-      const { graphQLErrors } = error;
+    if (!prevProps.result.error && result.error) {
+      const { graphQLErrors } = result.error;
       const { message, extensions } = graphQLErrors[0];
       const invalidField = get(extensions, 'exception.invalidField');
 
@@ -40,8 +39,8 @@ class Form extends Component {
       }
     }
 
-    if (!prevProps.result.data && data) {
-      onSuccess(data);
+    if (!prevProps.result.data && result.data) {
+      onSuccess(result.data);
     }
   }
 
@@ -51,7 +50,7 @@ class Form extends Component {
     const { setFieldError, onSubmit } = this.props;
 
     if (!isEmpty(asyncErrors)) {
-      map(asyncErrors, (val, key) => setFieldError(key, val));
+      forEach(asyncErrors, (val, key) => setFieldError(key, val));
     } else {
       onSubmit();
     }
@@ -68,7 +67,6 @@ class Form extends Component {
   render() {
     const { asyncErrors } = this.state;
     const {
-      values,
       fields,
       errors,
       setFieldError,
@@ -100,8 +98,8 @@ class Form extends Component {
                 <AsyncFormInput
                   {...field}
                   key={name}
-                  isError={isError || isAsyncError}
                   error={error}
+                  isError={isError || isAsyncError}
                   asyncError={asyncError}
                   setAsyncError={this.setAsyncError}
                   clearAsyncError={this.clearAsyncError}
@@ -129,8 +127,8 @@ class Form extends Component {
                   <FormInput
                     {...field}
                     key={name}
-                    isError={isError}
                     error={error}
+                    isError={isError}
                     onChange={onChange}
                     onBlur={onBlur}
                   />

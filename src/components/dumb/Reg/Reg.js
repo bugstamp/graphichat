@@ -8,7 +8,7 @@ import { backgrounds } from 'polished';
 import RegForm from './RegForm';
 import bgImage from '../../../assets/images/reg-bg.jpg';
 
-import { checkAuth } from '../../../router/PrivateRoute';
+import { checkToken } from '../../../router/PrivateRoute';
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
@@ -18,25 +18,27 @@ const Wrapper = styled(Grid)`
 
 class SignUp extends Component {
   state = {
-    activeStep: 1,
+    activeStep: 0,
   }
 
   steps = [
-    'Step 1. Create your account.',
-    'Step 2. Tell us a bit about yourself.',
+    'Create your account',
+    'Tell us about yourself',
   ];
 
   async componentDidMount() {
-    const { location: { search } } = this.props;
+    const { location: { search }, history } = this.props;
     const { step, token } = queryString.parse(search);
 
     if (step && token) {
-      try {
-        await checkAuth(token);
+      const validStep = +step - 1;
 
-        this.setState({ activeStep: step });
+      try {
+        await checkToken(token);
+
+        this.setState(() => ({ activeStep: validStep }));
       } catch (e) {
-        throw e;
+        history.push('/reg');
       }
     }
   }

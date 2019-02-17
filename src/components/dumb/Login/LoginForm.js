@@ -140,6 +140,7 @@ class LoginForm extends Component {
           result={signInBySocial.result}
           onSuccess={this.handleSuccess}
           onError={this.handleError}
+          note="Sign in with social media:"
         />
         <Notification
           type="error"

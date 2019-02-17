@@ -35,20 +35,24 @@ class SignUp extends Component {
 
       try {
         await checkToken(token);
-
-        this.setState(() => ({ activeStep: validStep }));
+        this.setActiveStep(validStep);
       } catch (e) {
         history.push('/reg');
       }
     }
   }
 
+  setActiveStep = (step) => {
+    this.setState(() => ({ activeStep: step }));
+  }
+
   render() {
     const { activeStep } = this.state;
     const {
-      signUp,
       signUpAsyncValidationUsername,
       signUpAsyncValidationEmail,
+      signUp,
+      signUpBySocial,
     } = this.props;
 
     return (
@@ -59,11 +63,13 @@ class SignUp extends Component {
         container
       >
         <RegForm
-          signUp={signUp}
+          steps={this.steps}
+          activeStep={activeStep}
           signUpAsyncValidationUsername={signUpAsyncValidationUsername}
           signUpAsyncValidationEmail={signUpAsyncValidationEmail}
-          activeStep={activeStep}
-          steps={this.steps}
+          signUp={signUp}
+          signUpBySocial={signUpBySocial}
+          setActiveStep={this.setActiveStep}
         />
       </Wrapper>
     );

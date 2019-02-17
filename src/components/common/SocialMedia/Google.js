@@ -11,12 +11,23 @@ const Google = ({ loading, mutation }) => (
     <GoogleLogin
       scope="email profile"
       clientId={process.env.GOOGLE_APP_ID}
-      onSuccess={({ profileObj: { googleId, email } }) => mutation({
+      onSuccess={({
+        profileObj: {
+          googleId: id,
+          email,
+          givenName: firstName,
+          familyName: lastName,
+          gender,
+        },
+      }) => mutation({
         variables: {
           social: 'google',
           profile: {
-            id: googleId,
+            id,
             email,
+            firstName,
+            lastName,
+            gender,
           },
         },
       })}

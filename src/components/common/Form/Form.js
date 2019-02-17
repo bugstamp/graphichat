@@ -77,7 +77,6 @@ class Form extends Component {
       result,
       submitButtonText,
       asyncValidationFields,
-      isValidating,
     } = this.props;
     const { loading } = result;
 

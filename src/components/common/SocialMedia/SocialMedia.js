@@ -21,34 +21,35 @@ const SocialMediaNote = styled.p`
 class SocialMedia extends Component {
   componentDidUpdate(prevProps) {
     const {
-      result: {
-        error,
-        data
-      },
+      result,
       setFieldError,
       onSuccess,
       onError,
     } = this.props;
 
-    if (!prevProps.result.error && error) {
-      const { graphQLErrors } = error;
+    if (!prevProps.result.error && result.error) {
+      const { graphQLErrors } = result.error;
       const { message, extensions } = graphQLErrors[0];
 
       onError(message);
     }
 
-    if (!prevProps.result.data && data) {
-      onSuccess(data);
+    if (!prevProps.result.data && result.data) {
+      onSuccess(result.data);
     }
   }
 
   render() {
-    const { result: { loading }, mutation } = this.props;
+    const {
+      result: { loading },
+      mutation,
+      note,
+    } = this.props;
 
     return (
       <SocialMediaWrapper>
         <SocialMediaNote>
-          {'Sign in with social media:'}
+          {note}
         </SocialMediaNote>
         <Facebook loading={loading} mutation={mutation} />
         <Google loading={loading} mutation={mutation} />

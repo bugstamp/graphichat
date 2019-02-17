@@ -14,21 +14,15 @@ type UserFriend {
   name: String
 }
 
-type UserSocial {
-  id: ID!
-  email: String
-}
-
 type UserSocials {
-  google: UserSocial
-  facebook: UserSocial
-  github: UserSocial
+  google: ID!
+  facebook: ID!
+  github: ID!
 }
 
 type User {
-  isAdmin: Boolean!
   id: ID!
-  username: String!
+  username: String
   email: String!
   displayName: String
   firstName: String
@@ -63,7 +57,9 @@ input SignUpCompletionForm {
 
 input SocialProfile {
   id: ID!
-  email: String
+  email: String!
+  firstName: String!
+  lastName: String!
 }
 
 type AsyncValidationResult {
@@ -80,6 +76,7 @@ type Query {
 type Mutation {
   signIn(username: String!, password: String!): AuthPayload
   signInBySocial(social: String!, profile: SocialProfile!): AuthPayload
+  signUpBySocial(social: String!, profile: SocialProfile!): AuthPayload
   signUp(form: SignUpForm!): Boolean
   signUpCompletion(id: ID!, form: SignUpCompletionForm): AuthPayload
   signUpAsyncValidation(field: String!, value: String!): AsyncValidationResult

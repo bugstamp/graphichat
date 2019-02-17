@@ -30,30 +30,17 @@ const userFriendSchema = new mongoose.Schema({
   },
 });
 
-const userSocialSchema = new mongoose.Schema({
-  id: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: null,
-  },
-});
-
 const userSocialsSchema = new mongoose.Schema({
-  google: userSocialSchema,
-  facebook: userSocialSchema,
-  github: userSocialSchema,
+  google: String,
+  facebook: String,
+  github: String,
 });
 
 const userSchema = new mongoose.Schema({
   // avatar: {},
-  isAdmin: {
-    type: Boolean,
-    require: true,
-    default: false,
-  },
   username: {
     type: String,
     unique: true,
-    require: true,
   },
   email: {
     type: String,
@@ -62,7 +49,6 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    require: true,
   },
   displayName: {
     type: String,
@@ -244,7 +230,7 @@ userSchema.statics = {
       if (email) {
         user = await this.getUserByField('email', email);
       } else {
-        user = await this.getUserByField(`socials.${social}.id`, id);
+        user = await this.getUserByField(`socials.${social}`, id);
       }
 
       return user;
@@ -322,7 +308,7 @@ userSchema.statics = {
       const { password: hash, regStatus } = user;
       const correctPassword = await user.comparePassword(password, hash);
       const emailUnconfirmed = regStatus === EMAIL_UNCONFIRMED;
-      const invalidRegistration = regStatus === UNCOMPLETED;
+      // const invalidRegistration = regStatus === UNCOMPLETED;
 
       if (!correctPassword) {
         throw new UserInputError('Specified password is incorrect.', {
@@ -347,6 +333,18 @@ userSchema.statics = {
 
       if (!user) {
         throw new AuthenticationError('User not found.');
+      }
+      return user;
+    } catch (e) {
+      throw e;
+    }
+  },
+  async signUpBySocialValidation(social, profile) {
+    try {
+      const user = await this.getUserBySocial(social, profile);
+
+      if (user) {
+        throw new AuthenticationError('User is exist.');
       }
       return user;
     } catch (e) {

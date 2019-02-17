@@ -75,8 +75,16 @@ class SignUp extends Component {
     signUp.mutation({ variables: { form } });
   }
 
-  handleSuccess = () => {
-    this.setState({ completed: true });
+  handleSuccess = ({ token, refreshToken }) => {
+    if (token || refreshToken) {
+      const { history } = this.props;
+
+      localStorage.setItem('chatkilla_tkn', token);
+      localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
+      history.push('/');
+    } else {
+      this.setState({ completed: true });
+    }
   }
 
   handleError = (message) => {
@@ -88,9 +96,10 @@ class SignUp extends Component {
     const {
       steps,
       activeStep,
-      signUp,
       signUpAsyncValidationUsername,
       signUpAsyncValidationEmail,
+      signUp,
+      signUpBySocial,
     } = this.props;
 
     return (
@@ -155,10 +164,8 @@ class SignUp extends Component {
                 handleBlur,
                 handleSubmit,
                 setFieldError,
-                isValidating,
               }) => (
                 <Form
-                  isValidating={isValidating}
                   fields={this.formFields}
                   values={values}
                   errors={errors}
@@ -181,12 +188,13 @@ class SignUp extends Component {
                 />
               )}
             </Formik>
-            {/* <SocialMedia
-              mutation={signInBySocial.mutation}
-              result={signInBySocial.result}
+            <SocialMedia
+              mutation={signUpBySocial.mutation}
+              result={signUpBySocial.result}
               onSuccess={this.handleSuccess}
               onError={this.handleError}
-            /> */}
+              note="Sign Up with social media:"
+            />
           </When>
           <Otherwise>
             {null}

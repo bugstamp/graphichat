@@ -16,6 +16,21 @@ const SIGN_UP_ASYNC_VALIDATION = gql`
   }
 `;
 
+const SIGN_UP = gql`
+  mutation SignUp($form: SignUpForm!) {
+    signUp(form: $form)
+  }
+`;
+
+const SIGN_UP_BY_SOCIAL = gql`
+  mutation SignUpBySocial($social: String!, $profile: SocialProfile!) {
+    signUpBySocial(social: $social, profile: $profile) {
+      token
+      refreshToken
+    }
+  }
+`;
+
 const signUpAsyncValidationUsername = ({ render }) => (
   <Mutation mutation={SIGN_UP_ASYNC_VALIDATION}>
     {mapMutationProps(render, 'signUpAsyncValidation')}
@@ -28,15 +43,15 @@ const signUpAsyncValidationEmail = ({ render }) => (
   </Mutation>
 );
 
-const SIGN_UP = gql`
-  mutation SignUp($form: SignUpForm!) {
-    signUp(form: $form)
-  }
-`;
-
 const signUp = ({ render }) => (
   <Mutation mutation={SIGN_UP}>
     {mapMutationProps(render, 'signUp')}
+  </Mutation>
+);
+
+const signUpBySocial = ({ render }) => (
+  <Mutation mutation={SIGN_UP_BY_SOCIAL}>
+    {mapMutationProps(render, 'signUpBySocial')}
   </Mutation>
 );
 
@@ -44,6 +59,7 @@ const Composed = adopt({
   signUpAsyncValidationUsername,
   signUpAsyncValidationEmail,
   signUp,
+  signUpBySocial,
 });
 
 const RegContainer = ownProps => (

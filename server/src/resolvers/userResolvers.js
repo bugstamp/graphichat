@@ -58,6 +58,25 @@ export default {
         throw e;
       }
     },
+    async signUpBySocial(parent, { social, profile }, { db }) {
+      try {
+        await db.User.signUpBySocialValidation(social, profile);
+        const { id, ...rest } = profile;
+        const { firstName, lastName } = rest;
+        const user = await db.User.create({
+          socials: { [social]: id },
+          displayName: `${firstName} ${lastName}`,
+          ...rest,
+        });
+        await user.logCreation();
+        await user.confirmSignUp();
+        const tokens = await user.genTokens();
+
+        return tokens;
+      } catch (e) {
+        throw e;
+      }
+    },
     async signUp(parent, { form }, { db }) {
       try {
         const { email, username } = form;
@@ -75,8 +94,10 @@ export default {
         throw e;
       }
     },
-    async signUpCompletion(parent, { id, form }, { db }) {
+    async signUpCompletion(parent, { form }, { db, user }) {
       try {
+        console.log(user);
+        const { id } = user;
         const { firstName, lastName } = form;
         const displayName = `${firstName} ${lastName}`;
         const user = await db.User.findOneAndUpdate({ id }, {

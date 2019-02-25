@@ -19,12 +19,12 @@ class FormInputPassword extends PureComponent {
 
   render() {
     const { showPassword } = this.state;
-    const { type } = this.props;
+    const { type, ...rest } = this.props;
     const validType = showPassword ? 'text' : type;
 
     return (
       <FormInput
-        {...this.props}
+        {...rest}
         type={validType}
         endAdornment={(
           <InputAdornment position="end">

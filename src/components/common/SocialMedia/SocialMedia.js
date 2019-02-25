@@ -21,21 +21,19 @@ const SocialMediaNote = styled.p`
 class SocialMedia extends Component {
   componentDidUpdate(prevProps) {
     const {
-      result,
-      setFieldError,
+      result: { error, data },
       onSuccess,
       onError,
     } = this.props;
 
-    if (!prevProps.result.error && result.error) {
-      const { graphQLErrors } = result.error;
+    if (!prevProps.result.error && error) {
+      const { graphQLErrors } = error;
       const { message, extensions } = graphQLErrors[0];
 
       onError(message);
     }
-
-    if (!prevProps.result.data && result.data) {
-      onSuccess(result.data);
+    if (!prevProps.result.data && data) {
+      onSuccess(data);
     }
   }
 

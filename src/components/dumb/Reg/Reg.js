@@ -31,11 +31,9 @@ class SignUp extends Component {
     const { step, token } = queryString.parse(search);
 
     if (step && token) {
-      const validStep = +step - 1;
-
       try {
         await checkToken(token);
-        this.setActiveStep(validStep);
+        this.setActiveStep(+step - 1);
       } catch (e) {
         history.push('/reg');
       }

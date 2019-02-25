@@ -13,48 +13,14 @@ class AsyncFormInput extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      name,
-      error,
-      result,
-      setAsyncError,
-      clearAsyncError,
-    } = this.props;
+    const { result: { data, error } } = this.props;
 
-    if (!prevProps.result.error && result.error) {
-      const { graphQLErrors } = result.error;
-      const { message, extensions } = graphQLErrors[0];
-      const invalidField = get(extensions, 'exception.invalidField');
-
-      if (invalidField) {
-        setAsyncError(invalidField, message);
-      }
-    }
-
-    if (!prevProps.result.data && result.data) {
+    if (!prevProps.result.data && data) {
       this.setAsyncValid(true);
-      clearAsyncError(name);
     }
-
-    if (!prevProps.error && error) {
+    if (!prevProps.result.error && error) {
       this.setAsyncValid(false);
-      clearAsyncError(name);
     }
-  }
-
-  handleBlur = (event) => {
-    const {
-      name,
-      error,
-      onBlur,
-      mutation,
-    } = this.props;
-    const { target: { value } } = event;
-
-    if (value && !error) {
-      delay(() => mutation({ variables: { field: name, value } }), 1000);
-    }
-    onBlur(event);
   }
 
   setAsyncValid = (valid) => {
@@ -63,22 +29,11 @@ class AsyncFormInput extends PureComponent {
 
   render() {
     const { asyncValid } = this.state;
-    const {
-      error,
-      asyncError,
-      mutation,
-      result,
-      setAsyncError,
-      clearAsyncError,
-      ...rest
-    } = this.props;
-    const { loading } = result;
+    const { result: { loading }, ...rest } = this.props;
 
     return (
       <FormInput
         {...rest}
-        error={error || asyncError}
-        onBlur={this.handleBlur}
         endAdornment={
           (loading || asyncValid)
           && (

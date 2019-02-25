@@ -12,7 +12,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 import Button from '@material-ui/core/Button';
 
 import Form from '../../common/Form/Form';
-import { formFields, formValidationSchemas } from '../../common/Form/config';
+import formConfig from '../../common/Form/config';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import Notification from '../../common/Notification';
 
@@ -51,8 +51,7 @@ class LoginForm extends Component {
     };
 
     this.formId = 'signIn';
-    this.formFields = formFields[this.formId];
-    this.formValidationSchema = formValidationSchemas[this.formId];
+    this.formConfig = formConfig(this.formId);
   }
 
   toggleAlert = (message = '') => {
@@ -64,8 +63,8 @@ class LoginForm extends Component {
     }));
   }
 
-  handleSubmit = ({ username, password }) => {
-    const { signIn, signInBySocial } = this.props;
+  handleSubmit = async ({ username, password }) => {
+    const { signIn } = this.props;
 
     signIn.mutation({ variables: { username, password } });
   }
@@ -97,35 +96,14 @@ class LoginForm extends Component {
         <Header variant="h1" color="primary" align="center" gutterBottom>
           <AccountCircleIcon fontSize="inherit" color="primary" />
         </Header>
-        <Formik
-          validationSchema={this.formValidationSchema}
+        <Form
+          {...this.formConfig}
           onSubmit={this.handleSubmit}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            setFieldError,
-          }) => (
-            <Form
-              fields={this.formFields}
-              values={values}
-              errors={errors}
-              touched={touched}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              onSubmit={handleSubmit}
-              onSuccess={this.handleSuccess}
-              onError={this.handleError}
-              result={signIn.result}
-              setFieldError={setFieldError}
-              submitButtonText="Sign In"
-            />
-          )}
-        </Formik>
+          onSuccess={this.handleSuccess}
+          onError={this.handleError}
+          result={signIn.result}
+          submitButtonText="Sign In"
+        />
         <SignUpButton
           onClick={this.signUp}
           color="primary"

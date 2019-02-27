@@ -17,7 +17,6 @@ const Google = ({ loading, mutation }) => (
           email,
           givenName: firstName,
           familyName: lastName,
-          gender,
         },
       }) => mutation({
         variables: {
@@ -27,7 +26,6 @@ const Google = ({ loading, mutation }) => (
             email,
             firstName,
             lastName,
-            gender,
           },
         },
       })}

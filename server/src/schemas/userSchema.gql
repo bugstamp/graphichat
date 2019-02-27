@@ -52,7 +52,6 @@ input SignUpForm {
 input SignUpCompletionForm {
   firstName: String!
   lastName: String!
-  gender: String!
 }
 
 input SocialProfile {

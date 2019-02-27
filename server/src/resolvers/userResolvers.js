@@ -94,15 +94,12 @@ export default {
         throw e;
       }
     },
-    async signUpCompletion(parent, { form }, { db, user }) {
+    async signUpCompletion(parent, { form }, { user }) {
       try {
-        console.log(user);
-        const { id } = user;
         const { firstName, lastName } = form;
         const displayName = `${firstName} ${lastName}`;
-        const user = await db.User.findOneAndUpdate({ id }, {
-          $set: { displayName, ...form },
-        }, { new: true });
+
+        await user.updateOne({ $set: { displayName, ...form } });
         await user.confirmSignUp();
         const tokens = await user.genTokens();
 

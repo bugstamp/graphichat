@@ -18,7 +18,6 @@ const Facebook = ({ loading, mutation }) => (
         email,
         first_name: firstName,
         last_name: lastName,
-        gender,
       }) => mutation({
         variables: {
           social: 'facebook',
@@ -27,7 +26,6 @@ const Facebook = ({ loading, mutation }) => (
             email,
             firstName,
             lastName,
-            gender,
           },
         },
       })}

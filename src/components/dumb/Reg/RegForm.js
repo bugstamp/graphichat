@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import { Formik } from 'formik';
 import styled from 'styled-components';
 // import {} from 'polished';
-import { map } from 'lodash';
+import { get, map } from 'lodash';
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -16,7 +15,7 @@ import InfoIcon from '@material-ui/icons/InfoRounded';
 import CheckCircleIcon from '@material-ui/icons/CheckCircleRounded';
 
 import Form from '../../common/Form/Form';
-import { formFields, formValidationSchemas } from '../../common/Form/config';
+import formConfig from '../../common/Form/config';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import Notification from '../../common/Notification';
 
@@ -56,8 +55,7 @@ class SignUp extends Component {
     };
 
     this.formId = 'signUpStepOne';
-    this.formFields = formFields[this.formId];
-    this.formValidationSchema = formValidationSchemas[this.formId];
+    this.formConfig = formConfig(this.formId);
   }
 
   toggleAlert = (message = '') => {
@@ -69,7 +67,7 @@ class SignUp extends Component {
     }));
   }
 
-  handleSubmit = (form) => {
+  handleSubmit = async (form) => {
     const { signUp } = this.props;
 
     signUp.mutation({ variables: { form } });
@@ -105,10 +103,7 @@ class SignUp extends Component {
     return (
       <Wrapper elevation={8}>
         <Header variant="h1" color="primary" align="center" gutterBottom>
-          <Stepper
-            alternativeLabel
-            activeStep={activeStep}
-          >
+          <Stepper alternativeLabel activeStep={activeStep}>
             {
               map(steps, (label, index) => {
                 const isActive = activeStep === index;
@@ -152,42 +147,21 @@ class SignUp extends Component {
             {'Your account had been successfuly completed.Check your email and confirm your email.'}
           </When>
           <When condition={activeStep === 0}>
-            <Formik
-              validationSchema={this.formValidationSchema}
+            <Form
+              {...this.formConfig}
+              result={signUp.result}
               onSubmit={this.handleSubmit}
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                setFieldError,
-              }) => (
-                <Form
-                  fields={this.formFields}
-                  values={values}
-                  errors={errors}
-                  touched={touched}
-                  setFieldError={setFieldError}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  onSubmit={handleSubmit}
-                  onSuccess={this.handleSuccess}
-                  onError={this.handleError}
-                  result={signUp.result}
-                  submitButtonText="Confirm"
-                  asyncValidationFields={[{
-                    name: 'username',
-                    validation: signUpAsyncValidationUsername,
-                  }, {
-                    name: 'email',
-                    validation: signUpAsyncValidationEmail,
-                  }]}
-                />
-              )}
-            </Formik>
+              onSuccess={this.handleSuccess}
+              onError={this.handleError}
+              submitButtonText="Confirm"
+              asyncValidationFields={[{
+                name: 'username',
+                validation: signUpAsyncValidationUsername,
+              }, {
+                name: 'email',
+                validation: signUpAsyncValidationEmail,
+              }]}
+            />
             <SocialMedia
               mutation={signUpBySocial.mutation}
               result={signUpBySocial.result}

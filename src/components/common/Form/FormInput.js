@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Field } from 'formik';
 import styled from 'styled-components';
 import { position } from 'polished';
 
@@ -22,45 +23,54 @@ const InputError = styled(FormHelperText)`
 `;
 
 const FormInput = ({
-  value,
   name,
-  label,
   type,
+  label,
   placeholder,
   required,
   autoComplete,
   error,
   isError,
+  validate,
+  validateField,
   onChange,
   onBlur,
   ...rest,
 }) => {
   return (
-    <InputWrapper key={name} fullWidth>
-      <InputLabel htmlFor={name}>{label}</InputLabel>
-      <Input
-        id={name}
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        autoComplete={autoComplete}
-        error={isError}
-        onChange={onChange}
-        onBlur={onBlur}
-        inputProps={{
-          onKeyDown: (event) => {
-            const { key, target } = event;
+    <Field name={name} validate={value => validate(value, name)}>
+      {({ field }) => (
+        <InputWrapper key={name} fullWidth>
+          <InputLabel htmlFor={name}>{label}</InputLabel>
+          <Input
+            {...field}
+            id={name}
+            type={type}
+            placeholder={placeholder}
+            required={required}
+            autoComplete={autoComplete}
+            error={isError}
+            onChange={onChange}
+            onBlur={(event) => {
+              validateField(name);
 
-            if (key === 'Escape') {
-              target.blur();
-            }
-          },
-        }}
-        {...rest}
-      />
-      <InputError error={isError}>{error}</InputError>
-    </InputWrapper>
+              if (onBlur) {
+                onBlur(event);
+              }
+            }}
+            inputProps={{
+              onKeyDown: ({ key, target }) => {
+                if (key === 'Escape') {
+                  target.blur();
+                }
+              },
+            }}
+            {...rest}
+          />
+          <InputError error={isError}>{error}</InputError>
+        </InputWrapper>
+      )}
+    </Field>
   );
 };
 

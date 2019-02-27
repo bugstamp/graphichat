@@ -50,6 +50,7 @@ class SignUp extends Component {
       signUpAsyncValidationUsername,
       signUpAsyncValidationEmail,
       signUp,
+      signUpCompletion,
       signUpBySocial,
     } = this.props;
 
@@ -66,6 +67,7 @@ class SignUp extends Component {
           signUpAsyncValidationUsername={signUpAsyncValidationUsername}
           signUpAsyncValidationEmail={signUpAsyncValidationEmail}
           signUp={signUp}
+          signUpCompletion={signUpCompletion}
           signUpBySocial={signUpBySocial}
           setActiveStep={this.setActiveStep}
         />

@@ -22,6 +22,12 @@ const SIGN_UP = gql`
   }
 `;
 
+const SIGN_UP_COMPLETION = gql`
+  mutation SignUpCompletion($form: SignUpForm!) {
+    signUpCompletion(form: $form)
+  }
+`;
+
 const SIGN_UP_BY_SOCIAL = gql`
   mutation SignUpBySocial($social: String!, $profile: SocialProfile!) {
     signUpBySocial(social: $social, profile: $profile) {
@@ -49,6 +55,12 @@ const signUp = ({ render }) => (
   </Mutation>
 );
 
+const signUpCompletion = ({ render }) => (
+  <Mutation mutation={SIGN_UP_COMPLETION}>
+    {mapMutationProps(render, 'signUpCompletion')}
+  </Mutation>
+);
+
 const signUpBySocial = ({ render }) => (
   <Mutation mutation={SIGN_UP_BY_SOCIAL}>
     {mapMutationProps(render, 'signUpBySocial')}
@@ -59,6 +71,7 @@ const Composed = adopt({
   signUpAsyncValidationUsername,
   signUpAsyncValidationEmail,
   signUp,
+  signUpCompletion,
   signUpBySocial,
 });
 

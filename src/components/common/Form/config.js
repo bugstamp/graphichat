@@ -59,13 +59,13 @@ export const formFields = {
     type: 'text',
     autoComplete: 'no',
     required: true,
-    initialValue: '',
+    initialValue: 'Male',
   }, {
     name: 'birthday',
     label: 'Birthday',
     type: 'date',
     autoComplete: 'no',
-    required: true,
+    required: false,
     initialValue: '',
   }],
 };
@@ -119,11 +119,11 @@ export const formValidationSchemas = {
         break;
       }
       case 'gender': {
-        res[name] = yup.string().required('');
+        res[name] = yup.string().required('*required');
         break;
       }
       case 'birthday': {
-        res[name] = yup.date().required('');
+        res[name] = yup.date();
         break;
       }
     }

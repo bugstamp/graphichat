@@ -54,8 +54,10 @@ class SignUp extends Component {
       completed: false,
     };
 
-    this.formId = 'signUpStepOne';
-    this.formConfig = formConfig(this.formId);
+    this.formIdStepOne = 'signUpStepOne';
+    this.formConfigStepOne = formConfig(this.formIdStepOne);
+    this.formIdStepTwo = 'signUpStepTwo';
+    this.formConfigStepTwo = formConfig(this.formIdStepTwo);
   }
 
   toggleAlert = (message = '') => {
@@ -67,10 +69,16 @@ class SignUp extends Component {
     }));
   }
 
-  handleSubmit = async (form) => {
+  handleSubmitSignUp = async (form) => {
     const { signUp } = this.props;
 
     signUp.mutation({ variables: { form } });
+  }
+
+  handleSubmitSignUpCompletion = async (form) => {
+    const { signUpCompletion } = this.props;
+
+    signUpCompletion.mutation({ variables: { form } });
   }
 
   handleSuccess = ({ token, refreshToken }) => {
@@ -97,6 +105,7 @@ class SignUp extends Component {
       signUpAsyncValidationUsername,
       signUpAsyncValidationEmail,
       signUp,
+      signUpCompletion,
       signUpBySocial,
     } = this.props;
 
@@ -148,9 +157,9 @@ class SignUp extends Component {
           </When>
           <When condition={activeStep === 0}>
             <Form
-              {...this.formConfig}
+              {...this.formConfigStepOne}
               result={signUp.result}
-              onSubmit={this.handleSubmit}
+              onSubmit={this.handleSubmitSignUp}
               onSuccess={this.handleSuccess}
               onError={this.handleError}
               submitButtonText="Confirm"
@@ -168,6 +177,16 @@ class SignUp extends Component {
               onSuccess={this.handleSuccess}
               onError={this.handleError}
               note="Sign Up with social media:"
+            />
+          </When>
+          <When condition={activeStep === 1}>
+            <Form
+              {...this.formConfigStepTwo}
+              result={signUpCompletion.result}
+              onSubmit={this.handleSubmitSignUpCompletion}
+              onSuccess={this.handleSuccess}
+              onError={this.handleError}
+              submitButtonText="Confirm"
             />
           </When>
           <Otherwise>

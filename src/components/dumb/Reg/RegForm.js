@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
 // import {} from 'polished';
-import { get, map } from 'lodash';
+import { map } from 'lodash';
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -15,7 +15,7 @@ import InfoIcon from '@material-ui/icons/InfoRounded';
 import CheckCircleIcon from '@material-ui/icons/CheckCircleRounded';
 
 import Form from '../../common/Form/Form';
-import formConfig from '../../common/Form/config';
+import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import Notification from '../../common/Notification';
 
@@ -82,11 +82,14 @@ class SignUp extends Component {
   }
 
   handleSuccess = ({ token, refreshToken }) => {
-    if (token || refreshToken) {
+    if (token && refreshToken) {
       const { history } = this.props;
+      console.log('received', token);
 
       localStorage.setItem('chatkilla_tkn', token);
       localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
+
+      console.log('saved', localStorage.getItem('chatkilla_tkn'));
       history.push('/');
     } else {
       this.setState({ completed: true });

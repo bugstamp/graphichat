@@ -32,7 +32,8 @@ class SignUp extends Component {
 
     if (step && token) {
       try {
-        await checkToken(token);
+        await checkToken(token, true);
+
         this.setActiveStep(+step - 1);
       } catch (e) {
         history.push('/reg');

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
+import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { position } from 'polished';
 
@@ -12,13 +13,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 const InputWrapper = styled(FormControl)`
   && {
     position: relative;
-    margin-bottom: 1.5em;
+    padding-bottom: 1.5em;
   }
 `;
 
 const InputError = styled(FormHelperText)`
   && {
-    ${position('absolute', null, 0, '-1em', 0)}
+    ${position('absolute', null, 0, '0.5em', 0)}
   }
 `;
 
@@ -40,8 +41,8 @@ const FormInput = ({
   return (
     <Field name={name} validate={value => validate(value, name)}>
       {({ field }) => (
-        <InputWrapper key={name} fullWidth>
-          <InputLabel htmlFor={name}>{label}</InputLabel>
+        <InputWrapper fullWidth>
+          <InputLabel shrink={type === 'date' || undefined} htmlFor={name}>{label}</InputLabel>
           <Input
             {...field}
             id={name}
@@ -54,9 +55,7 @@ const FormInput = ({
             onBlur={(event) => {
               validateField(name);
 
-              if (onBlur) {
-                onBlur(event);
-              }
+              if (onBlur) onBlur(event);
             }}
             inputProps={{
               onKeyDown: ({ key, target }) => {

@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 
-export const checkToken = async (token) => {
+export const checkToken = async (token, set = false) => {
   try {
     if (!token) {
       throw new Error('Token wasn\'t found');
     }
     const { data: { regStatus } } = await jwt.verify(token, process.env.TOKEN_SECRET);
+
+    if (set) {
+      localStorage.setItem('chatkilla_tkn', token);
+    }
 
     return regStatus;
   } catch (e) {

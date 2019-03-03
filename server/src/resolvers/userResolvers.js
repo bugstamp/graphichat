@@ -61,6 +61,7 @@ export default {
     async signUpBySocial(parent, { social, profile }, { db }) {
       try {
         await db.User.signUpBySocialValidation(social, profile);
+
         const { id, ...rest } = profile;
         const { firstName, lastName } = rest;
         const user = await db.User.create({
@@ -70,6 +71,7 @@ export default {
         });
         await user.logCreation();
         await user.confirmSignUp();
+
         const tokens = await user.genTokens();
 
         return tokens;
@@ -86,21 +88,29 @@ export default {
         const user = await db.User.create(form);
         await user.logCreation();
 
-        const registerToken = await user.genRegisterToken(user);
-        const response = await nodemailer.sendEmailVerification(user.email, registerToken);
+        const registerToken = await user.genRegisterToken();
+        const response = await nodemailer.sendEmailVerification(email, registerToken);
 
         return !!response;
       } catch (e) {
         throw e;
       }
     },
-    async signUpCompletion(parent, { form }, { user }) {
+    async signUpCompletion(parent, { form }, { db, user: { id } }) {
       try {
-        const { firstName, lastName } = form;
+        const { firstName, lastName, birthday } = form;
         const displayName = `${firstName} ${lastName}`;
 
-        await user.updateOne({ $set: { displayName, ...form } });
-        await user.confirmSignUp();
+        const user = await db.User.findByIdAndUpdate(id, {
+          $set: {
+            ...form,
+            displayName,
+            birthday: birthday ? new Date(birthday) : birthday,
+            regStatus: 'COMPLETED',
+          },
+        }, {
+          new: true,
+        });
         const tokens = await user.genTokens();
 
         return tokens;

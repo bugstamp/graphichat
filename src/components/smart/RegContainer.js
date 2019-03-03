@@ -23,8 +23,11 @@ const SIGN_UP = gql`
 `;
 
 const SIGN_UP_COMPLETION = gql`
-  mutation SignUpCompletion($form: SignUpForm!) {
-    signUpCompletion(form: $form)
+  mutation SignUpCompletion($form: SignUpCompletionForm!) {
+    signUpCompletion(form: $form) {
+      token
+      refreshToken
+    }
   }
 `;
 

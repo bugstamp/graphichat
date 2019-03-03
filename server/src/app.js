@@ -22,10 +22,7 @@ const apolloServer = new ApolloServer({
   context: ({ req }) => {
     const { user } = req;
 
-    return {
-      db,
-      user,
-    };
+    return { db, user };
   },
 });
 const corsOptions = {};

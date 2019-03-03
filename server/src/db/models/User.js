@@ -94,6 +94,10 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre('save', async function prevSave(next) {
+  // if (this.isNew) {
+  //
+  // }
+
   if (!this.isModified('password')) {
     return next();
   }
@@ -199,14 +203,14 @@ userSchema.methods = {
   },
   async confirmEmail() {
     try {
-      await this.updateOne({ regStatus: UNCOMPLETED });
+      await this.updateOne({ regStatus: UNCOMPLETED }, { new: true });
     } catch (e) {
       throw e;
     }
   },
   async confirmSignUp() {
     try {
-      await this.updateOne({ regStatus: COMPLETED });
+      await this.set({ regStatus: COMPLETED });
     } catch (e) {
       throw e;
     }
@@ -282,8 +286,7 @@ userSchema.statics = {
   },
   async verifySignUp(regToken) {
     try {
-      const { data } = await this.verifyToken(regToken, registerTokenSecret);
-      const { id } = data;
+      const { data: { id } } = await this.verifyToken(regToken, registerTokenSecret);
 
       const user = await this.findById(id);
       await user.confirmEmail();
@@ -305,10 +308,10 @@ userSchema.statics = {
           invalidField: 'username',
         });
       }
+
       const { password: hash, regStatus } = user;
       const correctPassword = await user.comparePassword(password, hash);
       const emailUnconfirmed = regStatus === EMAIL_UNCONFIRMED;
-      // const invalidRegistration = regStatus === UNCOMPLETED;
 
       if (!correctPassword) {
         throw new UserInputError('Specified password is incorrect.', {
@@ -318,9 +321,6 @@ userSchema.statics = {
       if (emailUnconfirmed) {
         throw new UserInputError('Registration isn\'t completed.You need to confirm your email');
       }
-      // if (invalidRegistration) {
-      //   throw new UserInputError('Registration isn\'t completed.');
-      // }
 
       return user;
     } catch (e) {

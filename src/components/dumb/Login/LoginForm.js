@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import { Formik } from 'formik';
 import styled from 'styled-components';
 // import {} from 'polished';
 // import {} from 'lodash';
@@ -12,7 +11,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 import Button from '@material-ui/core/Button';
 
 import Form from '../../common/Form/Form';
-import formConfig from '../../common/Form/config';
+import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import Notification from '../../common/Notification';
 
@@ -118,7 +117,7 @@ class LoginForm extends Component {
           result={signInBySocial.result}
           onSuccess={this.handleSuccess}
           onError={this.handleError}
-          note="Sign in with social media:"
+          note="Sign In with social media:"
         />
         <Notification
           type="error"

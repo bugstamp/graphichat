@@ -53,7 +53,7 @@ input SignUpCompletionForm {
   firstName: String!
   lastName: String!
   gender: String
-  birthday: Date
+  birthday: String
 }
 
 input SocialProfile {

@@ -7,6 +7,7 @@ import * as yup from 'yup';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
+import FormInputRadio from './FormInputRadio';
 import AsyncFormInput from './AsyncFormInput';
 import FormSubmit from './FormSubmit';
 
@@ -120,6 +121,17 @@ class Form extends Component {
                     validate={this.validate}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                  />
+                </When>
+                <When condition={type === 'radio'}>
+                  <FormInputRadio
+                    {...values}
+                    key={name}
+                    name={name}
+                    type={type}
+                    validateField={validateField}
+                    validate={this.validate}
+                    onChange={handleChange}
                   />
                 </When>
                 <Otherwise>

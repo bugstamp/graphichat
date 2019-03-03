@@ -56,10 +56,11 @@ export const formFields = {
   }, {
     name: 'gender',
     label: 'Gender',
-    type: 'text',
+    type: 'radio',
     autoComplete: 'no',
     required: true,
     initialValue: 'Male',
+    values: ['Male', 'Female', 'Other'],
   }, {
     name: 'birthday',
     label: 'Birthday',
@@ -119,11 +120,11 @@ export const formValidationSchemas = {
         break;
       }
       case 'gender': {
-        res[name] = yup.string().required('*required');
+        res[name] = yup.string();
         break;
       }
       case 'birthday': {
-        res[name] = yup.date();
+        res[name] = yup.date().typeError('');
         break;
       }
     }

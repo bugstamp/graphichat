@@ -1,6 +1,10 @@
 import { AuthenticationError } from 'apollo-server-express';
+import { upperFirst } from 'lodash';
 
 import nodemailer from '../utils/nodemailer';
+import { COMPLETED } from '../db/models/User';
+
+const getDisplayName = ({ firstName, lastName }) => `${upperFirst(firstName)} ${upperFirst(lastName)}`;
 
 export default {
   Query: {
@@ -58,27 +62,6 @@ export default {
         throw e;
       }
     },
-    async signUpBySocial(parent, { social, profile }, { db }) {
-      try {
-        await db.User.signUpBySocialValidation(social, profile);
-
-        const { id, ...rest } = profile;
-        const { firstName, lastName } = rest;
-        const user = await db.User.create({
-          socials: { [social]: id },
-          displayName: `${firstName} ${lastName}`,
-          ...rest,
-        });
-        await user.logCreation();
-        await user.confirmSignUp();
-
-        const tokens = await user.genTokens();
-
-        return tokens;
-      } catch (e) {
-        throw e;
-      }
-    },
     async signUp(parent, { form }, { db }) {
       try {
         const { email, username } = form;
@@ -86,27 +69,41 @@ export default {
         await db.User.verifyInputData('username', username);
 
         const user = await db.User.create(form);
-        await user.logCreation();
+        const registerToken = await user.genToken('register');
+        const res = await nodemailer.sendEmailVerification(email, registerToken);
 
-        const registerToken = await user.genRegisterToken();
-        const response = await nodemailer.sendEmailVerification(email, registerToken);
+        return !!res;
+      } catch (e) {
+        throw e;
+      }
+    },
+    async signUpBySocial(parent, { social, profile }, { db }) {
+      try {
+        await db.User.signUpBySocialValidation(social, profile);
 
-        return !!response;
+        const { socialId, ...rest } = profile;
+        const user = await db.User.create({
+          ...rest,
+          socials: { [social]: socialId },
+          displayName: getDisplayName(profile),
+          regStatus: COMPLETED,
+        });
+        const tokens = await user.genTokens();
+
+        return tokens;
       } catch (e) {
         throw e;
       }
     },
     async signUpCompletion(parent, { form }, { db, user: { id } }) {
       try {
-        const { firstName, lastName, birthday } = form;
-        const displayName = `${firstName} ${lastName}`;
-
+        const { birthday } = form;
         const user = await db.User.findByIdAndUpdate(id, {
           $set: {
             ...form,
-            displayName,
+            displayName: getDisplayName(form),
             birthday: birthday ? new Date(birthday) : birthday,
-            regStatus: 'COMPLETED',
+            regStatus: COMPLETED,
           },
         }, {
           new: true,

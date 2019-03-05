@@ -14,7 +14,7 @@ const Facebook = ({ loading, mutation }) => (
       appId={process.env.FACEBOOK_APP_ID}
       callback={({
         // eslint-disable-next-line
-        userID: id,
+        userID: socialId,
         email,
         first_name: firstName,
         last_name: lastName,
@@ -22,7 +22,7 @@ const Facebook = ({ loading, mutation }) => (
         variables: {
           social: 'facebook',
           profile: {
-            id,
+            socialId,
             email,
             firstName,
             lastName,

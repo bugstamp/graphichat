@@ -6,19 +6,30 @@ import EmailValidator from 'email-validator';
 
 import mongoose from '../mongoose';
 
-const tokenSecret = process.env.TOKEN_SECRET;
-const tokenExpires = process.env.TOKEN_EXPIRES;
-const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
-const refreshTokenExpires = process.env.REFRESH_TOKEN_EXPIRES;
-const registerTokenSecret = process.env.REGISTER_TOKEN_SECRET;
-const registerTokenExpires = process.env.REGISTER_TOKEN_EXPIRES;
-
-const EMAIL_UNCONFIRMED = 'EMAIL_UNCONFIRMED';
-const UNCOMPLETED = 'UNCOMPLETED';
-const COMPLETED = 'COMPLETED';
+export const EMAIL_UNCONFIRMED = 'EMAIL_UNCONFIRMED';
+export const UNCOMPLETED = 'UNCOMPLETED';
+export const COMPLETED = 'COMPLETED';
 
 const ONLINE = 'ONLINE';
 const OFFLINE = 'OFFLINE';
+
+const tokensConfig = {
+  token: {
+    secret: process.env.TOKEN_SECRET,
+    expiresIn: process.env.TOKEN_EXPIRES,
+    model: ['id', 'regStatus'],
+  },
+  refresh: {
+    secret: process.env.REFRESH_TOKEN_SECRET,
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRES,
+    model: ['id'],
+  },
+  register: {
+    secret: process.env.REGISTER_TOKEN_SECRET,
+    expiresIn: process.env.REGISTER_TOKEN_EXPIRES,
+    model: ['id'],
+  },
+};
 
 const userFriendSchema = new mongoose.Schema({
   id: {
@@ -93,21 +104,20 @@ const userSchema = new mongoose.Schema({
   socials: userSocialsSchema,
 });
 
-userSchema.pre('save', async function prevSave(next) {
-  // if (this.isNew) {
-  //
-  // }
-
+userSchema.pre('save', async function preSave(next) {
+  if (this.isNew) {
+    await this.updateOne({ createDate: new Date() });
+  }
   if (!this.isModified('password')) {
-    return next();
+    next();
   }
 
   try {
     await this.genHash();
 
-    return next();
+    next();
   } catch (e) {
-    return next(e);
+    next(e);
   }
 });
 
@@ -131,62 +141,29 @@ userSchema.methods = {
       throw e;
     }
   },
-  async genToken() {
+  async genToken(type) {
     try {
+      const { secret, expiresIn, model } = tokensConfig[type];
       const token = await jwt.sign({
         type: 'token',
-        data: pick(this, ['id', 'regStatus']),
-      }, tokenSecret, { expiresIn: tokenExpires });
+        data: pick(this, model),
+      }, secret, { expiresIn });
 
       return token;
     } catch (e) {
       throw e;
     }
   },
-  async genRefreshToken() {
-    try {
-      const refreshToken = await jwt.sign({
-        type: 'refreshToken',
-        data: pick(this, ['id']),
-      }, refreshTokenSecret, { expiresIn: refreshTokenExpires });
-      await this.updateOne({ refreshToken });
-
-      return refreshToken;
-    } catch (e) {
-      throw e;
-    }
-  },
-  async genRegisterToken() {
-    try {
-      const registerToken = await jwt.sign({
-        type: 'registerToken',
-        data: pick(this, ['id']),
-      }, registerTokenSecret, { expiresIn: registerTokenExpires });
-
-      return registerToken;
-    } catch (e) {
-      throw e;
-    }
-  },
   async genTokens() {
     try {
-      const token = await this.genToken();
-      const refreshToken = await this.genRefreshToken();
+      const token = await this.genToken('token');
+      const refreshToken = await this.genToken('refresh');
+      await this.updateOne({ refreshToken });
 
       return {
         token,
         refreshToken,
       };
-    } catch (e) {
-      throw e;
-    }
-  },
-  async logCreation() {
-    try {
-      await this.updateOne({
-        createDate: new Date(),
-        lastDate: new Date(),
-      });
     } catch (e) {
       throw e;
     }
@@ -197,20 +174,6 @@ userSchema.methods = {
         status: phase === 'logout' ? OFFLINE : ONLINE,
         lastDate: new Date(),
       });
-    } catch (e) {
-      throw e;
-    }
-  },
-  async confirmEmail() {
-    try {
-      await this.updateOne({ regStatus: UNCOMPLETED }, { new: true });
-    } catch (e) {
-      throw e;
-    }
-  },
-  async confirmSignUp() {
-    try {
-      await this.set({ regStatus: COMPLETED });
     } catch (e) {
       throw e;
     }
@@ -227,14 +190,14 @@ userSchema.statics = {
       throw e;
     }
   },
-  async getUserBySocial(social, { email, id }) {
+  async getUserBySocial(social, { email, socialId }) {
     try {
       let user;
 
       if (email) {
         user = await this.getUserByField('email', email);
       } else {
-        user = await this.getUserByField(`socials.${social}`, id);
+        user = await this.getUserByField(`socials.${social}`, socialId);
       }
 
       return user;
@@ -242,26 +205,31 @@ userSchema.statics = {
       throw e;
     }
   },
-  async verifyToken(token, secret) {
+  async verifyToken(token, type) {
     try {
+      const { secret } = tokensConfig[type];
       const result = await jwt.verify(token, secret);
 
       return result;
     } catch (e) {
-      throw e;
+      throw new AuthenticationError('Token is not valid');
     }
   },
   async verifyTokens(token, refreshToken) {
     try {
-      const { data } = await this.verifyToken(token, tokenSecret);
+      const { data } = await this.verifyToken(token, 'token');
+      const user = await this.findById(data.id);
+
+      if (!user) {
+        throw new AuthenticationError('User is not found');
+      }
 
       return {
         user: data,
       };
     } catch (e) {
-      const { data } = await this.verifyToken(refreshToken, refreshTokenSecret);
-      const { id } = data;
-      const user = await this.findById(id);
+      const { data } = await this.verifyToken(refreshToken, 'refresh');
+      const user = await this.findById(data.id);
       const newTokens = await user.genTokens();
 
       return {
@@ -284,13 +252,11 @@ userSchema.statics = {
       throw e;
     }
   },
-  async verifySignUp(regToken) {
+  async verifyEmail(regToken) {
     try {
-      const { data: { id } } = await this.verifyToken(regToken, registerTokenSecret);
+      const { data: { id } } = await this.verifyToken(regToken, 'register');
 
-      const user = await this.findById(id);
-      await user.confirmEmail();
-      await user.logActivity();
+      const user = await this.findByIdAndUpdate(id, { regStatus: UNCOMPLETED });
       const tokens = await user.genTokens(user);
 
       return tokens;
@@ -304,22 +270,21 @@ userSchema.statics = {
       const user = await this.getUserByField(login, username);
 
       if (!user) {
-        throw new UserInputError('Specified username can\'t be found.', {
+        throw new UserInputError('Specified username can\'t be found', {
           invalidField: 'username',
         });
       }
-
       const { password: hash, regStatus } = user;
-      const correctPassword = await user.comparePassword(password, hash);
-      const emailUnconfirmed = regStatus === EMAIL_UNCONFIRMED;
+      const validPassword = await user.comparePassword(password, hash);
+      const validRegistration = regStatus !== EMAIL_UNCONFIRMED;
 
-      if (!correctPassword) {
-        throw new UserInputError('Specified password is incorrect.', {
+      if (!validPassword) {
+        throw new UserInputError('Specified password is incorrect', {
           invalidField: 'password',
         });
       }
-      if (emailUnconfirmed) {
-        throw new UserInputError('Registration isn\'t completed.You need to confirm your email');
+      if (!validRegistration) {
+        throw new AuthenticationError('Registration isn\'t completed.You need to confirm your email');
       }
 
       return user;
@@ -332,7 +297,7 @@ userSchema.statics = {
       const user = await this.getUserBySocial(social, profile);
 
       if (!user) {
-        throw new AuthenticationError('User not found.');
+        throw new AuthenticationError('User not found');
       }
       return user;
     } catch (e) {
@@ -344,7 +309,7 @@ userSchema.statics = {
       const user = await this.getUserBySocial(social, profile);
 
       if (user) {
-        throw new AuthenticationError('User is exist.');
+        throw new AuthenticationError('User is exist');
       }
       return user;
     } catch (e) {

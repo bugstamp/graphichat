@@ -57,7 +57,7 @@ input SignUpCompletionForm {
 }
 
 input SocialProfile {
-  id: ID!
+  socialId: ID!
   email: String!
   firstName: String!
   lastName: String!

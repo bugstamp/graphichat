@@ -4,6 +4,7 @@ const uri = process.env.MONGOLAB_URI;
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
+  useFindAndModify: false,
 };
 
 mongoose.Promise = Promise;

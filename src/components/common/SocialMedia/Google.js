@@ -13,7 +13,7 @@ const Google = ({ loading, mutation }) => (
       clientId={process.env.GOOGLE_APP_ID}
       onSuccess={({
         profileObj: {
-          googleId: id,
+          googleId: socialId,
           email,
           givenName: firstName,
           familyName: lastName,
@@ -22,7 +22,7 @@ const Google = ({ loading, mutation }) => (
         variables: {
           social: 'google',
           profile: {
-            id,
+            socialId,
             email,
             firstName,
             lastName,

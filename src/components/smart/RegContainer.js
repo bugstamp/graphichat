@@ -32,7 +32,7 @@ const SIGN_UP_COMPLETION = gql`
 `;
 
 const SIGN_UP_BY_SOCIAL = gql`
-  mutation SignUpBySocial($social: String!, $profile: SocialProfile!) {
+  mutation SignUpBySocial($social: SocialProfile!, $profile: SocialUserProfile!) {
     signUpBySocial(social: $social, profile: $profile) {
       token
       refreshToken

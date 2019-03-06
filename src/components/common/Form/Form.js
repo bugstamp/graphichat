@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import styled from 'styled-components';
-import { map, find, get } from 'lodash';
+import { map, find } from 'lodash';
 import * as yup from 'yup';
 
 import FormInput from './FormInput';
@@ -27,10 +27,10 @@ class Form extends Component {
     if (!prevProps.result.data && data) {
       onSuccess(data);
     }
+
     if (!prevProps.result.error && error) {
       const { graphQLErrors } = error;
-      const { message, extensions } = graphQLErrors[0];
-      const invalidField = get(extensions, 'exception.invalidField');
+      const { message, data: { invalidField } } = graphQLErrors[0];
 
       if (!invalidField) {
         onError(message);

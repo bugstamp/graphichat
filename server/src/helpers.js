@@ -1,3 +1,5 @@
+import { upperFirst } from 'lodash';
+
 export const getHeaderTokens = (req) => {
   const token = req.headers['x-token'];
   const refreshToken = req.headers['x-refresh-token'];
@@ -19,3 +21,5 @@ export const removeHeaderTokens = (res) => {
 
   return res;
 };
+
+export const getUserDisplayName = ({ firstName, lastName }) => `${upperFirst(firstName)} ${upperFirst(lastName)}`;

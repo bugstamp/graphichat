@@ -57,7 +57,11 @@ input SignUpCompletionForm {
 }
 
 input SocialProfile {
-  socialId: ID!
+  id: ID!
+  name: String!
+}
+
+input SocialUserProfile {
   email: String!
   firstName: String!
   lastName: String!
@@ -76,11 +80,11 @@ type Query {
 
 type Mutation {
   signIn(username: String!, password: String!): AuthPayload
-  signInBySocial(social: String!, profile: SocialProfile!): AuthPayload
-  signUpBySocial(social: String!, profile: SocialProfile!): AuthPayload
   signUp(form: SignUpForm!): Boolean
   signUpCompletion(form: SignUpCompletionForm): AuthPayload
   signUpAsyncValidation(field: String!, value: String!): AsyncValidationResult
+  signInBySocial(social: SocialProfile!, profile: SocialUserProfile!): AuthPayload
+  signUpBySocial(social: SocialProfile!, profile: SocialUserProfile!): AuthPayload
   signOut(id: ID!): User
   deleteUser(id: ID!): User
 }

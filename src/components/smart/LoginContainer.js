@@ -23,7 +23,7 @@ const signIn = ({ render }) => (
 );
 
 const SIGN_IN_BY_SOCIAL = gql`
-  mutation SignInBySocial($social: String!, $profile: SocialProfile!) {
+  mutation SignInBySocial($social: SocialProfile!, $profile: SocialUserProfile!) {
     signInBySocial(social: $social, profile: $profile) {
       token
       refreshToken
@@ -42,9 +42,9 @@ const Composed = adopt({
   signInBySocial,
 });
 
-const LoginContainer = () => (
+const LoginContainer = ownProps => (
   <Composed>
-    {props => (<Login {...props} />)}
+    {props => (<Login {...props} {...ownProps} />)}
   </Composed>
 );
 

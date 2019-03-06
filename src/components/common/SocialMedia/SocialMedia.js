@@ -28,7 +28,7 @@ class SocialMedia extends Component {
 
     if (!prevProps.result.error && error) {
       const { graphQLErrors } = error;
-      const { message, extensions } = graphQLErrors[0];
+      const { message } = graphQLErrors[0];
 
       onError(message);
     }

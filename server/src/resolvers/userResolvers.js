@@ -1,10 +1,7 @@
-import { AuthenticationError } from 'apollo-server-express';
-import { upperFirst } from 'lodash';
-
 import nodemailer from '../utils/nodemailer';
 import { COMPLETED } from '../db/models/User';
-
-const getDisplayName = ({ firstName, lastName }) => `${upperFirst(firstName)} ${upperFirst(lastName)}`;
+import { getUserDisplayName } from '../helpers';
+import { ForbiddenError } from '../utils/apolloErrors';
 
 export default {
   Query: {
@@ -29,7 +26,7 @@ export default {
     async getMe(parent, args, { db, user }) {
       try {
         if (!user) {
-          throw new AuthenticationError();
+          throw new ForbiddenError();
         }
         const me = db.User.findById(user.id);
 
@@ -43,17 +40,6 @@ export default {
     async signIn(parent, { username, password }, { db }) {
       try {
         const user = await db.User.signInValidation(username, password);
-        await user.logActivity();
-        const tokens = await user.genTokens();
-
-        return tokens;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async signInBySocial(parent, { social, profile }, { db }) {
-      try {
-        const user = await db.User.signInBySocialValidation(social, profile);
         await user.logActivity();
         const tokens = await user.genTokens();
 
@@ -77,31 +63,13 @@ export default {
         throw e;
       }
     },
-    async signUpBySocial(parent, { social, profile }, { db }) {
-      try {
-        await db.User.signUpBySocialValidation(social, profile);
-
-        const { socialId, ...rest } = profile;
-        const user = await db.User.create({
-          ...rest,
-          socials: { [social]: socialId },
-          displayName: getDisplayName(profile),
-          regStatus: COMPLETED,
-        });
-        const tokens = await user.genTokens();
-
-        return tokens;
-      } catch (e) {
-        throw e;
-      }
-    },
     async signUpCompletion(parent, { form }, { db, user: { id } }) {
       try {
         const { birthday } = form;
         const user = await db.User.findByIdAndUpdate(id, {
           $set: {
             ...form,
-            displayName: getDisplayName(form),
+            displayName: getUserDisplayName(form),
             birthday: birthday ? new Date(birthday) : birthday,
             regStatus: COMPLETED,
           },
@@ -123,6 +91,35 @@ export default {
           field,
           valid: result,
         };
+      } catch (e) {
+        throw e;
+      }
+    },
+    async signInBySocial(parent, { social, profile }, { db }) {
+      try {
+        const user = await db.User.signInBySocialValidation(social, profile);
+        await user.logActivity();
+        const tokens = await user.genTokens();
+
+        return tokens;
+      } catch (e) {
+        throw e;
+      }
+    },
+    async signUpBySocial(parent, { social, profile }, { db }) {
+      try {
+        await db.User.signUpBySocialValidation(social, profile);
+
+        const { id, name } = social;
+        const user = await db.User.create({
+          ...profile,
+          socials: { [name]: id },
+          displayName: getUserDisplayName(profile),
+          regStatus: COMPLETED,
+        });
+        const tokens = await user.genTokens();
+
+        return tokens;
       } catch (e) {
         throw e;
       }

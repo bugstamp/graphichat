@@ -1,5 +1,6 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
+import { formatError } from 'apollo-errors';
 import cors from 'cors';
 
 import paths from '../../paths';
@@ -19,6 +20,9 @@ const apolloPath = process.env.APOLLO_PATH;
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  formatError(e) {
+    return formatError(e);
+  },
   context: ({ req }) => {
     const { user } = req;
 

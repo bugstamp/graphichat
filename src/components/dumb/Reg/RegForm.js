@@ -84,12 +84,9 @@ class SignUp extends Component {
   handleSuccess = ({ token, refreshToken }) => {
     if (token && refreshToken) {
       const { history } = this.props;
-      console.log('received', token);
 
       localStorage.setItem('chatkilla_tkn', token);
       localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
-
-      console.log('saved', localStorage.getItem('chatkilla_tkn'));
       history.push('/');
     } else {
       this.setState({ completed: true });
@@ -156,7 +153,7 @@ class SignUp extends Component {
         </Header>
         <Choose>
           <When condition={completed}>
-            {'Your account had been successfuly completed.Check your email and confirm your email.'}
+            {'Your account had been successfuly completed.Check your email and confirm registration.'}
           </When>
           <When condition={activeStep === 0}>
             <Form

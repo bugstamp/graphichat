@@ -26,40 +26,37 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const tokenLink = new ApolloLink((operation, forward) => {
-  return forward(operation).map((response) => {
-    const { response: { headers } } = operation.getContext();
-    console.log(response);
+const tokenLink = new ApolloLink((operation, forward) => forward(operation).map((response) => {
+  const { response: { headers } } = operation.getContext();
 
-    if (headers) {
-      const token = headers.get('x-token');
-      const refreshToken = headers.get('x-refresh-token');
+  if (headers) {
+    const token = headers.get('x-token');
+    const refreshToken = headers.get('x-refresh-token');
 
-      if (token && refreshToken) {
-        localStorage.setItem('chatkilla_tkn', token);
-        localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
-      }
+    if (token && refreshToken) {
+      localStorage.setItem('chatkilla_tkn', token);
+      localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
     }
-    return response;
-  });
-});
+  }
+  return response;
+}));
 
-const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
-  console.log('networkerrors', networkError);
-  console.log('error', graphQLErrors);
-});
+// const errorLink = onError(({ networkError = {}, graphQLErrors, response, operation }) => {
+//   console.log('networkerrors', networkError);
+//   console.log('error', graphQLErrors);
+// });
 
 const logger = new ApolloLink((operation, forward) => {
   console.log(`operation: ${operation.operationName}`, operation);
   return forward(operation).map((result) => {
     console.log(`Result from ${operation.operationName}:`, result);
     return result;
-  })
+  });
 });
 
 const client = new ApolloClient({
   link: from([
-    errorLink,
+    // errorLink,
     tokenLink,
     authLink,
     logger,

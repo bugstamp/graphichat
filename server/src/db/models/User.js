@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { pick } from 'lodash';
-import { UserInputError, AuthenticationError } from 'apollo-server-express';
 import EmailValidator from 'email-validator';
 
 import mongoose from '../mongoose';
+import { AuthenticationError, BadInputError } from '../../utils/apolloErrors';
 
 export const EMAIL_UNCONFIRMED = 'EMAIL_UNCONFIRMED';
 export const UNCOMPLETED = 'UNCOMPLETED';
@@ -190,14 +190,14 @@ userSchema.statics = {
       throw e;
     }
   },
-  async getUserBySocial(social, { email, socialId }) {
+  async getUserBySocial({ id, name }, { email }) {
     try {
       let user;
 
       if (email) {
         user = await this.getUserByField('email', email);
       } else {
-        user = await this.getUserByField(`socials.${social}`, socialId);
+        user = await this.getUserByField(`socials.${name}`, id);
       }
 
       return user;
@@ -212,7 +212,7 @@ userSchema.statics = {
 
       return result;
     } catch (e) {
-      throw new AuthenticationError('Token is not valid');
+      throw new AuthenticationError({ message: 'Token is invalid' });
     }
   },
   async verifyTokens(token, refreshToken) {
@@ -221,7 +221,7 @@ userSchema.statics = {
       const user = await this.findById(data.id);
 
       if (!user) {
-        throw new AuthenticationError('User is not found');
+        throw new AuthenticationError({ message: 'User is not found' });
       }
 
       return {
@@ -243,8 +243,11 @@ userSchema.statics = {
       const user = await this.getUserByField(field, value);
 
       if (user) {
-        throw new UserInputError(`Specified ${field} is already exist.`, {
-          invalidField: field,
+        throw new BadInputError({
+          message: `The provided ${field} is already exist.`,
+          data: {
+            invalidField: field,
+          },
         });
       }
       return !user;
@@ -270,8 +273,11 @@ userSchema.statics = {
       const user = await this.getUserByField(login, username);
 
       if (!user) {
-        throw new UserInputError('Specified username can\'t be found', {
-          invalidField: 'username',
+        throw new BadInputError({
+          message: 'The provided username can\'t be found',
+          data: {
+            invalidField: 'username',
+          },
         });
       }
       const { password: hash, regStatus } = user;
@@ -279,12 +285,17 @@ userSchema.statics = {
       const validRegistration = regStatus !== EMAIL_UNCONFIRMED;
 
       if (!validPassword) {
-        throw new UserInputError('Specified password is incorrect', {
-          invalidField: 'password',
+        throw new BadInputError({
+          message: 'The provided password is incorrect',
+          data: {
+            invalidField: 'password',
+          },
         });
       }
       if (!validRegistration) {
-        throw new AuthenticationError('Registration isn\'t completed.You need to confirm your email');
+        throw new AuthenticationError({
+          message: 'Your registration isn\'t completed.You need to confirm your email',
+        });
       }
 
       return user;
@@ -297,7 +308,7 @@ userSchema.statics = {
       const user = await this.getUserBySocial(social, profile);
 
       if (!user) {
-        throw new AuthenticationError('User not found');
+        throw new AuthenticationError({ message: 'User not found' });
       }
       return user;
     } catch (e) {
@@ -309,7 +320,7 @@ userSchema.statics = {
       const user = await this.getUserBySocial(social, profile);
 
       if (user) {
-        throw new AuthenticationError('User is exist');
+        throw new AuthenticationError({ message: 'User is exist' });
       }
       return user;
     } catch (e) {

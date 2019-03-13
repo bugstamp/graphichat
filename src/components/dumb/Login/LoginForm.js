@@ -13,7 +13,6 @@ import Button from '@material-ui/core/Button';
 import Form from '../../common/Form/Form';
 import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
-import Notification from '../../common/Notification';
 
 import { getPadding } from '../../../styles';
 
@@ -42,53 +41,16 @@ class LoginForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      alert: {
-        open: false,
-        message: '',
-      },
-    };
-
     this.formId = 'signIn';
     this.formConfig = formConfig(this.formId);
   }
 
-  toggleAlert = (message = '') => {
-    this.setState(({ alert }) => ({
-      alert: {
-        open: !alert.open,
-        message,
-      },
-    }));
-  }
-
-  handleSubmit = async ({ username, password }) => {
-    const { signIn } = this.props;
-
-    signIn.mutation({ variables: { username, password } });
-  }
-
-  handleSuccess = ({ token, refreshToken }) => {
-    const { history } = this.props;
-
-    localStorage.setItem('chatkilla_tkn', token);
-    localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
-    history.push('/');
-  }
-
-  handleError = (message) => {
-    this.toggleAlert(message);
-  }
-
-  signUp = () => {
-    const { history } = this.props;
-
-    history.push('/reg');
-  }
-
   render() {
-    const { alert } = this.state;
-    const { signIn, signInBySocial } = this.props;
+    const {
+      signIn,
+      signInBySocial,
+      toSignUp,
+    } = this.props;
 
     return (
       <Wrapper elevation={8}>
@@ -97,14 +59,12 @@ class LoginForm extends Component {
         </Header>
         <Form
           {...this.formConfig}
-          onSubmit={this.handleSubmit}
-          onSuccess={this.handleSuccess}
-          onError={this.handleError}
+          mutation={signIn.mutation}
           result={signIn.result}
           submitButtonText="Sign In"
         />
         <SignUpButton
-          onClick={this.signUp}
+          onClick={toSignUp}
           color="primary"
           size="large"
           variant="outlined"
@@ -115,15 +75,7 @@ class LoginForm extends Component {
         <SocialMedia
           mutation={signInBySocial.mutation}
           result={signInBySocial.result}
-          onSuccess={this.handleSuccess}
-          onError={this.handleError}
           note="Sign In with social media:"
-        />
-        <Notification
-          type="error"
-          open={alert.open}
-          message={alert.message}
-          toggle={() => this.toggleAlert()}
         />
       </Wrapper>
     );

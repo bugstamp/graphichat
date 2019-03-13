@@ -37,8 +37,9 @@ export default {
     },
   },
   Mutation: {
-    async signIn(parent, { username, password }, { db }) {
+    async signIn(parent, { form }, { db }) {
       try {
+        const { username, password } = form;
         const user = await db.User.signInValidation(username, password);
         await user.logActivity();
         const tokens = await user.genTokens();

@@ -8,6 +8,7 @@ import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink, from } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+// import {} from 'lodash';
 // import registerServiceWorker from './registerServiceWorker';
 
 import App from './components/App';
@@ -47,18 +48,19 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
 // });
 
 const logger = new ApolloLink((operation, forward) => {
-  console.log(`operation: ${operation.operationName}`, operation);
-  return forward(operation).map((result) => {
-    console.log(`Result from ${operation.operationName}:`, result);
-    return result;
+  const { operationName } = operation;
+  console.log(`log operation: ${operationName}`, operation);
+  return forward(operation).map((response) => {
+    console.log(`log operation result ${operationName}:`, response);
+    return response;
   });
 });
 
 const client = new ApolloClient({
   link: from([
     // errorLink,
-    tokenLink,
     authLink,
+    tokenLink,
     logger,
     httpLink,
   ]),

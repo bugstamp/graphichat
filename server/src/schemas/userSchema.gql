@@ -43,6 +43,11 @@ type AuthPayload {
   refreshToken: String
 }
 
+input SignInForm {
+  username: String!
+  password: String!
+}
+
 input SignUpForm {
   username: String!
   email: String!
@@ -79,7 +84,7 @@ type Query {
 }
 
 type Mutation {
-  signIn(username: String!, password: String!): AuthPayload
+  signIn(form: SignInForm!): AuthPayload
   signUp(form: SignUpForm!): Boolean
   signUpCompletion(form: SignUpCompletionForm): AuthPayload
   signUpAsyncValidation(field: String!, value: String!): AsyncValidationResult

@@ -20,9 +20,7 @@ const apolloPath = process.env.APOLLO_PATH;
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  formatError(e) {
-    return formatError(e);
-  },
+  formatError,
   context: ({ req }) => {
     const { user } = req;
 

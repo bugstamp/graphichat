@@ -19,28 +19,10 @@ const SocialMediaNote = styled.p`
 `;
 
 class SocialMedia extends Component {
-  componentDidUpdate(prevProps) {
-    const {
-      result: { error, data },
-      onSuccess,
-      onError,
-    } = this.props;
-
-    if (!prevProps.result.error && error) {
-      const { graphQLErrors } = error;
-      const { message } = graphQLErrors[0];
-
-      onError(message);
-    }
-    if (!prevProps.result.data && data) {
-      onSuccess(data);
-    }
-  }
-
   render() {
     const {
-      result: { loading },
       mutation,
+      result: { loading },
       note,
     } = this.props;
 

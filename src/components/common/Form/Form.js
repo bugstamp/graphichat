@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import styled from 'styled-components';
-import { map, find } from 'lodash';
+import { map, find, isEmpty } from 'lodash';
 import * as yup from 'yup';
 
 import FormInput from './FormInput';
@@ -17,25 +17,16 @@ const FormWrapper = styled.form`
 
 class Form extends Component {
   componentDidUpdate(prevProps) {
-    const {
-      result: { data, error },
-      onSuccess,
-      onError,
-      setFieldError,
-    } = this.props;
-
-    if (!prevProps.result.data && data) {
-      onSuccess(data);
-    }
+    const { result: { error }, setFieldError } = this.props;
 
     if (!prevProps.result.error && error) {
-      const { graphQLErrors } = error;
-      const { message, data: { invalidField } } = graphQLErrors[0];
+      if (error.graphQLErrors) {
+        const { graphQLErrors } = error;
+        const { message, data: { invalidField } } = graphQLErrors[0];
 
-      if (!invalidField) {
-        onError(message);
-      } else {
-        setFieldError(invalidField, message);
+        if (invalidField) {
+          setFieldError(invalidField, message);
+        }
       }
     }
   }
@@ -161,13 +152,10 @@ class Form extends Component {
 export default withFormik({
   mapPropsToValues: ({ initialValues }) => initialValues,
 
-  handleSubmit: async (
-    values,
-    {
-      props: { onSubmit },
-    },
+  handleSubmit: (
+    values, { props: { mutation } },
   ) => {
-    onSubmit(values);
+    mutation({ variables: { form: values } });
   },
 
   validateOnChange: false,

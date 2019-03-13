@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { keys } from 'lodash';
 
 import Facebook from './Facebook';
 import Google from './Google';
@@ -18,24 +17,20 @@ const SocialMediaNote = styled.p`
   margin-right: 1em;
 `;
 
-class SocialMedia extends Component {
-  render() {
-    const {
-      mutation,
-      result: { loading },
-      note,
-    } = this.props;
-
-    return (
-      <SocialMediaWrapper>
-        <SocialMediaNote>
-          {note}
-        </SocialMediaNote>
-        <Facebook loading={loading} mutation={mutation} />
-        <Google loading={loading} mutation={mutation} />
-      </SocialMediaWrapper>
-    );
-  }
-}
+const SocialMedia = ({
+  mutation,
+  result: { loading },
+  note,
+}) => {
+  return (
+    <SocialMediaWrapper>
+      <SocialMediaNote>
+        {note}
+      </SocialMediaNote>
+      <Facebook loading={loading} mutation={mutation} />
+      <Google loading={loading} mutation={mutation} />
+    </SocialMediaWrapper>
+  );
+};
 
 export default SocialMedia;

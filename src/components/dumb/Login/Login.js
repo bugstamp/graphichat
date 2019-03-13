@@ -6,8 +6,9 @@ import { backgrounds } from 'polished';
 
 import LoginContainer from '../../smart/LoginContainer';
 import LoginForm from './LoginForm';
+import withNotification from '../../common/HOC/withNotification';
+
 import bgImage from '../../../assets/images/login-bg.jpg';
-import Notification from '../../common/Notification';
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
@@ -16,26 +17,6 @@ const Wrapper = styled(Grid)`
 `;
 
 class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      alert: {
-        open: false,
-        message: '',
-      },
-    };
-  }
-
-  toggleAlert = (message = '') => {
-    this.setState(({ alert: { open } }) => ({
-      alert: {
-        open: !open,
-        message,
-      },
-    }));
-  }
-
   handleSuccess = ({ token, refreshToken }) => {
     const { history } = this.props;
 
@@ -46,11 +27,12 @@ class Login extends Component {
 
   handleError = (e) => {
     if (e.graphQLErrors) {
+      const { toggleNotification } = this.props;
       const { graphQLErrors } = e;
       const { message, data: { invalidField } } = graphQLErrors[0];
 
       if (!invalidField) {
-        this.toggleAlert(message);
+        toggleNotification(message);
       }
     }
   }
@@ -62,8 +44,6 @@ class Login extends Component {
   }
 
   render() {
-    const { alert } = this.state;
-
     return (
       <LoginContainer
         signInProps={{
@@ -86,12 +66,6 @@ class Login extends Component {
               signInBySocial={signInBySocial}
               toSignUp={this.toSignUp}
             />
-            <Notification
-              type="error"
-              open={alert.open}
-              message={alert.message}
-              toggle={() => this.toggleAlert()}
-            />
           </Wrapper>
         )}
       </LoginContainer>
@@ -99,4 +73,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withNotification(Login);

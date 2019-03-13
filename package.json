@@ -45,6 +45,7 @@
     "body-parser": "^1.18.3",
     "core-js": "^2.6.1",
     "cors": "^2.8.5",
+    "create-react-context": "^0.2.3",
     "dotenv": "^6.2.0",
     "dotenv-expand": "^4.2.0",
     "dotenv-webpack": "^1.7.0",

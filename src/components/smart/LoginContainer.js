@@ -5,18 +5,18 @@ import { adopt } from 'react-adopt';
 import gql from 'graphql-tag';
 import { has, get } from 'lodash';
 
-const createMutation = (name, gqlMutation, mutationProps = {}) => (connectorProps) => {
-  const mutationConnectorPropsKey = `${name}Props`;
-  const mutationConnectorProps = has(connectorProps, mutationConnectorPropsKey)
-    ? get(connectorProps, mutationConnectorPropsKey)
+const createMutation = (name, gqlMutation, mutationProps = {}) => (containerProps) => {
+  const mutationContainerPropsKey = `${name}Props`;
+  const mutationContainerProps = has(containerProps, mutationContainerPropsKey)
+    ? get(containerProps, mutationContainerPropsKey)
     : {};
-  const { render } = connectorProps;
+  const { render } = containerProps;
 
   return (
     <Mutation
       mutation={gqlMutation}
       {...mutationProps}
-      {...mutationConnectorProps}
+      {...mutationContainerProps}
     >
       {(mutation, result) => render({
         mutation,

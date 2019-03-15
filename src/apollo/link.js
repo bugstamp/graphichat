@@ -2,6 +2,8 @@ import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink, from } from 'apollo-link';
 // import { onError } from 'apollo-link-error';
 
+import storage from '../actions/storage';
+
 const httpLink = createHttpLink({
   uri: process.env.APOLLO_URL,
 });
@@ -9,8 +11,8 @@ const httpLink = createHttpLink({
 const authLink = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
-      'x-token': localStorage.getItem('chatkilla_tkn') || null,
-      'x-refresh-token': localStorage.getItem('chatkilla_rfrsh_tkn') || null,
+      'x-token': storage.token.get(),
+      'x-refresh-token': storage.refreshToken.get(),
     },
   });
   return forward(operation);
@@ -24,8 +26,7 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
     const refreshToken = headers.get('x-refresh-token');
 
     if (token && refreshToken) {
-      localStorage.setItem('chatkilla_tkn', token);
-      localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
+      storage.setTokens(token, refreshToken);
     }
   }
   return response;

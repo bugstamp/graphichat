@@ -3,17 +3,20 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 
+import storage from '../actions/storage';
+
+const tokenSecret = process.env.TOKEN_SECRET;
+
 export const checkToken = async (token, set = false) => {
   try {
     if (!token) {
       throw new Error('Token wasn\'t found');
     }
-    const { data: { regStatus } } = await jwt.verify(token, process.env.TOKEN_SECRET);
+    const { data: { regStatus } } = await jwt.verify(token, tokenSecret);
 
     if (set) {
-      localStorage.setItem('chatkilla_tkn', token);
+      storage.token.set(token);
     }
-
     return regStatus;
   } catch (e) {
     throw new Error(e.message);
@@ -29,7 +32,7 @@ class PrivateRoute extends Component {
 
   async componentDidMount() {
     try {
-      const token = localStorage.getItem('chatkilla_tkn');
+      const token = storage.token.get();
       const status = await checkToken(token);
 
       this.setState({
@@ -49,6 +52,7 @@ class PrivateRoute extends Component {
   render() {
     const { render, auth, status } = this.state;
     const { children } = this.props;
+    const regRedirect = `reg?token=${storage.token.get()}`;
 
     return (
       <Choose>
@@ -58,7 +62,7 @@ class PrivateRoute extends Component {
               <Redirect to="login" />
             </When>
             <When condition={auth && status === 'UNCOMPLETED'}>
-              <Redirect to={`reg?step=2&token=${localStorage.getItem('chatkilla_tkn')}`} />
+              <Redirect to={regRedirect} />
             </When>
             <Otherwise>
               {children}

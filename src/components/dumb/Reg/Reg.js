@@ -7,9 +7,11 @@ import { backgrounds } from 'polished';
 
 import RegContainer from '../../smart/RegContainer';
 import RegForm from './RegForm';
-import withNotification from '../../common/HOC/withNotification';
 
+import withNotification from '../../common/HOC/withNotification';
 import { checkToken } from '../../../router/PrivateRoute';
+import storage from '../../../actions/storage';
+
 import bgImage from '../../../assets/images/reg-bg.jpg';
 
 const Wrapper = styled(Grid)`
@@ -47,8 +49,7 @@ class SignUp extends Component {
     if (token && refreshToken) {
       const { history } = this.props;
 
-      localStorage.setItem('chatkilla_tkn', token);
-      localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
+      storage.setTokens(token, refreshToken);
       history.push('/');
     } else {
       this.setState({ completed: true });

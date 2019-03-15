@@ -6,7 +6,9 @@ import { backgrounds } from 'polished';
 
 import LoginContainer from '../../smart/LoginContainer';
 import LoginForm from './LoginForm';
+
 import withNotification from '../../common/HOC/withNotification';
+import storage from '../../../actions/storage';
 
 import bgImage from '../../../assets/images/login-bg.jpg';
 
@@ -20,8 +22,7 @@ class Login extends Component {
   handleSuccess = ({ token, refreshToken }) => {
     const { history } = this.props;
 
-    localStorage.setItem('chatkilla_tkn', token);
-    localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
+    storage.setTokens(token, refreshToken);
     history.push('/');
   }
 

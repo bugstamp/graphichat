@@ -1,9 +1,9 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 // const { GenerateSW } = require('workbox-webpack-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
+const VisualizerPlugin = require('webpack-visualizer-plugin');
 
 const paths = require('../paths');
 
@@ -21,15 +21,16 @@ module.exports = merge([
         },
       },
       minimizer: [
-        new UglifyJSPlugin({
+        new TerserPlugin({
           cache: true,
           parallel: true,
           sourceMap: true,
-          uglifyOptions: {
+          terserOptions: {
             output: {
               comments: false,
             },
           },
+          exclude: /\/node_modules/,
         }),
       ],
     },
@@ -58,7 +59,7 @@ module.exports = merge([
       //     },
       //   ],
       // }),
-      new Visualizer(),
+      new VisualizerPlugin(),
     ],
 
     devtool: 'source-map',

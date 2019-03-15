@@ -1,5 +1,5 @@
 import db from '../db';
-import { getHeaderTokens, setHeaderTokens, removeHeaderTokens } from '../helpers';
+import { getHeaderTokens, setHeaderTokens, removeHeaderTokens } from '../utils/helpers';
 
 export default async (req, res, next) => {
   const tokens = getHeaderTokens(req);

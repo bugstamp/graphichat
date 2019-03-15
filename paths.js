@@ -10,7 +10,7 @@ module.exports = {
   favicon: path.resolve(__dirname, 'src/assets/favicon.ico'),
   fonts: path.resolve(__dirname, 'src/assets/fonts'),
   images: path.resolve(__dirname, 'src/assets/images'),
-  public: path.resolve(__dirname, 'public'),
+  public: path.resolve(__dirname, 'build'),
   html: path.resolve(__dirname, 'public/index.html'),
   modules: path.resolve(__dirname, 'node_modules'),
 };

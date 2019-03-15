@@ -1,6 +1,6 @@
 import nodemailer from '../utils/nodemailer';
 import { COMPLETED } from '../db/models/User';
-import { getUserDisplayName } from '../helpers';
+import { getUserDisplayName } from '../utils/helpers';
 import { ForbiddenError } from '../utils/apolloErrors';
 
 export default {

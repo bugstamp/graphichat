@@ -5,10 +5,12 @@ import queryString from 'query-string';
 import styled from 'styled-components';
 import { backgrounds } from 'polished';
 
+import RegContainer from '../../smart/RegContainer';
 import RegForm from './RegForm';
-import bgImage from '../../../assets/images/reg-bg.jpg';
+import withNotification from '../../common/HOC/withNotification';
 
 import { checkToken } from '../../../router/PrivateRoute';
+import bgImage from '../../../assets/images/reg-bg.jpg';
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
@@ -19,6 +21,7 @@ const Wrapper = styled(Grid)`
 class SignUp extends Component {
   state = {
     activeStep: 0,
+    completed: false,
   }
 
   steps = [
@@ -28,16 +31,37 @@ class SignUp extends Component {
 
   async componentDidMount() {
     const { location: { search }, history } = this.props;
-    const { step, token } = queryString.parse(search);
+    const { token } = queryString.parse(search);
 
-    if (step && token) {
+    if (token) {
       try {
         await checkToken(token, true);
-
-        this.setActiveStep(+step - 1);
+        this.setActiveStep(1);
       } catch (e) {
         history.push('/reg');
       }
+    }
+  }
+
+  handleSuccess = ({ token, refreshToken }) => {
+    if (token && refreshToken) {
+      const { history } = this.props;
+
+      localStorage.setItem('chatkilla_tkn', token);
+      localStorage.setItem('chatkilla_rfrsh_tkn', refreshToken);
+      history.push('/');
+    } else {
+      this.setState({ completed: true });
+    }
+  }
+
+  handleError = (e) => {
+    if (e.graphQLErrors) {
+      const { toggleNotification } = this.props;
+      const { graphQLErrors } = e;
+      const { message } = graphQLErrors[0];
+
+      toggleNotification(message);
     }
   }
 
@@ -46,35 +70,49 @@ class SignUp extends Component {
   }
 
   render() {
-    const { activeStep } = this.state;
-    const {
-      signUpAsyncValidationUsername,
-      signUpAsyncValidationEmail,
-      signUp,
-      signUpCompletion,
-      signUpBySocial,
-    } = this.props;
+    const { activeStep, completed } = this.state;
 
     return (
-      <Wrapper
-        ref={this.createRef}
-        justify="center"
-        alignItems="center"
-        container
+      <RegContainer
+        signUpProps={{
+          onCompleted: ({ signUp }) => this.handleSuccess(signUp),
+        }}
+        signUpCompletionProps={{
+          onCompleted: ({ signUpCompletion }) => this.handleSuccess(signUpCompletion),
+        }}
+        signUpBySocialProps={{
+          onCompleted: ({ signUpBySocial }) => this.handleSuccess(signUpBySocial),
+          onError: this.handleError,
+        }}
       >
-        <RegForm
-          steps={this.steps}
-          activeStep={activeStep}
-          signUpAsyncValidationUsername={signUpAsyncValidationUsername}
-          signUpAsyncValidationEmail={signUpAsyncValidationEmail}
-          signUp={signUp}
-          signUpCompletion={signUpCompletion}
-          signUpBySocial={signUpBySocial}
-          setActiveStep={this.setActiveStep}
-        />
-      </Wrapper>
+        {({
+          signUpAsyncValidationUsername,
+          signUpAsyncValidationEmail,
+          signUp,
+          signUpCompletion,
+          signUpBySocial,
+        }) => (
+          <Wrapper
+            ref={this.createRef}
+            justify="center"
+            alignItems="center"
+            container
+          >
+            <RegForm
+              steps={this.steps}
+              activeStep={activeStep}
+              completed={completed}
+              signUpAsyncValidationUsername={signUpAsyncValidationUsername}
+              signUpAsyncValidationEmail={signUpAsyncValidationEmail}
+              signUp={signUp}
+              signUpCompletion={signUpCompletion}
+              signUpBySocial={signUpBySocial}
+            />
+          </Wrapper>
+        )}
+      </RegContainer>
     );
   }
 }
 
-export default SignUp;
+export default withNotification(SignUp);

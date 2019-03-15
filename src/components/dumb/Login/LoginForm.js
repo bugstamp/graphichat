@@ -11,8 +11,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 import Button from '@material-ui/core/Button';
 
 import Form from '../../common/Form/Form';
-import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import formConfig from '../../common/Form/formConfig';
+import SocialMedia from '../../common/SocialMedia/SocialMedia';
 
 import { getPadding } from '../../../styles';
 
@@ -71,4 +71,4 @@ const LoginForm = ({
   );
 };
 
-export default withRouter(LoginForm);
+export default LoginForm;

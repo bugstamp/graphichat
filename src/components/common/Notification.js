@@ -76,7 +76,13 @@ const NotificationContent = ({ type, message, toggle }) => (
   />
 );
 
-const Notification = ({ type, message, open, toggle, ...rest }) => (
+const Notification = ({
+  type,
+  message,
+  open,
+  toggle,
+  ...rest
+}) => (
   <Snackbar
     open={open}
     onClose={(event, reason) => {
@@ -95,7 +101,7 @@ const Notification = ({ type, message, open, toggle, ...rest }) => (
     }}
     {...rest}
   >
-    <NotificationContent type={type} message={message} toggle={toggle} />
+    <NotificationContent type={type} message={message} toggle={() => toggle()} />
   </Snackbar>
 );
 

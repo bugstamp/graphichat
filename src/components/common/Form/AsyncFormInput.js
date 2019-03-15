@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { get, delay } from 'lodash';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import CheckIcon from '@material-ui/icons/CheckRounded';

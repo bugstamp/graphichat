@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
-import styled from 'styled-components';
-import { map, find, isEmpty } from 'lodash';
 import * as yup from 'yup';
+import { map, find } from 'lodash';
+import styled from 'styled-components';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
@@ -41,7 +41,7 @@ class Form extends Component {
       if (asyncValidationField) {
         const { validation } = asyncValidationField;
 
-        await validation.mutation({ variables: { field, value } });
+        await validation.mutation({ variables: { value, field } });
       }
     } catch ({ message, graphQLErrors }) {
       if (graphQLErrors) {
@@ -49,7 +49,6 @@ class Form extends Component {
 
         throw graphQlMessage;
       }
-      throw message;
     }
   }
 
@@ -94,8 +93,8 @@ class Form extends Component {
                     error={error}
                     isError={isError}
                     result={asyncValidationField.validation.result}
-                    validateField={validateField}
                     validate={this.validate}
+                    validateField={validateField}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
@@ -152,10 +151,8 @@ class Form extends Component {
 export default withFormik({
   mapPropsToValues: ({ initialValues }) => initialValues,
 
-  handleSubmit: (
-    values, { props: { mutation } },
-  ) => {
-    mutation({ variables: { form: values } });
+  handleSubmit: (form, { props: { mutation } }) => {
+    mutation({ variables: { form } });
   },
 
   validateOnChange: false,

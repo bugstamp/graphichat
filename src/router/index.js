@@ -3,7 +3,7 @@ import { Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
 
 // import LoginLayout from '../components/layouts/LoginLayout';
-// import ChatLayout from '../components/layouts/ChatLayout';
+// import AppLayout from '../components/layouts/AppLayout';
 
 import Home from '../components/common/Home';
 import Login from '../components/dumb/Login/Login';
@@ -18,8 +18,8 @@ const LoginLayout = Loadable({
   loading: PageLoader,
 });
 
-const ChatLayout = Loadable({
-  loader: () => import('../components/layouts/ChatLayout'),
+const AppLayout = Loadable({
+  loader: () => import('../components/layouts/AppLayout'),
   loading: PageLoader,
 });
 
@@ -30,9 +30,12 @@ const ChatLayout = Loadable({
 
 const Routes = () => (
   <Switch>
-    <AppRoute exact path="/login" layout={LoginLayout} component={Login} />
-    <AppRoute exact path="/reg" layout={LoginLayout} component={Reg} />
-    <AppRoute exact path="/" layout={ChatLayout} component={Home} privateRoute />
+    <AppRoute path="/login" layout={LoginLayout} component={Login} />
+    <AppRoute path="/reg" layout={LoginLayout} component={Reg} />
+    <AppRoute exact path="/" layout={AppLayout} component={Home} privateRoute />
+    <AppRoute path="/person" layout={AppLayout} component={Home} privateRoute />
+    <AppRoute path="/group" layout={AppLayout} component={Home} privateRoute />
+    <AppRoute path="/saved" layout={AppLayout} component={Home} privateRoute />
     {/* <AppRoute component={NotFound} /> */}
   </Switch>
 );

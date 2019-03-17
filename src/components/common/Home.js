@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-
-const Wrapper = styled.div`
-  flex: 1 auto;
-`;
 
 const GET_ME = gql`
   query GetMe {
@@ -29,7 +24,6 @@ class Home extends Component {
 
   render() {
     return (
-      <Wrapper>
         <Query query={GET_ME}>
           {({ loading, error, data }) => {
             if (loading) return 'Loading...';
@@ -38,10 +32,11 @@ class Home extends Component {
             }
             console.log(data.getMe);
 
-            return 'Home';
+            return (
+              'home'
+            );
           }}
         </Query>
-      </Wrapper>
     );
   }
 }

@@ -12,12 +12,13 @@ import resolvers from './resolvers';
 import routers from './routers';
 import middlewares from './middlewares';
 
-const { tokenVerification } = middlewares;
 const { verification } = routers;
+const { tokenVerification } = middlewares;
 
-const app = express();
 const port = process.env.PORT;
 const apolloPath = process.env.APOLLO_PATH;
+
+const app = express();
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,

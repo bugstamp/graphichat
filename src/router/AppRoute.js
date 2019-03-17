@@ -40,7 +40,7 @@ AppRoute.defaultProps = {
 };
 AppRoute.propTypes = {
   component: PropTypes.oneOfType([PropTypes.element, PropTypes.node, PropTypes.func]).isRequired,
-  layout: PropTypes.oneOfType([PropTypes.element, PropTypes.node, PropTypes.func]).isRequired,
+  layout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
   privateRoute: PropTypes.bool,
 };
 

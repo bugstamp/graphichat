@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch } from 'react-router-dom';
-import Loadable from 'react-loadable';
+import importedComponent from 'react-imported-component';
 
 // import LoginLayout from '../components/layouts/LoginLayout';
 // import AppLayout from '../components/layouts/AppLayout';
@@ -13,15 +13,14 @@ import PageLoader from '../components/ui/PageLoader';
 
 import AppRoute from './AppRoute';
 
-const LoginLayout = Loadable({
-  loader: () => import('../components/layouts/LoginLayout'),
-  loading: PageLoader,
+const LoginLayout = importedComponent(() => import('../components/layouts/LoginLayout'), {
+  LoadingComponent: PageLoader,
 });
 
-const AppLayout = Loadable({
-  loader: () => import('../components/layouts/AppLayout'),
-  loading: PageLoader,
+const AppLayout = importedComponent(() => import('../components/layouts/AppLayout'), {
+  LoadingComponent: PageLoader,
 });
+
 
 // const NotFound = Loadable({
 //   loader: () => import('../components/common/NotFound'),

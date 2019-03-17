@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
+import { hot } from 'react-hot-loader';
 import { Link } from 'react-router-dom';
 import { map, set } from 'lodash';
 import styled from 'styled-components';
@@ -170,4 +171,4 @@ class AppLayout extends Component {
 
 AppLayout.propTypes = {};
 
-export default AppLayout;
+export default hot(module)(AppLayout);

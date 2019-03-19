@@ -4,8 +4,15 @@ import reset from 'styled-reset';
 import { size } from 'polished';
 import { get } from 'lodash';
 
-export const getStyledProps = path => props => get(props, path);
-export const getPadding = (num = 1) => (props) => {
+export const getStyledProps = (path, unit = '') => (props) => {
+  const value = get(props, path);
+
+  if (unit) {
+    return `${value}${unit}`;
+  }
+  return value;
+};
+export const getSpacing = (num = 1) => (props) => {
   const defaultPadding = getStyledProps('theme.spacing.unit')(props);
   const padding = defaultPadding * num;
 
@@ -35,6 +42,10 @@ export const GlobalStyle = createGlobalStyle`
     color: #000;
     background-color: #fff;
     overflow-y: auto;
+
+    * {
+      box-sizing: border-box;
+    }
 
     #root {
       ${size('inherit')};

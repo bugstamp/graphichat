@@ -12,14 +12,14 @@ import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import RegFormStepper from './RegFormStepper';
 
-import { getPadding } from '../../../styles';
+import { getSpacing } from '../../../styles';
 
 const Wrapper = styled(Paper)`
   && {
     width: 100%;
     max-width: 375px;
     min-width: 320px;
-    padding: ${getPadding(5)} ${getPadding(3)};
+    padding: ${getSpacing(5)} ${getSpacing(3)};
   }
 `;
 

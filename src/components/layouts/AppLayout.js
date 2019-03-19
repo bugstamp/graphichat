@@ -9,17 +9,26 @@ import { size } from 'polished';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Tab from '@material-ui/core/Tab';
+import InputBase from '@material-ui/core/InputBase';
+import Avatar from '@material-ui/core/Avatar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Hidden from '@material-ui/core/Hidden';
+
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleRounded';
 import PersonIcon from '@material-ui/icons/PersonRounded';
+import SearchIcon from '@material-ui/icons/SearchRounded';
 import GroupIcon from '@material-ui/icons/GroupRounded';
 import BookmarkIcon from '@material-ui/icons/BookmarkRounded';
 import SettingsIcon from '@material-ui/icons/SettingsRounded';
 import LogoutIcon from '@material-ui/icons/ExitToAppRounded';
+
 import red from '@material-ui/core/colors/red';
 import blue from '@material-ui/core/colors/blue';
 import indigo from '@material-ui/core/colors/indigo';
 
-import { getStyledProps, getPadding } from '../../styles';
+import { getStyledProps, getSpacing } from '../../styles';
 
 const AppContainer = styled(Paper)`
   ${size('100%')};
@@ -29,11 +38,15 @@ const AppContainer = styled(Paper)`
 
 const AppNavigation = styled.div`
   flex: 0 60px;
-  padding-top: ${getPadding(2)};
+  padding-top: ${getSpacing(2)};
 `;
 
-const AppContent = styled.div`
-  flex: 1 auto;
+const AppContent = styled(Paper)`
+  && {
+    flex: 1 auto;
+    display: flex;
+    align-items: stretch;
+  }
 `;
 
 const TabStyled = styled(Tab)`
@@ -91,6 +104,56 @@ const LogoIcon = styled(({ above, ...rest }) => <ChatBubbleIcon {...rest} />)`
   }
 `;
 
+const AppListPanel = styled(Paper)`
+  && {
+    height: 100%;
+    flex-flow: column;
+    background-color: ${getStyledProps('theme.palette.grey.100')};
+    padding: ${getSpacing(2)};
+    padding-top: ${getSpacing(3)};
+  }
+`;
+
+const AppListSearch = styled.div`
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  margin-bottom: ${getSpacing(1)};
+  color: ${getStyledProps('theme.palette.grey.600')};
+  background-color: #fff;
+  border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')}
+`;
+
+const SearchIconWrapper = styled.div`
+  flex: 0 50px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: ${getStyledProps('theme.palette.primary.light')};
+`;
+
+const SearchInput = styled(InputBase)`
+  && {
+    flex: 1 auto;
+    color: inherit;
+  }
+`;
+
+const AppList = styled(List)`
+  && {
+    flex: 1 auto;
+    transition-duration: ${getStyledProps('theme.transitions.duration.shortest', 'ms')};
+    transition-timing-function: ${getStyledProps('theme.transitions.easing.sharp')};
+
+    &:hover {
+      background-color: #fff;
+      border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')};
+      cursor: pointer;
+    }
+  }
+`;
+
 const links = [
   {
     name: 'person',
@@ -114,8 +177,6 @@ class AppLayout extends Component {
     activeTab: 0,
   }
 
-  componentDidMount
-
   handleChangeTab = (index) => {
     this.setState({ activeTab: index });
   }
@@ -126,7 +187,7 @@ class AppLayout extends Component {
 
     return (
       <Grid container spacing={0} justify="center">
-        <Grid item md={12} lg={8}>
+        <Grid item xs={12} lg={10}>
           <AppContainer square>
             <AppNavigation>
               <Logo>
@@ -151,15 +212,34 @@ class AppLayout extends Component {
                   );
                 })}
                 <TabStyled icon={<SettingsIcon color="action" />} />
-                <TabStyled icon={<LogoutIcon nativeColor={red[900]} fontSize="large" />} />
+                <TabStyled icon={<LogoutIcon nativeColor={red[900]} />} />
                 <TabIndicatorCustomStyled activeTab={activeTab} />
               </TabsCustomStyled>
             </AppNavigation>
-            <AppContent>
-              <Grid container justify="center" spacing={0}>
-                <Grid item>{children}</Grid>
-                <Grid item></Grid>
-                <Grid item></Grid>
+            <AppContent square elevation={0}>
+              <Grid container spacing={0}>
+                <Grid item xs={12} sm={4} lg={3}>
+                  <AppListPanel square elevation={0}>
+                    <AppListSearch>
+                      <SearchIconWrapper>
+                        <SearchIcon />
+                      </SearchIconWrapper>
+                      <SearchInput type="text" placeholder="Search..." />
+                    </AppListSearch>
+                    <AppList>
+                      <ListItem>
+                        <Avatar>KG</Avatar>
+                        <ListItemText primary="onemorekiril" secondary="You: Hello, bro!" />
+                      </ListItem>
+                    </AppList>
+                  </AppListPanel>
+                </Grid>
+                <Hidden xsDown>
+                  <Grid item sm={8} lg={6}>Messages</Grid>
+                </Hidden>
+                <Hidden mdDown>
+                  <Grid item lg={3}>Details</Grid>
+                </Hidden>
               </Grid>
             </AppContent>
           </AppContainer>

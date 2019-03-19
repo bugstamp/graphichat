@@ -147,8 +147,14 @@ const AppList = styled(List)`
     flex: 1 auto;
     transition-duration: ${getStyledProps('theme.transitions.duration.shortest', 'ms')};
     transition-timing-function: ${getStyledProps('theme.transitions.easing.sharp')};
+  }
+`;
 
-    &:hover {
+const AppListItem = styled(ListItem)`
+  && {
+    padding-right: 60px;
+
+    &&:hover {
       background-color: #fff;
       border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')};
       cursor: pointer;
@@ -180,36 +186,35 @@ const AppListAvatarWrapper = styled.div`
   }
 `;
 
-const AppListSecondaryItems = styled(ListItemSecondaryAction)`
-  && {
-    width: 32px;
-    ${position('absolute', 0, 0, 0, null)};
-    color: ${getStyledProps('theme.palette.grey.700')};
-    transform: none;
+const AppListSecondaryItems = styled.div`
+  width: 60px;
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  ${position('absolute', 0, 0, 0, null)};
+  color: ${getStyledProps('theme.palette.grey.700')};
+  padding: 11px;
+  padding-left: 0;
 
-    span {
-      ${position('absolute', 0, 0, null, null)};
-      width: 60px;
-      padding-right: ${getSpacing(1)};
-      font-size: 11px;
-      text-align: right;
-      text-transform: uppercase;
-    }
+  span {
+    width: 100%;
+    font-size: 11px;
+    text-align: right;
+    text-transform: uppercase;
+  }
 
-    div {
-      min-width: 20px;
-      min-height: 20px;
-      max-width: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      right:  ${getSpacing(1)};
-      bottom: 11px;
-      color: #fff;
-      background-color: ${red[500]};
-      border-radius: 50%;
-    }
+  div {
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 11px;
+    color: #fff;
+    background-color: ${red[500]};
+    border-radius: 50%;
   }
 `;
 
@@ -286,7 +291,7 @@ class AppLayout extends Component {
                       <SearchInput type="text" placeholder="Search..." />
                     </AppListSearch>
                     <AppList>
-                      <ListItem>
+                      <AppListItem>
                         <AppListAvatarWrapper>
                           <Avatar>KG</Avatar>
                           <span />
@@ -296,7 +301,7 @@ class AppLayout extends Component {
                           <span>12:17 pm</span>
                           <div>10</div>
                         </AppListSecondaryItems>
-                      </ListItem>
+                      </AppListItem>
                     </AppList>
                   </AppListPanel>
                 </Grid>

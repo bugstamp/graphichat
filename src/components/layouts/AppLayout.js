@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader';
 import { Link } from 'react-router-dom';
 import { map, set } from 'lodash';
 import styled from 'styled-components';
-import { size } from 'polished';
+import { size, position, ellipsis } from 'polished';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -14,6 +14,7 @@ import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Hidden from '@material-ui/core/Hidden';
 
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleRounded';
@@ -24,6 +25,7 @@ import BookmarkIcon from '@material-ui/icons/BookmarkRounded';
 import SettingsIcon from '@material-ui/icons/SettingsRounded';
 import LogoutIcon from '@material-ui/icons/ExitToAppRounded';
 
+import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import blue from '@material-ui/core/colors/blue';
 import indigo from '@material-ui/core/colors/indigo';
@@ -154,6 +156,63 @@ const AppList = styled(List)`
   }
 `;
 
+const AppListItemText = styled(ListItemText)`
+  && {
+    display: inline-flex;
+    flex-flow: column;
+
+    * {
+      ${ellipsis('100%')};
+    }
+  }
+`;
+
+const AppListAvatarWrapper = styled.div`
+  position: relative;
+  border-radius: 50%;
+
+  span {
+    ${position('absolute', null, '2px', '2px', null)};
+    ${size('10px')};
+    display: block;
+    background-color: ${green[500]};
+    border-radius: 50%;
+  }
+`;
+
+const AppListSecondaryItems = styled(ListItemSecondaryAction)`
+  && {
+    width: 32px;
+    ${position('absolute', 0, 0, 0, null)};
+    color: ${getStyledProps('theme.palette.grey.700')};
+    transform: none;
+
+    span {
+      ${position('absolute', 0, 0, null, null)};
+      width: 60px;
+      padding-right: ${getSpacing(1)};
+      font-size: 11px;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    div {
+      min-width: 20px;
+      min-height: 20px;
+      max-width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      right:  ${getSpacing(1)};
+      bottom: 11px;
+      color: #fff;
+      background-color: ${red[500]};
+      border-radius: 50%;
+    }
+  }
+`;
+
 const links = [
   {
     name: 'person',
@@ -228,8 +287,15 @@ class AppLayout extends Component {
                     </AppListSearch>
                     <AppList>
                       <ListItem>
-                        <Avatar>KG</Avatar>
-                        <ListItemText primary="onemorekiril" secondary="You: Hello, bro!" />
+                        <AppListAvatarWrapper>
+                          <Avatar>KG</Avatar>
+                          <span />
+                        </AppListAvatarWrapper>
+                        <AppListItemText primary="onemorekiril" secondary="You: Hello, bro!" />
+                        <AppListSecondaryItems>
+                          <span>12:17 pm</span>
+                          <div>10</div>
+                        </AppListSecondaryItems>
                       </ListItem>
                     </AppList>
                   </AppListPanel>

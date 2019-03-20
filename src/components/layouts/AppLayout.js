@@ -9,12 +9,14 @@ import { size, position, ellipsis } from 'polished';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Tab from '@material-ui/core/Tab';
+import Input from '@material-ui/core/Input';
 import InputBase from '@material-ui/core/InputBase';
 import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleRounded';
@@ -217,6 +219,61 @@ const AppListSecondaryItems = styled.div`
   }
 `;
 
+const AppMessagePanel = styled(Paper)`
+  && {
+    height: 100%;
+    flex-flow: column;
+    background-color: #fff;
+  padding: ${getSpacing(2)} ${getSpacing(3)};
+  }
+`;
+
+const AppMessagePanelTopBar = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid ${getStyledProps('theme.palette.grey.300')};
+`;
+
+const AppMessagePanelTopBarName = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  p {
+    ${getStyledProps('theme.typography.subtitle2')};
+  }
+`;
+
+const AppMessagePanelTopBarNameStatus = styled.span`
+  ${getStyledProps('theme.typography.caption')};
+  color: ${({ online, ...rest }) => (online
+    ? green[600]
+    : getStyledProps('theme.palette.grey.500')(rest))};
+`;
+
+const AppMessagePanelComment = styled.div`
+  width: 100%;
+`;
+
+const AppMessagePanelCommentInput = styled(Input)`
+  width: 100%;
+  min-height: 100px;
+  ${getStyledProps('theme.typography.caption')};
+`;
+
+const AppMessagePanelCommentSubmit = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  button {
+    margin-top: ${getSpacing(1)};
+    text-transform: uppercase;
+  }
+`;
+
 const links = [
   {
     name: 'person',
@@ -269,10 +326,7 @@ class AppLayout extends Component {
                     set(tabProps, 'to', to);
                     set(tabProps, 'component', Link);
                   }
-
-                  return (
-                    <TabStyled key={name} {...tabProps} />
-                  );
+                  return (<TabStyled key={name} {...tabProps} />);
                 })}
                 <TabStyled icon={<SettingsIcon color="action" />} />
                 <TabStyled icon={<LogoutIcon nativeColor={red[900]} />} />
@@ -295,7 +349,7 @@ class AppLayout extends Component {
                           <Avatar>KG</Avatar>
                           <span />
                         </AppListAvatarWrapper>
-                        <AppListItemText primary="onemorekiril" secondary="You: Hello, bro!" />
+                        <AppListItemText primary="Kiril Grischenko" secondary="You: Hello, bro!" />
                         <AppListSecondaryItems>
                           <span>12:17 pm</span>
                           <div>10</div>
@@ -305,7 +359,28 @@ class AppLayout extends Component {
                   </AppListPanel>
                 </Grid>
                 <Hidden xsDown>
-                  <Grid item sm={8} lg={6}>Messages</Grid>
+                  <Grid item sm={8} lg={6}>
+                    <AppMessagePanel square elevation={0}>
+                      <AppMessagePanelTopBar>
+                        <IconButton>
+                          <SearchIcon />
+                        </IconButton>
+                        <AppMessagePanelTopBarName>
+                          <p>Kiril Grischenko</p>
+                          <AppMessagePanelTopBarNameStatus online>online</AppMessagePanelTopBarNameStatus>
+                        </AppMessagePanelTopBarName>
+                        <IconButton>
+                          <SettingsIcon />
+                        </IconButton>
+                      </AppMessagePanelTopBar>
+                      <AppMessagePanelComment>
+                        <AppMessagePanelCommentInput placeholder="Write a message..." multiline maxRows={5} />
+                        <AppMessagePanelCommentSubmit>
+                          <Button color="primary">Send</Button>
+                        </AppMessagePanelCommentSubmit>
+                      </AppMessagePanelComment>
+                    </AppMessagePanel>
+                  </Grid>
                 </Hidden>
                 <Hidden mdDown>
                   <Grid item lg={3}>Details</Grid>

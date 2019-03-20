@@ -209,9 +209,8 @@ const AppListSecondaryItems = styled.div`
     min-height: 20px;
     max-width: 30px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    bottom: 11px;
+    align-items: center;
     color: #fff;
     background-color: ${red[500]};
     border-radius: 50%;
@@ -247,7 +246,7 @@ class AppLayout extends Component {
 
   render() {
     const { activeTab } = this.state;
-    const { children } = this.props;
+    // const { children } = this.props;
 
     return (
       <Grid container spacing={0} justify="center">

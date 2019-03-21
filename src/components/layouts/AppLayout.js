@@ -222,9 +222,10 @@ const AppListSecondaryItems = styled.div`
 const AppMessagePanel = styled(Paper)`
   && {
     height: 100%;
+    display: flex;
     flex-flow: column;
     background-color: #fff;
-  padding: ${getSpacing(2)} ${getSpacing(3)};
+    padding: ${getSpacing(2)} ${getSpacing(3)};
   }
 `;
 
@@ -255,12 +256,31 @@ const AppMessagePanelTopBarNameStatus = styled.span`
 
 const AppMessagePanelComment = styled.div`
   width: 100%;
+  display: flex;
+  flex-flow: column;
+  border-top: 1px solid ${getStyledProps('theme.palette.grey.300')};
+`;
+
+const AppMessagePanelCommentAvatar = styled.div`
+  display: flex;
+  align-items: flex-start;
+  padding: ${getSpacing(2)};
+`;
+
+const AppMessagePanelCommentForm = styled.form`
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
 `;
 
 const AppMessagePanelCommentInput = styled(Input)`
-  width: 100%;
-  min-height: 100px;
-  ${getStyledProps('theme.typography.caption')};
+  && {
+    width: 100%;
+    min-height: 100%;
+    display: inline-flex;
+    align-items: flex-start;
+  }
 `;
 
 const AppMessagePanelCommentSubmit = styled.div`
@@ -272,6 +292,10 @@ const AppMessagePanelCommentSubmit = styled.div`
     margin-top: ${getSpacing(1)};
     text-transform: uppercase;
   }
+`;
+
+const AppMessagePanelListWrapper = styled.div`
+  flex: 1 auto;
 `;
 
 const links = [
@@ -367,14 +391,24 @@ class AppLayout extends Component {
                         </IconButton>
                         <AppMessagePanelTopBarName>
                           <p>Kiril Grischenko</p>
-                          <AppMessagePanelTopBarNameStatus online>online</AppMessagePanelTopBarNameStatus>
+                          <AppMessagePanelTopBarNameStatus online>
+                            online
+                          </AppMessagePanelTopBarNameStatus>
                         </AppMessagePanelTopBarName>
                         <IconButton>
                           <SettingsIcon />
                         </IconButton>
                       </AppMessagePanelTopBar>
+                      <AppMessagePanelListWrapper>
+
+                      </AppMessagePanelListWrapper>
                       <AppMessagePanelComment>
-                        <AppMessagePanelCommentInput placeholder="Write a message..." multiline maxRows={5} />
+                        <AppMessagePanelCommentForm>
+                          <AppMessagePanelCommentAvatar>
+                            <Avatar>KG</Avatar>
+                          </AppMessagePanelCommentAvatar>
+                          <AppMessagePanelCommentInput placeholder="Write a message..." multiline />
+                        </AppMessagePanelCommentForm>
                         <AppMessagePanelCommentSubmit>
                           <Button color="primary">Send</Button>
                         </AppMessagePanelCommentSubmit>

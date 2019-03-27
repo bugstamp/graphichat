@@ -17,8 +17,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import Hidden from '@material-ui/core/Hidden';
 
+import MoodIcon from '@material-ui/icons/MoodRounded';
+import SendIcon from '@material-ui/icons/SendRounded';
+import AddIcon from '@material-ui/icons/AddRounded';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleRounded';
 import PersonIcon from '@material-ui/icons/PersonRounded';
 import SearchIcon from '@material-ui/icons/SearchRounded';
@@ -28,9 +32,11 @@ import SettingsIcon from '@material-ui/icons/SettingsRounded';
 import LogoutIcon from '@material-ui/icons/ExitToAppRounded';
 
 import green from '@material-ui/core/colors/green';
+import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 import blue from '@material-ui/core/colors/blue';
 import indigo from '@material-ui/core/colors/indigo';
+import orange from '@material-ui/core/colors/orange';
 
 import { getStyledProps, getSpacing } from '../../styles';
 
@@ -111,6 +117,7 @@ const LogoIcon = styled(({ above, ...rest }) => <ChatBubbleIcon {...rest} />)`
 const AppListPanel = styled(Paper)`
   && {
     height: 100%;
+    display: flex;
     flex-flow: column;
     background-color: ${getStyledProps('theme.palette.grey.100')};
     padding: ${getSpacing(2)};
@@ -144,9 +151,19 @@ const SearchInput = styled(InputBase)`
   }
 `;
 
+const AppListWrapper = styled.div`
+  flex: 1 auto;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+`;
+
 const AppList = styled(List)`
   && {
-    flex: 1 auto;
+    ${position('absolute', 0, '-17px', 0, 0)}
+    height: 100%;
+    max-height: 100%;
+    overflow-y: scroll;
     transition-duration: ${getStyledProps('theme.transitions.duration.shortest', 'ms')};
     transition-timing-function: ${getStyledProps('theme.transitions.easing.sharp')};
   }
@@ -175,7 +192,7 @@ const AppListItemText = styled(ListItemText)`
   }
 `;
 
-const AppListAvatarWrapper = styled.div`
+const AppListItemAvatar = styled.div`
   position: relative;
   border-radius: 50%;
 
@@ -188,7 +205,7 @@ const AppListAvatarWrapper = styled.div`
   }
 `;
 
-const AppListSecondaryItems = styled.div`
+const AppListItemSecondary = styled.div`
   width: 60px;
   display: flex;
   flex-flow: column;
@@ -217,6 +234,11 @@ const AppListSecondaryItems = styled.div`
     background-color: ${red[500]};
     border-radius: 50%;
   }
+`;
+
+const AppListFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const AppMessagePanel = styled(Paper)`
@@ -257,8 +279,9 @@ const AppMessagePanelTopBarNameStatus = styled.span`
 const AppMessagePanelComment = styled.div`
   width: 100%;
   display: flex;
-  flex-flow: column;
+  flex-flow: row nowrap;
   border-top: 1px solid ${getStyledProps('theme.palette.grey.300')};
+  padding-top: ${getSpacing(1)};
 `;
 
 const AppMessagePanelCommentAvatar = styled.div`
@@ -270,20 +293,38 @@ const AppMessagePanelCommentAvatar = styled.div`
 const AppMessagePanelCommentForm = styled.form`
   width: 100%;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column;
   align-items: flex-start;
+  position: relative;
 `;
 
 const AppMessagePanelCommentInput = styled(Input)`
   && {
     width: 100%;
-    min-height: 100%;
+    min-height: 80px;
     display: inline-flex;
     align-items: flex-start;
+
+    > div {
+      width: 95%;
+    }
+  }
+`;
+
+const AppMessagePanelCommentSmiles = styled.div`
+  ${position('absolute', 0, 0, null, null)}
+  font-size: 28px;
+  color: ${grey[500]};
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    color: ${orange[300]};
   }
 `;
 
 const AppMessagePanelCommentSubmit = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -291,11 +332,47 @@ const AppMessagePanelCommentSubmit = styled.div`
   button {
     margin-top: ${getSpacing(1)};
     text-transform: uppercase;
+
+    svg {
+      margin-left: ${getSpacing(1)};
+    }
   }
 `;
 
 const AppMessagePanelListWrapper = styled.div`
   flex: 1 auto;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+`;
+
+const AppMessagePanelList = styled(List)`
+  && {
+    ${position('absolute', 0, '-17px', 0, 0)}
+    height: 100%;
+    max-height: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-end;
+    overflow-y: scroll;
+  }
+`;
+
+const AppMessagePanelListItem = styled(ListItem)`
+  && {
+    justify-content: ${({ me }) => (me ? 'flex-start' : 'flex-end')};
+  }
+`;
+
+const AppMessagePanelListMessage = styled.div`
+  border-radius: 10px;
+  background-color: ${blue[100]};
+  padding: ${getSpacing(2)};
+  ${'' /* ${({ me }) => me ? { 'border-bottom-left-radius': 0 } : { 'border-bottom-right-radius': 0 } }; */}
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const links = [
@@ -367,19 +444,26 @@ class AppLayout extends Component {
                       </SearchIconWrapper>
                       <SearchInput type="text" placeholder="Search..." />
                     </AppListSearch>
-                    <AppList>
-                      <AppListItem>
-                        <AppListAvatarWrapper>
-                          <Avatar>KG</Avatar>
-                          <span />
-                        </AppListAvatarWrapper>
-                        <AppListItemText primary="Kiril Grischenko" secondary="You: Hello, bro!" />
-                        <AppListSecondaryItems>
-                          <span>12:17 pm</span>
-                          <div>10</div>
-                        </AppListSecondaryItems>
-                      </AppListItem>
-                    </AppList>
+                    <AppListWrapper>
+                      <AppList disablePadding>
+                        <AppListItem>
+                          <AppListItemAvatar>
+                            <Avatar>KG</Avatar>
+                            <span />
+                          </AppListItemAvatar>
+                          <AppListItemText primary="Kiril Grischenko" secondary="You: Hello, bro!" />
+                          <AppListItemSecondary>
+                            <span>12:17 pm</span>
+                            <div>10</div>
+                          </AppListItemSecondary>
+                        </AppListItem>
+                      </AppList>
+                    </AppListWrapper>
+                    <AppListFooter>
+                      <Fab color="secondary">
+                        <AddIcon />
+                      </Fab>
+                    </AppListFooter>
                   </AppListPanel>
                 </Grid>
                 <Hidden xsDown>
@@ -400,18 +484,38 @@ class AppLayout extends Component {
                         </IconButton>
                       </AppMessagePanelTopBar>
                       <AppMessagePanelListWrapper>
-
+                        <AppMessagePanelList>
+                          <AppMessagePanelListItem>
+                            <AppMessagePanelListMessage>
+                              Hi, Kiril!
+                            </AppMessagePanelListMessage>
+                          </AppMessagePanelListItem>
+                          <AppMessagePanelListItem me>
+                            <AppMessagePanelListMessage me>
+                              Hi!
+                            </AppMessagePanelListMessage>
+                          </AppMessagePanelListItem>
+                        </AppMessagePanelList>
                       </AppMessagePanelListWrapper>
                       <AppMessagePanelComment>
+                        <AppMessagePanelCommentAvatar>
+                          <Avatar>KG</Avatar>
+                        </AppMessagePanelCommentAvatar>
                         <AppMessagePanelCommentForm>
-                          <AppMessagePanelCommentAvatar>
-                            <Avatar>KG</Avatar>
-                          </AppMessagePanelCommentAvatar>
+                          <AppMessagePanelCommentSmiles>
+                            <MoodIcon fontSize="inherit" color="inherit" />
+                          </AppMessagePanelCommentSmiles>
                           <AppMessagePanelCommentInput placeholder="Write a message..." multiline />
+                          <AppMessagePanelCommentSubmit>
+                            <Button color="primary">
+                              Send
+                              <SendIcon />
+                            </Button>
+                          </AppMessagePanelCommentSubmit>
                         </AppMessagePanelCommentForm>
-                        <AppMessagePanelCommentSubmit>
-                          <Button color="primary">Send</Button>
-                        </AppMessagePanelCommentSubmit>
+                        <AppMessagePanelCommentAvatar>
+                          <Avatar>KG</Avatar>
+                        </AppMessagePanelCommentAvatar>
                       </AppMessagePanelComment>
                     </AppMessagePanel>
                   </Grid>

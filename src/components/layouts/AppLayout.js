@@ -119,7 +119,7 @@ const AppListPanel = styled(Paper)`
     height: 100%;
     display: flex;
     flex-flow: column;
-    background-color: ${getStyledProps('theme.palette.grey.100')};
+    background-color: ${getStyledProps('theme.palette.background.default')};
     padding: ${getSpacing(2)};
     padding-top: ${getSpacing(3)};
   }
@@ -239,15 +239,18 @@ const AppListItemSecondary = styled.div`
 const AppListFooter = styled.div`
   display: flex;
   justify-content: flex-end;
+  padding: ${getSpacing(1)} 0;
 `;
 
 const AppMessagePanel = styled(Paper)`
   && {
     height: 100%;
+    max-width: 700px;
     display: flex;
     flex-flow: column;
+    padding: ${getSpacing(2)} ${getSpacing(2)};
+    margin: 0 auto;
     background-color: #fff;
-    padding: ${getSpacing(2)} ${getSpacing(3)};
   }
 `;
 
@@ -358,20 +361,43 @@ const AppMessagePanelList = styled(List)`
   }
 `;
 
-const AppMessagePanelListItem = styled(ListItem)`
+const AppMessagePanelListItem = styled(({ me, ...rest }) => (<ListItem {...rest} />))`
   && {
-    justify-content: ${({ me }) => (me ? 'flex-start' : 'flex-end')};
+    flex-flow: column;
+    align-items: ${({ me }) => (me ? 'flex-start' : 'flex-end')};
   }
 `;
 
 const AppMessagePanelListMessage = styled.div`
   border-radius: 10px;
-  background-color: ${blue[100]};
+  background-color: ${({ me }) => (me ? grey[100] : blue[100])};
   padding: ${getSpacing(2)};
-  ${'' /* ${({ me }) => me ? { 'border-bottom-left-radius': 0 } : { 'border-bottom-right-radius': 0 } }; */}
+  ${({ me }) => ({
+    [`border-bottom-${me ? 'left' : 'right'}-radius`]: 0,
+  })};
 
   &:hover {
     cursor: pointer;
+  }
+`;
+
+const AppMessagePanelListMessageTime = styled.div`
+  display: flex;
+  justify-content: flex-start;
+
+  span {
+    ${getStyledProps('theme.typography.caption')};
+    color: ${getStyledProps('theme.palette.text.secondary')};
+  }
+`;
+
+const AppInfoPanel = styled(Paper)`
+  && {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    padding: ${getSpacing(2)} ${getSpacing(2)};
+    background-color: ${getStyledProps('theme.palette.background.default')};
   }
 `;
 
@@ -460,7 +486,7 @@ class AppLayout extends Component {
                       </AppList>
                     </AppListWrapper>
                     <AppListFooter>
-                      <Fab color="secondary">
+                      <Fab color="secondary" size="medium">
                         <AddIcon />
                       </Fab>
                     </AppListFooter>
@@ -484,16 +510,22 @@ class AppLayout extends Component {
                         </IconButton>
                       </AppMessagePanelTopBar>
                       <AppMessagePanelListWrapper>
-                        <AppMessagePanelList>
+                        <AppMessagePanelList disablePadding>
                           <AppMessagePanelListItem>
                             <AppMessagePanelListMessage>
                               Hi, Kiril!
                             </AppMessagePanelListMessage>
+                            <AppMessagePanelListMessageTime>
+                              <span>13:00:15</span>
+                            </AppMessagePanelListMessageTime>
                           </AppMessagePanelListItem>
                           <AppMessagePanelListItem me>
                             <AppMessagePanelListMessage me>
                               Hi!
                             </AppMessagePanelListMessage>
+                            <AppMessagePanelListMessageTime>
+                              <span>13:01:30</span>
+                            </AppMessagePanelListMessageTime>
                           </AppMessagePanelListItem>
                         </AppMessagePanelList>
                       </AppMessagePanelListWrapper>
@@ -521,7 +553,9 @@ class AppLayout extends Component {
                   </Grid>
                 </Hidden>
                 <Hidden mdDown>
-                  <Grid item lg={3}>Details</Grid>
+                  <Grid item lg={3}>
+                    <AppInfoPanel square elevation={0}>{null}</AppInfoPanel>
+                  </Grid>
                 </Hidden>
               </Grid>
             </AppContent>

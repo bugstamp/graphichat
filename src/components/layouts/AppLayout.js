@@ -43,17 +43,16 @@ import { getStyledProps, getSpacing } from '../../styles';
 const AppContainer = styled(Paper)`
   ${size('100%')};
   display: flex;
-  flex-flow: row nowrap;
 `;
 
 const AppNavigation = styled.div`
-  flex: 0 60px;
+  width: 60px;
   padding-top: ${getSpacing(2)};
 `;
 
 const AppContent = styled(Paper)`
   && {
-    flex: 1 auto;
+    ${size('100%')};
     display: flex;
     align-items: stretch;
   }
@@ -224,12 +223,12 @@ const AppListItemSecondary = styled.div`
   }
 
   div {
-    min-width: 20px;
-    min-height: 20px;
-    max-width: 30px;
+    min-width: 21px;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 5px;
+    font-size: 11px;
     color: #fff;
     background-color: ${red[500]};
     border-radius: 50%;
@@ -436,129 +435,137 @@ class AppLayout extends Component {
       <Grid container spacing={0} justify="center">
         <Grid item xs={12} lg={10}>
           <AppContainer square>
-            <AppNavigation>
-              <Logo>
-                <LogoIcon fontSize="inherit" above />
-                <LogoIcon fontSize="inherit" />
-              </Logo>
-              <TabsCustomStyled>
-                {map(links, ({ name, Icon, to }, index) => {
-                  const color = activeTab === index ? 'primary' : 'action';
-                  const tabProps = {
-                    onClick: () => this.handleChangeTab(index),
-                    icon: <Icon color={color} />,
-                  };
+            <Grid container spacing={0}>
+              <Hidden smDown>
+                <Grid item>
+                  <AppNavigation>
+                    <Logo>
+                      <LogoIcon fontSize="inherit" above />
+                      <LogoIcon fontSize="inherit" />
+                    </Logo>
+                    <TabsCustomStyled>
+                      {map(links, ({ name, Icon, to }, index) => {
+                        const color = activeTab === index ? 'primary' : 'action';
+                        const tabProps = {
+                          onClick: () => this.handleChangeTab(index),
+                          icon: <Icon color={color} />,
+                        };
 
-                  if (to) {
-                    set(tabProps, 'to', to);
-                    set(tabProps, 'component', Link);
-                  }
-                  return (<TabStyled key={name} {...tabProps} />);
-                })}
-                <TabStyled icon={<SettingsIcon color="action" />} />
-                <TabStyled icon={<LogoutIcon nativeColor={red[900]} />} />
-                <TabIndicatorCustomStyled activeTab={activeTab} />
-              </TabsCustomStyled>
-            </AppNavigation>
-            <AppContent square elevation={0}>
-              <Grid container spacing={0}>
-                <Grid item xs={12} sm={4} lg={3}>
-                  <AppListPanel square elevation={0}>
-                    <AppListSearch>
-                      <SearchIconWrapper>
-                        <SearchIcon />
-                      </SearchIconWrapper>
-                      <SearchInput type="text" placeholder="Search..." />
-                    </AppListSearch>
-                    <AppListWrapper>
-                      <AppList disablePadding>
-                        <AppListItem>
-                          <AppListItemAvatar>
-                            <Avatar>KG</Avatar>
-                            <span />
-                          </AppListItemAvatar>
-                          <AppListItemText primary="Kiril Grischenko" secondary="You: Hello, bro!" />
-                          <AppListItemSecondary>
-                            <span>12:17 pm</span>
-                            <div>10</div>
-                          </AppListItemSecondary>
-                        </AppListItem>
-                      </AppList>
-                    </AppListWrapper>
-                    <AppListFooter>
-                      <Fab color="secondary" size="medium">
-                        <AddIcon />
-                      </Fab>
-                    </AppListFooter>
-                  </AppListPanel>
+                        if (to) {
+                          set(tabProps, 'to', to);
+                          set(tabProps, 'component', Link);
+                        }
+                        return (<TabStyled key={name} {...tabProps} />);
+                      })}
+                      <TabStyled icon={<SettingsIcon color="action" />} />
+                      <TabStyled icon={<LogoutIcon nativeColor={red[900]} />} />
+                      <TabIndicatorCustomStyled activeTab={activeTab} />
+                    </TabsCustomStyled>
+                  </AppNavigation>
                 </Grid>
-                <Hidden xsDown>
-                  <Grid item sm={8} lg={6}>
-                    <AppMessagePanel square elevation={0}>
-                      <AppMessagePanelTopBar>
-                        <IconButton>
-                          <SearchIcon />
-                        </IconButton>
-                        <AppMessagePanelTopBarName>
-                          <p>Kiril Grischenko</p>
-                          <AppMessagePanelTopBarNameStatus online>
-                            online
-                          </AppMessagePanelTopBarNameStatus>
-                        </AppMessagePanelTopBarName>
-                        <IconButton>
-                          <SettingsIcon />
-                        </IconButton>
-                      </AppMessagePanelTopBar>
-                      <AppMessagePanelListWrapper>
-                        <AppMessagePanelList disablePadding>
-                          <AppMessagePanelListItem>
-                            <AppMessagePanelListMessage>
-                              Hi, Kiril!
-                            </AppMessagePanelListMessage>
-                            <AppMessagePanelListMessageTime>
-                              <span>13:00:15</span>
-                            </AppMessagePanelListMessageTime>
-                          </AppMessagePanelListItem>
-                          <AppMessagePanelListItem me>
-                            <AppMessagePanelListMessage me>
-                              Hi!
-                            </AppMessagePanelListMessage>
-                            <AppMessagePanelListMessageTime>
-                              <span>13:01:30</span>
-                            </AppMessagePanelListMessageTime>
-                          </AppMessagePanelListItem>
-                        </AppMessagePanelList>
-                      </AppMessagePanelListWrapper>
-                      <AppMessagePanelComment>
-                        <AppMessagePanelCommentAvatar>
-                          <Avatar>KG</Avatar>
-                        </AppMessagePanelCommentAvatar>
-                        <AppMessagePanelCommentForm>
-                          <AppMessagePanelCommentSmiles>
-                            <MoodIcon fontSize="inherit" color="inherit" />
-                          </AppMessagePanelCommentSmiles>
-                          <AppMessagePanelCommentInput placeholder="Write a message..." multiline />
-                          <AppMessagePanelCommentSubmit>
-                            <Button color="primary">
-                              Send
-                              <SendIcon />
-                            </Button>
-                          </AppMessagePanelCommentSubmit>
-                        </AppMessagePanelCommentForm>
-                        <AppMessagePanelCommentAvatar>
-                          <Avatar>KG</Avatar>
-                        </AppMessagePanelCommentAvatar>
-                      </AppMessagePanelComment>
-                    </AppMessagePanel>
+              </Hidden>
+              <Grid item xs>
+                <AppContent square elevation={0}>
+                  <Grid container spacing={0}>
+                    <Grid item xs={12} sm={4} lg={3}>
+                      <AppListPanel square elevation={0}>
+                        <AppListSearch>
+                          <SearchIconWrapper>
+                            <SearchIcon />
+                          </SearchIconWrapper>
+                          <SearchInput type="text" placeholder="Search..." />
+                        </AppListSearch>
+                        <AppListWrapper>
+                          <AppList disablePadding>
+                            <AppListItem>
+                              <AppListItemAvatar>
+                                <Avatar>KG</Avatar>
+                                <span />
+                              </AppListItemAvatar>
+                              <AppListItemText primary="Kiril Grischenko" secondary="You: Hello, bro!" />
+                              <AppListItemSecondary>
+                                <span>12:17 pm</span>
+                                <div>10</div>
+                              </AppListItemSecondary>
+                            </AppListItem>
+                          </AppList>
+                        </AppListWrapper>
+                        <AppListFooter>
+                          <Fab color="secondary" size="medium">
+                            <AddIcon />
+                          </Fab>
+                        </AppListFooter>
+                      </AppListPanel>
+                    </Grid>
+                    <Hidden xsDown>
+                      <Grid item sm={8} lg={6}>
+                        <AppMessagePanel square elevation={0}>
+                          <AppMessagePanelTopBar>
+                            <IconButton>
+                              <SearchIcon />
+                            </IconButton>
+                            <AppMessagePanelTopBarName>
+                              <p>Kiril Grischenko</p>
+                              <AppMessagePanelTopBarNameStatus online>
+                                online
+                              </AppMessagePanelTopBarNameStatus>
+                            </AppMessagePanelTopBarName>
+                            <IconButton>
+                              <SettingsIcon />
+                            </IconButton>
+                          </AppMessagePanelTopBar>
+                          <AppMessagePanelListWrapper>
+                            <AppMessagePanelList disablePadding>
+                              <AppMessagePanelListItem>
+                                <AppMessagePanelListMessage>
+                                  Hi, Kiril!
+                                </AppMessagePanelListMessage>
+                                <AppMessagePanelListMessageTime>
+                                  <span>13:00:15</span>
+                                </AppMessagePanelListMessageTime>
+                              </AppMessagePanelListItem>
+                              <AppMessagePanelListItem me>
+                                <AppMessagePanelListMessage me>
+                                  Hi!
+                                </AppMessagePanelListMessage>
+                                <AppMessagePanelListMessageTime>
+                                  <span>13:01:30</span>
+                                </AppMessagePanelListMessageTime>
+                              </AppMessagePanelListItem>
+                            </AppMessagePanelList>
+                          </AppMessagePanelListWrapper>
+                          <AppMessagePanelComment>
+                            <AppMessagePanelCommentAvatar>
+                              <Avatar>KG</Avatar>
+                            </AppMessagePanelCommentAvatar>
+                            <AppMessagePanelCommentForm>
+                              <AppMessagePanelCommentSmiles>
+                                <MoodIcon fontSize="inherit" color="inherit" />
+                              </AppMessagePanelCommentSmiles>
+                              <AppMessagePanelCommentInput placeholder="Write a message..." multiline />
+                              <AppMessagePanelCommentSubmit>
+                                <Button color="primary">
+                                  Send
+                                  <SendIcon />
+                                </Button>
+                              </AppMessagePanelCommentSubmit>
+                            </AppMessagePanelCommentForm>
+                            <AppMessagePanelCommentAvatar>
+                              <Avatar>KG</Avatar>
+                            </AppMessagePanelCommentAvatar>
+                          </AppMessagePanelComment>
+                        </AppMessagePanel>
+                      </Grid>
+                    </Hidden>
+                    <Hidden mdDown>
+                      <Grid item lg={3}>
+                        <AppInfoPanel square elevation={0}>{null}</AppInfoPanel>
+                      </Grid>
+                    </Hidden>
                   </Grid>
-                </Hidden>
-                <Hidden mdDown>
-                  <Grid item lg={3}>
-                    <AppInfoPanel square elevation={0}>{null}</AppInfoPanel>
-                  </Grid>
-                </Hidden>
+                </AppContent>
               </Grid>
-            </AppContent>
+            </Grid>
           </AppContainer>
         </Grid>
       </Grid>

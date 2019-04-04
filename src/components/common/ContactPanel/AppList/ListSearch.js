@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/SearchRounded';
 
-import { getStyledProps, getSpacing } from '../../../styles';
+import { getStyledProps, getSpacing } from '../../../../styles';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -17,32 +17,32 @@ const Wrapper = styled.div`
   border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')}
 `;
 
-const ListPanelSearchIcon = styled.div`
-  flex: 0 50px;
+const SearchIconWrapper = styled.div`
+  flex: 0 40px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   color: ${getStyledProps('theme.palette.primary.light')};
 `;
 
-const ListPanelSearchInput = styled(InputBase)`
+const SearchInput = styled(InputBase)`
   && {
     flex: 1 auto;
     color: inherit;
   }
 `;
 
-class ListPanelSearch extends Component {
+class ListSearch extends Component {
   render() {
     return (
       <Wrapper>
-        <ListPanelSearchIcon>
+        <SearchIconWrapper>
           <SearchIcon />
-        </ListPanelSearchIcon>
-        <ListPanelSearchInput type="text" placeholder="Search..." />
+        </SearchIconWrapper>
+        <SearchInput type="text" placeholder="Search..." />
       </Wrapper>
     );
   }
 }
 
-export default ListPanelSearch;
+export default ListSearch;

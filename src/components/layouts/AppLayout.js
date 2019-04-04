@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
-// import {} from 'lodash';
 import styled from 'styled-components';
+// import {} from 'lodash';
 import { size } from 'polished';
 
 import Grid from '@material-ui/core/Grid';
@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 
 import Navigation from '../common/Navigation/Navigation';
-import ListPanel from '../common/ListPanel/ListPanel';
+import ContactPanel from '../common/ContactPanel/ContactPanel';
 import MessagePanel from '../common/MessagePanel/MessagePanel';
 
 import { getStyledProps, getSpacing } from '../../styles';
@@ -39,8 +39,6 @@ const AppInfoPanel = styled(Paper)`
 `;
 
 class AppLayout extends Component {
-  state = {}
-
   render() {
     // const { children } = this.props;
 
@@ -58,7 +56,7 @@ class AppLayout extends Component {
                 <AppContent square elevation={0}>
                   <Grid container spacing={0}>
                     <Grid item xs={12} sm={4} lg={3}>
-                      <ListPanel />
+                      <ContactPanel />
                     </Grid>
                     <Hidden xsDown>
                       <Grid item sm={8} lg={6}>

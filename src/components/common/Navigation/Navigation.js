@@ -3,8 +3,8 @@ import styled from 'styled-components';
 // import {} from 'polished';
 // import {} from 'lodash';
 
-import Logo from '../../ui/Logo';
 import Tabs from './Tabs';
+import Logo from '../Logo';
 
 import { getSpacing } from '../../../styles';
 

@@ -9,7 +9,7 @@ import Home from '../components/common/Home';
 import Login from '../components/dumb/Login/Login';
 import Reg from '../components/dumb/Reg/Reg';
 // import NotFound from '../components/common/NotFound';
-import PageLoader from '../components/ui/PageLoader';
+import PageLoader from '../components/common/PageLoader';
 
 import AppRoute from './AppRoute';
 

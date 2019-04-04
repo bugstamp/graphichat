@@ -6,15 +6,15 @@ import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import InputBase from '@material-ui/core/InputBase';
 import Fab from '@material-ui/core/Fab';
 import Avatar from '@material-ui/core/Avatar';
 
 import AddIcon from '@material-ui/icons/AddRounded';
-import SearchIcon from '@material-ui/icons/SearchRounded';
 
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
+
+import ListPanelSearch from './ListPanelSearch';
 
 import { getStyledProps, getSpacing } from '../../../styles';
 
@@ -26,32 +26,6 @@ const WrapperPaper = styled(Paper)`
     background-color: ${getStyledProps('theme.palette.background.default')};
     padding: ${getSpacing(2)};
     padding-top: ${getSpacing(3)};
-  }
-`;
-
-const ListPanelSearch = styled.div`
-  width: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: stretch;
-  margin-bottom: ${getSpacing(1)};
-  color: ${getStyledProps('theme.palette.grey.600')};
-  background-color: #fff;
-  border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')}
-`;
-
-const ListPanelSearchIcon = styled.div`
-  flex: 0 50px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  color: ${getStyledProps('theme.palette.primary.light')};
-`;
-
-const ListPanelSearchInput = styled(InputBase)`
-  && {
-    flex: 1 auto;
-    color: inherit;
   }
 `;
 
@@ -150,12 +124,7 @@ class ListPanel extends Component {
   render() {
     return (
       <WrapperPaper square elevation={0}>
-        <ListPanelSearch>
-          <ListPanelSearchIcon>
-            <SearchIcon />
-          </ListPanelSearchIcon>
-          <ListPanelSearchInput type="text" placeholder="Search..." />
-        </ListPanelSearch>
+        <ListPanelSearch />
         <AppListWrapper>
           <AppList disablePadding>
             <AppListItem>
@@ -172,7 +141,7 @@ class ListPanel extends Component {
           </AppList>
         </AppListWrapper>
         <AppListFooter>
-          <Fab color="secondary" size="medium">
+          <Fab color="primary" size="medium">
             <AddIcon />
           </Fab>
         </AppListFooter>

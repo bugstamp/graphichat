@@ -71,7 +71,7 @@ const AppMessagePanelComment = styled.div`
 const AppMessagePanelCommentAvatar = styled.div`
   display: flex;
   align-items: flex-start;
-  padding: ${getSpacing(2)};
+  padding: ${getSpacing(1)};
 `;
 
 const AppMessagePanelCommentForm = styled.form`

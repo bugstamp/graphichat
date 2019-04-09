@@ -5,13 +5,15 @@ import EmailValidator from 'email-validator';
 
 import mongoose from '../mongoose';
 import { AuthenticationError, BadInputError } from '../../utils/apolloErrors';
+import {
+  EMAIL_UNCONFIRMED,
+  UNCOMPLETED,
+  COMPLETED,
+  ONLINE,
+  OFFLINE,
+} from './enums';
 
-export const EMAIL_UNCONFIRMED = 'EMAIL_UNCONFIRMED';
-export const UNCOMPLETED = 'UNCOMPLETED';
-export const COMPLETED = 'COMPLETED';
-
-const ONLINE = 'ONLINE';
-const OFFLINE = 'OFFLINE';
+const { ObjectId } = mongoose.Schema.Types;
 
 const tokensConfig = {
   token: {
@@ -31,17 +33,31 @@ const tokensConfig = {
   },
 };
 
-const userFriendSchema = new mongoose.Schema({
-  id: {
-    type: mongoose.Schema.Types.ObjectId,
+const messageSchema = new mongoose.Schema({
+  content: {
+    type: String,
     require: true,
   },
-  name: {
-    type: String,
+  time: {
+    type: Date,
+    require: true,
+  },
+  editTime: Date,
+  ownerId: {
+    type: ObjectId,
+    require: true,
   },
 });
 
-const userSocialsSchema = new mongoose.Schema({
+const chatSchema = new mongoose.Schema({
+  userId: {
+    type: ObjectId,
+    require: true,
+  },
+  messages: [messageSchema],
+});
+
+const socialSchema = new mongoose.Schema({
   google: String,
   facebook: String,
   github: String,
@@ -100,8 +116,8 @@ const userSchema = new mongoose.Schema({
     require: true,
     default: EMAIL_UNCONFIRMED,
   },
-  friends: [userFriendSchema],
-  socials: userSocialsSchema,
+  chats: [chatSchema],
+  socials: socialSchema,
 });
 
 userSchema.pre('save', async function preSave(next) {

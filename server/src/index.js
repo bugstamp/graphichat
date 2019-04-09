@@ -18,30 +18,34 @@ const { tokenVerification } = middlewares;
 const port = process.env.PORT;
 const apolloPath = process.env.APOLLO_PATH;
 
-const app = express();
-const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
-  formatError,
-  context: ({ req }) => {
-    const { user } = req;
+const startServer = async () => {
+  const app = express();
+  const apolloServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+    formatError,
+    context: ({ req }) => {
+      const { user } = req;
 
-    return { db, user };
-  },
-});
-const corsOptions = {};
+      return { db, user };
+    },
+  });
+  const corsOptions = {};
 
-app.use(express.static(paths.public));
-app.use(cors(corsOptions));
-app.use(tokenVerification);
-app.use(verification);
+  app.use(express.static(paths.public));
+  app.use(cors(corsOptions));
+  app.use(tokenVerification);
+  app.use(verification);
 
-apolloServer.applyMiddleware({ app, path: apolloPath });
+  apolloServer.applyMiddleware({ app, path: apolloPath });
 
-app.get('*', (req, res) => {
-  res.sendFile(paths.html);
-});
+  app.get('*', (req, res) => {
+    res.sendFile(paths.html);
+  });
 
-app.listen({ port }, () => {
-  console.log(`Server is listening on port - ${port}`);
-});
+  app.listen({ port }, () => {
+    console.log(`Server is listening on port - ${port}`);
+  });
+};
+
+startServer();

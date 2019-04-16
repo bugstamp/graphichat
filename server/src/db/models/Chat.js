@@ -13,17 +13,45 @@ const messageSchema = new mongoose.Schema({
     type: Date,
     require: true,
   },
-  editTime: Date,
+  edited: {
+    type: Boolean,
+    default: false,
+  },
   ownerId: {
     type: ObjectId,
     require: true,
   },
 });
 
+const profileSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    require: true,
+  },
+  avatar: {
+    type: String,
+  },
+});
+
 const chatSchema = new mongoose.Schema({
+  ownerId: {
+    type: ObjectId,
+    require: true,
+  },
   userId: {
     type: ObjectId,
     require: true,
+  },
+  profile: profileSchema,
+  createDate: {
+    type: Date,
+    require: true,
+    default: new Date(),
+  },
+  lastDate: {
+    type: Date,
+    require: true,
+    default: new Date(),
   },
   messages: [messageSchema],
 });
@@ -31,6 +59,6 @@ const chatSchema = new mongoose.Schema({
 chatSchema.methods = {};
 chatSchema.statistics = {};
 
-const Chat = mongoose.model('User', chatSchema);
+const Chat = mongoose.model('Chat', chatSchema);
 
 export default Chat;

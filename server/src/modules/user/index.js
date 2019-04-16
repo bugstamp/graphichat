@@ -20,18 +20,6 @@ const UserModule = new GraphQLModule({
       COMPLETED
     }
 
-    type Message {
-      content: String!
-      time: DateTime!
-      editTime: DateTime
-      ownerId: ID!
-    }
-
-    type Chat {
-      userId: ID!
-      messages: [Message]
-    }
-
     type Social {
       google: ID!
       facebook: ID!
@@ -52,7 +40,6 @@ const UserModule = new GraphQLModule({
       lastDate: DateTime!
       refreshToken: String
       regStatus: regStatus
-      chats: [Chat]
       socials: Social
     }
 

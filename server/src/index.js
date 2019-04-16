@@ -7,22 +7,20 @@ import './dotenv';
 import paths from '../../paths';
 
 import db from './db';
-import typeDefs from './schemas';
-import resolvers from './resolvers';
-import routers from './routers';
+import modules from './modules';
 import middlewares from './middlewares';
+import routers from './routers';
 
-const { verification } = routers;
 const { tokenVerification } = middlewares;
+const { verification } = routers;
 
 const port = process.env.PORT;
 const apolloPath = process.env.APOLLO_PATH;
 
-const startServer = async () => {
+const startServer = async ({ schema }) => {
   const app = express();
   const apolloServer = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema,
     formatError,
     context: ({ req }) => {
       const { user } = req;
@@ -48,4 +46,4 @@ const startServer = async () => {
   });
 };
 
-startServer();
+startServer(modules);

@@ -7,7 +7,7 @@
   "ignore": [
     "server/build/*"
   ],
-  "ext": "js,json,gql",
+  "ext": "js,json,gql,graphql",
   "env": {
     "NODE_ENV": "development"
   }

@@ -4,7 +4,10 @@ import { pick } from 'lodash';
 import EmailValidator from 'email-validator';
 
 import mongoose from '../mongoose';
-import { AuthenticationError, BadInputError } from '../../utils/apolloErrors';
+import {
+  AuthenticationError,
+  BadInputError,
+} from '../../utils/apolloErrors';
 import {
   EMAIL_UNCONFIRMED,
   UNCOMPLETED,
@@ -12,8 +15,6 @@ import {
   ONLINE,
   OFFLINE,
 } from './enums';
-
-const { ObjectId } = mongoose.Schema.Types;
 
 const tokensConfig = {
   token: {
@@ -32,30 +33,6 @@ const tokensConfig = {
     model: ['id'],
   },
 };
-
-const messageSchema = new mongoose.Schema({
-  content: {
-    type: String,
-    require: true,
-  },
-  time: {
-    type: Date,
-    require: true,
-  },
-  editTime: Date,
-  ownerId: {
-    type: ObjectId,
-    require: true,
-  },
-});
-
-const chatSchema = new mongoose.Schema({
-  userId: {
-    type: ObjectId,
-    require: true,
-  },
-  messages: [messageSchema],
-});
 
 const socialSchema = new mongoose.Schema({
   google: String,
@@ -116,7 +93,6 @@ const userSchema = new mongoose.Schema({
     require: true,
     default: EMAIL_UNCONFIRMED,
   },
-  chats: [chatSchema],
   socials: socialSchema,
 });
 
@@ -261,9 +237,7 @@ userSchema.statics = {
       if (user) {
         throw new BadInputError({
           message: `The provided ${field} is already exist.`,
-          data: {
-            invalidField: field,
-          },
+          data: { invalidField: field },
         });
       }
       return !user;
@@ -291,9 +265,7 @@ userSchema.statics = {
       if (!user) {
         throw new BadInputError({
           message: 'The provided username can\'t be found',
-          data: {
-            invalidField: 'username',
-          },
+          data: { invalidField: 'username' },
         });
       }
       const { password: hash, regStatus } = user;
@@ -303,9 +275,7 @@ userSchema.statics = {
       if (!validPassword) {
         throw new BadInputError({
           message: 'The provided password is incorrect',
-          data: {
-            invalidField: 'password',
-          },
+          data: { invalidField: 'password' },
         });
       }
       if (!validRegistration) {

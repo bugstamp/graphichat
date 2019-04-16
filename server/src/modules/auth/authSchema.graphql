@@ -1,50 +1,3 @@
-enum Status {
-  OFFLINE
-  ONLINE
-}
-
-enum regStatus {
-  EMAIL_UNCONFIRMED
-  UNCOMPLETED
-  COMPLETED
-}
-
-type Message {
-  content: String!
-  time: Date!
-  editTime: Date
-  ownerId: ID!
-}
-
-type Chat {
-  userId: ID!
-  messages: [Message]
-}
-
-type Social {
-  google: ID!
-  facebook: ID!
-  github: ID!
-}
-
-type User {
-  id: ID!
-  username: String
-  email: String!
-  displayName: String
-  firstName: String
-  lastName: String
-  gender: String
-  birthday: Date
-  status: Status
-  createDate: Date!
-  lastDate: Date!
-  refreshToken: String
-  regStatus: regStatus
-  chats: [Chat]
-  socials: Social
-}
-
 type AuthPayload {
   token: String
   refreshToken: String
@@ -85,9 +38,7 @@ type AsyncValidationResult {
 }
 
 type Query {
-  getUser(id: ID!): User
-  getUsers: [User]
-  getMe: User
+  me: User
 }
 
 type Mutation {
@@ -97,6 +48,5 @@ type Mutation {
   signUpAsyncValidation(field: String!, value: String!): AsyncValidationResult
   signInBySocial(social: SocialProfile!, profile: SocialUserProfile!): AuthPayload
   signUpBySocial(social: SocialProfile!, profile: SocialUserProfile!): AuthPayload
-  signOut(id: ID!): User
-  deleteUser(id: ID!): User
+  signOut: User
 }

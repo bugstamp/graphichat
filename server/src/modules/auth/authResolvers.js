@@ -1,34 +1,12 @@
-import nodemailer from '../utils/nodemailer';
-import { COMPLETED } from '../db/models/User';
-import { getUserDisplayName } from '../utils/helpers';
-import { ForbiddenError } from '../utils/apolloErrors';
+import nodemailer from '../../utils/nodemailer';
+import { COMPLETED } from '../../db/models/enums';
+import { getUserDisplayName } from '../../utils/helpers';
 
 export default {
   Query: {
-    async getUser(parent, { id }, { db }) {
+    async me(parent, args, { db, user }) {
       try {
-        const user = db.User.findById(id);
-
-        return user;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async getUsers(parent, args, { db }) {
-      try {
-        const users = await db.User.find({});
-
-        return users;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async getMe(parent, args, { db, user }) {
-      try {
-        if (!user) {
-          throw new ForbiddenError();
-        }
-        const me = db.User.findById(user.id);
+        const me = await db.User.findById(user.id);
 
         return me;
       } catch (e) {
@@ -125,21 +103,13 @@ export default {
         throw e;
       }
     },
-    async signOut(parent, { id }, { db }) {
+    async signOut(parent, args, { db, user }) {
       try {
-        const user = await db.User.findById(id);
-        await user.logActivity('logout');
+        const { id } = user;
+        const currentUser = await db.User.findById(id);
+        await currentUser.logActivity('logout');
 
-        return user;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async deleteUser(parent, { id }, { db }) {
-      try {
-        const result = db.User.findByIdAndDelete(id);
-
-        return result;
+        return currentUser;
       } catch (e) {
         throw e;
       }

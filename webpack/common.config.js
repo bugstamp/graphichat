@@ -34,6 +34,11 @@ module.exports = merge([
           ],
         },
         {
+          test: /\.(graphql|gql)$/,
+          exclude: /node_modules/,
+          loader: 'graphql-tag/loader',
+        },
+        {
           test: /\.html$/,
           use: ['html-loader'],
         },

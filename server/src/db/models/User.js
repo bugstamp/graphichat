@@ -16,6 +16,8 @@ import {
   OFFLINE,
 } from './enums';
 
+const { ObjectId } = mongoose.Schema.Types;
+
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
@@ -38,6 +40,17 @@ const socialSchema = new mongoose.Schema({
   google: String,
   facebook: String,
   github: String,
+});
+
+const friendSchema = new mongoose.Schema({
+  userId: {
+    type: ObjectId,
+    required: true,
+  },
+  chatId: {
+    type: ObjectId,
+    required: true,
+  },
 });
 
 const userSchema = new mongoose.Schema({
@@ -94,6 +107,7 @@ const userSchema = new mongoose.Schema({
     default: EMAIL_UNCONFIRMED,
   },
   socials: socialSchema,
+  friends: [friendSchema],
 });
 
 userSchema.pre('save', async function preSave(next) {

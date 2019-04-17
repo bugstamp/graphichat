@@ -26,6 +26,11 @@ const UserModule = new GraphQLModule({
       github: ID!
     }
 
+    type Friend {
+      userId: ID!
+      chatId: ID!
+    }
+
     type User {
       id: ID!
       username: String
@@ -41,6 +46,7 @@ const UserModule = new GraphQLModule({
       refreshToken: String
       regStatus: regStatus
       socials: Social
+      friends: Friend
     }
 
     type Query {

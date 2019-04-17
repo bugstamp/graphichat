@@ -1,33 +1,27 @@
+import { map } from 'lodash';
+
 export default {
-  // Query: {
-  //   async user(parent, { id }, { db }) {
-  //     try {
-  //       const user = db.User.findById(id);
-  //
-  //       return user;
-  //     } catch (e) {
-  //       throw e;
-  //     }
-  //   },
-  //   async users(parent, args, { db }) {
-  //     try {
-  //       const users = await db.User.find({});
-  //
-  //       return users;
-  //     } catch (e) {
-  //       throw e;
-  //     }
-  //   },
-  // },
-  // Mutation: {
-  //   async delete(parent, { id }, { db }) {
-  //     try {
-  //       const result = db.User.findByIdAndDelete(id);
-  //
-  //       return result;
-  //     } catch (e) {
-  //       throw e;
-  //     }
-  //   },
-  // },
+  Query: {
+    async myChats(parent, args, { db, user }) {
+      try {
+        const { id } = user;
+        const { friends } = db.User.findById(id);
+        const chatIds = map(friends, 'chatId');
+        const chats = db.Chat.find({ id: { $in: chatIds } });
+
+        return chats;
+      } catch (e) {
+        throw e;
+      }
+    },
+    async chats(parent, args, { db }) {
+      try {
+        const chats = db.Chat.find({});
+
+        return chats;
+      } catch (e) {
+        throw e;
+      }
+    },
+  },
 };

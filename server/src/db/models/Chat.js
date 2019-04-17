@@ -5,7 +5,7 @@ import mongoose from '../mongoose';
 const { ObjectId } = mongoose.Schema.Types;
 
 const messageSchema = new mongoose.Schema({
-  ownerId: {
+  userId: {
     type: ObjectId,
     require: true,
   },
@@ -23,38 +23,20 @@ const messageSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-});
-
-const profileSchema = new mongoose.Schema({
-  userId: {
-    type: ObjectId,
-    require: true,
-  },
-  name: {
-    type: String,
-    require: true,
-  },
-  avatar: {
-    type: String,
+  read: {
+    type: Boolean,
+    default: false,
   },
 });
 
 const chatSchema = new mongoose.Schema({
-  ownerId: {
-    type: ObjectId,
-    require: true,
-  },
-  profile: profileSchema,
+  members: [ObjectId],
   createDate: {
     type: Date,
     require: true,
     default: new Date(),
   },
-  lastDate: {
-    type: Date,
-    require: true,
-    default: new Date(),
-  },
+  lastDate: Date,
   messages: [messageSchema],
 });
 

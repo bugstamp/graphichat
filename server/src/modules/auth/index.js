@@ -67,6 +67,7 @@ const AuthModule = new GraphQLModule({
   resolversComposition: {
     'Query.me': [isAuth()],
   },
+  context: context => context,
 });
 
 export default AuthModule;

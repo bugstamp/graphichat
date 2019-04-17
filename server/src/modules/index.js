@@ -12,6 +12,7 @@ const AppModule = new GraphQLModule({
     AuthModule,
     ChatModule,
   ],
+  context: context => context,
 });
 
 export default AppModule;

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Switch } from 'react-router-dom';
+import { Switch, Redirect } from 'react-router-dom';
 import importedComponent from 'react-imported-component';
 
 // import LoginLayout from '../components/layouts/LoginLayout';
 // import AppLayout from '../components/layouts/AppLayout';
 
-import Home from '../components/common/Home';
 import Login from '../components/dumb/Login/Login';
 import Reg from '../components/dumb/Reg/Reg';
+import Chats from '../components/dumb/Chats/Chats';
 // import NotFound from '../components/common/NotFound';
 import PageLoader from '../components/common/PageLoader';
 
@@ -21,7 +21,6 @@ const AppLayout = importedComponent(() => import('../components/layouts/AppLayou
   LoadingComponent: PageLoader,
 });
 
-
 // const NotFound = Loadable({
 //   loader: () => import('../components/common/NotFound'),
 //   loading: PageLoader,
@@ -31,10 +30,8 @@ const Routes = () => (
   <Switch>
     <AppRoute path="/login" layout={LoginLayout} component={Login} />
     <AppRoute path="/reg" layout={LoginLayout} component={Reg} />
-    <AppRoute exact path="/" layout={AppLayout} component={Home} privateRoute />
-    <AppRoute path="/person" layout={AppLayout} component={Home} privateRoute />
-    <AppRoute path="/group" layout={AppLayout} component={Home} privateRoute />
-    <AppRoute path="/saved" layout={AppLayout} component={Home} privateRoute />
+    <AppRoute exact path="/" component={Redirect} to="/chats" redirect />
+    <AppRoute path="/chats" layout={AppLayout} component={Chats} privateRoute />
     {/* <AppRoute component={NotFound} /> */}
   </Switch>
 );

@@ -11,19 +11,22 @@ const ChatModule = new GraphQLModule({
   imports: [ScalarsModule],
   typeDefs: gql`
     type Message {
+      ownerId: ID!
       content: String!
       time: DateTime!
       editTime: DateTime
-      ownerId: ID!
+      edited: Boolean 
     }
 
     type UserProfile {
+      userId: ID!
       name: String!
+      avatar: String
     }
 
     type Chat {
       ownerId: ID!
-      userId: ID!
+      profile: UserProfile
       createDate: DateTime!
       lastDate: DateTime!
       messages: [Message]

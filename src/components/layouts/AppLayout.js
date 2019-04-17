@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import styled from 'styled-components';
 // import {} from 'lodash';
@@ -10,37 +10,15 @@ import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 
 import Navigation from '../common/Navigation/Navigation';
-import ContactPanel from '../common/ContactPanel/ContactPanel';
-import MessagePanel from '../common/MessagePanel/MessagePanel';
-
-import { getStyledProps, getSpacing } from '../../styles';
 
 const AppContainer = styled(Paper)`
   ${size('100%')};
   display: flex;
 `;
 
-const AppContent = styled(Paper)`
-  && {
-    ${size('100%')};
-    display: flex;
-    align-items: stretch;
-  }
-`;
-
-const AppInfoPanel = styled(Paper)`
-  && {
-    height: 100%;
-    display: flex;
-    flex-flow: column;
-    padding: ${getSpacing(2)} ${getSpacing(2)};
-    background-color: ${getStyledProps('theme.palette.background.default')};
-  }
-`;
-
 class AppLayout extends Component {
   render() {
-    // const { children } = this.props;
+    const { children } = this.props;
 
     return (
       <Grid container spacing={0} justify="center">
@@ -53,23 +31,7 @@ class AppLayout extends Component {
                 </Grid>
               </Hidden>
               <Grid item xs>
-                <AppContent square elevation={0}>
-                  <Grid container spacing={0}>
-                    <Grid item xs={12} sm={4} lg={3}>
-                      <ContactPanel />
-                    </Grid>
-                    <Hidden xsDown>
-                      <Grid item sm={8} lg={6}>
-                        <MessagePanel />
-                      </Grid>
-                    </Hidden>
-                    <Hidden mdDown>
-                      <Grid item lg={3}>
-                        <AppInfoPanel square elevation={0}>{null}</AppInfoPanel>
-                      </Grid>
-                    </Hidden>
-                  </Grid>
-                </AppContent>
+                {children}
               </Grid>
             </Grid>
           </AppContainer>
@@ -79,6 +41,8 @@ class AppLayout extends Component {
   }
 }
 
-AppLayout.propTypes = {};
+AppLayout.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
+};
 
 export default hot(module)(AppLayout);

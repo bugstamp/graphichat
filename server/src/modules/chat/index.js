@@ -4,7 +4,7 @@ import { gql } from 'apollo-server-express';
 import resolvers from './chatResolvers';
 import ScalarsModule from '../scalars';
 
-// import { isAuth } from '../middlewares';
+import { isAuth } from '../middlewares';
 
 const ChatModule = new GraphQLModule({
   name: 'chat',
@@ -35,9 +35,9 @@ const ChatModule = new GraphQLModule({
     # }
   `,
   resolvers,
-  // resolversComposition: {
-  //   'Query.me': [isAuth()],
-  // },
+  resolversComposition: {
+    'Query.myChats': [isAuth()],
+  },
 });
 
 export default ChatModule;

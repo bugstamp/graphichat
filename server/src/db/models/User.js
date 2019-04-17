@@ -42,7 +42,7 @@ const socialSchema = new mongoose.Schema({
   github: String,
 });
 
-const friendSchema = new mongoose.Schema({
+const contactSchema = new mongoose.Schema({
   userId: {
     type: ObjectId,
     required: true,
@@ -107,7 +107,7 @@ const userSchema = new mongoose.Schema({
     default: EMAIL_UNCONFIRMED,
   },
   socials: socialSchema,
-  friends: [friendSchema],
+  contacts: [contactSchema],
 });
 
 userSchema.pre('save', async function preSave(next) {

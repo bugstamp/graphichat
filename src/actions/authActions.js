@@ -50,3 +50,16 @@ export const SIGN_UP_BY_SOCIAL = gql`
     }
   }
 `;
+
+export const GET_ME = gql`
+  query Me {
+    me {
+      id
+      username
+      displayName
+      firstName
+      lastName
+      status
+    }
+  }
+`;

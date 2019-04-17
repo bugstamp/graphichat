@@ -2,14 +2,13 @@ import { map } from 'lodash';
 
 export default {
   Query: {
-    async myChats(parent, args, { db, user }) {
+    async myChats(parent, args, { db, user: { id } }) {
       try {
-        const { id } = user;
-        const { friends } = db.User.findById(id);
+        const { friends } = await db.User.findById(id);
         const chatIds = map(friends, 'chatId');
-        const chats = db.Chat.find({ id: { $in: chatIds } });
+        const myChats = await db.Chat.find({ id: { $in: chatIds } });
 
-        return chats;
+        return myChats;
       } catch (e) {
         throw e;
       }

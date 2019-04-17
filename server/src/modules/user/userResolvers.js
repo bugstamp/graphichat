@@ -1,3 +1,5 @@
+import { map } from 'lodash';
+
 export default {
   Query: {
     async user(parent, { id }, { db }) {
@@ -14,6 +16,26 @@ export default {
         const users = await db.User.find({});
 
         return users;
+      } catch (e) {
+        throw e;
+      }
+    },
+    async me(parent, args, { db, user: { id } }) {
+      try {
+        const me = await db.User.findById(id);
+
+        return me;
+      } catch (e) {
+        throw e;
+      }
+    },
+    async myContacts(parent, args, { db, user: { id } }) {
+      try {
+        const { contacts } = await db.User.findById(id);
+        const contactIds = map(contacts, 'userId');
+        const myContacts = await db.User.find({ id: { $in: contactIds } });
+
+        return myContacts;
       } catch (e) {
         throw e;
       }

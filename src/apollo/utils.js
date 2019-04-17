@@ -33,3 +33,5 @@ export const createMutation = (name, gqlMutation, mutationProps = {}) => (contai
 //     />
 //   );
 // };
+
+export default undefined;

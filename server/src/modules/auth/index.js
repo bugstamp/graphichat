@@ -2,9 +2,7 @@ import { GraphQLModule } from '@graphql-modules/core';
 import { gql } from 'apollo-server-express';
 
 import resolvers from './authResolvers';
-
 import UserModule from '../user';
-import { isAuth } from '../middlewares';
 
 const AuthModule = new GraphQLModule({
   name: 'auth',
@@ -49,10 +47,6 @@ const AuthModule = new GraphQLModule({
       valid: Boolean!
     }
 
-    type Query {
-      me: User
-    }
-
     type Mutation {
       signIn(form: SignInForm!): AuthPayload
       signUp(form: SignUpForm!): Boolean
@@ -64,9 +58,6 @@ const AuthModule = new GraphQLModule({
     }
   `,
   resolvers,
-  resolversComposition: {
-    'Query.me': [isAuth()],
-  },
   context: context => context,
 });
 

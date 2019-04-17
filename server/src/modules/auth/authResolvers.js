@@ -3,17 +3,6 @@ import { COMPLETED } from '../../db/models/enums';
 import { getUserDisplayName } from '../../utils/helpers';
 
 export default {
-  Query: {
-    async me(parent, args, { db, user }) {
-      try {
-        const me = await db.User.findById(user.id);
-
-        return me;
-      } catch (e) {
-        throw e;
-      }
-    },
-  },
   Mutation: {
     async signIn(parent, { form }, { db }) {
       try {

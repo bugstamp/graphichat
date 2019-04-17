@@ -2,8 +2,8 @@ import { GraphQLModule } from '@graphql-modules/core';
 import { gql } from 'apollo-server-express';
 
 import resolvers from './userResolvers';
-
 import ScalarsModule from '../scalars';
+import { isAuth } from '../middlewares';
 
 const UserModule = new GraphQLModule({
   name: 'user',
@@ -26,7 +26,7 @@ const UserModule = new GraphQLModule({
       github: ID!
     }
 
-    type Friend {
+    type Contact {
       userId: ID!
       chatId: ID!
     }
@@ -46,12 +46,14 @@ const UserModule = new GraphQLModule({
       refreshToken: String
       regStatus: regStatus
       socials: Social
-      friends: Friend
+      contacts: Contact
     }
 
     type Query {
       user(id: ID!): User
       users: [User]
+      me: User
+      myContacts: [User]
     }
 
     type Mutation {
@@ -59,6 +61,10 @@ const UserModule = new GraphQLModule({
     }
   `,
   resolvers,
+  resolversComposition: {
+    'Query.me': [isAuth()],
+  },
+  context: context => context,
 });
 
 export default UserModule;

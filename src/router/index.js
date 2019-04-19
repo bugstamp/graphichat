@@ -7,7 +7,7 @@ import importedComponent from 'react-imported-component';
 
 import Login from '../components/dumb/Login/Login';
 import Reg from '../components/dumb/Reg/Reg';
-import Chats from '../components/dumb/Chats/Chats';
+import Contacts from '../components/dumb/Contacts/Contacts';
 // import NotFound from '../components/common/NotFound';
 import PageLoader from '../components/common/PageLoader';
 
@@ -30,8 +30,8 @@ const Routes = () => (
   <Switch>
     <AppRoute path="/login" layout={LoginLayout} component={Login} />
     <AppRoute path="/reg" layout={LoginLayout} component={Reg} />
-    <AppRoute exact path="/" component={Redirect} to="/chats" redirect />
-    <AppRoute path="/chats" layout={AppLayout} component={Chats} privateRoute />
+    <AppRoute exact path="/" component={Redirect} to="/contacts" redirect />
+    <AppRoute path="/contacts" layout={AppLayout} component={Contacts} privateRoute />
     {/* <AppRoute component={NotFound} /> */}
   </Switch>
 );

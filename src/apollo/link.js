@@ -1,6 +1,6 @@
 import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink, from } from 'apollo-link';
-// import { onError } from 'apollo-link-error';
+import { onError } from 'apollo-link-error';
 
 import storage from '../actions/storage';
 
@@ -32,10 +32,10 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
   return response;
 }));
 
-// const errorLink = onError(({ networkError = {}, graphQLErrors, response, operation }) => {
-//   console.log('networkerrors', networkError);
-//   console.log('error', graphQLErrors);
-// });
+const errorLink = onError(({ networkError = {}, graphQLErrors, response, operation }) => {
+  console.log('networkerrors', networkError);
+  console.log('error', graphQLErrors);
+});
 
 const logger = new ApolloLink((operation, forward) => {
   const { operationName } = operation;
@@ -47,7 +47,7 @@ const logger = new ApolloLink((operation, forward) => {
 });
 
 const link = from([
-  // errorLink,
+  errorLink,
   authLink,
   tokenLink,
   logger,

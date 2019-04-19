@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { pick } from 'lodash';
+import { map, pick } from 'lodash';
 import EmailValidator from 'email-validator';
 
 import mongoose from '../mongoose';

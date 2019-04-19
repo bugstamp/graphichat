@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import styled from 'styled-components';
-import { isEmpty } from 'lodash';
+// import { isEmpty } from 'lodash';
 import { size } from 'polished';
 
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +12,7 @@ import Hidden from '@material-ui/core/Hidden';
 import AppLayoutContainer from '../smart/AppLayoutContainer';
 import Navigation from '../common/Navigation/Navigation';
 
-const Container = styled(Paper)`
+const AppContainer = styled(Paper)`
   ${size('100%')};
   display: flex;
 `;
@@ -23,13 +23,11 @@ class AppLayout extends Component {
 
     return (
       <AppLayoutContainer>
-        {({ getMe: { ...props } }) => {
-          console.log(props);
-
+        {() => {
           return (
             <Grid container spacing={0} justify="center">
               <Grid item xs={12} lg={10}>
-                <Container square>
+                <AppContainer square>
                   <Grid container spacing={0}>
                     <Hidden smDown>
                       <Grid item>
@@ -40,7 +38,7 @@ class AppLayout extends Component {
                       {children}
                     </Grid>
                   </Grid>
-                </Container>
+                </AppContainer>
               </Grid>
             </Grid>
           );

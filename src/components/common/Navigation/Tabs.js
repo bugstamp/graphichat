@@ -52,9 +52,9 @@ const TabItemIndicator = styled.span`
 
 const links = [
   {
-    name: 'person',
+    name: 'contacts',
     Icon: PersonIcon,
-    to: 'person',
+    to: 'contacts',
   },
   // {
   //   name: 'group',

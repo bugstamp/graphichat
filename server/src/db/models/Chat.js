@@ -30,13 +30,11 @@ const messageSchema = new mongoose.Schema({
 });
 
 const chatSchema = new mongoose.Schema({
-  members: [ObjectId],
   createDate: {
     type: Date,
     require: true,
     default: new Date(),
   },
-  lastDate: Date,
   messages: [messageSchema],
 });
 

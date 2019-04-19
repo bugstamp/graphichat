@@ -9,19 +9,14 @@ const client = new ApolloClient({
   cache,
   credentials: 'include',
 });
-
 const initialState = {
-  me: {},
-  chats: {
-    all: [],
-    selected: {},
-  },
+  me: null,
+  contacts: [],
 };
 
 const initData = (data) => {
   cache.writeData({ data });
 };
-
 initData(initialState);
 
 client.onResetStore(() => { initData(initialState); });

@@ -24,14 +24,25 @@ export const createMutation = (name, gqlMutation, mutationProps = {}) => (contai
   );
 };
 
-// export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps) => {
-//   const queryContainerPropsKey = `${name}Props`;
-//
-//   return (
-//     <Query
-//       query={queryProps}
-//     />
-//   );
-// };
+export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps) => {
+  const queryContainerPropsKey = `${name}Props`;
+  const queryContainerProps = has(containerProps, queryContainerPropsKey)
+    ? get(containerProps, queryContainerPropsKey)
+    : {};
+  const { render } = containerProps;
+
+  return (
+    <Query
+      query={gqlQuery}
+      {...queryProps}
+      {...queryContainerProps}
+    >
+      {props => render({
+        ...props,
+        name,
+      })}
+    </Query>
+  );
+};
 
 export default undefined;

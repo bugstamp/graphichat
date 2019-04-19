@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import { forEach, isEmpty } from 'lodash';
 
 export default {
   Query: {
@@ -32,8 +32,24 @@ export default {
     async myContacts(parent, args, { db, user: { id } }) {
       try {
         const { contacts } = await db.User.findById(id);
-        const contactIds = map(contacts, 'userId');
-        const myContacts = await db.User.find({ id: { $in: contactIds } });
+        const myContacts = [];
+
+        if (!isEmpty(contacts)) {
+          forEach(contacts, async ({ userId, chatId }) => {
+            const person = await db.User.find({ id: userId });
+            const messages = await db.Chat
+              .find({ id: chatId }, {
+                messages: {
+                  $slice: ['messages', -1],
+                },
+              });
+
+            myContacts.push({
+              person,
+              messages,
+            });
+          });
+        }
 
         return myContacts;
       } catch (e) {

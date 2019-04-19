@@ -52,7 +52,7 @@ export const SIGN_UP_BY_SOCIAL = gql`
 `;
 
 export const GET_ME = gql`
-  query Me {
+  query GetMe {
     me {
       id
       username
@@ -60,6 +60,24 @@ export const GET_ME = gql`
       firstName
       lastName
       status
+    }
+    myContacts {
+      person {
+        id
+        username
+        displayName
+        firstName
+        lastName
+        status
+      }
+      messages {
+        userId
+        content
+        time
+        editTime
+        edited
+        read
+      }
     }
   }
 `;

@@ -1,16 +1,16 @@
 import { GraphQLModule } from '@graphql-modules/core';
 import { gql } from 'apollo-server-express';
 
-import resolvers from './chatResolvers';
 import ScalarsModule from '../scalars';
 
-import { isAuth } from '../middlewares';
+import resolvers from './chatResolvers';
+// import { isAuth } from '../middlewares';
 
 const ChatModule = new GraphQLModule({
   name: 'chat',
   imports: [ScalarsModule],
   typeDefs: gql`
-    type Message {
+    type ChatMessage {
       userId: ID!
       content: String!
       time: DateTime!
@@ -20,14 +20,11 @@ const ChatModule = new GraphQLModule({
     }
 
     type Chat {
-      members: [ID!]
       createDate: DateTime!
-      lastDate: DateTime!
-      messages: [Message]
+      messages: [ChatMessage]
     }
 
     type Query {
-      myChats: [Chat]
       chats: [Chat]
     }
 
@@ -35,9 +32,7 @@ const ChatModule = new GraphQLModule({
     # }
   `,
   resolvers,
-  resolversComposition: {
-    'Query.myChats': [isAuth()],
-  },
+  resolversComposition: {},
 });
 
 export default ChatModule;

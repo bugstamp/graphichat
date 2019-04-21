@@ -10,7 +10,6 @@ const ListItemStyled = styled(ListItem)`
   && {
     padding: 0 ${getSpacing(1)};
     margin-bottom: ${getSpacing(1)};
-    cursor: pointer;
   }
 `;
 

@@ -90,6 +90,12 @@ export const GET_ME = gql`
   }
 `;
 
+export const GET_MY_CONTACTS = gql`
+  query GetMyContacts {
+    myContacts @client
+  }
+`;
+
 export const SEARCH_USERS = gql`
   query SearchUsers($searchValue: String!) {
     searchUsers(searchValue: $searchValue) {
@@ -99,6 +105,22 @@ export const SEARCH_USERS = gql`
       firstName
       lastName
       status
+    }
+  }
+`;
+
+export const ADD_CONTACT = gql`
+  mutation addContact($userId: ID!) {
+    addContact(userId: $userId) {
+      person {
+        id
+        username
+        displayName
+        firstName
+        lastName
+        status
+      }
+      messages
     }
   }
 `;

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import styled from 'styled-components';
 import { map } from 'lodash';
 
@@ -26,7 +26,8 @@ const ListWrapper = styled.div`
 
 const SubTitle = styled(Typography)`
   && {
-    padding-top: ${getSpacing(1)};
+    padding: 0 ${getSpacing(3)};
+    padding-bottom: ${getSpacing(1)};
   }
 `;
 
@@ -40,6 +41,8 @@ const ProgressWrapper = styled.div`
 class SearchDialog extends PureComponent {
   state = {
     searchValue: '',
+    confirmDialog: false,
+    selectedUser: {},
   }
 
   onChangeSearchValue = (value, refetch) => {
@@ -51,9 +54,17 @@ class SearchDialog extends PureComponent {
     );
   }
 
+  toggleConfirmDialog = (user = {}) => {
+    this.setState(({ confirmDialog }) => ({
+      confirmDialog: !confirmDialog,
+      selectedUser: user,
+    }));
+  }
+
   render() {
-    const { searchValue } = this.state;
+    const { searchValue, confirmDialog, selectedUser } = this.state;
     const { open, toggle } = this.props;
+    console.log(selectedUser);
 
     return (
       <SearchDialogContainer
@@ -62,50 +73,81 @@ class SearchDialog extends PureComponent {
           skip: !searchValue,
         }}
       >
-        {({ searchUsers: { loading, data, refetch } }) => {
+        {({ searchUsers: { loading, data, refetch }, addContact }) => {
+          console.log(addContact);
           return (
-            <Dialog open={open} onClose={toggle} scroll="body">
-              <DialogTitle>
-                Search contact
+            <Fragment>
+              <Dialog open={open} onClose={toggle} scroll="body">
+                <DialogTitle>
+                  Search contact
+                </DialogTitle>
                 <SubTitle variant="subtitle2">
                   Search contact by name or use "@" as a first character for searching by username.
                 </SubTitle>
-              </DialogTitle>
-              <DialogContent>
-                <ListSearch
-                  value={searchValue}
-                  onChange={value => this.onChangeSearchValue(value, refetch)}
-                />
-                <ListWrapper>
-                  <Choose>
-                    <When condition={loading}>
-                      <ProgressWrapper>
-                        <CircularProgress size={20} />
-                      </ProgressWrapper>
-                    </When>
-                    <When condition={!data}>
-                      {null}
-                    </When>
-                    <Otherwise>
-                      <List>
-                        {map(data.searchUsers, (item) => {
-                          const { id } = item;
+                <DialogContent>
+                  <ListSearch
+                    value={searchValue}
+                    onChange={value => this.onChangeSearchValue(value, refetch)}
+                  />
+                  <ListWrapper>
+                    <Choose>
+                      <When condition={loading}>
+                        <ProgressWrapper>
+                          <CircularProgress size={20} />
+                        </ProgressWrapper>
+                      </When>
+                      <When condition={!data}>
+                        {null}
+                      </When>
+                      <Otherwise>
+                        <List>
+                          {map(data.searchUsers, (item) => {
+                            const { id } = item;
 
-                          return (<SearchDialogListItem key={id} {...item} />);
-                        })}
-                      </List>
-                    </Otherwise>
-                  </Choose>
-                </ListWrapper>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={toggle} color="primary">Close</Button>
-              </DialogActions>
-              {/* <DialogActions>
-                <Button onClick={toggle} color="primary">Cancel</Button>
-                <Button color="primary" disabled>Add</Button>
-              </DialogActions> */}
-            </Dialog>
+                            return (
+                              <SearchDialogListItem
+                                key={id}
+                                item={item}
+                                openConfirmDialog={this.toggleConfirmDialog}
+                              />
+                            );
+                          })}
+                        </List>
+                      </Otherwise>
+                    </Choose>
+                  </ListWrapper>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={toggle} color="primary">Close</Button>
+                </DialogActions>
+                {/* <DialogActions>
+                  <Button onClick={toggle} color="primary">Cancel</Button>
+                  <Button color="primary" disabled>Add</Button>
+                </DialogActions> */}
+              </Dialog>
+              <If condition={confirmDialog}>
+                <Dialog open={confirmDialog} onClose={toggle}>
+                  <DialogTitle>Create chat with {selectedUser.displayName}?</DialogTitle>
+                  <DialogActions>
+                    <Button
+                      color="primary"
+                      size="small"
+                      onClick={this.toggleConfirmDialog}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      size="small"
+                      onClick={() => addContact.mutation({ variables: { userId: selectedUser.id } })}
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </If>
+            </Fragment>
           );
         }}
       </SearchDialogContainer>

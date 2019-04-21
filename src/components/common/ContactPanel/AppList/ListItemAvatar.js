@@ -11,6 +11,7 @@ import green from '@material-ui/core/colors/green';
 const Wrapper = styled.div`
   position: relative;
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 const AvatarIndicator = styled.span`

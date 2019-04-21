@@ -11,15 +11,17 @@ const ChatModule = new GraphQLModule({
   imports: [ScalarsModule],
   typeDefs: gql`
     type ChatMessage {
-      userId: ID!
-      content: String!
-      time: DateTime!
+      id: ID
+      userId: ID
+      content: String
+      time: DateTime
       editTime: DateTime
       edited: Boolean
       read: Boolean
     }
 
     type Chat {
+      id: ID!
       createDate: DateTime!
       messages: [ChatMessage]
     }
@@ -33,6 +35,7 @@ const ChatModule = new GraphQLModule({
   `,
   resolvers,
   resolversComposition: {},
+  context: context => context,
 });
 
 export default ChatModule;

@@ -42,6 +42,7 @@ const ListSearch = ({ value, onChange }) => (
       value={value}
       onChange={({ target }) => onChange(target.value)}
       placeholder="Search..."
+      autoFocus
     />
   </Wrapper>
 );

@@ -1,4 +1,4 @@
-import { forEach, isEmpty } from 'lodash';
+import { forEach, isEmpty, filter } from 'lodash';
 import { getUserDisplayName } from '../../utils/helpers';
 
 export default {
@@ -37,11 +37,11 @@ export default {
 
         if (!isEmpty(contacts)) {
           forEach(contacts, async ({ userId, chatId }) => {
-            const person = await db.User.find({ id: userId });
+            const person = await db.User.findById(userId);
             const messages = await db.Chat
               .find({ id: chatId }, {
                 messages: {
-                  $slice: ['messages', -1],
+                  $slice: ['$messages', -1],
                 },
               });
 
@@ -95,6 +95,31 @@ export default {
         const result = db.User.findByIdAndDelete(id);
 
         return result;
+      } catch (e) {
+        throw e;
+      }
+    },
+    async addContact(parent, { userId }, { db, user: { id } }) {
+      try {
+        const person = await db.User.findById(userId);
+        const { id: chatId, messages } = await db.Chat.create({});
+        await db.User.findByIdAndUpdate(id, { $push: { contacts: { userId, chatId } } });
+
+        return {
+          person,
+          messages,
+        };
+      } catch (e) {
+        throw e;
+      }
+    },
+    async removeContact(parent, { userId }, { db, user: { id } }) {
+      try {
+        const user = await db.User.findById(id);
+        const { contacts } = user;
+        await user.update({ contacts: filter(contacts, contact => contact.userId !== userId) });
+
+        return true;
       } catch (e) {
         throw e;
       }

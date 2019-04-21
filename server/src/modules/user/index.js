@@ -51,7 +51,7 @@ const UserModule = new GraphQLModule({
       contacts: Contact
     }
 
-    type MyContact {
+    type Contact {
       person: User
       messages: ChatMessage
     }
@@ -60,7 +60,7 @@ const UserModule = new GraphQLModule({
       user(id: ID!): User
       users: [User]
       me: User
-      myContacts: [MyContact]
+      myContacts: [Contact]
       searchUsers(searchValue: String!): [User]
     }
 
@@ -78,6 +78,8 @@ const UserModule = new GraphQLModule({
     type Mutation {
       createUser(form: UserCreateForm): User
       deleteUser: User
+      addContact(userId: ID!): Contact
+      removeContact(userId: ID!): Boolean
     }
   `,
   resolvers,

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import InputBase from '@material-ui/core/InputBase';
@@ -32,17 +32,18 @@ const SearchInput = styled(InputBase)`
   }
 `;
 
-class ListSearch extends Component {
-  render() {
-    return (
-      <Wrapper>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <SearchInput type="text" placeholder="Search..." />
-      </Wrapper>
-    );
-  }
-}
+const ListSearch = ({ value, onChange }) => (
+  <Wrapper>
+    <SearchIconWrapper>
+      <SearchIcon />
+    </SearchIconWrapper>
+    <SearchInput
+      type="text"
+      value={value}
+      onChange={({ target }) => onChange(target.value)}
+      placeholder="Search..."
+    />
+  </Wrapper>
+);
 
 export default ListSearch;

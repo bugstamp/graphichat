@@ -51,6 +51,14 @@ export const SIGN_UP_BY_SOCIAL = gql`
   }
 `;
 
+export const SIGN_OUT = gql`
+  mutation SignOut {
+    signOut {
+      id
+    }
+  }
+`;
+
 export const GET_ME = gql`
   query GetMe {
     me {
@@ -78,6 +86,19 @@ export const GET_ME = gql`
         edited
         read
       }
+    }
+  }
+`;
+
+export const SEARCH_USERS = gql`
+  query SearchUsers($searchValue: String!) {
+    searchUsers(searchValue: $searchValue) {
+      id
+      username
+      displayName
+      firstName
+      lastName
+      status
     }
   }
 `;

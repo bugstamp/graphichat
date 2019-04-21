@@ -9,16 +9,12 @@ const client = new ApolloClient({
   cache,
   credentials: 'include',
 });
-const initialState = {
-  me: null,
-  contacts: [],
-};
 
-const initData = (data) => {
+const initialState = {};
+const resetData = (data) => {
   cache.writeData({ data });
 };
-initData(initialState);
 
-client.onResetStore(() => { initData(initialState); });
+client.onResetStore(() => { resetData(initialState); });
 
 export default client;

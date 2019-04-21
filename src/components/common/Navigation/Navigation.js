@@ -24,11 +24,16 @@ class Navigation extends PureComponent {
 
   render() {
     const { activeTab } = this.state;
+    const { signOut } = this.props;
 
     return (
       <Wrapper>
         <Logo />
-        <Tabs activeTab={activeTab} onChangeTab={this.handleChangeTab} />
+        <Tabs
+          activeTab={activeTab}
+          onChangeTab={this.handleChangeTab}
+          signOut={signOut}
+        />
       </Wrapper>
     );
   }

@@ -1,4 +1,5 @@
 import { forEach, isEmpty } from 'lodash';
+import { getUserDisplayName } from '../../utils/helpers';
 
 export default {
   Query: {
@@ -56,9 +57,40 @@ export default {
         throw e;
       }
     },
+    async searchUsers(parent, { searchValue }, { db }) {
+      try {
+        let usersList = [];
+
+        if (searchValue) {
+          const isSearchByUsername = searchValue[0] === '@';
+
+          if (isSearchByUsername) {
+            const username = searchValue.slice(1);
+
+            usersList = await db.User.find({ username: { $regex: username, $options: 'i' } });
+          } else {
+            usersList = await db.User.find({ displayName: { $regex: searchValue, $options: 'i' } });
+          }
+        }
+
+        return usersList;
+      } catch (e) {
+        throw e;
+      }
+    },
   },
   Mutation: {
-    async delete(parent, { id }, { db }) {
+    async createUser(parent, { form }, { db }) {
+      try {
+        const displayName = getUserDisplayName(form);
+        const newUser = await db.User.create({ ...form, displayName });
+
+        return newUser;
+      } catch (e) {
+        throw e;
+      }
+    },
+    async deleteUser(parent, { id }, { db }) {
       try {
         const result = db.User.findByIdAndDelete(id);
 

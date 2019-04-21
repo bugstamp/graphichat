@@ -61,10 +61,23 @@ const UserModule = new GraphQLModule({
       users: [User]
       me: User
       myContacts: [MyContact]
+      searchUsers(searchValue: String!): [User]
+    }
+
+    input UserCreateForm {
+      username: String!
+      email: String!
+      password: String!
+      firstName: String!
+      lastName: String!
+      gender: String
+      birthday: String
+      regStatus: String!
     }
 
     type Mutation {
-      delete: User
+      createUser(form: UserCreateForm): User
+      deleteUser: User
     }
   `,
   resolvers,

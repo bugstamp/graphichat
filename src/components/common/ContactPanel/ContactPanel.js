@@ -59,7 +59,9 @@ class ContactPanel extends Component {
           })}
         </AppList>
         <ContactPanelFooter toggleSearchDialog={this.toggleSearchDialog} />
-        <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
+        <If condition={searchDialog}>
+          <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
+        </If>
       </Wrapper>
     );
   }

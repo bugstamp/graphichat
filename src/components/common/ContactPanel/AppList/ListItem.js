@@ -9,12 +9,14 @@ import { getSpacing } from '../../../../styles';
 const ListItemStyled = styled(ListItem)`
   && {
     padding: 0 ${getSpacing(1)};
+    margin-bottom: ${getSpacing(1)};
+    cursor: pointer;
   }
 `;
 
-const AppListItem = ({ children }) => {
+const AppListItem = ({ children, onClick }) => {
   return (
-    <ListItemStyled>
+    <ListItemStyled onClick={onClick}>
       {children}
     </ListItemStyled>
   );

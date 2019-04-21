@@ -68,7 +68,7 @@ const links = [
   // },
 ];
 
-const Tabs = ({ activeTab, onChangeTab }) => {
+const Tabs = ({ activeTab, onChangeTab, signOut }) => {
   const logoutIconColor = red[900];
 
   return (
@@ -87,7 +87,7 @@ const Tabs = ({ activeTab, onChangeTab }) => {
         );
       })}
       <TabItem icon={<SettingsIcon color="action" />} />
-      <TabItem icon={<LogoutIcon nativeColor={logoutIconColor} />} />
+      <TabItem icon={<LogoutIcon nativeColor={logoutIconColor} />} onClick={signOut} />
       <TabItemIndicator activeTab={activeTab} />
     </Wrapper>
   );

@@ -10,19 +10,20 @@ import AppListItemInfo from './AppList/ListItemInfo';
 import { getContactInitials } from '../../../helpers';
 
 const SearchDialogListItem = ({
+  id,
   avatar,
   firstName,
   lastName,
-  fullName,
-  login,
+  displayName,
+  username,
 }) => {
   const avatarText = getContactInitials(firstName, lastName);
-  const secondary = `@${login}`;
+  const secondary = `@${username}`;
 
   return (
-    <AppListItem>
+    <AppListItem onClick={() => console.log(id)}>
       <AppListItemAvatar src={avatar} text={avatarText} online={false} />
-      <AppListItemInfo primary={fullName} secondary={secondary} />
+      <AppListItemInfo primary={displayName} secondary={secondary} />
     </AppListItem>
   );
 };

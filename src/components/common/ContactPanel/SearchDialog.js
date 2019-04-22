@@ -18,7 +18,6 @@ import List from './AppList/List';
 import SearchDialogListItem from './SearchDialogListItem';
 
 import { getSpacing } from '../../../styles';
-import { GET_MY_CONTACTS, GET_ME_LOCAL } from '../../../actions/authActions';
 
 const ListWrapper = styled.div`
   height: 200px;
@@ -82,10 +81,9 @@ class SearchDialog extends PureComponent {
         {({
           searchUsers: { loading, data, refetch },
           addContact,
+          getMyContacts,
         }) => {
-          const { result: { client } } = addContact;
-          const { myContacts } = client.readQuery({ query: GET_MY_CONTACTS });
-          // const { me } = client.readQuery({ query: GET_ME_LOCAL });
+          const { data: { myContacts } } = getMyContacts;
 
           return (
             <Fragment>

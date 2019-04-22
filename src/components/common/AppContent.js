@@ -24,7 +24,7 @@ const InfoPanel = styled(Paper)`
     height: 100%;
     display: flex;
     flex-flow: column;
-    padding: ${getSpacing(2)} ${getSpacing(2)};
+    padding: ${getSpacing(2)};
     background-color: ${getStyledProps('theme.palette.background.default')};
   }
 `;

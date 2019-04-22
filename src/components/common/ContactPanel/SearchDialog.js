@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import styled from 'styled-components';
-import { map } from 'lodash';
+import { map, find } from 'lodash';
 
 // import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -18,6 +18,7 @@ import List from './AppList/List';
 import SearchDialogListItem from './SearchDialogListItem';
 
 import { getSpacing } from '../../../styles';
+import { GET_MY_CONTACTS, GET_ME_LOCAL } from '../../../actions/authActions';
 
 const ListWrapper = styled.div`
   height: 200px;
@@ -54,17 +55,22 @@ class SearchDialog extends PureComponent {
     );
   }
 
-  toggleConfirmDialog = (user = {}) => {
+  openConfirmDialog = (user = {}) => {
     this.setState(({ confirmDialog }) => ({
       confirmDialog: !confirmDialog,
       selectedUser: user,
     }));
   }
 
+  closeConfirmDialog = () => {
+    this.setState(({ confirmDialog }) => ({
+      confirmDialog: !confirmDialog,
+    }));
+  }
+
   render() {
     const { searchValue, confirmDialog, selectedUser } = this.state;
     const { open, toggle } = this.props;
-    console.log(selectedUser);
 
     return (
       <SearchDialogContainer
@@ -73,8 +79,14 @@ class SearchDialog extends PureComponent {
           skip: !searchValue,
         }}
       >
-        {({ searchUsers: { loading, data, refetch }, addContact }) => {
-          console.log(addContact);
+        {({
+          searchUsers: { loading, data, refetch },
+          addContact,
+        }) => {
+          const { result: { client } } = addContact;
+          const { myContacts } = client.readQuery({ query: GET_MY_CONTACTS });
+          // const { me } = client.readQuery({ query: GET_ME_LOCAL });
+
           return (
             <Fragment>
               <Dialog open={open} onClose={toggle} scroll="body">
@@ -103,12 +115,15 @@ class SearchDialog extends PureComponent {
                         <List>
                           {map(data.searchUsers, (item) => {
                             const { id } = item;
+                            const added = !!find(myContacts, ({ person }) => person.id === id);
 
                             return (
                               <SearchDialogListItem
                                 key={id}
                                 item={item}
-                                openConfirmDialog={this.toggleConfirmDialog}
+                                adding={addContact.result.loading && selectedUser.id === id}
+                                added={added}
+                                openConfirmDialog={this.openConfirmDialog}
                               />
                             );
                           })}
@@ -132,7 +147,7 @@ class SearchDialog extends PureComponent {
                     <Button
                       color="primary"
                       size="small"
-                      onClick={this.toggleConfirmDialog}
+                      onClick={this.closeConfirmDialog}
                     >
                       Cancel
                     </Button>
@@ -140,7 +155,10 @@ class SearchDialog extends PureComponent {
                       color="primary"
                       variant="contained"
                       size="small"
-                      onClick={() => addContact.mutation({ variables: { userId: selectedUser.id } })}
+                      onClick={() => {
+                        addContact.mutation({ variables: { userId: selectedUser.id } });
+                        this.closeConfirmDialog();
+                      }}
                     >
                       Confirm
                     </Button>

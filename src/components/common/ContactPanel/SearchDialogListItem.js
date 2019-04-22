@@ -3,6 +3,8 @@ import React from 'react';
 // import {} from 'polished';
 
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import DoneIcon from '@material-ui/icons/DoneRounded';
 
 import AppListItem from './AppList/ListItem';
 import AppListItemAvatar from './AppList/ListItemAvatar';
@@ -14,6 +16,8 @@ import { getContactInitials } from '../../../helpers';
 const SearchDialogListItem = ({
   item,
   openConfirmDialog,
+  adding,
+  added,
 }) => {
   const {
     avatar,
@@ -34,8 +38,19 @@ const SearchDialogListItem = ({
         variant="contained"
         size="small"
         onClick={() => openConfirmDialog(item)}
+        disabled={added}
       >
-        Add
+        <Choose>
+          <When condition={adding}>
+            <CircularProgress size={20} color="inherit" />
+          </When>
+          <When condition={added}>
+            <DoneIcon />
+          </When>
+          <Otherwise>
+            Add
+          </Otherwise>
+        </Choose>
       </Button>
     </AppListItem>
   );

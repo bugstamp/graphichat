@@ -92,7 +92,37 @@ export const GET_ME = gql`
 
 export const GET_MY_CONTACTS = gql`
   query GetMyContacts {
-    myContacts @client
+    myContacts @client {
+      person {
+        id
+        username
+        displayName
+        firstName
+        lastName
+        status
+      }
+      messages {
+        userId
+        content
+        time
+        editTime
+        edited
+        read
+      }
+    }
+  }
+`;
+
+export const GET_ME_LOCAL = gql`
+  query GetMeLocal {
+    me @client {
+      id
+      username
+      displayName
+      firstName
+      lastName
+      status
+    }
   }
 `;
 
@@ -120,7 +150,14 @@ export const ADD_CONTACT = gql`
         lastName
         status
       }
-      messages
+      messages {
+        userId
+        content
+        time
+        editTime
+        edited
+        read
+      }
     }
   }
 `;

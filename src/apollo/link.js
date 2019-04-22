@@ -33,8 +33,8 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
 }));
 
 const errorLink = onError(({ networkError = {}, graphQLErrors, response, operation }) => {
-  console.log('networkerrors', networkError);
-  console.log('error', graphQLErrors);
+  console.log('network error', networkError);
+  console.log('qraphql errors', graphQLErrors);
 });
 
 const logger = new ApolloLink((operation, forward) => {

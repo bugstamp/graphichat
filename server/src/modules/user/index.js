@@ -23,9 +23,9 @@ const UserModule = new GraphQLModule({
     }
 
     type Social {
-      google: ID!
-      facebook: ID!
-      github: ID!
+      google: ID
+      facebook: ID
+      github: ID
     }
 
     type Contact {
@@ -35,33 +35,25 @@ const UserModule = new GraphQLModule({
 
     type User {
       id: ID!
-      username: String
+      username: String!
       email: String!
-      displayName: String
-      firstName: String
-      lastName: String
+      displayName: String!
+      firstName: String!
+      lastName: String!
       gender: String
       birthday: DateTime
       status: Status
       createDate: DateTime!
       lastDate: DateTime!
       refreshToken: String
-      regStatus: regStatus
+      regStatus: regStatus!
       socials: Social
-      contacts: Contact
+      contacts: [Contact!]!
     }
 
     type Contact {
       person: User
-      messages: ChatMessage
-    }
-
-    type Query {
-      user(id: ID!): User
-      users: [User]
-      me: User
-      myContacts: [Contact]
-      searchUsers(searchValue: String!): [User]
+      messages: [ChatMessage!]!
     }
 
     input UserCreateForm {
@@ -75,11 +67,19 @@ const UserModule = new GraphQLModule({
       regStatus: String!
     }
 
+    type Query {
+      user(id: ID!): User
+      users: [User!]!
+      me: User
+      myContacts: [Contact!]!
+      searchUsers(searchValue: String!): [User!]!
+    }
+
     type Mutation {
-      createUser(form: UserCreateForm): User
-      deleteUser: User
+      createUser(form: UserCreateForm): User!
+      deleteUser: User!
       addContact(userId: ID!): Contact
-      removeContact(userId: ID!): Boolean
+      removeContacts(userId: ID!): User!
     }
   `,
   resolvers,

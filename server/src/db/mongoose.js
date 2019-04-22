@@ -7,6 +7,12 @@ const options = {
   useFindAndModify: false,
 };
 
+const { ObjectId } = mongoose.Types;
+
+ObjectId.prototype.valueOf = function () {
+  return this.toString();
+};
+
 mongoose.Promise = Promise;
 mongoose.connect(uri, options, (err) => {
   if (err) {

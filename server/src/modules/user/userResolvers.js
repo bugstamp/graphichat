@@ -1,4 +1,4 @@
-import { forEach, isEmpty, filter } from 'lodash';
+import { map, isEmpty, filter } from 'lodash';
 import { getUserDisplayName } from '../../utils/helpers';
 
 export default {
@@ -36,19 +36,15 @@ export default {
         const myContacts = [];
 
         if (!isEmpty(contacts)) {
-          forEach(contacts, async ({ userId, chatId }) => {
+          return await map(contacts, async ({ userId, chatId }) => {
             const person = await db.User.findById(userId);
-            const messages = await db.Chat
-              .find({ id: chatId }, {
-                messages: {
-                  $slice: ['$messages', -1],
-                },
-              });
-
-            myContacts.push({
+            const { messages } = await db.Chat.findById(chatId, { messages: { $slice: -1 } });
+            const newContact = {
               person,
               messages,
-            });
+            };
+
+            return newContact;
           });
         }
 
@@ -57,7 +53,7 @@ export default {
         throw e;
       }
     },
-    async searchUsers(parent, { searchValue }, { db }) {
+    async searchUsers(parent, { searchValue }, { db, user: { id } }) {
       try {
         let usersList = [];
 
@@ -73,7 +69,7 @@ export default {
           }
         }
 
-        return usersList;
+        return filter(usersList, user => user.id !== id);
       } catch (e) {
         throw e;
       }
@@ -92,7 +88,7 @@ export default {
     },
     async deleteUser(parent, { id }, { db }) {
       try {
-        const result = db.User.findByIdAndDelete(id);
+        const result = await db.User.findByIdAndDelete(id);
 
         return result;
       } catch (e) {
@@ -101,25 +97,23 @@ export default {
     },
     async addContact(parent, { userId }, { db, user: { id } }) {
       try {
-        const person = await db.User.findById(userId);
+        const contact = await db.User.findById(userId);
         const { id: chatId, messages } = await db.Chat.create({});
         await db.User.findByIdAndUpdate(id, { $push: { contacts: { userId, chatId } } });
 
         return {
-          person,
+          person: contact,
           messages,
         };
       } catch (e) {
         throw e;
       }
     },
-    async removeContact(parent, { userId }, { db, user: { id } }) {
+    async removeContacts(parent, { userId }, { db }) {
       try {
-        const user = await db.User.findById(id);
-        const { contacts } = user;
-        await user.update({ contacts: filter(contacts, contact => contact.userId !== userId) });
+        const user = await db.User.findByIdAndUpdate(userId, { contacts: [] }, { new: true });
 
-        return true;
+        return user;
       } catch (e) {
         throw e;
       }

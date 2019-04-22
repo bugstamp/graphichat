@@ -10,4 +10,15 @@ export default {
       }
     },
   },
+  Mutation: {
+    async removeChat(parent, { id }, { db }) {
+      try {
+        await db.Chat.findByIdAndDelete(id);
+
+        return true;
+      } catch (e) {
+        throw e;
+      }
+    },
+  },
 };

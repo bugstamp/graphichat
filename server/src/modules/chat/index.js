@@ -14,8 +14,7 @@ const ChatModule = new GraphQLModule({
       id: ID!
       userId: ID!
       content: String!
-      time: DateTime!
-      editTime: DateTime
+      timestamp: DateTime!
       edited: Boolean!
       read: Boolean!
     }

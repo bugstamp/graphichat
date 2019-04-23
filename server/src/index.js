@@ -1,4 +1,5 @@
 import express from 'express';
+import http from 'http';
 import { ApolloServer } from 'apollo-server-express';
 import { formatError } from 'apollo-errors';
 import cors from 'cors';
@@ -16,13 +17,19 @@ const { verification } = routers;
 
 const port = process.env.PORT;
 const apolloPath = process.env.APOLLO_PATH;
+const apolloUrl = process.env.APOLLO_URL;
+const wsUrl = process.env.WS_URL;
 
-const startServer = async ({ schema }) => {
+const startServer = async ({ schema, subscriptions }) => {
   const app = express();
   const apolloServer = new ApolloServer({
     schema,
+    subscriptions,
     formatError,
-    context: ({ req }) => {
+    context: ({ req, connection }) => {
+      if (connection) {
+        console.log(connection);
+      }
       const { user } = req;
 
       return { db, user };
@@ -41,8 +48,12 @@ const startServer = async ({ schema }) => {
     res.sendFile(paths.html);
   });
 
-  app.listen({ port }, () => {
-    console.log(`Server is listening on port - ${port}`);
+  const httpServer = http.createServer(app);
+  apolloServer.installSubscriptionHandlers(httpServer);
+
+  httpServer.listen(port, () => {
+    console.log(`Server ready at ${apolloUrl}`);
+    console.log(`Subscriptions ready at ${wsUrl}`);
   });
 };
 

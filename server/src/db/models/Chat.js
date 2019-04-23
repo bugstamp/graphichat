@@ -13,12 +13,11 @@ const messageSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  time: {
+  timestamp: {
     type: Date,
     default: new Date(),
     require: true,
   },
-  editTime: Date,
   edited: {
     type: Boolean,
     default: false,

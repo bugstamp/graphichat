@@ -81,8 +81,7 @@ export const GET_ME = gql`
       messages {
         userId
         content
-        time
-        editTime
+        timestamp
         edited
         read
       }
@@ -104,8 +103,7 @@ export const GET_MY_CONTACTS = gql`
       messages {
         userId
         content
-        time
-        editTime
+        timestamp
         edited
         read
       }
@@ -153,8 +151,7 @@ export const ADD_CONTACT = gql`
       messages {
         userId
         content
-        time
-        editTime
+        timestamp
         edited
         read
       }

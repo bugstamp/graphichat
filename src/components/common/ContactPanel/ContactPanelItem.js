@@ -60,7 +60,12 @@ const ContactPanelItem = ({
   contact,
   message,
 }) => {
-  const { displayName, firstName, lastName, status } = contact;
+  const {
+    displayName,
+    firstName,
+    lastName,
+    status,
+  } = contact;
   const avatarText = getContactInitials(firstName, lastName);
   const online = status === 'ONLINE';
 

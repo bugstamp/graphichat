@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 import AppContent from '../../common/AppContent';
+import ChatsContainer from '../../smart/ChatsContainer';
 
-
-class Contacts extends Component {
+class Chats extends Component {
   render() {
     return (
       <AppContent />
@@ -11,4 +11,4 @@ class Contacts extends Component {
   }
 }
 
-export default Contacts;
+export default Chats;

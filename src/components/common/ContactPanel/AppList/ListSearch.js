@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import InputBase from '@material-ui/core/InputBase';
@@ -32,7 +33,7 @@ const SearchInput = styled(InputBase)`
   }
 `;
 
-const ListSearch = ({ value, onChange }) => (
+const ListSearch = ({ value, onChange, autoFocus }) => (
   <Wrapper>
     <SearchIconWrapper>
       <SearchIcon />
@@ -42,9 +43,16 @@ const ListSearch = ({ value, onChange }) => (
       value={value}
       onChange={({ target }) => onChange(target.value)}
       placeholder="Search..."
-      autoFocus
+      autoFocus={autoFocus}
     />
   </Wrapper>
 );
+
+ListSearch.defaultProps = {
+  autoFocus: false,
+};
+ListSearch.props = {
+  autoFocus: PropTypes.bool,
+};
 
 export default ListSearch;

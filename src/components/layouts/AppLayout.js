@@ -39,7 +39,10 @@ class AppLayout extends Component {
           onCompleted: this.signOutCompleted,
         }}
       >
-        {({ signOut }) => {
+        {({ getMe: { loading }, signOut }) => {
+          // if (loading) {
+          //   return 'Loading...';
+          // }
           return (
             <Grid container spacing={0} justify="center">
               <Grid item xs={12} lg={10}>

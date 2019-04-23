@@ -30,7 +30,6 @@ const InfoPanel = styled(Paper)`
 `;
 
 class AppContent extends Component {
-
   render() {
     return (
       <Wrapper square elevation={0}>

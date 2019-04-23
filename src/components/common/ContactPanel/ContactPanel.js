@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { map } from 'lodash';
+import { size } from 'polished';
+import { map, isEmpty } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import ListSearch from './AppList/ListSearch';
 import AppList from './AppList/List';
@@ -23,18 +25,16 @@ const Wrapper = styled(Paper)`
   }
 `;
 
-const contacts = [
-  {
-    id: 12312,
-    avatar: '',
-    firstName: 'Kiril',
-    lastName: 'Grischenko',
-    fullName: 'Kiril Grischenko',
-    message: 'You: Hi!',
-    messageTime: '12:17 pm',
-    noSeen: 10,
-  },
-];
+const NoContactInfo = styled.div`
+  ${size('100%')};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    text-align: center;
+  }
+`;
 
 class ContactPanel extends Component {
   state = {
@@ -47,16 +47,29 @@ class ContactPanel extends Component {
 
   render() {
     const { searchDialog } = this.state;
+    const { contacts } = this.props;
 
     return (
       <Wrapper square elevation={0}>
         <ListSearch />
         <AppList>
-          {map(contacts, (contact) => {
-            const { id } = contact;
+          <Choose>
+            <When condition={isEmpty(contacts)}>
+              <NoContactInfo>
+                <Typography variant="subtitle2">
+                  <p>Your contact list is empty.</p>
+                  <p>Click on the "plus" icon to find your contacts</p>
+                </Typography>
+              </NoContactInfo>
+            </When>
+            <Otherwise>
+              {map(contacts, ({ person, messages }) => {
+                const { id } = person;
 
-            return (<ContactPanelItem key={id} {...contact} />);
-          })}
+                return (<ContactPanelItem key={id} contact={person} message={messages[0]} />);
+              })}
+            </Otherwise>
+          </Choose>
         </AppList>
         <ContactPanelFooter toggleSearchDialog={this.toggleSearchDialog} />
         <If condition={searchDialog}>

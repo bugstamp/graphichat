@@ -84,6 +84,7 @@ class SearchDialog extends PureComponent {
           getMyContacts,
         }) => {
           const { data: { myContacts } } = getMyContacts;
+          console.log(myContacts);
 
           return (
             <Fragment>
@@ -98,6 +99,7 @@ class SearchDialog extends PureComponent {
                   <ListSearch
                     value={searchValue}
                     onChange={value => this.onChangeSearchValue(value, refetch)}
+                    autoFocus
                   />
                   <ListWrapper>
                     <Choose>

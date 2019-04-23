@@ -1,5 +1,5 @@
 import React from 'react';
-import { Query, Mutation } from 'react-apollo';
+import { Query, Mutation, Subscription } from 'react-apollo';
 import { get, has } from 'lodash';
 
 export const createMutation = (name, gqlMutation, mutationProps = {}) => (containerProps) => {
@@ -42,6 +42,27 @@ export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps)
         name,
       })}
     </Query>
+  );
+};
+
+export const createSubscription = (name, gqlSubscription, subscriptionProps = {}) => (containerProps) => {
+  const subscriptionContainerPropsKey = `${name}Props`;
+  const subscriptionContainerProps = has(containerProps, subscriptionContainerPropsKey)
+    ? get(containerProps, subscriptionContainerPropsKey)
+    : {};
+  const { render } = containerProps;
+
+  return (
+    <Subscription
+      subscription={gqlSubscription}
+      {...subscriptionProps}
+      {...subscriptionContainerProps}
+    >
+      {props => render({
+        ...props,
+        name,
+      })}
+    </Subscription>
   );
 };
 

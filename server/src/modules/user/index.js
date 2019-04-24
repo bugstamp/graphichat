@@ -51,7 +51,7 @@ const UserModule = new GraphQLModule({
       contacts: [Contact!]!
     }
 
-    type Contact {
+    type myContact {
       person: User
       messages: [ChatMessage!]!
     }
@@ -71,7 +71,7 @@ const UserModule = new GraphQLModule({
       user(id: ID!): User
       users: [User!]!
       me: User
-      myContacts: [Contact!]!
+      myContacts: [myContact!]!
       searchUsers(searchValue: String!): [User!]!
     }
 

@@ -73,12 +73,12 @@ const ContactPanelItem = ({
     <ContactListItem>
       <AppListItemAvatar src={null} text={avatarText} online={online} />
       <AppListItemInfo primary={displayName} secondary={message} />
-      <If condition={!isEmpty(message)}>
-        <ContactItemSecondary>
+      <ContactItemSecondary>
+        <If condition={!isEmpty(message)}>
           <ContactItemTime>{message.time}</ContactItemTime>
           {/* <ContactItemBadge>{}</ContactItemBadge> */}
-        </ContactItemSecondary>
-      </If>
+        </If>
+      </ContactItemSecondary>
     </ContactListItem>
   );
 };

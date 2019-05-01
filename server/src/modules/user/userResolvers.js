@@ -1,4 +1,5 @@
 import { map, isEmpty, filter } from 'lodash';
+
 import { getUserDisplayName } from '../../utils/helpers';
 
 export default {
@@ -37,17 +38,14 @@ export default {
 
         if (!isEmpty(contacts)) {
           return await map(contacts, async ({ userId, chatId }) => {
-            const person = await db.User.findById(userId);
-            const { messages } = await db.Chat.findById(chatId, { messages: { $slice: -1 } });
-            const newContact = {
-              person,
-              messages,
-            };
+            const contact = await db.User.findById(userId);
 
-            return newContact;
+            return {
+              chatId,
+              userInfo: contact,
+            };
           });
         }
-
         return myContacts;
       } catch (e) {
         throw e;
@@ -68,7 +66,6 @@ export default {
             usersList = await db.User.find({ displayName: { $regex: searchValue, $options: 'i' } });
           }
         }
-
         return filter(usersList, user => user.id !== id);
       } catch (e) {
         throw e;
@@ -95,20 +92,6 @@ export default {
         throw e;
       }
     },
-    async addContact(parent, { userId }, { db, user: { id } }) {
-      try {
-        const contact = await db.User.findById(userId);
-        const { id: chatId, messages } = await db.Chat.create({});
-        await db.User.findByIdAndUpdate(id, { $push: { contacts: { userId, chatId } } });
-
-        return {
-          person: contact,
-          messages,
-        };
-      } catch (e) {
-        throw e;
-      }
-    },
     async removeContacts(parent, { userId }, { db }) {
       try {
         const user = await db.User.findByIdAndUpdate(userId, { contacts: [] }, { new: true });
@@ -119,4 +102,5 @@ export default {
       }
     },
   },
+  // Subscription: {},
 };

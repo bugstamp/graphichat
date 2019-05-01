@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { position } from 'polished';
-import { isEmpty } from 'lodash';
 
 import ListItem from '@material-ui/core/ListItem';
 import red from '@material-ui/core/colors/red';
@@ -10,7 +9,7 @@ import AppListItemAvatar from './AppList/ListItemAvatar';
 import AppListItemInfo from './AppList/ListItemInfo';
 
 import { getStyledProps, getSpacing } from '../../../styles';
-import { getContactInitials } from '../../../helpers';
+import { getContactInitials, messageShortTimeParser } from '../../../helpers';
 
 const ContactListItem = styled(ListItem)`
   && {
@@ -68,17 +67,16 @@ const ContactPanelItem = ({
   } = contact;
   const avatarText = getContactInitials(firstName, lastName);
   const online = status === 'ONLINE';
+  const { content, time } = message;
 
   return (
     <ContactListItem>
       <AppListItemAvatar src={null} text={avatarText} online={online} />
-      <AppListItemInfo primary={displayName} secondary={message} />
-      <If condition={!isEmpty(message)}>
-        <ContactItemSecondary>
-          <ContactItemTime>{message.time}</ContactItemTime>
-          {/* <ContactItemBadge>{}</ContactItemBadge> */}
-        </ContactItemSecondary>
-      </If>
+      <AppListItemInfo primary={displayName} secondary={content} />
+      <ContactItemSecondary>
+        <ContactItemTime>{messageShortTimeParser(time)}</ContactItemTime>
+        {/* <ContactItemBadge>{}</ContactItemBadge> */}
+      </ContactItemSecondary>
     </ContactListItem>
   );
 };

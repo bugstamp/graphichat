@@ -1,12 +1,12 @@
 import { adopt } from 'react-adopt';
 
-import { createMutation, createQuery } from '../../apollo/utils';
-import { GET_MY_CONTACTS } from '../../actions/authActions';
+import { createQuery } from '../../apollo/utils';
+import { GET_MY_CHATS } from '../../actions/authActions';
 
-const getMyContacts = createQuery('getMyContacts', GET_MY_CONTACTS);
+const getMyChats = createQuery('getMyChats', GET_MY_CHATS);
 
 const ContactsContainer = adopt({
-  getMyContacts,
+  getMyChats,
 });
 
 export default ContactsContainer;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { size } from 'polished';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, find } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -47,7 +47,7 @@ class ContactPanel extends Component {
 
   render() {
     const { searchDialog } = this.state;
-    const { contacts } = this.props;
+    const { contacts, chats } = this.props;
 
     return (
       <Wrapper square elevation={0}>
@@ -58,15 +58,17 @@ class ContactPanel extends Component {
               <NoContactInfo>
                 <Typography variant="subtitle2">
                   <p>Your contact list is empty.</p>
-                  <p>Click on the "plus" icon to find your contacts</p>
+                  <p>Click on the '+' icon to find your contacts</p>
                 </Typography>
               </NoContactInfo>
             </When>
             <Otherwise>
-              {map(contacts, ({ person, messages }) => {
-                const { id } = person;
+              {map(contacts, ({ chatId, userInfo }) => {
+                const { id } = userInfo;
+                const { history } = find(chats, { id: chatId });
+                const { messages } = history[0];
 
-                return (<ContactPanelItem key={id} contact={person} message={messages[0]} />);
+                return (<ContactPanelItem key={id} contact={userInfo} message={messages[0]} />);
               })}
             </Otherwise>
           </Choose>

@@ -1,8 +1,8 @@
 import { createHttpLink } from 'apollo-link-http';
 import { ApolloLink, from, split } from 'apollo-link';
 import { onError } from 'apollo-link-error';
-import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { WebSocketLink } from 'apollo-link-ws';
 
 import storage from '../actions/storage';
 
@@ -14,6 +14,9 @@ const wsLink = new WebSocketLink({
   uri: process.env.WS_URL,
   options: {
     reconnect: true,
+    connectionParams: {
+      tokens: storage.getTokens(),
+    },
   },
 });
 
@@ -65,10 +68,10 @@ const logger = new ApolloLink((operation, forward) => {
 });
 
 const link = from([
-  errorLink,
   authLink,
   tokenLink,
   logger,
+  errorLink,
   networkLink,
 ]);
 

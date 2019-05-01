@@ -35,12 +35,12 @@ class Chats extends Component {
   render() {
     return (
       <ChatsContainer>
-        {({ getMyContacts: { data: { myContacts } } }) => {
+        {({ getMyChats: { data: { myContacts, myChats } } }) => {
           return (
             <Wrapper square elevation={0}>
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} lg={3}>
-                  <ContactPanel contacts={myContacts} />
+                  <ContactPanel contacts={myContacts} chats={myChats} />
                 </Grid>
                 <Hidden xsDown>
                   <Grid item sm={8} lg={6}>

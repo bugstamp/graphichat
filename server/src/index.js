@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express from 'express';
 import http from 'http';
 import { ApolloServer } from 'apollo-server-express';
@@ -20,15 +21,35 @@ const apolloPath = process.env.APOLLO_PATH;
 const apolloUrl = process.env.APOLLO_URL;
 const wsUrl = process.env.WS_URL;
 
-const startServer = async ({ schema, subscriptions }) => {
+const startServer = ({ schema, subscriptions }) => {
   const app = express();
   const apolloServer = new ApolloServer({
     schema,
-    subscriptions,
+    subscriptions: {
+      ...subscriptions,
+      onConnect: async ({ tokens }) => {
+        console.log(tokens);
+        if (tokens) {
+          const { token, refreshToken } = tokens;
+
+          try {
+            const { user } = await db.User.verifyTokens(token, refreshToken);
+
+            return { user };
+          } catch (e) {
+            throw e;
+          }
+        } else {
+          throw new Error('Missing auth token!');
+        }
+      },
+    },
     formatError,
     context: ({ req, connection }) => {
       if (connection) {
-        console.log(connection);
+        const { context } = connection;
+
+        return { ...context, db };
       }
       const { user } = req;
 

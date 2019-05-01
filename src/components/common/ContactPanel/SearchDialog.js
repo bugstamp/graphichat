@@ -80,11 +80,10 @@ class SearchDialog extends PureComponent {
       >
         {({
           searchUsers: { loading, data, refetch },
-          addContact,
+          createChat,
           getMyContacts,
         }) => {
           const { data: { myContacts } } = getMyContacts;
-          console.log(myContacts);
 
           return (
             <Fragment>
@@ -113,15 +112,15 @@ class SearchDialog extends PureComponent {
                       </When>
                       <Otherwise>
                         <List>
-                          {map(data.searchUsers, (item) => {
-                            const { id } = item;
-                            const added = !!find(myContacts, ({ person }) => person.id === id);
+                          {map(data.searchUsers, (user) => {
+                            const { id } = user;
+                            const added = !!find(myContacts, ({ userInfo }) => userInfo.id === id);
 
                             return (
                               <SearchDialogListItem
                                 key={id}
-                                item={item}
-                                adding={addContact.result.loading && selectedUser.id === id}
+                                item={user}
+                                adding={createChat.result.loading && selectedUser.id === id}
                                 added={added}
                                 openConfirmDialog={this.openConfirmDialog}
                               />
@@ -156,7 +155,7 @@ class SearchDialog extends PureComponent {
                       variant="contained"
                       size="small"
                       onClick={() => {
-                        addContact.mutation({ variables: { userId: selectedUser.id } });
+                        createChat.mutation({ variables: { userId: selectedUser.id } });
                         this.closeConfirmDialog();
                       }}
                     >

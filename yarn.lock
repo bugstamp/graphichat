@@ -929,21 +929,21 @@
   resolved "https://registry.npmjs.org/@gerhobbelt/xregexp/-/xregexp-3.2.0-22.tgz#66e6640eb6a5bba78ad9ea8187f6910b53b6c0ea"
   integrity sha512-TRu38Z67VxFSMrBP3z/ORiJVQqp56ulidZirbobtmJnVGBWLdo4GbHtihgIJFGieIZuk+LxmPkK45SY+SQsR3A==
 
-"@graphql-modules/core@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.npmjs.org/@graphql-modules/core/-/core-0.7.0.tgz#c5b87e8febce7541b1b3ab147ebd242d69702318"
-  integrity sha512-nWEcn6WsJfEpMzN2++7gokleBh1jn+j6B4ZrcpYhndDaLtRpRgYMqbb+VEWe2TW8ezr2llMDs1upuQAKm/RwwA==
+"@graphql-modules/core@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/core/-/core-0.7.1.tgz#91532cdad368ec1d03f236e772178df36ccb1887"
+  integrity sha512-/Agz3vMzMNkMfP9cJ3AxQeHObn45OdqduPIf7sgcq8+ffrUAA0ZpqSA5pthu6EMxdzLR4iycPoUXCGaEgrD4Yg==
   dependencies:
-    "@graphql-modules/di" "0.7.0"
+    "@graphql-modules/di" "0.7.1"
     apollo-server-caching "0.3.1"
     graphql-toolkit "0.2.9"
     graphql-tools "4.0.4"
     tslib "1.9.3"
 
-"@graphql-modules/di@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/di/-/di-0.7.0.tgz#ae7a374ab1a18748e56a724bc3f6659bdb579090"
-  integrity sha512-mUzceezfyT2FmY2DIn309SVRFxDnjyThJTvv8tLwsSN8J9EUjv6oMXnC1/Zg+ZXDupx0RfKWLEcM+Obtw+FCyw==
+"@graphql-modules/di@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/di/-/di-0.7.1.tgz#d58ae91bda6739ee97e03e28cf0eaf2771150815"
+  integrity sha512-4CkgMDeYdtqX68Iph8e7chyqEcyZ0BD1qNvZSrpZ69zIubHRYQ19NqboZACGrkFuXDHY31qS8Ed+bczcyDyf2w==
   dependencies:
     events "3.0.0"
     tslib "1.9.3"
@@ -8107,6 +8107,11 @@ redent@^2.0.0:
   dependencies:
     indent-string "^3.0.0"
     strip-indent "^2.0.0"
+
+reflect-metadata@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+  integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
 
 regenerate-unicode-properties@^7.0.0:
   version "7.0.0"

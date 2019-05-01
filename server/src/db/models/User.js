@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { map, pick } from 'lodash';
+import { pick } from 'lodash';
 import EmailValidator from 'email-validator';
 
 import mongoose from '../mongoose';
@@ -36,21 +36,30 @@ const tokensConfig = {
   },
 };
 
-const socialSchema = new mongoose.Schema({
+const userSocialsSchema = new mongoose.Schema({
   google: String,
   facebook: String,
   github: String,
 });
 
-const contactSchema = new mongoose.Schema({
+const userContactSettingsSchema = new mongoose.Schema({
+  notifications: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+});
+
+const userContactSchema = new mongoose.Schema({
   userId: {
     type: ObjectId,
-    required: true,
+    require: true,
   },
   chatId: {
     type: ObjectId,
-    required: true,
+    require: true,
   },
+  settings: userContactSettingsSchema,
 });
 
 const userSchema = new mongoose.Schema({
@@ -63,6 +72,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
     require: true,
+  },
+  phone: {
+    type: String,
   },
   password: {
     type: String,
@@ -106,8 +118,8 @@ const userSchema = new mongoose.Schema({
     require: true,
     default: EMAIL_UNCONFIRMED,
   },
-  socials: socialSchema,
-  contacts: [contactSchema],
+  socials: userSocialsSchema,
+  contacts: [userContactSchema],
 });
 
 userSchema.pre('save', async function preSave(next) {

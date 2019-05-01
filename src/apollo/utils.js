@@ -65,5 +65,3 @@ export const createSubscription = (name, gqlSubscription, subscriptionProps = {}
     </Subscription>
   );
 };
-
-export default undefined;

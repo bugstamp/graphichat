@@ -10,7 +10,7 @@ import LoginForm from './LoginForm';
 import withNotification from '../../common/HOC/withNotification';
 import storage from '../../../actions/storage';
 
-import bgImage from '../../../assets/images/login-bg.jpg';
+import bgImage from '../../../assets/images/login-bg__1920_95.jpg';
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;

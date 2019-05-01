@@ -1,36 +1,63 @@
 import { GraphQLModule } from '@graphql-modules/core';
 import { gql } from 'apollo-server-express';
 
+import PubSubModule from '../pubsub';
 import ScalarsModule from '../scalars';
+import UserModule from '../user';
 
 import resolvers from './chatResolvers';
 // import { isAuth } from '../middlewares';
 
 const ChatModule = new GraphQLModule({
   name: 'chat',
-  imports: [ScalarsModule],
+  imports: [PubSubModule, ScalarsModule, UserModule],
   typeDefs: gql`
+    enum ChatMessageType {
+      system
+      text
+    }
+
     type ChatMessage {
       id: ID!
-      userId: ID!
+      senderId: ID
+      type: ChatMessageType!
       content: String!
-      timestamp: DateTime!
+      time: DateTime!
       edited: Boolean!
-      read: Boolean!
+      seen: Boolean!
+    }
+
+    type ChatHistory {
+      date: DateTime!
+      messages: [ChatMessage]
     }
 
     type Chat {
       id: ID!
+      members: [ID!]!
+      createdBy: ID!
       createDate: DateTime!
-      messages: [ChatMessage!]!
+      history: [ChatHistory!]!
+    }
+
+    type ContactUpdate {
+      contact: MyContact!
+      chat: Chat!
     }
 
     type Query {
       chats: [Chat!]!
+      myChats: [Chat!]!
     }
 
     type Mutation {
-      removeChat(id: ID!): Boolean
+      createChat(userId: ID!): ContactUpdate!
+      removeChat(id: ID!): Boolean!
+      removeChats: Boolean!
+    }
+
+    type Subscription {
+      chatCreated: ContactUpdate
     }
   `,
   resolvers,

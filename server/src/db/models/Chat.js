@@ -4,16 +4,24 @@ import mongoose from '../mongoose';
 
 const { ObjectId } = mongoose.Schema.Types;
 
-const messageSchema = new mongoose.Schema({
-  userId: {
+const messageTypeEnums = ['system', 'text'];
+
+const chatMessageSchema = new mongoose.Schema({
+  senderId: {
     type: ObjectId,
+    default: null,
+  },
+  type: {
+    type: String,
+    enum: messageTypeEnums,
+    default: 'text',
     require: true,
   },
   content: {
     type: String,
     require: true,
   },
-  timestamp: {
+  time: {
     type: Date,
     default: new Date(),
     require: true,
@@ -22,19 +30,33 @@ const messageSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  read: {
+  seen: {
     type: Boolean,
     default: false,
   },
 });
 
+const chatHistorySchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    require: true,
+    default: new Date(),
+  },
+  messages: [chatMessageSchema],
+});
+
 const chatSchema = new mongoose.Schema({
+  members: [ObjectId],
+  createdBy: {
+    type: ObjectId,
+    require: true,
+  },
   createDate: {
     type: Date,
     require: true,
     default: new Date(),
   },
-  messages: [messageSchema],
+  history: [chatHistorySchema],
 });
 
 chatSchema.methods = {};

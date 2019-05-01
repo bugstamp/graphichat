@@ -15,6 +15,7 @@ const initialState = {
     __typename: 'User',
   },
   myContacts: [],
+  myChats: [],
 };
 
 const initData = (data) => {

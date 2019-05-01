@@ -2,14 +2,14 @@ import { GraphQLModule } from '@graphql-modules/core';
 import { gql } from 'apollo-server-express';
 
 import ScalarsModule from '../scalars';
-import ChatModule from '../chat';
+import PubSubModule from '../pubsub';
 
 import resolvers from './userResolvers';
 import { isAuth } from '../middlewares';
 
 const UserModule = new GraphQLModule({
   name: 'user',
-  imports: [ScalarsModule, ChatModule],
+  imports: [PubSubModule, ScalarsModule],
   typeDefs: gql`
     enum Status {
       OFFLINE
@@ -22,38 +22,45 @@ const UserModule = new GraphQLModule({
       COMPLETED
     }
 
-    type Social {
+    type UserSocials {
       google: ID
       facebook: ID
       github: ID
     }
 
-    type Contact {
+    type UserContactSettings {
+      notifications: Boolean!
+    }
+
+    type UserContact {
+      id: ID!
       userId: ID!
       chatId: ID!
+      settings: UserContactSettings
     }
 
     type User {
       id: ID!
       username: String!
-      email: String!
+      email: EmailAddress!
+      phone: PhoneNumber
       displayName: String!
       firstName: String!
       lastName: String!
       gender: String
       birthday: DateTime
-      status: Status
+      status: Status!
       createDate: DateTime!
       lastDate: DateTime!
       refreshToken: String
       regStatus: regStatus!
-      socials: Social
-      contacts: [Contact!]!
+      socials: UserSocials!
+      contacts: [UserContact!]!
     }
 
-    type Contact {
-      person: User
-      messages: [ChatMessage!]!
+    type MyContact {
+      chatId: ID!
+      userInfo: User!
     }
 
     input UserCreateForm {
@@ -71,16 +78,17 @@ const UserModule = new GraphQLModule({
       user(id: ID!): User
       users: [User!]!
       me: User
-      myContacts: [Contact!]!
+      myContacts: [MyContact!]!
       searchUsers(searchValue: String!): [User!]!
     }
 
     type Mutation {
       createUser(form: UserCreateForm): User!
       deleteUser: User!
-      addContact(userId: ID!): Contact
       removeContacts(userId: ID!): User!
     }
+
+    # type Subscription {}
   `,
   resolvers,
   resolversComposition: {

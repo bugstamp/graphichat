@@ -1,4 +1,5 @@
 import { upperCase } from 'lodash';
+import moment from 'moment';
 
 export const getContactInitials = (first, last = '') => {
   const firstLater = upperCase(first[0]);
@@ -13,4 +14,6 @@ export const getContactInitials = (first, last = '') => {
   return `${firstLater}${lastLater}`;
 };
 
-export default undefined;
+export const historyDateParser = date => moment(date).format('dddd, MMMM D, YYYY');
+export const messageShortTimeParser = time => moment(time).format('LT');
+export const messageWideTimeParser = time => moment(time).format('LTS');

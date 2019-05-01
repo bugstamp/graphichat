@@ -58,9 +58,15 @@ const UserModule = new GraphQLModule({
       contacts: [UserContact!]!
     }
 
+<<<<<<< HEAD
     type MyContact {
       chatId: ID!
       userInfo: User!
+=======
+    type myContact {
+      person: User
+      messages: [ChatMessage!]!
+>>>>>>> 67bd404fca650cc32b331344eea754a728765526
     }
 
     input UserCreateForm {
@@ -78,7 +84,11 @@ const UserModule = new GraphQLModule({
       user(id: ID!): User
       users: [User!]!
       me: User
+<<<<<<< HEAD
       myContacts: [MyContact!]!
+=======
+      myContacts: [myContact!]!
+>>>>>>> 67bd404fca650cc32b331344eea754a728765526
       searchUsers(searchValue: String!): [User!]!
     }
 

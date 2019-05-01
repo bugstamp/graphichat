@@ -53,7 +53,7 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
   return response;
 }));
 
-const errorLink = onError(({ networkError = {}, graphQLErrors, response, operation }) => {
+const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
   console.log('network error', networkError);
   console.log('qraphql errors', graphQLErrors);
 });

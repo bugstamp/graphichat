@@ -27,26 +27,28 @@ const startServer = ({ schema, subscriptions }) => {
     schema,
     subscriptions: {
       ...subscriptions,
-      // onConnect: async ({ tokens }) => {
-      //   if (tokens) {
-      //     const { token } = tokens;
-      //
-      //     try {
-      //       const { data } = await db.User.verifyToken(token, 'token');
-      //
-      //       return { user: data };
-      //     } catch (e) {
-      //       throw e;
-      //     }
-      //   } else {
-      //     throw new Error('Missing auth token!');
-      //   }
-      // },
+      onConnect: async ({ tokens }) => {
+        if (tokens) {
+          const { refreshToken } = tokens;
+
+          try {
+            const { data } = await db.User.verifyToken(refreshToken, 'refresh');
+
+            return { user: data, db };
+          } catch (e) {
+            throw e;
+          }
+        } else {
+          throw new Error('Missing auth token!');
+        }
+      },
     },
     formatError,
     context: ({ req, connection }) => {
       if (connection) {
-        return connection.context;
+        const { context } = connection;
+
+        return context;
       }
       const { user } = req;
 
@@ -68,10 +70,10 @@ const startServer = ({ schema, subscriptions }) => {
     res.sendFile(paths.html);
   });
 
-  const httpServer = http.createServer(app);
-  apolloServer.installSubscriptionHandlers(httpServer);
+  const ws = http.createServer(app);
+  apolloServer.installSubscriptionHandlers(ws);
 
-  httpServer.listen(port, () => {
+  ws.listen(port, () => {
     console.log(`Server ready at ${apolloUrl}`);
     console.log(`Subscriptions ready at ${wsUrl}`);
   });

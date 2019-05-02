@@ -194,3 +194,9 @@ export const CREATE_CHAT_SUBSCRIPTION = gql`
   ${myContactFragment}
   ${myChatFragment}
 `;
+
+export const GET_SESSION_EXPIRED = gql`
+  {
+    sessionExpired @client
+  }
+`;

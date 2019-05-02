@@ -12,7 +12,7 @@ import withNotification from '../../common/HOC/withNotification';
 import { checkToken } from '../../../router/PrivateRoute';
 import storage from '../../../actions/storage';
 
-import bgImage from '../../../assets/images/reg-bg.jpg';
+import bgImage from '../../../assets/images/reg-bg__1920_95.jpg';
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;

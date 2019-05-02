@@ -26,7 +26,7 @@ const tokensConfig = {
   },
   refresh: {
     secret: process.env.REFRESH_TOKEN_SECRET,
-    expiresIn: 20,
+    expiresIn: 30,
     model: ['id', 'regStatus'],
   },
   register: {
@@ -230,7 +230,7 @@ userSchema.statics = {
 
       return result;
     } catch (e) {
-      throw new AuthenticationError({ message: `${upperFirst(type)} token is invalid` });
+      throw new AuthenticationError({ message: 'Token is invalid' });
     }
   },
   async verifyTokens(token, refreshToken) {

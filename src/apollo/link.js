@@ -6,7 +6,6 @@ import { WebSocketLink } from 'apollo-link-ws';
 
 import storage from '../actions/storage';
 import client from './index';
-import history from '../router/history';
 
 const httpLink = createHttpLink({
   uri: process.env.APOLLO_URL,
@@ -16,9 +15,9 @@ const wsLink = new WebSocketLink({
   uri: process.env.WS_URL,
   options: {
     reconnect: true,
-    connectionParams: {
+    connectionParams: () => ({
       tokens: storage.getTokens(),
-    },
+    }),
   },
 });
 
@@ -56,9 +55,8 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
 }));
 
 const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
-  if (networkError.statusCode === 401) {
-    storage.removeTokens();
-    history.push('/');
+  if ((networkError.message || graphQLErrors[0].message) === 'Token is invalid') {
+    client.writeData({ data: { sessionExpired: true } });
   }
   console.log('network error', networkError);
   console.log('qraphql errors', graphQLErrors);

@@ -1,5 +1,9 @@
 import db from '../db';
 import { getHeaderTokens, setHeaderTokens } from '../utils/helpers';
+// import {
+//   AuthenticationError,
+//   BadInputError,
+// } from '../../utils/apolloErrors';
 
 export default async (req, res, next) => {
   const tokens = getHeaderTokens(req);
@@ -17,7 +21,8 @@ export default async (req, res, next) => {
       next();
     } catch (e) {
       req.user = undefined;
-      res.status(401).send(e.message);
+      e.statusCode = 401;
+      throw e;
     }
   } else {
     next();

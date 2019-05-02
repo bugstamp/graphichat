@@ -2,14 +2,13 @@ import { GraphQLModule } from '@graphql-modules/core';
 import { gql } from 'apollo-server-express';
 
 import ScalarsModule from '../scalars';
-import PubSubModule from '../pubsub';
 
 import resolvers from './userResolvers';
 import { isAuth } from '../middlewares';
 
 const UserModule = new GraphQLModule({
   name: 'user',
-  imports: [PubSubModule, ScalarsModule],
+  imports: [ScalarsModule],
   typeDefs: gql`
     enum Status {
       OFFLINE

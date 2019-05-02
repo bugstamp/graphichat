@@ -11,6 +11,7 @@ const client = new ApolloClient({
 });
 
 const initialState = {
+  sessionExpired: false,
   me: {
     __typename: 'User',
   },

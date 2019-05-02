@@ -22,11 +22,11 @@ const AppContainer = styled(Paper)`
 `;
 
 class AppLayout extends Component {
-  signOutCompleted = () => {
+  signOut = () => {
     const { history, client } = this.props;
 
-    client.resetStore();
     storage.removeTokens();
+    client.resetStore();
     history.push('/');
   }
 
@@ -36,10 +36,17 @@ class AppLayout extends Component {
     return (
       <AppLayoutContainer
         signOutProps={{
-          onCompleted: this.signOutCompleted,
+          onCompleted: this.signOut,
+        }}
+        getSessionExpiredProps={{
+          onCompleted: ({ sessionExpired }) => {
+            if (sessionExpired) {
+              this.signOut();
+            }
+          },
         }}
       >
-        {({ getMe: { loading }, signOut }) => {
+        {({ signOut }) => {
           // if (loading) {
           //   return 'Loading...';
           // }

@@ -940,7 +940,7 @@
     graphql-tools "4.0.4"
     tslib "1.9.3"
 
-"@graphql-modules/di@0.7.1":
+"@graphql-modules/di@0.7.1", "@graphql-modules/di@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@graphql-modules/di/-/di-0.7.1.tgz#d58ae91bda6739ee97e03e28cf0eaf2771150815"
   integrity sha512-4CkgMDeYdtqX68Iph8e7chyqEcyZ0BD1qNvZSrpZ69zIubHRYQ19NqboZACGrkFuXDHY31qS8Ed+bczcyDyf2w==

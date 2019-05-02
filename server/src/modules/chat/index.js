@@ -1,5 +1,5 @@
 import { GraphQLModule } from '@graphql-modules/core';
-import { gql } from 'apollo-server-express';
+import { gql, PubSub } from 'apollo-server-express';
 
 import PubSubModule from '../pubsub';
 import ScalarsModule from '../scalars';
@@ -11,6 +11,7 @@ import resolvers from './chatResolvers';
 const ChatModule = new GraphQLModule({
   name: 'chat',
   imports: [PubSubModule, ScalarsModule, UserModule],
+  providers: [PubSub],
   typeDefs: gql`
     enum ChatMessageType {
       system

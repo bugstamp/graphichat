@@ -6,7 +6,7 @@ const createTokenMethods = name => ({
     localStorage.setItem(this.name, token);
   },
   get() {
-    return localStorage.getItem(this.name) || null;
+    return localStorage.getItem(this.name) || '';
   },
   remove() {
     localStorage.removeItem(this.name);

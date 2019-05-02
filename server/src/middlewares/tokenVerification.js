@@ -1,5 +1,5 @@
 import db from '../db';
-import { getHeaderTokens, setHeaderTokens, removeHeaderTokens } from '../utils/helpers';
+import { getHeaderTokens, setHeaderTokens } from '../utils/helpers';
 
 export default async (req, res, next) => {
   const tokens = getHeaderTokens(req);
@@ -11,14 +11,15 @@ export default async (req, res, next) => {
 
       if (newTokens) {
         res = setHeaderTokens(res, newTokens);
-      } else {
-        res = removeHeaderTokens(res);
       }
 
       req.user = user;
+      next();
     } catch (e) {
       req.user = undefined;
+      res.status(401).send(e.message);
     }
+  } else {
+    next();
   }
-  next();
 };

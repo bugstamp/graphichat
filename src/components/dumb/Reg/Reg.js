@@ -37,10 +37,15 @@ class SignUp extends Component {
 
     if (token) {
       try {
-        await checkToken(token, true);
-        this.setActiveStep(1);
+        const { regStatus } = await checkToken(token, true);
+
+        if (regStatus) {
+          this.setActiveStep(1);
+        } else {
+          history.push('/reg');
+        }
       } catch (e) {
-        history.push('/reg');
+        throw e;
       }
     }
   }

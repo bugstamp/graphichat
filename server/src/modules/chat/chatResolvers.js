@@ -98,9 +98,9 @@ export default {
   Subscription: {
     chatCreated: {
       subscribe: withFilter(
-        (parent, args, { injector, user }) => {
+        (parent, args, { injector }) => {
           console.log('subscribe on create chat');
-          console.log(user)
+          // console.log(user)
           return injector.get(PubSub).asyncIterator([CHAT_CREATED]);
         },
         ({ chat: { members } }, variables, context) => {

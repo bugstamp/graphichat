@@ -2,9 +2,6 @@ import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 import importedComponent from 'react-imported-component';
 
-// import LoginLayout from '../components/layouts/LoginLayout';
-// import AppLayout from '../components/layouts/AppLayout';
-
 import Login from '../components/dumb/Login/Login';
 import Reg from '../components/dumb/Reg/Reg';
 import Chats from '../components/dumb/Chats/Chats';

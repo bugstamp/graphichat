@@ -5,21 +5,25 @@ import jwt from 'jsonwebtoken';
 
 import storage from '../actions/storage';
 
-const tokenSecret = process.env.TOKEN_SECRET;
+const tokenSecrets = {
+  token: process.env.TOKEN_SECRET,
+  refresh: process.env.REFRESH_TOKEN_SECRET,
+};
 
-export const checkToken = async (token, set = false) => {
+export const checkToken = async (token, set = false, secretType = 'token') => {
   try {
     if (!token) {
       throw new Error('Token wasn\'t found');
     }
-    const { data: { regStatus } } = await jwt.verify(token, tokenSecret);
+    const secret = tokenSecrets[secretType];
+    const { data: { regStatus } } = await jwt.verify(token, secret);
 
     if (set) {
       storage.token.set(token);
     }
-    return regStatus;
+    return { regStatus };
   } catch (e) {
-    throw new Error(e.message);
+    return { regStatus: '' };
   }
 };
 
@@ -31,20 +35,23 @@ class PrivateRoute extends Component {
   }
 
   async componentDidMount() {
-    try {
-      const token = storage.token.get();
-      const status = await checkToken(token);
+    const token = storage.token.get();
 
+    if (token) {
+      try {
+        const { regStatus } = await checkToken(token, false);
+
+        this.setState({
+          render: true,
+          auth: true,
+          status: regStatus,
+        });
+      } catch (e) {
+        throw e;
+      }
+    } else {
       this.setState({
         render: true,
-        auth: true,
-        status,
-      });
-    } catch (e) {
-      this.setState({
-        render: true,
-        auth: false,
-        status: '',
       });
     }
   }
@@ -52,7 +59,6 @@ class PrivateRoute extends Component {
   render() {
     const { render, auth, status } = this.state;
     const { children } = this.props;
-    const regRedirect = `reg?token=${storage.token.get()}`;
 
     return (
       <Choose>
@@ -62,7 +68,7 @@ class PrivateRoute extends Component {
               <Redirect to="login" />
             </When>
             <When condition={auth && status === 'UNCOMPLETED'}>
-              <Redirect to={regRedirect} />
+              <Redirect to={`reg?token=${storage.token.get()}`} />
             </When>
             <Otherwise>
               {children}

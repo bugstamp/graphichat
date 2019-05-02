@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { pick } from 'lodash';
+import { pick, upperFirst } from 'lodash';
 import EmailValidator from 'email-validator';
 
 import mongoose from '../mongoose';
@@ -21,17 +21,17 @@ const { ObjectId } = mongoose.Schema.Types;
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
-    expiresIn: process.env.TOKEN_EXPIRES,
+    expiresIn: 10,
     model: ['id', 'regStatus'],
   },
   refresh: {
     secret: process.env.REFRESH_TOKEN_SECRET,
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRES,
-    model: ['id'],
+    expiresIn: 20,
+    model: ['id', 'regStatus'],
   },
   register: {
     secret: process.env.REGISTER_TOKEN_SECRET,
-    expiresIn: process.env.REGISTER_TOKEN_EXPIRES,
+    expiresIn: '1d',
     model: ['id'],
   },
 };
@@ -230,7 +230,7 @@ userSchema.statics = {
 
       return result;
     } catch (e) {
-      throw new AuthenticationError({ message: 'Token is invalid' });
+      throw new AuthenticationError({ message: `${upperFirst(type)} token is invalid` });
     }
   },
   async verifyTokens(token, refreshToken) {

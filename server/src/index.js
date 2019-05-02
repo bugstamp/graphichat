@@ -27,36 +27,35 @@ const startServer = ({ schema, subscriptions }) => {
     schema,
     subscriptions: {
       ...subscriptions,
-      onConnect: async ({ tokens }) => {
-        console.log(tokens);
-        if (tokens) {
-          const { token, refreshToken } = tokens;
-
-          try {
-            const { user } = await db.User.verifyTokens(token, refreshToken);
-
-            return { user };
-          } catch (e) {
-            throw e;
-          }
-        } else {
-          throw new Error('Missing auth token!');
-        }
-      },
+      // onConnect: async ({ tokens }) => {
+      //   if (tokens) {
+      //     const { token } = tokens;
+      //
+      //     try {
+      //       const { data } = await db.User.verifyToken(token, 'token');
+      //
+      //       return { user: data };
+      //     } catch (e) {
+      //       throw e;
+      //     }
+      //   } else {
+      //     throw new Error('Missing auth token!');
+      //   }
+      // },
     },
     formatError,
     context: ({ req, connection }) => {
       if (connection) {
-        const { context } = connection;
-
-        return { ...context, db };
+        return connection.context;
       }
       const { user } = req;
 
       return { db, user };
     },
   });
-  const corsOptions = {};
+  const corsOptions = {
+    exposedHeaders: ['x-token', 'x-refresh-token'],
+  };
 
   app.use(express.static(paths.public));
   app.use(cors(corsOptions));

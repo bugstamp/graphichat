@@ -84,7 +84,7 @@ const UserModule = new GraphQLModule({
 
     type Mutation {
       createUser(form: UserCreateForm): User!
-      deleteUser: User!
+      deleteUser(id: ID!): User!
       removeContacts(userId: ID!): User!
     }
 

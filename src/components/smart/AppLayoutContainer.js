@@ -27,7 +27,7 @@ const createChatSubscription = createSubscription('createChatSubscription', CREA
 const signOut = createMutation('signOut', SIGN_OUT);
 
 const AppLayoutContainer = adopt({
-  createChatSubscription,
+  // createChatSubscription,
   getMe,
   signOut,
 });

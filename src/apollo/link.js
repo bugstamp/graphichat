@@ -5,6 +5,8 @@ import { getMainDefinition } from 'apollo-utilities';
 import { WebSocketLink } from 'apollo-link-ws';
 
 import storage from '../actions/storage';
+import client from './index';
+import history from '../router/history';
 
 const httpLink = createHttpLink({
   uri: process.env.APOLLO_URL,
@@ -54,6 +56,10 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
 }));
 
 const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
+  if (networkError.statusCode === 401) {
+    storage.removeTokens();
+    history.push('/');
+  }
   console.log('network error', networkError);
   console.log('qraphql errors', graphQLErrors);
 });

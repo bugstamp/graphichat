@@ -2,13 +2,14 @@ import { GraphQLModule } from '@graphql-modules/core';
 import { gql } from 'apollo-server-express';
 
 import ScalarsModule from '../scalars';
+import AuthModule from '../auth';
 
 import resolvers from './userResolvers';
 import { isAuth } from '../middlewares';
 
 const UserModule = new GraphQLModule({
   name: 'user',
-  imports: [ScalarsModule],
+  imports: [ScalarsModule, AuthModule],
   typeDefs: gql`
     enum Status {
       OFFLINE
@@ -86,8 +87,6 @@ const UserModule = new GraphQLModule({
       deleteUser(id: ID!): User!
       removeContacts(userId: ID!): User!
     }
-
-    # type Subscription {}
   `,
   resolvers,
   resolversComposition: {

@@ -1,12 +1,15 @@
 import { GraphQLModule } from '@graphql-modules/core';
 import { gql } from 'apollo-server-express';
 
+import CommonModule from '../common';
+
+import AuthProvider from './authProvider';
 import resolvers from './authResolvers';
-import UserModule from '../user';
 
 const AuthModule = new GraphQLModule({
   name: 'auth',
-  imports: [UserModule],
+  imports: [CommonModule],
+  providers: [AuthProvider],
   typeDefs: gql`
     type AuthPayload {
       token: String
@@ -54,11 +57,18 @@ const AuthModule = new GraphQLModule({
       signUpAsyncValidation(field: String!, value: String!): AsyncValidationResult
       signInBySocial(social: SocialProfile!, profile: SocialUserProfile!): AuthPayload
       signUpBySocial(social: SocialProfile!, profile: SocialUserProfile!): AuthPayload
-      signOut: User
+      signOut: Boolean
     }
   `,
   resolvers,
-  context: context => context,
+  context: (session) => {
+    if (session.req) {
+      return {
+        user: session.req.user,
+      };
+    }
+    return session;
+  },
 });
 
 export default AuthModule;

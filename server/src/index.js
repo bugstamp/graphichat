@@ -8,10 +8,9 @@ import cors from 'cors';
 import './dotenv';
 import paths from '../../paths';
 
-import db from './db';
-import modules from './modules';
 import middlewares from './middlewares';
 import routers from './routers';
+import AppModule from './modules';
 
 const { tokenVerification } = middlewares;
 const { verification } = routers;
@@ -25,35 +24,9 @@ const startServer = ({ schema, subscriptions }) => {
   const app = express();
   const apolloServer = new ApolloServer({
     schema,
-    subscriptions: {
-      ...subscriptions,
-      onConnect: async ({ tokens }) => {
-        if (tokens) {
-          const { refreshToken } = tokens;
-
-          try {
-            const { data } = await db.User.verifyToken(refreshToken, 'refresh');
-
-            return { user: data, db };
-          } catch (e) {
-            throw e;
-          }
-        } else {
-          throw new Error('Missing auth token!');
-        }
-      },
-    },
+    subscriptions,
     formatError,
-    context: ({ req, connection }) => {
-      if (connection) {
-        const { context } = connection;
-
-        return context;
-      }
-      const { user } = req;
-
-      return { db, user };
-    },
+    context: session => session,
   });
   const corsOptions = {
     exposedHeaders: ['x-token', 'x-refresh-token'],
@@ -79,4 +52,4 @@ const startServer = ({ schema, subscriptions }) => {
   });
 };
 
-startServer(modules);
+startServer(AppModule);

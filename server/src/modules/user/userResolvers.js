@@ -1,5 +1,6 @@
 import { map, isEmpty, filter } from 'lodash';
 
+import AuthProvider from '../auth/authProvider';
 import { getUserDisplayName } from '../../utils/helpers';
 
 export default {
@@ -102,5 +103,4 @@ export default {
       }
     },
   },
-  // Subscription: {},
 };

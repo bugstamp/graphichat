@@ -55,7 +55,7 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
 }));
 
 const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
-  if ((networkError.message || graphQLErrors[0].message) === 'Token is invalid') {
+  if (networkError.statusCode === 401) {
     client.writeData({ data: { sessionExpired: true } });
   }
   console.log('network error', networkError);

@@ -21,12 +21,12 @@ const { ObjectId } = mongoose.Schema.Types;
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
-    expiresIn: 10,
+    expiresIn: 60,
     model: ['id', 'regStatus'],
   },
   refresh: {
     secret: process.env.REFRESH_TOKEN_SECRET,
-    expiresIn: 30,
+    expiresIn: '15m',
     model: ['id', 'regStatus'],
   },
   register: {
@@ -230,7 +230,7 @@ userSchema.statics = {
 
       return result;
     } catch (e) {
-      throw new AuthenticationError({ message: 'Token is invalid' });
+      throw new AuthenticationError({ message: 'Token is invalid'`` });
     }
   },
   async verifyTokens(token, refreshToken) {

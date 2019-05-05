@@ -98,7 +98,7 @@ export default {
         const currentUser = await db.User.findById(id);
         await currentUser.logActivity('logout');
 
-        return currentUser;
+        return true;
       } catch (e) {
         throw e;
       }

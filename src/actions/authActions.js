@@ -60,9 +60,7 @@ export const SIGN_UP_BY_SOCIAL = gql`
 
 export const SIGN_OUT = gql`
   mutation SignOut {
-    signOut {
-      id
-    }
+    signOut
   }
 `;
 
@@ -120,9 +118,9 @@ export const GET_ME = gql`
       ...myChatData
     }
   }
-  ${myFragment}
   ${myContactFragment}
   ${myChatFragment}
+  ${myFragment}
 `;
 
 export const GET_ME_LOCAL = gql`

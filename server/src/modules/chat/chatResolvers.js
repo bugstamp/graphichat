@@ -1,6 +1,7 @@
-import { PubSub } from 'graphql-subscriptions';
 import { map, isEmpty } from 'lodash';
-import { withFilter } from 'apollo-server-express';
+import { PubSub, withFilter } from 'apollo-server-express';
+
+import AuthProvider from '../auth/authProvider';
 
 const CHAT_CREATED = 'CHAT_CREATED';
 
@@ -97,16 +98,9 @@ export default {
   },
   Subscription: {
     chatCreated: {
-      subscribe: withFilter(
-        (parent, args, { injector }) => {
-          console.log('subscribe on create chat');
-          // console.log(user)
-          return injector.get(PubSub).asyncIterator([CHAT_CREATED]);
-        },
-        ({ chat: { members } }, variables, context) => {
-          return false;
-        },
-      ),
+      subscribe: (parent, args, { injector }) => {
+        return injector.get(PubSub).asyncIterator([CHAT_CREATED]);
+      },
     },
   },
 };

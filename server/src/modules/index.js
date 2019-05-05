@@ -1,17 +1,17 @@
 import { GraphQLModule } from '@graphql-modules/core';
 
-import ChatModule from './chat';
+import ScalarsModule from './scalars';
+import CommonModule from './common';
 import AuthModule from './auth';
 import UserModule from './user';
-import PubSubModule from './pubsub';
-import ScalarsModule from './scalars';
+import ChatModule from './chat';
 
 const AppModule = new GraphQLModule({
   imports: [
     ScalarsModule,
-    PubSubModule,
-    UserModule,
+    CommonModule,
     AuthModule,
+    UserModule,
     ChatModule,
   ],
 });

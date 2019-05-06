@@ -9,6 +9,7 @@ const options = {
 
 const { ObjectId } = mongoose.Types;
 
+// eslint-disable-next-line
 ObjectId.prototype.valueOf = function () {
   return this.toString();
 };

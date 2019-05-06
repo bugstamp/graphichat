@@ -1,5 +1,7 @@
 import { Injectable, ProviderScope } from '@graphql-modules/di';
 
+import db from '../../db';
+
 @Injectable({
   scope: ProviderScope.Session,
 })
@@ -12,15 +14,20 @@ class AuthProvider {
     }
   }
 
-  async onConnect() {
-    if (this.user) {
-      return {
-        user: this.user,
-      };
+  async onConnect({ tokens: { token } }) {
+    if (token) {
+      try {
+        const { data } = await db.User.verifyToken(token, 'token');
+
+        this.user = data;
+      } catch (e) {
+        throw e;
+      }
     }
+    throw new Error('User is unauthorized');
   }
 
-  getUser() {
+  getMe() {
     return this.user;
   }
 }

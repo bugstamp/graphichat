@@ -1,13 +1,9 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { pick, upperFirst } from 'lodash';
-import EmailValidator from 'email-validator';
+import { pick } from 'lodash';
 
 import mongoose from '../mongoose';
-import {
-  AuthenticationError,
-  BadInputError,
-} from '../../utils/apolloErrors';
+import { AuthenticationError } from '../../utils/apolloErrors';
 import {
   EMAIL_UNCONFIRMED,
   UNCOMPLETED,
@@ -17,7 +13,6 @@ import {
 } from './enums';
 
 const { ObjectId } = mongoose.Schema.Types;
-
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
@@ -256,21 +251,6 @@ userSchema.statics = {
       };
     }
   },
-  async verifyInputData(field, value) {
-    try {
-      const user = await this.getUserByField(field, value);
-
-      if (user) {
-        throw new BadInputError({
-          message: `The provided ${field} is already exist.`,
-          data: { invalidField: field },
-        });
-      }
-      return !user;
-    } catch (e) {
-      throw e;
-    }
-  },
   async verifyEmail(regToken) {
     try {
       const { data: { id } } = await this.verifyToken(regToken, 'register');
@@ -279,62 +259,6 @@ userSchema.statics = {
       const tokens = await user.genTokens(user);
 
       return tokens;
-    } catch (e) {
-      throw e;
-    }
-  },
-  async signInValidation(username, password) {
-    try {
-      const login = EmailValidator.validate(username) ? 'email' : 'username';
-      const user = await this.getUserByField(login, username);
-
-      if (!user) {
-        throw new BadInputError({
-          message: 'The provided username can\'t be found',
-          data: { invalidField: 'username' },
-        });
-      }
-      const { password: hash, regStatus } = user;
-      const validPassword = await user.comparePassword(password, hash);
-      const validRegistration = regStatus !== EMAIL_UNCONFIRMED;
-
-      if (!validPassword) {
-        throw new BadInputError({
-          message: 'The provided password is incorrect',
-          data: { invalidField: 'password' },
-        });
-      }
-      if (!validRegistration) {
-        throw new AuthenticationError({
-          message: 'Your registration isn\'t completed.You need to confirm your email',
-        });
-      }
-
-      return user;
-    } catch (e) {
-      throw e;
-    }
-  },
-  async signInBySocialValidation(social, profile) {
-    try {
-      const user = await this.getUserBySocial(social, profile);
-
-      if (!user) {
-        throw new AuthenticationError({ message: 'User not found' });
-      }
-      return user;
-    } catch (e) {
-      throw e;
-    }
-  },
-  async signUpBySocialValidation(social, profile) {
-    try {
-      const user = await this.getUserBySocial(social, profile);
-
-      if (user) {
-        throw new AuthenticationError({ message: 'User is exist' });
-      }
-      return user;
     } catch (e) {
       throw e;
     }

@@ -1,106 +1,17 @@
-import { map, isEmpty, filter } from 'lodash';
-
-import AuthProvider from '../auth/authProvider';
-import { getUserDisplayName } from '../../utils/helpers';
+import AuthProvider from '../auth/AuthProvider';
+import UserProvider from './UserProvider';
 
 export default {
   Query: {
-    async user(parent, { id }, { db }) {
-      try {
-        const user = db.User.findById(id);
-
-        return user;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async users(parent, args, { db }) {
-      try {
-        const users = await db.User.find({});
-
-        return users;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async me(parent, args, { db, user: { id } }) {
-      try {
-        const me = await db.User.findById(id);
-
-        return me;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async myContacts(parent, args, { db, user: { id } }) {
-      try {
-        const { contacts } = await db.User.findById(id);
-        const myContacts = [];
-
-        if (!isEmpty(contacts)) {
-          return await map(contacts, async ({ userId, chatId }) => {
-            const contact = await db.User.findById(userId);
-
-            return {
-              chatId,
-              userInfo: contact,
-            };
-          });
-        }
-        return myContacts;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async searchUsers(parent, { searchValue }, { db, user: { id } }) {
-      try {
-        let usersList = [];
-
-        if (searchValue) {
-          const isSearchByUsername = searchValue[0] === '@';
-
-          if (isSearchByUsername) {
-            const username = searchValue.slice(1);
-
-            usersList = await db.User.find({ username: { $regex: username, $options: 'i' } });
-          } else {
-            usersList = await db.User.find({ displayName: { $regex: searchValue, $options: 'i' } });
-          }
-        }
-        return filter(usersList, user => user.id !== id);
-      } catch (e) {
-        throw e;
-      }
-    },
+    user: (parent, args, { injector }) => injector.get(UserProvider).getUser(),
+    users: (parent, args, { injector }) => injector.get(UserProvider).getUsers(),
+    me: (parent, args, { injector }) => injector.get(AuthProvider).getMe(),
+    myContacts: (parent, args, { injector }) => injector.get(UserProvider).getMyContacts(),
+    searchUsers: (parent, { searchValue }, { injector }) => injector.get(UserProvider).searchUsers(searchValue),
   },
   Mutation: {
-    async createUser(parent, { form }, { db }) {
-      try {
-        const displayName = getUserDisplayName(form);
-        const newUser = await db.User.create({ ...form, displayName });
-
-        return newUser;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async deleteUser(parent, { id }, { db }) {
-      try {
-        const result = await db.User.findByIdAndDelete(id);
-
-        return result;
-      } catch (e) {
-        throw e;
-      }
-    },
-    async removeContacts(parent, { userId }, { db }) {
-      try {
-        const user = await db.User.findByIdAndUpdate(userId, { contacts: [] }, { new: true });
-
-        return user;
-      } catch (e) {
-        throw e;
-      }
-    },
+    createUser: (parent, { form }, { injector }) => injector.get(UserProvider).createUser(form),
+    deleteUser: (parent, { id }, { injector }) => injector.get(UserProvider).deleteUser(id),
+    removeUserContacts: (parent, { userId }, { injector }) => injector.get(UserProvider).removeUserContacts(userId),
   },
 };

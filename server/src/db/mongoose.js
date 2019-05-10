@@ -1,5 +1,13 @@
 import mongoose from 'mongoose';
 
+mongoose.Promise = Promise;
+
+const { ObjectId } = mongoose.Types;
+// eslint-disable-next-line
+ObjectId.prototype.valueOf = function () {
+  return this.toString();
+};
+
 const uri = process.env.MONGOLAB_URI;
 const options = {
   useNewUrlParser: true,
@@ -7,19 +15,12 @@ const options = {
   useFindAndModify: false,
 };
 
-const { ObjectId } = mongoose.Types;
-
-// eslint-disable-next-line
-ObjectId.prototype.valueOf = function () {
-  return this.toString();
-};
-
-mongoose.Promise = Promise;
-mongoose.connect(uri, options, (err) => {
-  if (err) {
-    console.log('Couldn\'t connected to db', err);
+export const connectToDb = async () => {
+  try {
+    return await mongoose.connect(uri, options);
+  } catch (e) {
+    throw e;
   }
-  console.log('Connected to db');
-});
+};
 
 export default mongoose;

@@ -1,5 +1,5 @@
 import models from './models';
 
-export default ({
-  ...models,
-});
+export { connectToDb } from './mongoose';
+
+export default models;

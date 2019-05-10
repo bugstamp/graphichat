@@ -4,12 +4,16 @@ import { gql } from 'apollo-server-express';
 import ScalarsModule from '../scalars';
 import AuthModule from '../auth';
 
+import AuthProvider from '../auth/AuthProvider';
+import UserProvider from './UserProvider';
+
 import resolvers from './userResolvers';
 import { isAuth } from '../middlewares';
 
 const UserModule = new GraphQLModule({
   name: 'user',
   imports: [ScalarsModule, AuthModule],
+  providers: [UserProvider, AuthProvider],
   typeDefs: gql`
     enum Status {
       OFFLINE
@@ -85,7 +89,7 @@ const UserModule = new GraphQLModule({
     type Mutation {
       createUser(form: UserCreateForm): User!
       deleteUser(id: ID!): User!
-      removeContacts(userId: ID!): User!
+      removeUserContacts(userId: ID!): User!
     }
   `,
   resolvers,
@@ -93,7 +97,6 @@ const UserModule = new GraphQLModule({
     'Query.me': [isAuth()],
     'Query.myContacts': [isAuth()],
   },
-  context: context => context,
 });
 
 export default UserModule;

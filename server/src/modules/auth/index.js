@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-express';
 
 import CommonModule from '../common';
 
-import AuthProvider from './authProvider';
+import AuthProvider from './AuthProvider';
 import resolvers from './authResolvers';
 
 const AuthModule = new GraphQLModule({
@@ -61,14 +61,6 @@ const AuthModule = new GraphQLModule({
     }
   `,
   resolvers,
-  context: (session) => {
-    if (session.req) {
-      return {
-        user: session.req.user,
-      };
-    }
-    return session;
-  },
 });
 
 export default AuthModule;

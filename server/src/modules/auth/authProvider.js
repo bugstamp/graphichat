@@ -28,20 +28,25 @@ class AuthProvider {
     }
   }
 
-  async onConnect({ tokens: { token } }) {
-    if (token) {
-      try {
-        const { data } = await this.db.User.verifyToken(token, 'token');
+  async onConnect({ tokens }) {
+    if (tokens && ('token' in tokens)) {
+      const { token, refreshToken } = tokens;
 
-        this.user = data;
+      try {
+        const { user } = await this.db.User.verifyTokens(token, refreshToken);
+
+        this.user = user;
       } catch (e) {
         throw e;
       }
+    } else {
+      throw new Error('User is unauthorized');
     }
-    throw new Error('User is unauthorized');
   }
 
-  getUser = () => this.user;
+  onOperation() {
+    console.log('operation');
+  }
 
   getMe = async () => {
     try {

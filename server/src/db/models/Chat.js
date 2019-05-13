@@ -46,7 +46,7 @@ const chatHistorySchema = new mongoose.Schema({
 });
 
 const chatSchema = new mongoose.Schema({
-  members: [ObjectId],
+  members: [String],
   createdBy: {
     type: ObjectId,
     require: true,

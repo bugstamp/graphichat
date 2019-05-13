@@ -193,7 +193,7 @@ export const CREATE_CHAT_SUBSCRIPTION = gql`
   ${myChatFragment}
 `;
 
-export const GET_SESSION_EXPIRED = gql`
+export const CHECK_SESSION_EXPIRATION = gql`
   {
     sessionExpired @client
   }

@@ -1,12 +1,14 @@
 import { PubSub, withFilter } from 'apollo-server-express';
+import { includes } from 'lodash';
 
+import AuthProvider from '../auth/AuthProvider';
 import ChatProvider from './ChatProvider';
 
 import { CHAT_CREATED } from '../subscriptions';
 
 export default {
   Query: {
-    chats: (parent, args, { injector }) => injector.get(ChatProvider).getChat(),
+    chats: (parent, args, { injector }) => injector.get(ChatProvider).getChats(),
     myChats: (parent, args, { injector }) => injector.get(ChatProvider).getMyChats(),
   },
   Mutation: {
@@ -16,9 +18,15 @@ export default {
   },
   Subscription: {
     chatCreated: {
-      subscribe: (parent, args, { injector }) => {
-        return injector.get(PubSub).asyncIterator([CHAT_CREATED]);
-      },
+      subscribe: withFilter(
+        (parent, args, { injector }) => injector.get(PubSub).asyncIterator([CHAT_CREATED]),
+        ({ chatCreated }, variables, { injector }) => {
+          const { chat: { members } } = chatCreated;
+          const { id } = injector.get(AuthProvider).user;
+
+          return includes(members, id);
+        },
+      ),
     },
   },
 };

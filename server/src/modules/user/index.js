@@ -13,7 +13,7 @@ import { isAuth } from '../middlewares';
 const UserModule = new GraphQLModule({
   name: 'user',
   imports: [ScalarsModule, AuthModule],
-  providers: [UserProvider, AuthProvider],
+  providers: [AuthProvider, UserProvider],
   typeDefs: gql`
     enum Status {
       OFFLINE
@@ -97,6 +97,7 @@ const UserModule = new GraphQLModule({
     'Query.me': [isAuth()],
     'Query.myContacts': [isAuth()],
   },
+  context: context => context,
 });
 
 export default UserModule;

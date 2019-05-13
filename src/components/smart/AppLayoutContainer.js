@@ -7,13 +7,15 @@ import {
   CREATE_CHAT_SUBSCRIPTION,
   SIGN_OUT,
   GET_MY_CHATS,
-  GET_SESSION_EXPIRED,
+  CHECK_SESSION_EXPIRATION,
 } from '../../actions/authActions';
 
 const getMe = createQuery('getMe', GET_ME);
-const getSessionExpired = createQuery('getSessionExpired', GET_SESSION_EXPIRED);
+const checkSessionExpiration = createQuery('checkSessionExpiration', CHECK_SESSION_EXPIRATION);
 const createChatSubscription = createSubscription('createChatSubscription', CREATE_CHAT_SUBSCRIPTION, {
-  onSubscriptionData({ client, subscriptionData }) {
+  onSubscriptionData(props) {
+    console.log(props);
+    const { client, subscriptionData } = props;
     const { myContacts, myChats } = client.readQuery({ query: GET_MY_CHATS });
     const { contact, chat } = subscriptionData;
 
@@ -31,7 +33,7 @@ const signOut = createMutation('signOut', SIGN_OUT);
 const AppLayoutContainer = adopt({
   createChatSubscription,
   getMe,
-  getSessionExpired,
+  checkSessionExpiration,
   signOut,
 });
 

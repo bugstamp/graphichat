@@ -1,20 +1,23 @@
-import { map, isEmpty } from 'lodash';
-import { Injectable, Inject } from '@graphql-modules/di';
+import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
 import { PubSub } from 'apollo-server-express';
+import { map, isEmpty } from 'lodash';
 
 import DbProvider from '../common/DbProvider';
 import AuthProvider from '../auth/AuthProvider';
 
 import { CHAT_CREATED } from '../subscriptions';
 
-@Injectable()
+@Injectable({
+  scope: ProviderScope.Session,
+})
 class ChatProvider {
   @Inject(AuthProvider)
   authProvider;
 
-  db = DbProvider.db;
+  @Inject(PubSub)
+  pubsub;
 
-  pubsub = PubSub
+  db = DbProvider.db;
 
   getChats = async () => {
     try {
@@ -28,7 +31,7 @@ class ChatProvider {
 
   getMyChats = async () => {
     try {
-      const { contacts } = this.authProvider.getMe();
+      const { contacts } = await this.authProvider.getMe();
       const myChats = [];
 
       if (!isEmpty(contacts)) {

@@ -38,7 +38,7 @@ class AppLayout extends Component {
         signOutProps={{
           onCompleted: this.signOut,
         }}
-        getSessionExpiredProps={{
+        checkSessionExpirationProps={{
           onCompleted: ({ sessionExpired }) => {
             if (sessionExpired) {
               this.signOut();

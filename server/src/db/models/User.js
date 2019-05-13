@@ -225,7 +225,7 @@ userSchema.statics = {
 
       return result;
     } catch (e) {
-      throw new AuthenticationError({ message: 'Token is invalid'`` });
+      throw new AuthenticationError({ message: 'Token is invalid' });
     }
   },
   async verifyTokens(token, refreshToken) {

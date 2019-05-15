@@ -1,12 +1,14 @@
 import { adopt } from 'react-adopt';
 
-import {
+import gql from '../../gql';
+import { createMutation } from '../../apollo/utils';
+
+const {
   SIGN_UP_ASYNC_VALIDATION,
   SIGN_UP,
   SIGN_UP_COMPLETION,
   SIGN_UP_BY_SOCIAL,
-} from '../../actions/authActions';
-import { createMutation } from '../../apollo/utils';
+} = gql;
 
 const signUpAsyncValidationUsername = createMutation('signUpAsyncValidationUsername', SIGN_UP_ASYNC_VALIDATION);
 const signUpAsyncValidationEmail = createMutation('signUpAsyncValidationEmail', SIGN_UP_ASYNC_VALIDATION);

@@ -1,7 +1,13 @@
 import { adopt } from 'react-adopt';
 
 import { createMutation, createQuery } from '../../apollo/utils';
-import { SEARCH_USERS, CREATE_CHAT, GET_MY_CONTACTS } from '../../actions/authActions';
+import gql from '../../gql';
+
+const {
+  SEARCH_USERS,
+  CREATE_CHAT,
+  GET_MY_CONTACTS,
+} = gql;
 
 const searchUsers = createQuery('searchUsers', SEARCH_USERS);
 const getMyContacts = createQuery('getMyContacts', GET_MY_CONTACTS);

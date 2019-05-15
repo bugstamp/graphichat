@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 
-import storage from '../actions/storage';
+import storage from '../storage';
 
 const tokenSecrets = {
   token: process.env.TOKEN_SECRET,

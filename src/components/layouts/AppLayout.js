@@ -8,7 +8,7 @@ import { withApollo } from 'react-apollo';
 import AppLayoutContainer from '../smart/AppLayoutContainer';
 import AppContent from '../dumb/AppContent';
 
-import storage from '../../actions/storage';
+import storage from '../../storage';
 
 class AppLayout extends Component {
   signOut = () => {

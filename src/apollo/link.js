@@ -4,7 +4,7 @@ import { onError } from 'apollo-link-error';
 import { getMainDefinition } from 'apollo-utilities';
 import { WebSocketLink } from 'apollo-link-ws';
 
-import storage from '../actions/storage';
+import storage from '../storage';
 import client from './index';
 
 const httpLink = createHttpLink({

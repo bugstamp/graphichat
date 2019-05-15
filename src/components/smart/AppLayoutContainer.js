@@ -2,13 +2,15 @@ import { adopt } from 'react-adopt';
 import { concat } from 'lodash';
 
 import { createMutation, createQuery, createSubscription } from '../../apollo/utils';
-import {
+import gql from '../../gql';
+
+const {
   GET_ME,
   CHAT_CREATED_SUBSCRIPTION,
   SIGN_OUT,
   GET_MY_CHATS,
   CHECK_SESSION_EXPIRATION,
-} from '../../actions/authActions';
+} = gql;
 
 const getMe = createQuery('getMe', GET_ME);
 const checkSessionExpiration = createQuery('checkSessionExpiration', CHECK_SESSION_EXPIRATION);

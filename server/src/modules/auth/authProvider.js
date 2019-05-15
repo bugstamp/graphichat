@@ -1,5 +1,6 @@
 import { Injectable, ProviderScope } from '@graphql-modules/di';
 import EmailValidator from 'email-validator';
+import { has } from 'lodash';
 
 import DbProvider from '../common/DbProvider';
 
@@ -29,7 +30,7 @@ class AuthProvider {
   }
 
   async onConnect({ tokens }) {
-    if (tokens && ('token' in tokens)) {
+    if (tokens && has(tokens, 'token')) {
       const { token, refreshToken } = tokens;
 
       try {
@@ -44,8 +45,8 @@ class AuthProvider {
     }
   }
 
-  onOperation() {
-    console.log('operation');
+  onDisconnect() {
+    this.user = null;
   }
 
   getMe = async () => {

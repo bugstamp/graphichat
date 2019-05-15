@@ -4,7 +4,6 @@ import { gql } from 'apollo-server-express';
 import ScalarsModule from '../scalars';
 import AuthModule from '../auth';
 
-import AuthProvider from '../auth/AuthProvider';
 import UserProvider from './UserProvider';
 
 import resolvers from './userResolvers';
@@ -13,7 +12,7 @@ import { isAuth } from '../middlewares';
 const UserModule = new GraphQLModule({
   name: 'user',
   imports: [ScalarsModule, AuthModule],
-  providers: [AuthProvider, UserProvider],
+  providers: [UserProvider],
   typeDefs: gql`
     enum Status {
       OFFLINE
@@ -78,6 +77,12 @@ const UserModule = new GraphQLModule({
       regStatus: String!
     }
 
+    type UserActivityData {
+      userId: ID!
+      status: Status!
+      lastDate: DateTime!
+    }
+
     type Query {
       user(id: ID!): User
       users: [User!]!
@@ -91,13 +96,16 @@ const UserModule = new GraphQLModule({
       deleteUser(id: ID!): User!
       removeUserContacts(userId: ID!): User!
     }
+
+    type Subscription {
+      userActivityUpdate: UserActivityData!
+    }
   `,
   resolvers,
   resolversComposition: {
     'Query.me': [isAuth()],
     'Query.myContacts': [isAuth()],
   },
-  context: context => context,
 });
 
 export default UserModule;

@@ -7,7 +7,6 @@ import AuthModule from '../auth';
 import UserModule from '../user';
 
 import ChatProvider from './ChatProvider';
-import AuthProvider from '../auth/AuthProvider';
 
 import resolvers from './chatResolvers';
 // import { isAuth } from '../middlewares';
@@ -15,7 +14,7 @@ import resolvers from './chatResolvers';
 const ChatModule = new GraphQLModule({
   name: 'chat',
   imports: [ScalarsModule, CommonModule, AuthModule, UserModule],
-  providers: [AuthProvider, ChatProvider],
+  providers: [ChatProvider],
   typeDefs: gql`
     enum ChatMessageType {
       system

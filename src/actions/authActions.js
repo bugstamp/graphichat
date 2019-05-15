@@ -178,7 +178,7 @@ export const CREATE_CHAT = gql`
   ${myChatFragment}
 `;
 
-export const CREATE_CHAT_SUBSCRIPTION = gql`
+export const CHAT_CREATED_SUBSCRIPTION = gql`
   subscription onChatCreated {
     chatCreated {
       contact {

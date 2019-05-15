@@ -41,14 +41,18 @@ const authLink = new ApolloLink((operation, forward) => {
 });
 
 const tokenLink = new ApolloLink((operation, forward) => forward(operation).map((response) => {
-  const { response: { headers } } = operation.getContext();
+  const context = operation.getContext();
 
-  if (headers) {
-    const token = headers.get('x-token');
-    const refreshToken = headers.get('x-refresh-token');
+  if ('response' in context) {
+    const { response: { headers } } = context;
 
-    if (token && refreshToken) {
-      storage.setTokens(token, refreshToken);
+    if (headers) {
+      const token = headers.get('x-token');
+      const refreshToken = headers.get('x-refresh-token');
+
+      if (token && refreshToken) {
+        storage.setTokens(token, refreshToken);
+      }
     }
   }
   return response;
@@ -58,8 +62,6 @@ const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
   if (networkError.statusCode === 401) {
     client.writeData({ data: { sessionExpired: true } });
   }
-  console.log('network error', networkError);
-  console.log('qraphql errors', graphQLErrors);
 });
 
 const logger = new ApolloLink((operation, forward) => {

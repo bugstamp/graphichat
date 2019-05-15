@@ -4,7 +4,7 @@ import { concat } from 'lodash';
 import { createMutation, createQuery, createSubscription } from '../../apollo/utils';
 import {
   GET_ME,
-  CREATE_CHAT_SUBSCRIPTION,
+  CHAT_CREATED_SUBSCRIPTION,
   SIGN_OUT,
   GET_MY_CHATS,
   CHECK_SESSION_EXPIRATION,
@@ -12,12 +12,11 @@ import {
 
 const getMe = createQuery('getMe', GET_ME);
 const checkSessionExpiration = createQuery('checkSessionExpiration', CHECK_SESSION_EXPIRATION);
-const createChatSubscription = createSubscription('createChatSubscription', CREATE_CHAT_SUBSCRIPTION, {
+const chatCreatedSubscription = createSubscription('chatCreatedSubscription', CHAT_CREATED_SUBSCRIPTION, {
   onSubscriptionData(props) {
-    console.log(props);
-    const { client, subscriptionData } = props;
+    const { client, subscriptionData: { data: { chatCreated } } } = props;
     const { myContacts, myChats } = client.readQuery({ query: GET_MY_CHATS });
-    const { contact, chat } = subscriptionData;
+    const { contact, chat } = chatCreated;
 
     client.writeQuery({
       query: GET_MY_CHATS,
@@ -31,7 +30,7 @@ const createChatSubscription = createSubscription('createChatSubscription', CREA
 const signOut = createMutation('signOut', SIGN_OUT);
 
 const AppLayoutContainer = adopt({
-  createChatSubscription,
+  chatCreatedSubscription,
   getMe,
   checkSessionExpiration,
   signOut,

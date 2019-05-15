@@ -1,4 +1,5 @@
 import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
+import { PubSub } from 'apollo-server-express';
 import { map, isEmpty, filter } from 'lodash';
 
 import DbProvider from '../common/DbProvider';
@@ -12,6 +13,9 @@ import { getUserDisplayName } from '../../utils/helpers';
 class UserProvider {
   @Inject(AuthProvider)
   authProvider;
+
+  @Inject(PubSub)
+  pubsub;
 
   db = DbProvider.db;
 

@@ -20,14 +20,14 @@ export default {
     removeUserContacts: (parent, { userId }, { injector }) => injector.get(UserProvider).removeUserContacts(userId),
   },
   Subscription: {
-    userActivityUpdate: {
+    userActivityUpdated: {
       subscribe: withFilter(
         (parent, args, { injector }) => injector.get(PubSub).asyncIterator([USER_ACTIVITY_UPDATE]),
-        async ({ userActivityUpdate }, variables, { injector }) => {
-          const { userId } = userActivityUpdate;
+        async ({ userActivityUpdated }, variables, { injector }) => {
+          const { userId } = userActivityUpdated;
           const { contacts } = await injector.get(AuthProvider).getMe();
 
-          return find(contacts, { userId });
+          return !!find(contacts, { userId });
         },
       ),
     },

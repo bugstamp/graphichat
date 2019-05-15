@@ -35,7 +35,7 @@ class Chats extends Component {
   render() {
     return (
       <ChatsContainer>
-        {({ getMyChats: { data: { myContacts, myChats } } }) => {
+        {({ getMyChats: { data: { myContacts, myChats } } }) => {4
           return (
             <Wrapper square elevation={0}>
               <Grid container spacing={0}>

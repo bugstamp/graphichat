@@ -1,4 +1,5 @@
-import { Injectable, ProviderScope } from '@graphql-modules/di';
+import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
+import { PubSub } from 'apollo-server-express';
 import EmailValidator from 'email-validator';
 import { has } from 'lodash';
 
@@ -15,13 +16,18 @@ import {
 import { getUserDisplayName } from '../../utils/helpers';
 import nodemailer from '../../utils/nodemailer';
 
+import { USER_ACTIVITY_UPDATE } from '../subscriptions';
+
 @Injectable({
   scope: ProviderScope.Session,
 })
 class AuthProvider {
-  user = null;
+  @Inject(PubSub)
+  pubsub;
 
   db = DbProvider.db;
+
+  user = null;
 
   onRequest({ session }) {
     if (session.req) {
@@ -35,8 +41,8 @@ class AuthProvider {
 
       try {
         const { user } = await this.db.User.verifyTokens(token, refreshToken);
-
         this.user = user;
+        await this.updateUserActivity(this.user.id, 'login');
       } catch (e) {
         throw e;
       }
@@ -45,7 +51,10 @@ class AuthProvider {
     }
   }
 
-  onDisconnect() {
+  async onDisconnect() {
+    if (this.user) {
+      await this.updateUserActivity(this.user.id, 'logout');
+    }
     this.user = null;
   }
 
@@ -239,6 +248,19 @@ class AuthProvider {
     } catch (e) {
       throw e;
     }
+  }
+
+  updateUserActivity = async (userId, phase) => {
+    const user = await this.db.User.findById(userId);
+    const update = await user.logActivity(phase);
+    const result = {
+      userId,
+      ...update,
+    };
+
+    await this.pubsub.publish(USER_ACTIVITY_UPDATE, { userActivityUpdated: result });
+
+    return result;
   }
 }
 

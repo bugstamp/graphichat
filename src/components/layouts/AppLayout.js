@@ -35,7 +35,8 @@ class AppLayout extends Component {
           },
         }}
       >
-        {({ signOut }) => {
+        {({ signOut, userActivitySubscription }) => {
+          console.log(userActivitySubscription);
           // if (loading) {
           //   return 'Loading...';
           // }

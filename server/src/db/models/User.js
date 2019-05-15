@@ -47,11 +47,11 @@ const userContactSettingsSchema = new mongoose.Schema({
 
 const userContactSchema = new mongoose.Schema({
   userId: {
-    type: ObjectId,
+    type: String,
     require: true,
   },
   chatId: {
-    type: ObjectId,
+    type: String,
     require: true,
   },
   settings: userContactSettingsSchema,
@@ -183,10 +183,18 @@ userSchema.methods = {
   },
   async logActivity(phase = 'login') {
     try {
+      const status = phase === 'logout' ? OFFLINE : ONLINE;
+      const lastDate = new Date();
+
       await this.updateOne({
-        status: phase === 'logout' ? OFFLINE : ONLINE,
-        lastDate: new Date(),
+        status,
+        lastDate,
       });
+
+      return {
+        status,
+        lastDate,
+      };
     } catch (e) {
       throw e;
     }

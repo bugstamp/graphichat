@@ -59,10 +59,21 @@ const SEARCH_USERS = gql`
   ${myFragment}
 `;
 
+const USER_ACTIVITY_SUBSCRIPTION = gql`
+  subscription onUserActivityUpdated {
+    userActivityUpdated {
+      userId
+      status
+      lastDate
+    }
+  }
+`;
+
 export default {
   GET_ME,
   GET_ME_LOCAL,
   GET_MY_CONTACTS,
   GET_MY_CHATS,
   SEARCH_USERS,
+  USER_ACTIVITY_SUBSCRIPTION,
 };

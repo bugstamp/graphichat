@@ -77,7 +77,7 @@ const UserModule = new GraphQLModule({
       regStatus: String!
     }
 
-    type UserActivityData {
+    type UserActivityUpdate {
       userId: ID!
       status: Status!
       lastDate: DateTime!
@@ -98,7 +98,7 @@ const UserModule = new GraphQLModule({
     }
 
     type Subscription {
-      userActivityUpdate: UserActivityData!
+      userActivityUpdated: UserActivityUpdate!
     }
   `,
   resolvers,

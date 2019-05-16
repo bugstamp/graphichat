@@ -52,7 +52,8 @@ class ChatProvider {
 
   createChat = async (userId) => {
     try {
-      const { id, displayName } = await this.authProvider.getMe();
+      const me = await this.authProvider.getMe();
+      const { id, displayName } = me;
       const contact = await this.db.User.findById(userId);
       const chat = await this.db.Chat.create({
         createdBy: id,
@@ -70,21 +71,30 @@ class ChatProvider {
         ],
       });
       const { id: chatId } = chat;
+      const { id: myContactId } = await this.db.User.addContact(id, userId, chatId);
+      const { id: contactId } = await this.db.User.addContact(userId, id, chatId);
 
-      await this.db.User.findByIdAndUpdate(id, { $push: { contacts: { userId, chatId } } });
-      await this.db.User.findByIdAndUpdate(userId, { $push: { contacts: { userId, chatId } } });
-
-      const result = {
+      const myResult = {
         contact: {
+          id: myContactId,
           chatId,
           userInfo: contact,
         },
         chat,
       };
+      const contactResult = {
+        contact: {
+          id: contactId,
+          chatId,
+          userInfo: me,
+        },
+        chat,
+      };
 
-      await this.pubsub.publish(CHAT_CREATED, { chatCreated: result });
+      await this.pubsub.publish(CHAT_CREATED, { chatCreated: myResult });
+      await this.pubsub.publish(CHAT_CREATED, { chatCreated: contactResult });
 
-      return result;
+      return myResult;
     } catch (e) {
       throw e;
     }

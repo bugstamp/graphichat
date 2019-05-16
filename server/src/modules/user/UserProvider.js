@@ -46,10 +46,10 @@ class UserProvider {
       const myContacts = [];
 
       if (!isEmpty(contacts)) {
-        return await map(contacts, async ({ userId, chatId }) => {
+        return await map(contacts, async ({ id, userId, chatId }) => {
           const contact = await this.db.User.findById(userId);
 
-          return { chatId, userInfo: contact };
+          return { id, chatId, userInfo: contact };
         });
       }
       return myContacts;

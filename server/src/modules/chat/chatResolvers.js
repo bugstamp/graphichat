@@ -21,10 +21,11 @@ export default {
       subscribe: withFilter(
         (parent, args, { injector }) => injector.get(PubSub).asyncIterator([CHAT_CREATED]),
         ({ chatCreated }, variables, { injector }) => {
-          const { chat: { members } } = chatCreated;
+          const { chat: { members }, contact: { userInfo } } = chatCreated;
           const { id } = injector.get(AuthProvider).user;
+          const accept = includes(members, id) && userInfo.id !== id;
 
-          return includes(members, id);
+          return accept;
         },
       ),
     },

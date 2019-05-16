@@ -62,6 +62,7 @@ const UserModule = new GraphQLModule({
     }
 
     type MyContact {
+      id: ID!
       chatId: ID!
       userInfo: User!
     }

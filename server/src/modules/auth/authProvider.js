@@ -1,7 +1,7 @@
 import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
 import { PubSub } from 'apollo-server-express';
 import EmailValidator from 'email-validator';
-import { has } from 'lodash';
+import { has, delay, isEqual } from 'lodash';
 
 import DbProvider from '../common/DbProvider';
 
@@ -42,7 +42,7 @@ class AuthProvider {
       try {
         const { user } = await this.db.User.verifyTokens(token, refreshToken);
         this.user = user;
-        await this.updateUserActivity(this.user.id, 'login');
+        await this.logIn(this.user.id);
       } catch (e) {
         throw e;
       }
@@ -53,7 +53,9 @@ class AuthProvider {
 
   async onDisconnect() {
     if (this.user) {
-      await this.updateUserActivity(this.user.id, 'logout');
+      const { lastDate } = await this.getMe();
+
+      await this.logOut(this.user.id, lastDate);
     }
     this.user = null;
   }
@@ -121,8 +123,9 @@ class AuthProvider {
     try {
       const { username, password } = form;
       const user = await this.signInValidation(username, password);
-      await user.logActivity();
       const tokens = await user.genTokens();
+      const { id } = user;
+      await this.logIn(id);
 
       return tokens;
     } catch (e) {
@@ -161,6 +164,7 @@ class AuthProvider {
         new: true,
       });
       const tokens = await user.genTokens();
+      await this.logIn(id);
 
       return tokens;
     } catch (e) {
@@ -197,8 +201,9 @@ class AuthProvider {
   signInBySocial = async (social, profile) => {
     try {
       const user = await this.signInBySocialValidation(social, profile);
-      await user.logActivity();
       const tokens = await user.genTokens();
+      const { id } = user;
+      await this.logIn(id);
 
       return tokens;
     } catch (e) {
@@ -231,6 +236,8 @@ class AuthProvider {
         regStatus: COMPLETED,
       });
       const tokens = await user.genTokens();
+      const { id: userId } = user;
+      await this.logIn(userId);
 
       return tokens;
     } catch (e) {
@@ -240,8 +247,8 @@ class AuthProvider {
 
   signOut = async () => {
     try {
-      const me = await this.getMe();
-      await me.logActivity('logout');
+      const { id, lastDate } = await this.getMe();
+      await this.logOut(id, lastDate);
       this.user = null;
 
       return true;
@@ -257,11 +264,22 @@ class AuthProvider {
       userId,
       ...update,
     };
-
     await this.pubsub.publish(USER_ACTIVITY_UPDATE, { userActivityUpdated: result });
 
     return result;
   }
+
+  logIn = async (userId) => {
+    await this.updateUserActivity(userId, 'login');
+  }
+
+  logOut = async (userId, prevLastDate) => delay(async () => {
+    const { lastDate } = await this.db.User.findById(userId);
+
+    if (isEqual(prevLastDate, lastDate)) {
+      await this.updateUserActivity(userId, 'logout');
+    }
+  }, 5000);
 }
 
 export default AuthProvider;

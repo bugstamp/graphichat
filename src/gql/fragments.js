@@ -20,6 +20,7 @@ export const myFragment = gql`
 
 export const myContactFragment = gql`
   fragment myContactData on MyContact {
+    id
     chatId
     userInfo {
       id
@@ -28,6 +29,7 @@ export const myContactFragment = gql`
       firstName
       lastName
       status
+      lastDate
     }
   }
 `;
@@ -45,6 +47,16 @@ export const myChatFragment = gql`
         edited
         seen
       }
+    }
+  }
+`;
+
+export const myContactActivityFragment = gql`
+  fragment contactActivity on MyContact {
+    userInfo {
+      id
+      status
+      lastDate
     }
   }
 `;

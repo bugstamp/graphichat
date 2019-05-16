@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { pick } from 'lodash';
+import { pick, find } from 'lodash';
 
 import mongoose from '../mongoose';
 import { AuthenticationError } from '../../utils/apolloErrors';
@@ -267,6 +267,16 @@ userSchema.statics = {
       const tokens = await user.genTokens(user);
 
       return tokens;
+    } catch (e) {
+      throw e;
+    }
+  },
+  async addContact(id, userId, chatId) {
+    try {
+      const { contacts } = await this.db.User.findByIdAndUpdate(id, { $push: { contacts: { userId, chatId } } }, { new: true });
+      const contact = find(contacts, { userId });
+
+      return contact;
     } catch (e) {
       throw e;
     }

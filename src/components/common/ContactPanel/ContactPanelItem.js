@@ -58,6 +58,7 @@ const ContactItemBadge = styled.div`
 const ContactPanelItem = ({
   contact,
   message,
+  onSelect,
 }) => {
   const {
     displayName,
@@ -70,7 +71,7 @@ const ContactPanelItem = ({
   const { content, time } = message;
 
   return (
-    <ContactListItem>
+    <ContactListItem onClick={onSelect}>
       <AppListItemAvatar src={null} text={avatarText} online={online} />
       <AppListItemInfo primary={displayName} secondary={content} />
       <ContactItemSecondary>

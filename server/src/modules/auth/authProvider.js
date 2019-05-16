@@ -279,7 +279,7 @@ class AuthProvider {
     if (isEqual(prevLastDate, lastDate)) {
       await this.updateUserActivity(userId, 'logout');
     }
-  }, 5000);
+  }, (1000 * 60));
 }
 
 export default AuthProvider;

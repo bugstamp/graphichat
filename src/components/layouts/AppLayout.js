@@ -35,11 +35,7 @@ class AppLayout extends Component {
           },
         }}
       >
-        {({ signOut, userActivitySubscription }) => {
-          console.log(userActivitySubscription);
-          // if (loading) {
-          //   return 'Loading...';
-          // }
+        {({ signOut }) => {
           return (
             <AppContent signOut={signOut.mutation}>
               {children}

@@ -25,7 +25,7 @@ const Wrapper = styled(Paper)`
   }
 `;
 
-const NoContactInfo = styled.div`
+export const NoContactInfo = styled.div`
   ${size('100%')};
   display: flex;
   align-items: center;
@@ -47,7 +47,7 @@ class ContactPanel extends Component {
 
   render() {
     const { searchDialog } = this.state;
-    const { contacts, chats } = this.props;
+    const { contacts, chats, selectChat } = this.props;
 
     return (
       <Wrapper square elevation={0}>
@@ -64,11 +64,18 @@ class ContactPanel extends Component {
             </When>
             <Otherwise>
               {map(contacts, ({ chatId, userInfo }) => {
-                const { id } = userInfo;
+                const { id, username } = userInfo;
                 const { history } = find(chats, { id: chatId });
                 const { messages } = history[0];
 
-                return (<ContactPanelItem key={id} contact={userInfo} message={messages[0]} />);
+                return (
+                  <ContactPanelItem
+                    key={id}
+                    contact={userInfo}
+                    message={messages[0]}
+                    onSelect={() => selectChat(username, id)}
+                  />
+                );
               })}
             </Otherwise>
           </Choose>

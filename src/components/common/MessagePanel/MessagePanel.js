@@ -7,25 +7,21 @@ import Input from '@material-ui/core/Input';
 import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 
 import MoodIcon from '@material-ui/icons/MoodRounded';
 import SendIcon from '@material-ui/icons/SendRounded';
 
-import SearchIcon from '@material-ui/icons/SearchRounded';
-import SettingsIcon from '@material-ui/icons/SettingsRounded';
-
-import green from '@material-ui/core/colors/green';
 import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
 import orange from '@material-ui/core/colors/orange';
 
-import { getStyledProps, getSpacing } from '../../../styles';
+import MessagePanelTopBar from './MessagePanelTopBar';
 
+import { getStyledProps, getSpacing } from '../../../styles';
 import { userLastDateParser } from '../../../helpers';
 
-const AppMessagePanel = styled(Paper)`
+const Wrapper = styled(Paper)`
   && {
     height: 100%;
     max-width: 700px;
@@ -35,31 +31,6 @@ const AppMessagePanel = styled(Paper)`
     margin: 0 auto;
     background-color: #fff;
   }
-`;
-
-const AppMessagePanelTopBar = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid ${getStyledProps('theme.palette.grey.300')};
-`;
-
-const AppMessagePanelTopBarName = styled.div`
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-
-  p {
-    ${getStyledProps('theme.typography.subtitle2')};
-  }
-`;
-
-const AppMessagePanelTopBarNameStatus = styled.span`
-  ${getStyledProps('theme.typography.caption')};
-  color: ${({ online, ...rest }) => (online
-    ? green[600]
-    : getStyledProps('theme.palette.grey.500')(rest))};
 `;
 
 const AppMessagePanelComment = styled.div`
@@ -184,21 +155,12 @@ class MessagePanel extends Component {
       : userLastDateParser(lastDate);
 
     return (
-      <AppMessagePanel square elevation={0}>
-        <AppMessagePanelTopBar>
-          <IconButton>
-            <SearchIcon />
-          </IconButton>
-          <AppMessagePanelTopBarName>
-            <p>{displayName}</p>
-            <AppMessagePanelTopBarNameStatus online={isOnline}>
-              {statusText}
-            </AppMessagePanelTopBarNameStatus>
-          </AppMessagePanelTopBarName>
-          <IconButton>
-            <SettingsIcon />
-          </IconButton>
-        </AppMessagePanelTopBar>
+      <Wrapper square elevation={0}>
+        <MessagePanelTopBar
+          name={displayName}
+          isOnline={isOnline}
+          statusText={statusText}
+        />
         <AppMessagePanelListWrapper>
           <AppMessagePanelList disablePadding>
             <AppMessagePanelListItem>
@@ -239,7 +201,7 @@ class MessagePanel extends Component {
             <Avatar>KG</Avatar>
           </AppMessagePanelCommentAvatar>
         </AppMessagePanelComment>
-      </AppMessagePanel>
+      </Wrapper>
     );
   }
 }

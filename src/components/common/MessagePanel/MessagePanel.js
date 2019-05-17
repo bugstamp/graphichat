@@ -23,6 +23,8 @@ import orange from '@material-ui/core/colors/orange';
 
 import { getStyledProps, getSpacing } from '../../../styles';
 
+import { userLastDateParser } from '../../../helpers';
+
 const AppMessagePanel = styled(Paper)`
   && {
     height: 100%;
@@ -174,6 +176,13 @@ const AppMessagePanelListMessageTime = styled.div`
 
 class MessagePanel extends Component {
   render() {
+    const { me, contact } = this.props;
+    const { userInfo: { displayName, status, lastDate } } = contact;
+    const isOnline = status === 'ONLINE';
+    const statusText = isOnline
+      ? 'online'
+      : userLastDateParser(lastDate);
+
     return (
       <AppMessagePanel square elevation={0}>
         <AppMessagePanelTopBar>
@@ -181,9 +190,9 @@ class MessagePanel extends Component {
             <SearchIcon />
           </IconButton>
           <AppMessagePanelTopBarName>
-            <p>Kiril Grischenko</p>
-            <AppMessagePanelTopBarNameStatus online>
-              online
+            <p>{displayName}</p>
+            <AppMessagePanelTopBarNameStatus online={isOnline}>
+              {statusText}
             </AppMessagePanelTopBarNameStatus>
           </AppMessagePanelTopBarName>
           <IconButton>
@@ -193,20 +202,20 @@ class MessagePanel extends Component {
         <AppMessagePanelListWrapper>
           <AppMessagePanelList disablePadding>
             <AppMessagePanelListItem>
-              <AppMessagePanelListMessage>
+              {/* <AppMessagePanelListMessage>
                 Hi, Kiril!
-              </AppMessagePanelListMessage>
-              <AppMessagePanelListMessageTime>
+                </AppMessagePanelListMessage>
+                <AppMessagePanelListMessageTime>
                 <span>13:00:15</span>
-              </AppMessagePanelListMessageTime>
-            </AppMessagePanelListItem>
-            <AppMessagePanelListItem me>
-              <AppMessagePanelListMessage me>
+                </AppMessagePanelListMessageTime>
+                </AppMessagePanelListItem>
+                <AppMessagePanelListItem me>
+                <AppMessagePanelListMessage me>
                 Hi!
-              </AppMessagePanelListMessage>
-              <AppMessagePanelListMessageTime>
+                </AppMessagePanelListMessage>
+                <AppMessagePanelListMessageTime>
                 <span>13:01:30</span>
-              </AppMessagePanelListMessageTime>
+              </AppMessagePanelListMessageTime> */}
             </AppMessagePanelListItem>
           </AppMessagePanelList>
         </AppMessagePanelListWrapper>

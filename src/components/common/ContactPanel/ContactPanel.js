@@ -47,7 +47,7 @@ class ContactPanel extends Component {
 
   render() {
     const { searchDialog } = this.state;
-    const { contacts, chats, selectChat } = this.props;
+    const { contacts, chats, selected, selectChat } = this.props;
 
     return (
       <Wrapper square elevation={0}>
@@ -64,7 +64,7 @@ class ContactPanel extends Component {
             </When>
             <Otherwise>
               {map(contacts, ({ chatId, userInfo }) => {
-                const { id, username } = userInfo;
+                const { id } = userInfo;
                 const { history } = find(chats, { id: chatId });
                 const { messages } = history[0];
 
@@ -73,7 +73,8 @@ class ContactPanel extends Component {
                     key={id}
                     contact={userInfo}
                     message={messages[0]}
-                    onSelect={() => selectChat(username, id)}
+                    isSelected={selected === chatId}
+                    onSelect={() => selectChat(chatId)}
                   />
                 );
               })}

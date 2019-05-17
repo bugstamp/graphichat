@@ -9,12 +9,16 @@ import AppListItemAvatar from './AppList/ListItemAvatar';
 import AppListItemInfo from './AppList/ListItemInfo';
 
 import { getStyledProps, getSpacing } from '../../../styles';
-import { getContactInitials, messageShortTimeParser } from '../../../helpers';
+import { getContactInitials, messageTimeParser } from '../../../helpers';
 
-const ContactListItem = styled(ListItem)`
+const ContactListItem = styled(({ isSelected, ...rest }) => <ListItem {...rest} />)`
   && {
     padding-right: 60px;
     padding-left: ${getSpacing(1)};
+    ${({ isSelected }) => isSelected && ({
+      'background-color': '#fff',
+      'border-radius': getStyledProps('theme.shape.borderRadius', 'px'),
+    })};
 
     &&:hover {
       background-color: #fff;
@@ -55,10 +59,11 @@ const ContactItemBadge = styled.div`
   border-radius: 50%;
 `;
 
-const ContactPanelItem = ({
+const  ContactPanelItem = ({
   contact,
   message,
   onSelect,
+  isSelected,
 }) => {
   const {
     displayName,
@@ -71,11 +76,11 @@ const ContactPanelItem = ({
   const { content, time } = message;
 
   return (
-    <ContactListItem onClick={onSelect}>
+    <ContactListItem isSelected={isSelected} onClick={onSelect}>
       <AppListItemAvatar src={null} text={avatarText} online={online} />
       <AppListItemInfo primary={displayName} secondary={content} />
       <ContactItemSecondary>
-        <ContactItemTime>{messageShortTimeParser(time)}</ContactItemTime>
+        <ContactItemTime>{messageTimeParser(time)}</ContactItemTime>
         {/* <ContactItemBadge>{}</ContactItemBadge> */}
       </ContactItemSecondary>
     </ContactListItem>

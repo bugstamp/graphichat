@@ -7,6 +7,7 @@ import { withApollo } from 'react-apollo';
 
 import AppLayoutContainer from '../smart/AppLayoutContainer';
 import AppContent from '../dumb/AppContent';
+import { AppContext } from '../context/AppProvider';
 
 import storage from '../../storage';
 
@@ -23,26 +24,34 @@ class AppLayout extends Component {
     const { children } = this.props;
 
     return (
-      <AppLayoutContainer
-        signOutProps={{
-          onCompleted: this.signOut,
-        }}
-        checkSessionExpirationProps={{
-          onCompleted: ({ sessionExpired }) => {
-            if (sessionExpired) {
-              this.signOut();
-            }
-          },
-        }}
-      >
-        {({ signOut }) => {
-          return (
-            <AppContent signOut={signOut.mutation}>
-              {children}
-            </AppContent>
-          );
-        }}
-      </AppLayoutContainer>
+      <AppContext.Consumer>
+        {({ setUser }) => (
+          <AppLayoutContainer
+            signOutProps={{
+              onCompleted: this.signOut,
+            }}
+            checkSessionExpirationProps={{
+              onCompleted: ({ sessionExpired }) => {
+                if (sessionExpired) {
+                  this.signOut();
+                }
+              },
+            }}
+          >
+            {({ signOut, getMe: { data: { me } } }) => {
+              return (
+                <AppContent
+                  user={me}
+                  setUserToContext={setUser}
+                  signOut={signOut.mutation}
+                >
+                  {children}
+                </AppContent>
+              );
+            }}
+          </AppLayoutContainer>
+        )}
+      </AppContext.Consumer>
     );
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { size } from 'polished';
 
@@ -13,25 +13,37 @@ const AppContainer = styled(Paper)`
   display: flex;
 `;
 
-const AppContent = ({ children, signOut }) => {
-  return (
-    <Grid container spacing={0} justify="center">
-      <Grid item xs={12} lg={10}>
-        <AppContainer square>
-          <Grid container spacing={0}>
-            <Hidden smDown>
-              <Grid item>
-                <Navigation signOut={signOut} />
+class AppContent extends Component {
+  componentDidUpdate(prevProps) {
+    const { user, setUserToContext } = this.props;
+
+    if (!prevProps.user && user) {
+      setUserToContext(user);
+    }
+  }
+
+  render() {
+    const { children, signOut } = this.props;
+
+    return (
+      <Grid container spacing={0} justify="center">
+        <Grid item xs={12} lg={10}>
+          <AppContainer square>
+            <Grid container spacing={0}>
+              <Hidden smDown>
+                <Grid item>
+                  <Navigation signOut={signOut} />
+                </Grid>
+              </Hidden>
+              <Grid item xs>
+                {children}
               </Grid>
-            </Hidden>
-            <Grid item xs>
-              {children}
             </Grid>
-          </Grid>
-        </AppContainer>
+          </AppContainer>
+        </Grid>
       </Grid>
-    </Grid>
-  );
-};
+    );
+  }
+}
 
 export default AppContent;

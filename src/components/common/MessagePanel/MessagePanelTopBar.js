@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 import IconButton from '@material-ui/core/IconButton';
 import SettingsIcon from '@material-ui/icons/SettingsRounded';
+import SearchIcon from '@material-ui/icons/SearchRounded';
 import green from '@material-ui/core/colors/green';
 
-import { getStyledProps, getSpacing } from '../../../styles';
+import { getStyledProps } from '../../../styles';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -38,7 +39,7 @@ const MessagePanelTopBar = ({ name, statusText, isOnline }) => (
       <SearchIcon />
     </IconButton>
     <MessagePanelTopBarName>
-      <p>{displayName}</p>
+      <p>{name}</p>
       <MessagePanelTopBarStatus online={isOnline}>
         {statusText}
       </MessagePanelTopBarStatus>

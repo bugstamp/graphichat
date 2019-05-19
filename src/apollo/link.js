@@ -3,6 +3,7 @@ import { ApolloLink, from, split } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { getMainDefinition } from 'apollo-utilities';
 import { WebSocketLink } from 'apollo-link-ws';
+import { isEmpty } from 'lodash';
 
 import storage from '../storage';
 import client from './index';
@@ -61,6 +62,12 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
 const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
   if (networkError.statusCode === 401) {
     client.writeData({ data: { sessionExpired: true } });
+  }
+  if (!isEmpty(networkError)) {
+    console.log(networkError);
+  }
+  if (!isEmpty(graphQLErrors)) {
+    console.log(graphQLErrors);
   }
 });
 

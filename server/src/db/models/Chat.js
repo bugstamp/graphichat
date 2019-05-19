@@ -36,15 +36,6 @@ const chatMessageSchema = new mongoose.Schema({
   },
 });
 
-const chatHistorySchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    require: true,
-    default: new Date(),
-  },
-  messages: [chatMessageSchema],
-});
-
 const chatSchema = new mongoose.Schema({
   members: [String],
   createdBy: {
@@ -56,7 +47,7 @@ const chatSchema = new mongoose.Schema({
     require: true,
     default: new Date(),
   },
-  history: [chatHistorySchema],
+  messages: [chatMessageSchema],
 });
 
 chatSchema.methods = {};

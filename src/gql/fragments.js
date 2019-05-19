@@ -37,16 +37,14 @@ export const myContactFragment = gql`
 export const myChatFragment = gql`
   fragment myChatData on Chat {
     id
-    history {
-      date
-      messages {
-        senderId
-        type
-        content
-        time
-        edited
-        seen
-      }
+    messages {
+      id
+      senderId
+      type
+      content
+      time
+      edited
+      seen
     }
   }
 `;

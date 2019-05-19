@@ -31,17 +31,12 @@ const ChatModule = new GraphQLModule({
       seen: Boolean!
     }
 
-    type ChatHistory {
-      date: DateTime!
-      messages: [ChatMessage]
-    }
-
     type Chat {
       id: ID!
       members: [ID!]!
       createdBy: ID!
       createDate: DateTime!
-      history: [ChatHistory!]!
+      messages: [ChatMessage]
     }
 
     type ContactUpdate {

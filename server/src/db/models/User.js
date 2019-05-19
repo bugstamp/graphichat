@@ -12,7 +12,6 @@ import {
   OFFLINE,
 } from './enums';
 
-const { ObjectId } = mongoose.Schema.Types;
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
@@ -273,7 +272,7 @@ userSchema.statics = {
   },
   async addContact(id, userId, chatId) {
     try {
-      const { contacts } = await this.db.User.findByIdAndUpdate(id, { $push: { contacts: { userId, chatId } } }, { new: true });
+      const { contacts } = await this.findByIdAndUpdate(id, { $push: { contacts: { userId, chatId } } }, { new: true });
       const contact = find(contacts, { userId });
 
       return contact;

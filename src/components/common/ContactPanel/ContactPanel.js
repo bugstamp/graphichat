@@ -58,15 +58,14 @@ class ContactPanel extends Component {
               <NoContactInfo>
                 <Typography variant="subtitle2">
                   <p>Your contact list is empty.</p>
-                  <p>Click on the '+' icon to find your contacts</p>
+                  <p>Click on the "+" icon to find your contacts</p>
                 </Typography>
               </NoContactInfo>
             </When>
             <Otherwise>
               {map(contacts, ({ chatId, userInfo }) => {
                 const { id } = userInfo;
-                const { history } = find(chats, { id: chatId });
-                const { messages } = history[0];
+                const { messages } = find(chats, { id: chatId });
 
                 return (
                   <ContactPanelItem

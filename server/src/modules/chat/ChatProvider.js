@@ -37,7 +37,7 @@ class ChatProvider {
       if (!isEmpty(contacts)) {
         return await map(contacts, async ({ chatId }) => {
           const chat = await this.db.Chat.findById(chatId, {
-            history: {
+            messages: {
               $slice: -1,
             },
           });
@@ -58,15 +58,10 @@ class ChatProvider {
       const chat = await this.db.Chat.create({
         createdBy: id,
         members: [id, userId],
-        history: [
+        messages: [
           {
-            date: Date.now(),
-            messages: [
-              {
-                type: 'system',
-                content: `Chat created by ${displayName}`,
-              },
-            ],
+            type: 'system',
+            content: `Chat created by ${displayName}`,
           },
         ],
       });

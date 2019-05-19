@@ -87,6 +87,7 @@ class Chats extends Component {
           <ChatsContainer>
             {({ getMyChats: { data: { myContacts, myChats } } }) => {
               const selectedContact = find(myContacts, { chatId: selected });
+              const selectedChat = find(myChats, { id: selected });
 
               return (
                 <Wrapper square elevation={0}>
@@ -113,7 +114,11 @@ class Chats extends Component {
                             </NoContactInfo>
                           </When>
                           <Otherwise>
-                            <MessagePanel me={user} contact={selectedContact} />
+                            <MessagePanel
+                              me={user}
+                              contact={selectedContact}
+                              chat={selectedChat}
+                            />
                           </Otherwise>
                         </Choose>
                       </Grid>

@@ -59,7 +59,7 @@ const ContactItemBadge = styled.div`
   border-radius: 50%;
 `;
 
-const  ContactPanelItem = ({
+const ContactPanelItem = ({
   contact,
   message,
   onSelect,

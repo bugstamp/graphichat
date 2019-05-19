@@ -34,10 +34,9 @@ const MessagePanelList = styled(List)`
   }
 `;
 
-const MessagePanelListItem = styled(({ me, ...rest }) => (<ListItem {...rest} />))`
+const MessagePanelListItem = styled(ListItem)`
   && {
     flex-flow: column;
-    align-items: ${({ me }) => (me ? 'flex-start' : 'flex-end')};
   }
 `;
 
@@ -71,10 +70,10 @@ const MessagePanelHistoryDivider = styled.div`
 
 const MessagePanelMessage = styled.div`
   border-radius: 10px;
-  background-color: ${({ me }) => (me ? grey[100] : blue[100])};
+  background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
   padding: ${getSpacing(2)};
-  ${({ me }) => ({
-    [`border-bottom-${me ? 'left' : 'right'}-radius`]: 0,
+  ${({ isMyMessage }) => ({
+    [`border-bottom-${isMyMessage ? 'left' : 'right'}-radius`]: 0,
   })};
 
   &:hover {
@@ -114,7 +113,8 @@ class MessagePanelMessages extends Component {
       }) => {
         const isSystem = type === 'system';
         const isFirst = findIndex(messages, { id }) === 0;
-        const direction = id === myId ? 'start' : 'end';
+        const isMyMessage = id === myId;
+        const direction = isMyMessage ? 'start' : 'end';
         const alignItems = isSystem ? 'center' : `flex-${direction}`;
         let divider = false;
 
@@ -140,7 +140,7 @@ class MessagePanelMessages extends Component {
                   </MessagePanelSystemMessage>
                 </When>
                 <Otherwise>
-                  <MessagePanelMessage>
+                  <MessagePanelMessage isMyMessage={isMyMessage}>
                     {content}
                   </MessagePanelMessage>
                   <MessagePanelMessageTime>

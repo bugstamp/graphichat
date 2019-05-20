@@ -42,6 +42,7 @@ class AuthProvider {
       try {
         const { user } = await this.db.User.verifyTokens(token, refreshToken);
         this.user = user;
+        console.log('connected', this.user);
         await this.logIn(this.user.id);
       } catch (e) {
         throw e;
@@ -52,12 +53,17 @@ class AuthProvider {
   }
 
   async onDisconnect() {
+    console.log('disconnected', this.user);
     if (this.user) {
       const { lastDate } = await this.getMe();
 
       await this.logOut(this.user.id, lastDate);
     }
     this.user = null;
+  }
+
+  async OnOperation() {
+    console.log('operation');
   }
 
   getMe = async () => {
@@ -124,8 +130,12 @@ class AuthProvider {
       const { username, password } = form;
       const user = await this.signInValidation(username, password);
       const tokens = await user.genTokens();
-      const { id } = user;
+      const { id, regStatus } = user;
       await this.logIn(id);
+      this.user = {
+        id,
+        regStatus,
+      };
 
       return tokens;
     } catch (e) {
@@ -279,7 +289,7 @@ class AuthProvider {
     if (isEqual(prevLastDate, lastDate)) {
       await this.updateUserActivity(userId, 'logout');
     }
-  }, (1000 * 60));
+  }, (1000 * 10));
 }
 
 export default AuthProvider;

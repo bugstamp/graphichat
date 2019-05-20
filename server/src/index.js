@@ -2,6 +2,8 @@ import 'reflect-metadata';
 import express from 'express';
 import http from 'http';
 import { ApolloServer } from 'apollo-server-express';
+import { execute, subscribe } from 'graphql';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { formatError } from 'apollo-errors';
 import cors from 'cors';
 
@@ -24,7 +26,6 @@ const startServer = ({ schema, subscriptions }) => {
   const app = express();
   const apolloServer = new ApolloServer({
     schema,
-    subscriptions,
     formatError,
     context: session => session,
   });
@@ -49,6 +50,16 @@ const startServer = ({ schema, subscriptions }) => {
   ws.listen(port, () => {
     console.log(`Server ready at ${apolloUrl}`);
     console.log(`Subscriptions ready at ${wsUrl}`);
+
+    new SubscriptionServer({
+      execute,
+      subscribe,
+      schema,
+      ...subscriptions,
+    }, {
+      server: ws,
+      path: '/graphql',
+    });
   });
 };
 

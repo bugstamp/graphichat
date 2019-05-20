@@ -5,7 +5,7 @@ import { map, isEmpty } from 'lodash';
 import DbProvider from '../common/DbProvider';
 import AuthProvider from '../auth/AuthProvider';
 
-import { CHAT_CREATED } from '../subscriptions';
+import { CHAT_CREATED, MESSAGE_ADDED } from '../subscriptions';
 
 @Injectable({
   scope: ProviderScope.Session,
@@ -94,6 +94,16 @@ class ChatProvider {
       throw e;
     }
   }
+
+  // addMessage = async ({ chatId, senderId, content }) => {
+  //   try {
+  //     const time = new Date();
+  //     const chat = await this.db.Chat.findByIdAndUpdate(chatId);
+  //     const message = await chat.update
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
 
   removeChat = async (chatId) => {
     try {

@@ -4,13 +4,12 @@ import { gql } from 'apollo-server-express';
 import CommonModule from '../common';
 
 import AuthProvider from './AuthProvider';
-import UserProvider from '../user/UserProvider';
 import resolvers from './authResolvers';
 
 const AuthModule = new GraphQLModule({
   name: 'auth',
   imports: [CommonModule],
-  providers: [AuthProvider, UserProvider],
+  providers: [AuthProvider],
   typeDefs: gql`
     type AuthPayload {
       token: String

@@ -25,7 +25,8 @@ export default {
         (parent, args, { injector }) => injector.get(PubSub).asyncIterator([USER_ACTIVITY_UPDATE]),
         async ({ userActivityUpdated }, variables, { injector }) => {
           const { userId } = userActivityUpdated;
-          const { contacts } = await injector.get(AuthProvider).getMe();
+          const { id, contacts } = await injector.get(AuthProvider).getMe();
+          console.log(userId, id);
 
           return !!find(contacts, { userId });
         },

@@ -26,7 +26,7 @@ const WrapperPaper = styled(Paper)`
 class MessagePanel extends Component {
   render() {
     const { me, contact, chat } = this.props;
-    const { userId, userInfo } = contact;
+    const { userInfo } = contact;
     const {
       firstName,
       lastName,

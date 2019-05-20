@@ -1,4 +1,4 @@
-import { PubSub, withFilter } from 'apollo-server-express';
+import { PubSub, withFilter } from 'graphql-subscriptions';
 import { find } from 'lodash';
 
 import AuthProvider from '../auth/AuthProvider';

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
-import http from 'http';
+import { createServer } from 'http';
 import { ApolloServer } from 'apollo-server-express';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
@@ -44,17 +44,16 @@ const startServer = ({ schema, subscriptions }) => {
     res.sendFile(paths.html);
   });
 
-  const ws = http.createServer(app);
-  apolloServer.installSubscriptionHandlers(ws);
+  const ws = createServer(app);
 
   ws.listen(port, () => {
     console.log(`Server ready at ${apolloUrl}`);
     console.log(`Subscriptions ready at ${wsUrl}`);
 
-    new SubscriptionServer({
+    SubscriptionServer.create({
+      schema,
       execute,
       subscribe,
-      schema,
       ...subscriptions,
     }, {
       server: ws,

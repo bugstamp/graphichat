@@ -1,5 +1,5 @@
 import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
-import { PubSub } from 'apollo-server-express';
+import { PubSub } from 'graphql-subscriptions';
 import { map, isEmpty, filter } from 'lodash';
 
 import DbProvider from '../common/DbProvider';

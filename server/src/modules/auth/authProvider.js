@@ -1,5 +1,5 @@
 import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
-import { PubSub } from 'apollo-server-express';
+import { PubSub } from 'graphql-subscriptions';
 import EmailValidator from 'email-validator';
 import { has, delay, isEqual } from 'lodash';
 
@@ -52,6 +52,10 @@ class AuthProvider {
     }
   }
 
+  async onOperation() {
+    console.log('on operation');
+  }
+
   async onDisconnect() {
     console.log('disconnected', this.user);
     if (this.user) {
@@ -60,10 +64,6 @@ class AuthProvider {
       await this.logOut(this.user.id, lastDate);
     }
     this.user = null;
-  }
-
-  async OnOperation() {
-    console.log('operation');
   }
 
   getMe = async () => {

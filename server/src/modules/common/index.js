@@ -1,5 +1,5 @@
 import { GraphQLModule } from '@graphql-modules/core';
-import { PubSub } from 'apollo-server-express';
+import { PubSub } from 'graphql-subscriptions';
 
 import DbProvider from './DbProvider';
 

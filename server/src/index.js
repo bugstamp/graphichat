@@ -20,6 +20,7 @@ const { verification } = routers;
 const port = process.env.PORT;
 const apolloPath = process.env.APOLLO_PATH;
 const apolloUrl = process.env.APOLLO_URL;
+const wsPath = process.env.WS_PATH;
 const wsUrl = process.env.WS_URL;
 
 const startServer = ({ schema, subscriptions }) => {
@@ -43,9 +44,9 @@ const startServer = ({ schema, subscriptions }) => {
   app.get('*', (req, res) => {
     res.sendFile(paths.html);
   });
+  const { onOperationComplete, onOperation, ...rest } = subscriptions;
 
   const ws = createServer(app);
-
   ws.listen(port, () => {
     console.log(`Server ready at ${apolloUrl}`);
     console.log(`Subscriptions ready at ${wsUrl}`);
@@ -54,10 +55,10 @@ const startServer = ({ schema, subscriptions }) => {
       schema,
       execute,
       subscribe,
-      ...subscriptions,
+      ...rest,
     }, {
       server: ws,
-      path: '/graphql',
+      path: wsPath,
     });
   });
 };

@@ -41,9 +41,9 @@ class AuthProvider {
 
       try {
         const { user } = await this.db.User.verifyTokens(token, refreshToken);
+        await this.logIn(user.id);
+
         this.user = user;
-        console.log('connected', this.user);
-        await this.logIn(this.user.id);
       } catch (e) {
         throw e;
       }
@@ -52,12 +52,15 @@ class AuthProvider {
     }
   }
 
-  async onOperation() {
+  onOperation() {
     console.log('on operation');
   }
 
+  onOperationComplete() {
+    console.log('on operation complete');
+  }
+
   async onDisconnect() {
-    console.log('disconnected', this.user);
     if (this.user) {
       const { lastDate } = await this.getMe();
 

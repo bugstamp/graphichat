@@ -44,7 +44,6 @@ const startServer = ({ schema, subscriptions }) => {
   app.get('*', (req, res) => {
     res.sendFile(paths.html);
   });
-  const { onOperationComplete, onOperation, ...rest } = subscriptions;
 
   const ws = createServer(app);
   ws.listen(port, () => {
@@ -55,7 +54,7 @@ const startServer = ({ schema, subscriptions }) => {
       schema,
       execute,
       subscribe,
-      ...rest,
+      ...subscriptions,
     }, {
       server: ws,
       path: wsPath,

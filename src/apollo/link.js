@@ -14,7 +14,8 @@ const httpLink = createHttpLink({
 });
 
 const wsClient = new SubscriptionClient(
-  process.env.WS_URL, {
+  process.env.WS_URL,
+  {
     reconnect: true,
     connectionParams: () => ({
       tokens: storage.getTokens(),

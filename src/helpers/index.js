@@ -21,19 +21,15 @@ export const messageTimeParser = (time, variant = 'short') => {
 };
 export const userLastDateParser = date => moment(date).calendar(null, {
   sameDay: '[today at] HH:mm',
-  nextDay: '[Tomorrow]',
-  nextWeek: 'dddd',
   lastDay: '[yesterday at] HH:mm',
   lastWeek: '[last] dddd [at] HH:mm',
   sameElse: 'DD/MM/YYYY',
 });
 export const messageHistoryDateParser = date => moment(date).calendar(null, {
   sameDay: '[Today]',
-  nextDay: '[Tomorrow]',
-  nextWeek: 'dddd',
-  lastDay: 'dddd, MMMM, YYYY',
-  lastWeek: 'dddd, MMMM, YYYY',
-  sameElse: 'dddd, MMMM, YYYY',
+  lastDay: 'LL',
+  lastWeek: 'LL',
+  sameElse: 'LL',
 });
 export const isSameDay = (date, referenceDate) => {
   const a = moment(date);

@@ -95,15 +95,44 @@ class ChatProvider {
     }
   }
 
-  // addMessage = async ({ chatId, senderId, content }) => {
-  //   try {
-  //     const time = new Date();
-  //     const chat = await this.db.Chat.findByIdAndUpdate(chatId);
-  //     const message = await chat.update
-  //   } catch (e) {
-  //     throw e;
-  //   }
-  // }
+  addMessage = async ({ chatId, content }) => {
+    try {
+      const time = new Date();
+      const { id: senderId } = this.authProvider.user;
+      const newMessage = {
+        senderId,
+        content,
+        time,
+      };
+      const res = await this.db.Chat.findByIdAndUpdate(
+        chatId,
+        {
+          $push: { messages: newMessage },
+        },
+        {
+          new: true,
+          select: {
+            messages: {
+              $elemMatch: {
+                senderId,
+                time,
+              },
+            },
+          },
+        },
+      );
+      console.log(res);
+      const result = {
+        chatId,
+        message: res,
+      };
+      await this.pubsub.publish(MESSAGE_ADDED, { messageAdded: result });
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
 
   removeChat = async (chatId) => {
     try {

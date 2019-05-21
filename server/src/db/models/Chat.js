@@ -2,13 +2,11 @@
 
 import mongoose from '../mongoose';
 
-const { ObjectId } = mongoose.Schema.Types;
-
 const messageTypeEnums = ['system', 'text'];
 
 const chatMessageSchema = new mongoose.Schema({
   senderId: {
-    type: ObjectId,
+    type: String,
     default: null,
   },
   type: {
@@ -39,7 +37,7 @@ const chatMessageSchema = new mongoose.Schema({
 const chatSchema = new mongoose.Schema({
   members: [String],
   createdBy: {
-    type: ObjectId,
+    type: String,
     require: true,
   },
   createDate: {

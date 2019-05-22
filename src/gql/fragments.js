@@ -34,19 +34,26 @@ export const myContactFragment = gql`
   }
 `;
 
+export const messageFragment = gql`
+  fragment messageData on ChatMessage {
+    id
+    senderId
+    type
+    content
+    time
+    edited
+    seen
+  }
+`;
+
 export const myChatFragment = gql`
   fragment myChatData on Chat {
     id
     messages {
-      id
-      senderId
-      type
-      content
-      time
-      edited
-      seen
+      ...messageData
     }
   }
+  ${messageFragment}
 `;
 
 export const myContactActivityFragment = gql`

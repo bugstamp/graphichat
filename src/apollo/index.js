@@ -1,29 +1,14 @@
 import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import link from './link';
+import cache, { initData } from './cache';
 
-const cache = new InMemoryCache();
 const client = new ApolloClient({
   link,
   cache,
   credentials: 'include',
 });
 
-const initialState = {
-  sessionExpired: false,
-  me: {
-    __typename: 'User',
-  },
-  myContacts: [],
-  myChats: [],
-};
-
-const initData = (data) => {
-  cache.writeData({ data });
-};
-initData(initialState);
-
-client.onResetStore(() => { initData(initialState); });
+client.onResetStore(initData);
 
 export default client;

@@ -84,8 +84,22 @@ class Chats extends Component {
     return (
       <AppContext.Consumer>
         {({ user }) => (
-          <ChatsContainer>
-            {({ getMyChats: { data: { myContacts, myChats } } }) => {
+          <ChatsContainer
+            getChatMessagesProps={{
+              variables: {
+                chatId: selected,
+              },
+              skip: !selected,
+            }}
+            messageAddedSubscriptionProps={{
+              variables: {
+                chatId: selected,
+              },
+            }}
+          >
+            {({
+              getMyChats: { data: { myContacts, myChats } },
+            }) => {
               const selectedContact = find(myContacts, { chatId: selected });
               const selectedChat = find(myChats, { id: selected });
 

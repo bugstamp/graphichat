@@ -1,6 +1,6 @@
 import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
 import { PubSub } from 'graphql-subscriptions';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, find } from 'lodash';
 
 import DbProvider from '../common/DbProvider';
 import AuthProvider from '../auth/AuthProvider';
@@ -45,6 +45,16 @@ class ChatProvider {
         });
       }
       return myChats;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  getChatMessages = async (chatId) => {
+    try {
+      const { messages } = await this.db.Chat.findById(chatId);
+
+      return messages;
     } catch (e) {
       throw e;
     }

@@ -16,7 +16,7 @@ export default async (req, res, next) => {
       next();
     } catch (e) {
       req.user = undefined;
-      res.status(401).send(e.message);
+      res.status(401).send(e);
     }
   } else {
     next();

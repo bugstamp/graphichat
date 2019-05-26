@@ -1,11 +1,14 @@
 import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
 import { PubSub } from 'graphql-subscriptions';
-import { map, isEmpty, find } from 'lodash';
+import { map, isEmpty, find, forEach } from 'lodash';
+import { ObjectId } from 'mongodb';
 
 import DbProvider from '../common/DbProvider';
 import AuthProvider from '../auth/AuthProvider';
 
 import { CHAT_CREATED, MESSAGE_ADDED } from '../subscriptions';
+
+const messageCount = 20;
 
 @Injectable({
   scope: ProviderScope.Session,
@@ -50,9 +53,30 @@ class ChatProvider {
     }
   }
 
-  getChatMessages = async (chatId) => {
+  getChatMessages = async (chatId, lastMessageTime) => {
     try {
-      const { messages } = await this.db.Chat.findById(chatId);
+      const chat = await this.db.Chat.aggregate([
+        {
+          $match: {
+            _id: ObjectId(chatId),
+          },
+        },
+        {
+          $match: {
+            'messages.time': {
+              $lte: lastMessageTime,
+            },
+          },
+        },
+        {
+          $limit: messageCount,
+        },
+      ]);
+
+      if (isEmpty(chat)) {
+        return chat;
+      }
+      const { messages } = chat[0];
 
       return messages;
     } catch (e) {

@@ -1,5 +1,3 @@
-// import {} from 'lodash';
-
 import mongoose from '../mongoose';
 
 const messageTypeEnums = ['system', 'text'];

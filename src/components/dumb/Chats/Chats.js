@@ -57,6 +57,8 @@ class Chats extends Component {
 
       if (!selected) {
         this.selectChat(null);
+      } else {
+        this.selectChat(selected);
       }
     }
   }
@@ -85,12 +87,6 @@ class Chats extends Component {
       <AppContext.Consumer>
         {({ user }) => (
           <ChatsContainer
-            getChatMessagesProps={{
-              variables: {
-                chatId: selected,
-              },
-              skip: !selected,
-            }}
             messageAddedSubscriptionProps={{
               variables: {
                 chatId: selected,

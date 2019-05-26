@@ -52,13 +52,15 @@ class AuthProvider {
     }
   }
 
-  onOperation() {
-    console.log('on operation');
-  }
-
-  onOperationComplete() {
-    console.log('on operation complete');
-  }
+  // onOperation(params, params1) {
+  //   console.log('on operation');
+  //   console.log(params);
+  //   console.log(params1);
+  // }
+  //
+  // onOperationComplete() {
+  //   console.log('on operation complete');
+  // }
 
   async onDisconnect() {
     if (this.user) {

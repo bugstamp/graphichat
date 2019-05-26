@@ -7,6 +7,8 @@ import MessagePanelTopBar from './MessagePanelTopBar';
 import MessagePanelMessages from './MessagePanelMessages';
 import MessagePanelComment from './MessagePanelComment';
 
+import MessagePanelContainer from '../../smart/MessagePanelContainer';
+
 import { getSpacing } from '../../../styles';
 import { getContactInitials, userLastDateParser } from '../../../helpers';
 
@@ -33,35 +35,50 @@ class MessagePanel extends Component {
       status,
       lastDate,
     } = userInfo;
-    const { messages } = chat;
+    const { id: chatId, messages } = chat;
+
     const isOnline = status === 'ONLINE';
     const statusText = isOnline
       ? 'online'
       : userLastDateParser(lastDate);
     const myAvatarText = getContactInitials(me.firstName, me.lastName);
     const contactAvatarText = getContactInitials(firstName, lastName);
+    const lastMessageTime = messages[0].time;
 
     return (
-      <WrapperPaper square elevation={0}>
-        <MessagePanelTopBar
-          name={displayName}
-          isOnline={isOnline}
-          statusText={statusText}
-        />
-        <MessagePanelMessages myId={me.id} messages={messages} />
-        <MessagePanelComment
-          avatars={{
-            me: {
-              src: null,
-              text: myAvatarText,
-            },
-            contact: {
-              src: null,
-              text: contactAvatarText,
-            },
-          }}
-        />
-      </WrapperPaper>
+      <MessagePanelContainer
+        getChatMessagesProps={{
+          variables: {
+            chatId,
+            lastMessageTime,
+          },
+        }}
+      >
+        {() => {
+          return (
+            <WrapperPaper square elevation={0}>
+              <MessagePanelTopBar
+                name={displayName}
+                isOnline={isOnline}
+                statusText={statusText}
+              />
+              <MessagePanelMessages myId={me.id} messages={messages} />
+              <MessagePanelComment
+                avatars={{
+                  me: {
+                    src: null,
+                    text: myAvatarText,
+                  },
+                  contact: {
+                    src: null,
+                    text: contactAvatarText,
+                  },
+                }}
+              />
+            </WrapperPaper>
+          );
+        }}
+      </MessagePanelContainer>
     );
   }
 }

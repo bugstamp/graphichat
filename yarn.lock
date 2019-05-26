@@ -967,21 +967,21 @@
   resolved "https://registry.npmjs.org/@gerhobbelt/xregexp/-/xregexp-3.2.0-22.tgz#66e6640eb6a5bba78ad9ea8187f6910b53b6c0ea"
   integrity sha512-TRu38Z67VxFSMrBP3z/ORiJVQqp56ulidZirbobtmJnVGBWLdo4GbHtihgIJFGieIZuk+LxmPkK45SY+SQsR3A==
 
-"@graphql-modules/core@0.8.0-alpha.90c55362":
-  version "0.8.0-alpha.90c55362"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/core/-/core-0.8.0-alpha.90c55362.tgz#353e04f2dd4bf917800538933f69765b91a8a49c"
-  integrity sha512-hdLRILUSIkyZ9aEhbc2Lk/1OVV923ntrz6gaTj2CBm8ITe4veULTxCVoN3ezF4irMRw6ABVW8Zu6NaA4syW3KQ==
+"@graphql-modules/core@0.8.0-alpha.9f6edd2a":
+  version "0.8.0-alpha.9f6edd2a"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/core/-/core-0.8.0-alpha.9f6edd2a.tgz#a5dbf8f2a950f36465349bd18fa5e6e7ffa9631f"
+  integrity sha512-NAGcp5YXw0RGclWA1aE4y9JzutirMnR4c9pcWv5zFjJ5wYzaAGOjDclBATBS4IUM1dBKS3RPGDctMgTRwJw0Nw==
   dependencies:
-    "@graphql-modules/di" "0.8.0-alpha.90c55362"
+    "@graphql-modules/di" "0.8.0-alpha.9f6edd2a"
     apollo-server-caching "0.4.0"
     graphql-toolkit "0.2.12"
     graphql-tools "4.0.4"
     tslib "1.9.3"
 
-"@graphql-modules/di@0.8.0-alpha.90c55362":
-  version "0.8.0-alpha.90c55362"
-  resolved "https://registry.yarnpkg.com/@graphql-modules/di/-/di-0.8.0-alpha.90c55362.tgz#a46cc8715680283831c51d8d5adf46539ea3bde2"
-  integrity sha512-ffuj5m3mSi6wqEFPOteDBFJPanVXP6eNjkRqBWQH6EQLc4SwelNaJBtYT1tDKhVK+f++MS7TDyou1hXDsfmidA==
+"@graphql-modules/di@0.8.0-alpha.9f6edd2a":
+  version "0.8.0-alpha.9f6edd2a"
+  resolved "https://registry.yarnpkg.com/@graphql-modules/di/-/di-0.8.0-alpha.9f6edd2a.tgz#519f36c858e3ae4f9a4315d81bd6b435d08e1b65"
+  integrity sha512-ePjbY8HZp0aJHejw28U0Uts0R5MUz2crfp6epO+SVsOKIbSgwYqFxUwMqMfvQjbaWF1cQtNbsAFFGhDoxWpTMw==
   dependencies:
     events "3.0.0"
     tslib "1.9.3"

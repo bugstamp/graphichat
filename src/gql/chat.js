@@ -34,8 +34,8 @@ export const CHAT_CREATED_SUBSCRIPTION = gql`
 
 
 export const GET_CHAT_MESSAGES = gql`
-  query ChatMessages($chatId: String!) {
-    chatMessages(chatId: $chatId) {
+  query ChatMessages($chatId: String!, $lastMessageTime: DateTime!) {
+    chatMessages(chatId: $chatId, lastMessageTime: $lastMessageTime) {
       ...messageData
     }
   }

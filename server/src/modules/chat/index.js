@@ -52,7 +52,7 @@ const ChatModule = new GraphQLModule({
     type Query {
       chats: [Chat!]!
       myChats: [Chat!]!
-      chatMessages(chatId: String!): [ChatMessage!]!
+      chatMessages(chatId: String!, lastMessageTime: DateTime!): [ChatMessage!]!
     }
 
     type Mutation {

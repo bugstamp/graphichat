@@ -107,13 +107,14 @@ class MessagePanelMessages extends Component {
 
       return map(messages, ({
         id,
+        senderId,
         type,
         time,
         content,
       }) => {
         const isSystem = type === 'system';
         const isFirst = findIndex(messages, { id }) === 0;
-        const isMyMessage = id === myId;
+        const isMyMessage = senderId === myId;
         const direction = isMyMessage ? 'start' : 'end';
         const alignItems = isSystem ? 'center' : `flex-${direction}`;
         let divider = false;

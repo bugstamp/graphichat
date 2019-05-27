@@ -43,18 +43,17 @@ class MessagePanel extends Component {
       : userLastDateParser(lastDate);
     const myAvatarText = getContactInitials(me.firstName, me.lastName);
     const contactAvatarText = getContactInitials(firstName, lastName);
-    const lastMessageTime = messages[0].time;
 
     return (
       <MessagePanelContainer
         getChatMessagesProps={{
           variables: {
             chatId,
-            lastMessageTime,
+            skip: messages.length,
           },
         }}
       >
-        {() => {
+        {({ addMessage }) => {
           return (
             <WrapperPaper square elevation={0}>
               <MessagePanelTopBar
@@ -74,6 +73,7 @@ class MessagePanel extends Component {
                     text: contactAvatarText,
                   },
                 }}
+                submit={content => addMessage.mutation({ variables: { chatId, content } })}
               />
             </WrapperPaper>
           );

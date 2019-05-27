@@ -60,6 +60,7 @@ const ContactItemBadge = styled.div`
 `;
 
 const ContactPanelItem = ({
+  myId,
   contact,
   message,
   onSelect,
@@ -73,12 +74,16 @@ const ContactPanelItem = ({
   } = contact;
   const avatarText = getContactInitials(firstName, lastName);
   const online = status === 'ONLINE';
-  const { content, time } = message;
+  const { senderId, content, time } = message;
+  const isMyMessage = senderId === myId;
+  const secondary = isMyMessage
+    ? `You: ${content}`
+    : content;
 
   return (
     <ContactListItem isSelected={isSelected} onClick={onSelect}>
       <AppListItemAvatar src={null} text={avatarText} online={online} />
-      <AppListItemInfo primary={displayName} secondary={content} />
+      <AppListItemInfo primary={displayName} secondary={secondary} />
       <ContactItemSecondary>
         <ContactItemTime>{messageTimeParser(time)}</ContactItemTime>
         {/* <ContactItemBadge>{}</ContactItemBadge> */}

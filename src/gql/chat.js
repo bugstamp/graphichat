@@ -34,8 +34,8 @@ export const CHAT_CREATED_SUBSCRIPTION = gql`
 
 
 export const GET_CHAT_MESSAGES = gql`
-  query ChatMessages($chatId: String!, $lastMessageTime: DateTime!) {
-    chatMessages(chatId: $chatId, lastMessageTime: $lastMessageTime) {
+  query ChatMessages($chatId: String!, $skip: Int!) {
+    chatMessages(chatId: $chatId, skip: $skip) {
       ...messageData
     }
   }
@@ -44,7 +44,7 @@ export const GET_CHAT_MESSAGES = gql`
 
 export const ADD_MESSAGE = gql`
   mutation AddMessage($chatId: String!, $content: String!) {
-    addMessages(chatId: $chatId, content: $content) {
+    addMessage(chatId: $chatId, content: $content) {
       chatId
       message {
         ...messageData

@@ -8,7 +8,7 @@ import AuthProvider from '../auth/AuthProvider';
 
 import { CHAT_CREATED, MESSAGE_ADDED } from '../subscriptions';
 
-const messageCount = 20;
+const maxMessageCount = 20;
 
 @Injectable({
   scope: ProviderScope.Session,
@@ -53,30 +53,37 @@ class ChatProvider {
     }
   }
 
-  getChatMessages = async (chatId, lastMessageTime) => {
+  getChatMessages = async (chatId, skip) => {
     try {
-      const chat = await this.db.Chat.aggregate([
+      const messages = await this.db.Chat.aggregate([
         {
-          $match: {
-            _id: ObjectId(chatId),
-          },
+          $match: { _id: ObjectId(chatId) },
         },
         {
-          $match: {
-            'messages.time': {
-              $lte: lastMessageTime,
-            },
-          },
+          $unwind: '$messages',
         },
         {
-          $limit: messageCount,
+          $sort: { 'messages.time': -1 },
+        },
+        {
+          $skip: skip,
+        },
+        {
+          $limit: skip + maxMessageCount,
+        },
+        {
+          $group: {
+            _id: '$messages._id',
+            id: { $first: '$messages._id' },
+            senderId: { $first: '$messages.senderId' },
+            type: { $first: '$messages.type' },
+            content: { $first: '$messages.content' },
+            time: { $first: '$messages.time' },
+            seen: { $first: '$messages.seen' },
+            edited: { $first: '$messages.edited' },
+          },
         },
       ]);
-
-      if (isEmpty(chat)) {
-        return chat;
-      }
-      const { messages } = chat[0];
 
       return messages;
     } catch (e) {
@@ -129,37 +136,22 @@ class ChatProvider {
     }
   }
 
-  addMessage = async ({ chatId, content }) => {
+  addMessage = async (chatId, content) => {
     try {
-      const time = new Date();
       const { id: senderId } = this.authProvider.user;
-      const newMessage = {
+      const time = new Date();
+      const newMessageTemplate = {
         senderId,
         content,
         time,
       };
-      const res = await this.db.Chat.findByIdAndUpdate(
-        chatId,
-        {
-          $push: { messages: newMessage },
-        },
-        {
-          new: true,
-          select: {
-            messages: {
-              $elemMatch: {
-                senderId,
-                time,
-              },
-            },
-          },
-        },
-      );
-      console.log(res);
-      const result = {
-        chatId,
-        message: res,
-      };
+
+      const chat = await this.db.Chat.findById(chatId);
+      const newMessage = chat.messages.create(newMessageTemplate);
+      chat.messages.push(newMessage);
+      await chat.save();
+
+      const result = { chatId, message: newMessage };
       await this.pubsub.publish(MESSAGE_ADDED, { messageAdded: result });
 
       return result;

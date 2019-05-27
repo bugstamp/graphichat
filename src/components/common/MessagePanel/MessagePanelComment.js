@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, createRef } from 'react';
 import styled from 'styled-components';
 import { position } from 'polished';
 
@@ -6,6 +6,7 @@ import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import MoodIcon from '@material-ui/icons/MoodRounded';
 import SendIcon from '@material-ui/icons/SendRounded';
+import RootRef from '@material-ui/core/RootRef';
 
 import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/orange';
@@ -77,29 +78,45 @@ const MessagePanelCommentSubmit = styled.div`
   }
 `;
 
-const MessagePanelComment = ({ avatars: { me, contact } }) => {
-  return (
-    <Wrapper>
-      <MessagePanelCommentAvatar>
-        <AppListItemAvatar {...me} />
-      </MessagePanelCommentAvatar>
-      <MessagePanelCommentForm>
-        <MessagePanelCommentSmiles>
-          <MoodIcon fontSize="inherit" color="inherit" />
-        </MessagePanelCommentSmiles>
-        <MessagePanelCommentInput placeholder="Write a message..." multiline />
-        <MessagePanelCommentSubmit>
-          <Button variant="text" color="primary">
-            Send
-            <SendIcon />
-          </Button>
-        </MessagePanelCommentSubmit>
-      </MessagePanelCommentForm>
-      <MessagePanelCommentAvatar>
-        <AppListItemAvatar {...contact} />
-      </MessagePanelCommentAvatar>
-    </Wrapper>
-  );
-};
+class MessagePanelComment extends Component {
+  inputRef = createRef()
+
+  onSubmit = (e) => {
+    e.preventDefault();
+    const { submit } = this.props;
+    const { value } = this.inputRef.current;
+
+    if (value) {
+      submit(value);
+    }
+  }
+
+  render() {
+    const { avatars: { me, contact } } = this.props;
+
+    return (
+      <Wrapper>
+        <MessagePanelCommentAvatar>
+          <AppListItemAvatar {...me} />
+        </MessagePanelCommentAvatar>
+        <MessagePanelCommentForm onSubmit={this.onSubmit}>
+          <MessagePanelCommentSmiles>
+            <MoodIcon fontSize="inherit" color="inherit" />
+          </MessagePanelCommentSmiles>
+          <MessagePanelCommentInput inputRef={this.inputRef} placeholder="Write a message..." multiline />
+          <MessagePanelCommentSubmit>
+            <Button variant="text" color="primary" type="submit">
+              Send
+              <SendIcon />
+            </Button>
+          </MessagePanelCommentSubmit>
+        </MessagePanelCommentForm>
+        <MessagePanelCommentAvatar>
+          <AppListItemAvatar {...contact} />
+        </MessagePanelCommentAvatar>
+      </Wrapper>
+    );
+  }
+}
 
 export default MessagePanelComment;

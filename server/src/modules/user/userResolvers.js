@@ -10,7 +10,12 @@ export default {
   Query: {
     user: (parent, args, { injector }) => injector.get(UserProvider).getUser(),
     users: (parent, args, { injector }) => injector.get(UserProvider).getUsers(),
-    me: (parent, args, { injector }) => injector.get(AuthProvider).getMe(),
+    me: async (parent, args, { injector }) => {
+      const me = await injector.get(AuthProvider).getMe();
+      await injector.get(AuthProvider).logIn(me.id);
+
+      return me;
+    },
     myContacts: (parent, args, { injector }) => injector.get(UserProvider).getMyContacts(),
     searchUsers: (parent, { searchValue }, { injector }) => injector.get(UserProvider).searchUsers(searchValue),
   },
@@ -25,8 +30,7 @@ export default {
         (parent, args, { injector }) => injector.get(PubSub).asyncIterator([USER_ACTIVITY_UPDATE]),
         async ({ userActivityUpdated }, variables, { injector }) => {
           const { userId } = userActivityUpdated;
-          const { id, contacts } = await injector.get(AuthProvider).getMe();
-          console.log(userId, id);
+          const { contacts } = await injector.get(AuthProvider).getMe();
 
           return !!find(contacts, { userId });
         },

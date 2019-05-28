@@ -35,32 +35,21 @@ class AuthProvider {
     }
   }
 
-  async onConnect({ tokens }) {
+  async onOperation({ payload }) {
+    const { tokens } = payload;
+
     if (tokens && has(tokens, 'token')) {
       const { token, refreshToken } = tokens;
 
       try {
         const { user } = await this.db.User.verifyTokens(token, refreshToken);
-        await this.logIn(user.id);
 
         this.user = user;
       } catch (e) {
-        throw e;
+        this.user = null;
       }
-    } else {
-      throw new Error('User is unauthorized');
     }
   }
-
-  // onOperation(params, params1) {
-  //   console.log('on operation');
-  //   console.log(params);
-  //   console.log(params1);
-  // }
-  //
-  // onOperationComplete() {
-  //   console.log('on operation complete');
-  // }
 
   async onDisconnect() {
     if (this.user) {
@@ -294,7 +283,7 @@ class AuthProvider {
     if (isEqual(prevLastDate, lastDate)) {
       await this.updateUserActivity(userId, 'logout');
     }
-  }, (1000 * 10));
+  }, (1000 * 60));
 }
 
 export default AuthProvider;

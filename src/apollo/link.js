@@ -9,21 +9,23 @@ import { isEmpty } from 'lodash';
 import storage from '../storage';
 import client from './index';
 
+const subscriptionMiddleware = {
+  applyMiddleware: async (options, next) => {
+    options.tokens = storage.getTokens();
+    next();
+  },
+};
+
 const httpLink = createHttpLink({
   uri: process.env.APOLLO_URL,
 });
 
-const wsClient = new SubscriptionClient(
-  process.env.WS_URL,
-  {
-    reconnect: true,
-    connectionParams: () => ({
-      tokens: storage.getTokens(),
-    }),
-  },
-);
+const wsClient = new SubscriptionClient(process.env.WS_URL, {
+  reconnect: true,
+});
 
 const wsLink = new WebSocketLink(wsClient);
+wsLink.subscriptionClient.use([subscriptionMiddleware]);
 
 const networkLink = split(
   ({ query }) => {

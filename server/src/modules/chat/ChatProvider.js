@@ -66,10 +66,10 @@ class ChatProvider {
           $sort: { 'messages.time': -1 },
         },
         {
-          $skip: skip,
+          $limit: skip + maxMessageCount,
         },
         {
-          $limit: skip + maxMessageCount,
+          $skip: skip,
         },
         {
           $group: {
@@ -82,6 +82,9 @@ class ChatProvider {
             seen: { $first: '$messages.seen' },
             edited: { $first: '$messages.edited' },
           },
+        },
+        {
+          $sort: { time: 1 },
         },
       ]);
 

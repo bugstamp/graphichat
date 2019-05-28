@@ -144,7 +144,10 @@ class Chats extends Component {
                                     const { id, messages } = chat;
 
                                     if (id === chatId) {
-                                      const updatedMessages = concat(chatMessages, messages);
+                                      const updatedMessages = concat(messages, chatMessages);
+                                      console.log(messages);
+                                      console.log(chatMessages);
+                                      console.log(updatedMessages);
 
                                       return set(chat, 'messages', updatedMessages);
                                     }

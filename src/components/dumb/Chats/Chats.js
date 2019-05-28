@@ -3,7 +3,9 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
-import { isEmpty, isEqual, find, map, concat, set } from 'lodash';
+import {
+  isEmpty, isEqual, find, map, concat, set,
+} from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -144,10 +146,7 @@ class Chats extends Component {
                                     const { id, messages } = chat;
 
                                     if (id === chatId) {
-                                      const updatedMessages = concat(messages, chatMessages);
-                                      console.log(messages);
-                                      console.log(chatMessages);
-                                      console.log(updatedMessages);
+                                      const updatedMessages = concat(chatMessages, messages);
 
                                       return set(chat, 'messages', updatedMessages);
                                     }

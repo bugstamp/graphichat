@@ -72,7 +72,7 @@ class ContactPanel extends Component {
                     key={id}
                     myId={me.id}
                     contact={userInfo}
-                    message={messages[0]}
+                    message={messages[messages.length - 1]}
                     isSelected={selected === chatId}
                     onSelect={() => selectChat(chatId)}
                   />

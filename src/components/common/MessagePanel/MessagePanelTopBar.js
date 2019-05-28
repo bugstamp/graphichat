@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid ${getStyledProps('theme.palette.grey.300')};
+  z-index: 20;
 `;
 
 const MessagePanelTopBarName = styled.div`

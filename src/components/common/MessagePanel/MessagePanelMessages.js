@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { position } from 'polished';
 import { map, findIndex } from 'lodash';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
 
@@ -98,9 +100,14 @@ const MessagePanelMessageTime = styled.div`
   }
 `;
 
+const MessagePanelLoading = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 class MessagePanelMessages extends Component {
   render() {
-    const { messages, myId } = this.props;
+    const { messages, myId, loading } = this.props;
 
     const renderMessages = () => {
       let prevMessageTime;
@@ -158,7 +165,14 @@ class MessagePanelMessages extends Component {
     return (
       <Wrapper>
         <MessagePanelList disablePadding>
-          {renderMessages()}
+          <Fragment>
+            <If condition={loading}>
+              <MessagePanelLoading>
+                <CircularProgress color="primary" />
+              </MessagePanelLoading>
+            </If>
+            {renderMessages()}
+          </Fragment>
         </MessagePanelList>
       </Wrapper>
     );

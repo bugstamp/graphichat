@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { isEqual } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
 
 import MessagePanelTopBar from './MessagePanelTopBar';
 import MessagePanelMessages from './MessagePanelMessages';
 import MessagePanelComment from './MessagePanelComment';
-
-import MessagePanelContainer from '../../smart/MessagePanelContainer';
 
 import { getSpacing } from '../../../styles';
 import { getContactInitials, userLastDateParser } from '../../../helpers';
@@ -25,8 +24,39 @@ const WrapperPaper = styled(Paper)`
 `;
 
 class MessagePanel extends Component {
+  componentDidMount() {
+    this.getMessages(true);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { chat: { id } } = this.props;
+
+    if (!isEqual(prevProps.chat.id, id)) {
+      this.getMessages(true);
+    }
+  }
+
+  getMessages = (initial = false) => {
+    const { fetchMoreMessages, chat } = this.props;
+    const { id, messages } = chat;
+
+    if (initial) {
+      if (messages.length < 20) {
+        fetchMoreMessages(id, messages.length);
+      }
+    } else {
+      fetchMoreMessages(id, messages.length);
+    }
+  }
+
+  addMessage = (content) => {
+    const { chat: { id }, addMessage } = this.props;
+
+    addMessage({ variables: { chatId: id, content } });
+  }
+
   render() {
-    const { me, contact, chat } = this.props;
+    const { me, contact, chat, addMessage, loading } = this.props;
     const { userInfo } = contact;
     const {
       firstName,
@@ -45,40 +75,31 @@ class MessagePanel extends Component {
     const contactAvatarText = getContactInitials(firstName, lastName);
 
     return (
-      <MessagePanelContainer
-        getChatMessagesProps={{
-          variables: {
-            chatId,
-            skip: messages.length,
-          },
-        }}
-      >
-        {({ addMessage }) => {
-          return (
-            <WrapperPaper square elevation={0}>
-              <MessagePanelTopBar
-                name={displayName}
-                isOnline={isOnline}
-                statusText={statusText}
-              />
-              <MessagePanelMessages myId={me.id} messages={messages} />
-              <MessagePanelComment
-                avatars={{
-                  me: {
-                    src: null,
-                    text: myAvatarText,
-                  },
-                  contact: {
-                    src: null,
-                    text: contactAvatarText,
-                  },
-                }}
-                submit={content => addMessage.mutation({ variables: { chatId, content } })}
-              />
-            </WrapperPaper>
-          );
-        }}
-      </MessagePanelContainer>
+      <WrapperPaper square elevation={0}>
+        <MessagePanelTopBar
+          name={displayName}
+          isOnline={isOnline}
+          statusText={statusText}
+        />
+        <MessagePanelMessages
+          loading={loading}
+          myId={me.id}
+          messages={messages}
+        />
+        <MessagePanelComment
+          avatars={{
+            me: {
+              src: null,
+              text: myAvatarText,
+            },
+            contact: {
+              src: null,
+              text: contactAvatarText,
+            },
+          }}
+          submit={this.addMessage}
+        />
+      </WrapperPaper>
     );
   }
 }

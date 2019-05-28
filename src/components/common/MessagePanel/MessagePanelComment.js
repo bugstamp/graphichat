@@ -6,7 +6,6 @@ import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import MoodIcon from '@material-ui/icons/MoodRounded';
 import SendIcon from '@material-ui/icons/SendRounded';
-import RootRef from '@material-ui/core/RootRef';
 
 import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/orange';
@@ -88,6 +87,7 @@ class MessagePanelComment extends Component {
 
     if (value) {
       submit(value);
+      this.inputRef.current.value = '';
     }
   }
 

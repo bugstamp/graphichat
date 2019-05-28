@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
-import { isEmpty, isEqual, find } from 'lodash';
+import { isEmpty, isEqual, find, map, concat, set } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -16,7 +16,10 @@ import MessagePanel from '../../common/MessagePanel/MessagePanel';
 
 import ChatsContainer from '../../smart/ChatsContainer';
 
+import gql from '../../../gql';
 import { getStyledProps, getSpacing } from '../../../styles';
+
+const { GET_CHAT_MESSAGES } = gql;
 
 const Wrapper = styled(Paper)`
   && {
@@ -94,7 +97,8 @@ class Chats extends Component {
             }}
           >
             {({
-              getMyChats: { data: { myContacts, myChats } },
+              getMyChats: { data: { myContacts, myChats }, fetchMore, loading: getMessagesLoading },
+              addMessage: { mutation: addMessageMutation, result: addMessageResult },
             }) => {
               const selectedContact = find(myContacts, { chatId: selected });
               const selectedChat = find(myChats, { id: selected });
@@ -126,9 +130,30 @@ class Chats extends Component {
                           </When>
                           <Otherwise>
                             <MessagePanel
+                              loading={getMessagesLoading}
+                              adding={addMessageResult.loading}
                               me={user}
                               contact={selectedContact}
                               chat={selectedChat}
+                              fetchMoreMessages={(chatId, skip) => fetchMore({
+                                query: GET_CHAT_MESSAGES,
+                                variables: { chatId, skip },
+                                updateQuery: (prev, { fetchMoreResult }) => {
+                                  const { chatMessages } = fetchMoreResult;
+                                  const updatedMyChats = map(prev.myChats, (chat) => {
+                                    const { id, messages } = chat;
+
+                                    if (id === chatId) {
+                                      const updatedMessages = concat(chatMessages, messages);
+
+                                      return set(chat, 'messages', updatedMessages);
+                                    }
+                                    return chat;
+                                  });
+                                  return set(prev, myChats, updatedMyChats);
+                                },
+                              })}
+                              addMessage={addMessageMutation}
                             />
                           </Otherwise>
                         </Choose>

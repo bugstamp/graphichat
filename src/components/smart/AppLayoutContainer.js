@@ -18,8 +18,7 @@ const {
 const getMe = createQuery('getMe', GET_ME);
 const checkSessionExpiration = createQuery('checkSessionExpiration', CHECK_SESSION_EXPIRATION);
 const chatCreatedSubscription = createSubscription('chatCreatedSubscription', CHAT_CREATED_SUBSCRIPTION, {
-  onSubscriptionData(props) {
-    const { client, subscriptionData: { data: { chatCreated } } } = props;
+  onSubscriptionData({ client, subscriptionData: { data: { chatCreated } } }) {
     const { myContacts, myChats } = client.readQuery({ query: GET_MY_CHATS });
     const { contact, chat } = chatCreated;
 
@@ -33,8 +32,7 @@ const chatCreatedSubscription = createSubscription('chatCreatedSubscription', CH
   },
 });
 const userActivitySubscription = createSubscription('userActivitySubscription', USER_ACTIVITY_SUBSCRIPTION, {
-  onSubscriptionData(props) {
-    const { client, subscriptionData: { data: { userActivityUpdated } } } = props;
+  onSubscriptionData({ client, subscriptionData: { data: { userActivityUpdated } } }) {
     const { userId, status, lastDate } = userActivityUpdated;
     const { myContacts } = client.readQuery({ query: GET_MY_CONTACTS });
     const { id: contactId } = find(myContacts, ({ userInfo: { id: userId } }));

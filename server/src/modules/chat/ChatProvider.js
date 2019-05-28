@@ -130,7 +130,6 @@ class ChatProvider {
         chat,
       };
 
-      await this.pubsub.publish(CHAT_CREATED, { chatCreated: myResult });
       await this.pubsub.publish(CHAT_CREATED, { chatCreated: contactResult });
 
       return myResult;

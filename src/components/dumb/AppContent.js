@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { size } from 'polished';
+import { isEqual } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -14,11 +15,27 @@ const AppContainer = styled(Paper)`
 `;
 
 class AppContent extends Component {
+  componentDidMount() {
+    const { loading, setFetchingToContext } = this.props;
+
+    if (loading) {
+      setFetchingToContext(loading);
+    }
+  }
+
   componentDidUpdate(prevProps) {
-    const { user, setUserToContext } = this.props;
+    const {
+      loading,
+      user,
+      setUserToContext,
+      setFetchingToContext,
+    } = this.props;
 
     if (!prevProps.user && user) {
       setUserToContext(user);
+    }
+    if (!isEqual(prevProps.loading, loading)) {
+      setFetchingToContext(loading);
     }
   }
 

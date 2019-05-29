@@ -25,7 +25,7 @@ class AppLayout extends Component {
 
     return (
       <AppContext.Consumer>
-        {({ setUser }) => (
+        {({ setUser, setFetching }) => (
           <AppLayoutContainer
             signOutProps={{
               onCompleted: this.signOut,
@@ -38,11 +38,13 @@ class AppLayout extends Component {
               },
             }}
           >
-            {({ signOut, getInitialData: { data: { me } } }) => {
+            {({ signOut, getInitialData: { data: { me }, loading } }) => {
               return (
                 <AppContent
+                  loading={loading}
                   user={me}
                   setUserToContext={setUser}
+                  setFetchingToContext={setFetching}
                   signOut={signOut.mutation}
                 >
                   {children}

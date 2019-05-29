@@ -5,6 +5,7 @@ export const AppContext = createReactContext({});
 
 class AppProvider extends Component {
   state = {
+    fetching: false,
     user: {},
   }
 
@@ -12,15 +13,19 @@ class AppProvider extends Component {
     this.setState({ user });
   }
 
+  setFetching = (fetching) => {
+    this.setState({ fetching });
+  }
+
   render() {
-    const { user } = this.state;
     const { children } = this.props;
 
     return (
       <AppContext.Provider
         value={{
-          user,
+          ...this.state,
           setUser: this.setUser,
+          setFetching: this.setFetching,
         }}
       >
         {children}

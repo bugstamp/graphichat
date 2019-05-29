@@ -5,6 +5,7 @@ import { map, isEmpty, find } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import ListSearch from './AppList/ListSearch';
 import AppList from './AppList/List';
@@ -47,7 +48,14 @@ class ContactPanel extends Component {
 
   render() {
     const { searchDialog } = this.state;
-    const { me, contacts, chats, selected, selectChat } = this.props;
+    const {
+      loading,
+      me,
+      contacts,
+      chats,
+      selected,
+      selectChat,
+    } = this.props;
 
     return (
       <Wrapper square elevation={0}>
@@ -56,10 +64,17 @@ class ContactPanel extends Component {
           <Choose>
             <When condition={isEmpty(contacts)}>
               <NoContactInfo>
-                <Typography variant="subtitle2">
-                  <p>Your contact list is empty.</p>
-                  <p>Click on the "+" icon to find your contacts</p>
-                </Typography>
+                <Choose>
+                  <When condition={loading}>
+                    <CircularProgress color="primary" />
+                  </When>
+                  <Otherwise>
+                    <Typography variant="subtitle2">
+                      <p>Your contact list is empty.</p>
+                      <p>Click on the "+" icon to find your contacts</p>
+                    </Typography>
+                  </Otherwise>
+                </Choose>
               </NoContactInfo>
             </When>
             <Otherwise>

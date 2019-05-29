@@ -90,17 +90,22 @@ class Chats extends Component {
 
     return (
       <AppContext.Consumer>
-        {({ user }) => (
+        {({ user, fetching }) => (
           <ChatsContainer
             messageAddedSubscriptionProps={{
-              variables: {
-                chatId: selected,
-              },
+              variables: { chatId: selected },
             }}
           >
             {({
-              getMyChats: { data: { myContacts, myChats }, fetchMore, loading: getMessagesLoading },
-              addMessage: { mutation: addMessageMutation, result: addMessageResult },
+              getMyChats: {
+                data: { myContacts, myChats },
+                fetchMore: fetchMoreMessages,
+                loading: getMessagesLoading,
+              },
+              addMessage: {
+                mutation: addMessageMutation,
+                result: addMessageResult,
+              },
             }) => {
               const selectedContact = find(myContacts, { chatId: selected });
               const selectedChat = find(myChats, { id: selected });
@@ -110,6 +115,7 @@ class Chats extends Component {
                   <Grid container spacing={0}>
                     <Grid item xs={12} sm={4} lg={3}>
                       <ContactPanel
+                        loading={fetching}
                         me={user}
                         contacts={myContacts}
                         chats={myChats}
@@ -137,7 +143,7 @@ class Chats extends Component {
                               me={user}
                               contact={selectedContact}
                               chat={selectedChat}
-                              fetchMoreMessages={(chatId, skip) => fetchMore({
+                              fetchMoreMessages={(chatId, skip) => fetchMoreMessages({
                                 query: GET_CHAT_MESSAGES,
                                 variables: { chatId, skip },
                                 updateQuery: (prev, { fetchMoreResult }) => {

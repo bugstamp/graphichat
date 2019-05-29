@@ -43,9 +43,11 @@ export const GET_CHAT_MESSAGES = gql`
 `;
 
 export const ADD_MESSAGE = gql`
-  mutation AddMessage($chatId: String!, $content: String!) {
-    addMessage(chatId: $chatId, content: $content) {
+  mutation AddMessage($chatId: String!, $content: String!, $optimisticId: String!) {
+    addMessage(chatId: $chatId, content: $content, optimisticId: $optimisticId) {
       chatId
+      optimistic
+      optimisticId
       message {
         ...messageData
       }
@@ -55,9 +57,10 @@ export const ADD_MESSAGE = gql`
 `;
 
 export const MESSAGE_ADDED_SUBSCRIPTION = gql`
-  subscription onMessageAdded($chatId: String) {
+  subscription onMessageAdded($chatId: String!) {
     messageAdded(chatId: $chatId) {
       chatId
+      optimisticId
       message {
         ...messageData
       }

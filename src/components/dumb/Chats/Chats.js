@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
 import {
-  isEmpty, isEqual, find, map, concat, set,
+  isEmpty, isEqual, find, map, concat, set, filter,
 } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
@@ -44,6 +44,7 @@ const InfoPanel = styled(Paper)`
 class Chats extends Component {
   state = {
     selected: null,
+    sendedIds: [],
   }
 
   componentDidMount() {
@@ -85,8 +86,18 @@ class Chats extends Component {
     }
   }
 
+  updateSendedIds = (optimisticId, action = 'add') => {
+    if (action === 'add') {
+      this.setState(({ sendedIds }) => ({ sendedIds: concat(sendedIds, optimisticId) }));
+    } else if (action === 'remove') {
+      this.setState(({ sendedIds }) => ({
+        sendedIds: filter(sendedIds, id => id !== optimisticId),
+      }));
+    }
+  }
+
   render() {
-    const { selected } = this.state;
+    const { selected, sendedIds } = this.state;
 
     return (
       <AppContext.Consumer>
@@ -94,6 +105,11 @@ class Chats extends Component {
           <ChatsContainer
             messageAddedSubscriptionProps={{
               variables: { chatId: selected },
+            }}
+            addMessageProps={{
+              onCompleted: ({ addMessage: { optimisticId } }) => {
+                this.updateSendedIds(optimisticId, 'remove');
+              },
             }}
           >
             {({
@@ -140,6 +156,7 @@ class Chats extends Component {
                             <MessagePanel
                               loading={getMessagesLoading}
                               adding={addMessageResult.loading}
+                              sendedIds={sendedIds}
                               me={user}
                               contact={selectedContact}
                               chat={selectedChat}
@@ -161,7 +178,39 @@ class Chats extends Component {
                                   return set(prev, myChats, updatedMyChats);
                                 },
                               })}
-                              addMessage={addMessageMutation}
+                              addMessage={(variables) => {
+                                const { id } = user;
+                                const {
+                                  chatId,
+                                  content,
+                                  optimisticId,
+                                } = variables;
+                                const time = new Date();
+
+                                this.updateSendedIds(optimisticId);
+                                addMessageMutation({
+                                  variables,
+                                  optimisticResponse: {
+                                    __typename: 'Mutation',
+                                    addMessage: {
+                                      chatId,
+                                      optimistic: true,
+                                      optimisticId,
+                                      message: {
+                                        id: optimisticId,
+                                        senderId: id,
+                                        content,
+                                        time,
+                                        type: 'text',
+                                        seen: false,
+                                        edited: false,
+                                        __typename: 'ChatMessage',
+                                      },
+                                      __typename: 'MessageUpdate',
+                                    },
+                                  },
+                                });
+                              }}
                             />
                           </Otherwise>
                         </Choose>

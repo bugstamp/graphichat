@@ -6,6 +6,7 @@ import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import MoodIcon from '@material-ui/icons/MoodRounded';
 import SendIcon from '@material-ui/icons/SendRounded';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/orange';
@@ -18,8 +19,20 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
-  border-top: 1px solid ${getStyledProps('theme.palette.grey.300')};
+  position: relative;
+  border-top: 2px solid ${getStyledProps('theme.palette.grey.300')};
   padding-top: ${getSpacing(1)};
+`;
+
+const MessagePanelSubmitProgress = styled.div`
+  ${position('absolute', -2, 0, null, 0)}
+  height: 2px;
+`;
+
+const LinearProgressStyled = styled(LinearProgress)`
+  && {
+    height: 2px;
+  }
 `;
 
 const MessagePanelCommentAvatar = styled.div`
@@ -92,10 +105,15 @@ class MessagePanelComment extends Component {
   }
 
   render() {
-    const { avatars: { me, contact } } = this.props;
+    const { adding, avatars: { me, contact } } = this.props;
 
     return (
       <Wrapper>
+        <MessagePanelSubmitProgress>
+          <If condition={adding}>
+            <LinearProgressStyled color="primary" />
+          </If>
+        </MessagePanelSubmitProgress>
         <MessagePanelCommentAvatar>
           <AppListItemAvatar {...me} />
         </MessagePanelCommentAvatar>

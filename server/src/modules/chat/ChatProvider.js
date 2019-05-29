@@ -126,7 +126,7 @@ class ChatProvider {
     }
   }
 
-  addMessage = async (chatId, content) => {
+  addMessage = async (chatId, content, optimisticId) => {
     try {
       const { id: senderId } = this.authProvider.user;
       const time = new Date();
@@ -141,7 +141,12 @@ class ChatProvider {
       chat.messages.push(newMessage);
       await chat.save();
 
-      const result = { chatId, message: newMessage };
+      const result = {
+        chatId,
+        optimistic: false,
+        optimisticId,
+        message: newMessage,
+      };
       await this.pubsub.publish(MESSAGE_ADDED, { messageAdded: result });
 
       return result;

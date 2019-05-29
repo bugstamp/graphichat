@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { isEqual } from 'lodash';
+import uuid from 'uuid/v4';
 
 import Paper from '@material-ui/core/Paper';
 
@@ -50,13 +51,25 @@ class MessagePanel extends Component {
   }
 
   addMessage = (content) => {
-    const { chat: { id }, addMessage } = this.props;
+    const { chat: { id: chatId }, addMessage } = this.props;
+    const optimisticId = uuid();
 
-    addMessage({ variables: { chatId: id, content } });
+    addMessage({
+      chatId,
+      content,
+      optimisticId,
+    });
   }
 
   render() {
-    const { me, contact, chat, addMessage, loading } = this.props;
+    const {
+      loading,
+      adding,
+      me,
+      contact,
+      chat,
+      addMessage,
+    } = this.props;
     const { userInfo } = contact;
     const {
       firstName,
@@ -87,6 +100,7 @@ class MessagePanel extends Component {
           messages={messages}
         />
         <MessagePanelComment
+          adding={adding}
           avatars={{
             me: {
               src: null,

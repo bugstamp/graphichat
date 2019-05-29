@@ -38,7 +38,7 @@ class AppLayout extends Component {
               },
             }}
           >
-            {({ signOut, getMe: { data: { me } } }) => {
+            {({ signOut, getInitialData: { data: { me } } }) => {
               return (
                 <AppContent
                   user={me}

@@ -6,7 +6,7 @@ import gql from '../../gql';
 import { myContactActivityFragment } from '../../gql/fragments';
 
 const {
-  GET_ME,
+  GET_INITIAL_DATA,
   CHAT_CREATED_SUBSCRIPTION,
   SIGN_OUT,
   GET_MY_CHATS,
@@ -27,7 +27,7 @@ export const chatCreatedUpdate = (client, { contact, chat }) => {
   });
 };
 
-const getMe = createQuery('getMe', GET_ME);
+const getInitialData = createQuery('getInitialData', GET_INITIAL_DATA);
 const checkSessionExpiration = createQuery('checkSessionExpiration', CHECK_SESSION_EXPIRATION);
 const chatCreatedSubscription = createSubscription('chatCreatedSubscription', CHAT_CREATED_SUBSCRIPTION, {
   onSubscriptionData({ client, subscriptionData: { data: { chatCreated } } }) {
@@ -63,7 +63,7 @@ const signOut = createMutation('signOut', SIGN_OUT);
 const AppLayoutContainer = adopt({
   chatCreatedSubscription,
   userActivitySubscription,
-  getMe,
+  getInitialData,
   checkSessionExpiration,
   signOut,
 });

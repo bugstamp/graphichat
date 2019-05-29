@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 
 import { myContactFragment, myChatFragment, myFragment } from './fragments';
 
-const GET_ME = gql`
-  query GetMe {
+const GET_INITIAL_DATA = gql`
+  query GetInitialData {
     me {
       ...myData
     }
@@ -19,8 +19,8 @@ const GET_ME = gql`
   ${myFragment}
 `;
 
-const GET_ME_LOCAL = gql`
-  query GetMeLocal {
+const GET_ME = gql`
+  query GetMe {
     me @client {
       ...myData
     }
@@ -70,8 +70,8 @@ const USER_ACTIVITY_SUBSCRIPTION = gql`
 `;
 
 export default {
+  GET_INITIAL_DATA,
   GET_ME,
-  GET_ME_LOCAL,
   GET_MY_CONTACTS,
   GET_MY_CHATS,
   SEARCH_USERS,

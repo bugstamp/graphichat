@@ -56,21 +56,11 @@ class ChatProvider {
   getChatMessages = async (chatId, skip) => {
     try {
       const messages = await this.db.Chat.aggregate([
-        {
-          $match: { _id: ObjectId(chatId) },
-        },
-        {
-          $unwind: '$messages',
-        },
-        {
-          $sort: { 'messages.time': -1 },
-        },
-        {
-          $limit: skip + maxMessageCount,
-        },
-        {
-          $skip: skip,
-        },
+        { $match: { _id: ObjectId(chatId) } },
+        { $unwind: '$messages' },
+        { $sort: { 'messages.time': -1 } },
+        { $skip: skip },
+        { $limit: maxMessageCount },
         {
           $group: {
             _id: '$messages._id',
@@ -83,9 +73,7 @@ class ChatProvider {
             edited: { $first: '$messages.edited' },
           },
         },
-        {
-          $sort: { time: 1 },
-        },
+        { $sort: { time: 1 } },
       ]);
 
       return messages;

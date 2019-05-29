@@ -15,10 +15,18 @@ export const getContactInitials = (first = '', last = '') => {
 
 export const historyDateParser = date => moment(date).format('dddd, MMMM D, YYYY');
 
-export const messageTimeParser = (time, variant = 'short') => {
-  const format = variant === 'wide' ? 'HH:mm:ss' : 'HH:mm';
+const shortMessageTimeParser = date => moment(date).calendar(null, {
+  sameDay: 'HH:mm',
+  lastDay: 'ddd',
+  lastWeek: 'ddd',
+  sameElse: 'DD/MM/YY',
+});
 
-  return moment(time).format(format);
+export const messageTimeParser = (time, variant = 'short') => {
+  if (variant === 'wide') {
+    return moment(time).format('HH:mm:ss');
+  }
+  return shortMessageTimeParser(time);
 };
 
 export const userLastDateParser = date => moment(date).calendar(null, {
@@ -32,7 +40,7 @@ const messageHistoryDateFormat = 'dddd, MMMM D, YYYY';
 
 export const messageHistoryDateParser = date => moment(date).calendar(null, {
   sameDay: '[Today]',
-  lastDay: messageHistoryDateFormat,
+  lastDay: '[Yesterday]',
   lastWeek: messageHistoryDateFormat,
   sameElse: messageHistoryDateFormat,
 });

@@ -44,7 +44,6 @@ const ContactItemTime = styled.span`
   width: 100%;
   font-size: 11px;
   text-align: right;
-  text-transform: uppercase;
 `;
 
 const ContactItemBadge = styled.div`

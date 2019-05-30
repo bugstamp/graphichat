@@ -59,7 +59,7 @@ const ChatModule = new GraphQLModule({
 
     type Mutation {
       createChat(userId: ID!): ContactUpdate!
-      addMessage(chatId: String!, content: String!, optimisticId: String!): MessageUpdate!
+      addMessage(chatId: String!, content: String!, time: DateTime!, optimisticId: String!): MessageUpdate!
       removeChat(id: ID!): Boolean!
       removeChats: Boolean!
     }

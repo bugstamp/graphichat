@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import MoodIcon from '@material-ui/icons/MoodRounded';
 import SendIcon from '@material-ui/icons/SendRounded';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import RootRef from '@material-ui/core/RootRef';
 
 import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/orange';
@@ -16,29 +17,28 @@ import AppListItemAvatar from '../ContactPanel/AppList/ListItemAvatar';
 import { getStyledProps, getSpacing } from '../../../styles';
 
 const Wrapper = styled.div`
-  width: 100%;
   display: flex;
   flex-flow: row nowrap;
   position: relative;
-  border-top: 2px solid ${getStyledProps('theme.palette.grey.300')};
+  border-top: 1px solid ${getStyledProps('theme.palette.grey.300')};
   padding-top: ${getSpacing(1)};
 `;
 
 const MessagePanelSubmitProgress = styled.div`
-  ${position('absolute', -2, 0, null, 0)}
-  height: 2px;
+  ${position('absolute', '-1px', 0, null, 0)}
+  height: 1px;
 `;
 
 const LinearProgressStyled = styled(LinearProgress)`
   && {
-    height: 2px;
+    height: 1px;
   }
 `;
 
 const MessagePanelCommentAvatar = styled.div`
   display: flex;
   align-items: flex-start;
-  padding: ${getSpacing(1)};
+  padding: ${getSpacing(2)};
 `;
 
 const MessagePanelCommentForm = styled.form`
@@ -81,7 +81,7 @@ const MessagePanelCommentSubmit = styled.div`
   justify-content: flex-end;
 
   button {
-  margin-top: ${getSpacing(1)};
+    margin-top: ${getSpacing(1)};
     text-transform: uppercase;
 
     svg {
@@ -91,20 +91,46 @@ const MessagePanelCommentSubmit = styled.div`
 `;
 
 class MessagePanelComment extends Component {
-  inputRef = createRef()
+  submitButtonRef = createRef();
+
+  inputRef = createRef();
+
+  state = {
+    value: '',
+  }
 
   onSubmit = (e) => {
     e.preventDefault();
+    const { value } = this.state;
     const { submit } = this.props;
-    const { value } = this.inputRef.current;
 
     if (value) {
       submit(value);
-      this.inputRef.current.value = '';
+      this.clear();
+    }
+  }
+
+  onChange = () => {
+    const { value } = this.inputRef.current;
+
+    this.setState({ value });
+  }
+
+  clear = () => {
+    this.setState({ value: '' });
+    this.inputRef.current.focus();
+  }
+
+  onKeyDown = ({ key }) => {
+    if (key === 'Escape') {
+      this.inputRef.current.blur();
+    } else if (key === 'Enter') {
+      this.submitButtonRef.current.click();
     }
   }
 
   render() {
+    const { value } = this.state;
     const { adding, avatars: { me, contact } } = this.props;
 
     return (
@@ -121,12 +147,25 @@ class MessagePanelComment extends Component {
           <MessagePanelCommentSmiles>
             <MoodIcon fontSize="inherit" color="inherit" />
           </MessagePanelCommentSmiles>
-          <MessagePanelCommentInput inputRef={this.inputRef} placeholder="Write a message..." multiline />
+          <MessagePanelCommentInput
+            inputRef={this.inputRef}
+            value={value}
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
+            placeholder="Write a message..."
+            multiline
+          />
           <MessagePanelCommentSubmit>
-            <Button variant="text" color="primary" type="submit">
-              Send
-              <SendIcon />
-            </Button>
+            <RootRef rootRef={this.submitButtonRef}>
+              <Button
+                variant="text"
+                color="primary"
+                type="submit"
+              >
+                {'Send'}
+                <SendIcon />
+              </Button>
+            </RootRef>
           </MessagePanelCommentSubmit>
         </MessagePanelCommentForm>
         <MessagePanelCommentAvatar>

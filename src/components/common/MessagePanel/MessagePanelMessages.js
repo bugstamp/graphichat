@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { position } from 'polished';
-import { map, findIndex } from 'lodash';
+import { map, findIndex, includes } from 'lodash';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -32,6 +32,7 @@ const MessagePanelList = styled(List)`
     display: flex;
     flex-flow: column;
     justify-content: flex-end;
+    overflow-x: hidden;
     overflow-y: scroll;
   }
 `;
@@ -71,15 +72,19 @@ const MessagePanelHistoryDivider = styled.div`
 `;
 
 const MessagePanelMessage = styled.div`
-  border-radius: 10px;
-  background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
+  max-width: 49%;
   padding: ${getSpacing(2)};
   ${({ isMyMessage }) => ({
     [`border-bottom-${isMyMessage ? 'left' : 'right'}-radius`]: 0,
   })};
+  background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
+  border-radius: 10px;
+  opacity: ${({ isAdding }) => (isAdding ? 0.3 : 1)};
+  word-break: break-all;
+  ${getStyledProps('theme.typography.body1')};
 
   &:hover {
-    cursor: pointer;
+    cursor: text;
   }
 `;
 
@@ -107,7 +112,7 @@ const MessagePanelLoading = styled.div`
 
 class MessagePanelMessages extends Component {
   render() {
-    const { messages, myId, loading } = this.props;
+    const { messages, myId, loading, sendedIds } = this.props;
 
     const renderMessages = () => {
       let prevMessageTime;
@@ -122,6 +127,7 @@ class MessagePanelMessages extends Component {
         const isSystem = type === 'system';
         const isFirst = findIndex(messages, { id }) === 0;
         const isMyMessage = senderId === myId;
+        const isAdding = includes(sendedIds, id);
         const direction = isMyMessage ? 'start' : 'end';
         const alignItems = isSystem ? 'center' : `flex-${direction}`;
         let divider = false;
@@ -144,11 +150,14 @@ class MessagePanelMessages extends Component {
               <Choose>
                 <When condition={isSystem}>
                   <MessagePanelSystemMessage>
-                    {content}
+                    <p>{content}</p>
                   </MessagePanelSystemMessage>
                 </When>
                 <Otherwise>
-                  <MessagePanelMessage isMyMessage={isMyMessage}>
+                  <MessagePanelMessage
+                    isMyMessage={isMyMessage}
+                    isAdding={isAdding}
+                  >
                     {content}
                   </MessagePanelMessage>
                   <MessagePanelMessageTime>

@@ -156,10 +156,10 @@ class Chats extends Component {
                             <MessagePanel
                               loading={getMessagesLoading}
                               adding={addMessageResult.loading}
-                              sendedIds={sendedIds}
                               me={user}
                               contact={selectedContact}
                               chat={selectedChat}
+                              sendedIds={sendedIds}
                               fetchMoreMessages={(chatId, skip) => fetchMoreMessages({
                                 query: GET_CHAT_MESSAGES,
                                 variables: { chatId, skip },
@@ -183,9 +183,10 @@ class Chats extends Component {
                                 const {
                                   chatId,
                                   content,
+                                  time,
                                   optimisticId,
                                 } = variables;
-                                const time = new Date();
+
 
                                 this.updateSendedIds(optimisticId);
                                 addMessageMutation({

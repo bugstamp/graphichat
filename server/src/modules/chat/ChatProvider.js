@@ -126,10 +126,14 @@ class ChatProvider {
     }
   }
 
-  addMessage = async (chatId, content, optimisticId) => {
+  addMessage = async ({
+    chatId,
+    content,
+    time,
+    optimisticId,
+  }) => {
     try {
       const { id: senderId } = this.authProvider.user;
-      const time = new Date();
       const newMessageTemplate = {
         senderId,
         content,

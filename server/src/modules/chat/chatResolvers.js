@@ -14,7 +14,7 @@ export default {
   },
   Mutation: {
     createChat: (_, { userId }, { injector }) => injector.get(ChatProvider).createChat(userId),
-    addMessage: (_, { chatId, content, optimisticId }, { injector }) => injector.get(ChatProvider).addMessage(chatId, content, optimisticId),
+    addMessage: (_, args, { injector }) => injector.get(ChatProvider).addMessage(args),
     removeChat: (_, { chatId }, { injector }) => injector.get(ChatProvider).removeChat(chatId),
     removeChats: (_, args, { injector }) => injector.get(ChatProvider).removeChats(),
   },

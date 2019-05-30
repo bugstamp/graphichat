@@ -14,12 +14,11 @@ import { getContactInitials, userLastDateParser } from '../../../helpers';
 
 const WrapperPaper = styled(Paper)`
   && {
+    width: 100%;
     height: 100%;
-    max-width: 700px;
     display: flex;
     flex-flow: column;
-    padding: ${getSpacing(2)} ${getSpacing(2)};
-    margin: 0 auto;
+    padding: ${getSpacing(2)} 0;
     background-color: #fff;
   }
 `;
@@ -53,10 +52,12 @@ class MessagePanel extends Component {
   addMessage = (content) => {
     const { chat: { id: chatId }, addMessage } = this.props;
     const optimisticId = uuid();
+    const time = new Date();
 
     addMessage({
       chatId,
       content,
+      time,
       optimisticId,
     });
   }
@@ -68,6 +69,7 @@ class MessagePanel extends Component {
       me,
       contact,
       chat,
+      sendedIds,
       addMessage,
     } = this.props;
     const { userInfo } = contact;
@@ -98,6 +100,7 @@ class MessagePanel extends Component {
           loading={loading}
           myId={me.id}
           messages={messages}
+          sendedIds={sendedIds}
         />
         <MessagePanelComment
           adding={adding}

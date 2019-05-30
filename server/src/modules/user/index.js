@@ -44,7 +44,7 @@ const UserModule = new GraphQLModule({
 
     type User {
       id: ID!
-      username: String!
+      username: String
       email: EmailAddress!
       phone: PhoneNumber
       displayName: String!
@@ -68,7 +68,7 @@ const UserModule = new GraphQLModule({
     }
 
     input UserCreateForm {
-      username: String!
+      username: String
       email: String!
       password: String!
       firstName: String!

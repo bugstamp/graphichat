@@ -57,8 +57,8 @@ export const ADD_MESSAGE = gql`
 `;
 
 export const MESSAGE_ADDED_SUBSCRIPTION = gql`
-  subscription onMessageAdded($chatId: String) {
-    messageAdded(chatId: $chatId) {
+  subscription onMessageAdded {
+    messageAdded {
       chatId
       optimisticId
       message {

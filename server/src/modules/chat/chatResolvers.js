@@ -1,5 +1,5 @@
 import { PubSub, withFilter } from 'graphql-subscriptions';
-import { includes } from 'lodash';
+import { includes, find } from 'lodash';
 
 import AuthProvider from '../auth/AuthProvider';
 import ChatProvider from './ChatProvider';
@@ -36,8 +36,8 @@ export default {
         (_, args, { injector }) => injector.get(PubSub).asyncIterator([MESSAGE_ADDED]),
         async ({ messageAdded }, variables, { injector }) => {
           const { chatId, message: { senderId } } = messageAdded;
-          const { id } = await injector.get(AuthProvider).user;
-          const accept = chatId === variables.chatId && senderId !== id;
+          const { id, contacts } = await injector.get(AuthProvider).getMe();
+          const accept = find(contacts, { chatId }) && senderId !== id;
 
           return accept;
         },

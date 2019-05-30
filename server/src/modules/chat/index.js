@@ -66,7 +66,7 @@ const ChatModule = new GraphQLModule({
 
     type Subscription {
       chatCreated: ContactUpdate!
-      messageAdded(chatId: String): MessageUpdate!
+      messageAdded: MessageUpdate!
     }
   `,
   resolvers,

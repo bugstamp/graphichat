@@ -33,15 +33,15 @@ const SearchInput = styled(InputBase)`
   }
 `;
 
-const ListSearch = ({ value, onChange, autoFocus }) => (
+const ListSearch = ({ searchValue, onChange, autoFocus }) => (
   <Wrapper>
     <SearchIconWrapper>
       <SearchIcon />
     </SearchIconWrapper>
     <SearchInput
       type="text"
-      value={value}
-      onChange={({ target }) => onChange(target.value)}
+      value={searchValue}
+      onChange={({ target: { value } }) => onChange(value)}
       placeholder="Search..."
       autoFocus={autoFocus}
     />

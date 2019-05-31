@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { size } from 'polished';
-import { map, isEmpty, find } from 'lodash';
+import {
+  map, isEmpty, find, filter, upperCase,
+} from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -40,14 +42,31 @@ export const NoContactInfo = styled.div`
 class ContactPanel extends Component {
   state = {
     searchDialog: false,
+    searchValue: '',
   }
 
   toggleSearchDialog = () => {
     this.setState(({ searchDialog }) => ({ searchDialog: !searchDialog }));
   }
 
+  onChangeSearchValue = (searchValue) => {
+    this.setState({ searchValue });
+  }
+
+  sortContacts = () => {
+    const { searchValue } = this.state;
+    const { contacts } = this.props;
+
+    return filter(contacts, ({ userInfo }) => {
+      const upperName = upperCase(userInfo.displayName);
+      const upperSearchValue = upperCase(searchValue);
+
+      return upperName.indexOf(upperSearchValue) !== -1;
+    });
+  }
+
   render() {
-    const { searchDialog } = this.state;
+    const { searchDialog, searchValue } = this.state;
     const {
       loading,
       me,
@@ -56,10 +75,11 @@ class ContactPanel extends Component {
       selected,
       selectChat,
     } = this.props;
+    const sortedContacts = this.sortContacts();
 
     return (
       <Wrapper square elevation={0}>
-        <ListSearch />
+        <ListSearch searchValue={searchValue} onChange={this.onChangeSearchValue} />
         <AppList>
           <Choose>
             <When condition={isEmpty(contacts)}>
@@ -78,7 +98,7 @@ class ContactPanel extends Component {
               </NoContactInfo>
             </When>
             <Otherwise>
-              {map(contacts, ({ chatId, userInfo }) => {
+              {map(sortedContacts, ({ chatId, userInfo }) => {
                 const { id } = userInfo;
                 const { messages } = find(chats, { id: chatId });
 

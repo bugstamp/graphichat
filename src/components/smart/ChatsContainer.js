@@ -3,6 +3,7 @@ import { map } from 'lodash';
 
 import { createQuery, createMutation, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
+import { icqBeepPlay } from '../../helpers';
 
 const {
   GET_MY_CHATS,
@@ -41,6 +42,7 @@ const addMessage = createMutation('addMessage', ADD_MESSAGE, {
 const messageAddedSubscription = createSubscription('messageAddedSubscription', MESSAGE_ADDED_SUBSCRIPTION, {
   onSubscriptionData({ client, subscriptionData: { data: { messageAdded } } }) {
     addMessageUpdate(client, messageAdded);
+    // icqBeepPlay();
   },
 });
 

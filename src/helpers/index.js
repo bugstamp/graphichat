@@ -1,6 +1,8 @@
 import { upperCase } from 'lodash';
 import moment from 'moment';
 
+import icqBeep from '../assets/audio/icqBeep';
+
 export const getContactInitials = (first = '', last = '') => {
   if (!first) return '';
 
@@ -52,3 +54,5 @@ export const isSameDay = (date, referenceDate) => {
 
   return diff;
 };
+
+export const icqBeepPlay = () => icqBeep.play();

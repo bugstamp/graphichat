@@ -1,13 +1,20 @@
-import { createHttpLink } from 'apollo-link-http';
+import { createUploadLink } from 'apollo-upload-client';
 import { ApolloLink, from, split } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { getMainDefinition } from 'apollo-utilities';
-import { WebSocketLink } from "apollo-link-ws";
+import { WebSocketLink } from 'apollo-link-ws';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { isEmpty } from 'lodash';
 
 import storage from '../storage';
 import client from './index';
+
+const httpLink = createUploadLink({
+  uri: process.env.APOLLO_URL,
+});
+const wsClient = new SubscriptionClient(process.env.WS_URL, {
+  reconnect: true,
+});
 
 const subscriptionMiddleware = {
   applyMiddleware: async (options, next) => {
@@ -15,14 +22,6 @@ const subscriptionMiddleware = {
     next();
   },
 };
-
-const httpLink = createHttpLink({
-  uri: process.env.APOLLO_URL,
-});
-
-const wsClient = new SubscriptionClient(process.env.WS_URL, {
-  reconnect: true,
-});
 
 const wsLink = new WebSocketLink(wsClient);
 wsLink.subscriptionClient.use([subscriptionMiddleware]);

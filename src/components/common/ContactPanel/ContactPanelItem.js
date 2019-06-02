@@ -9,7 +9,7 @@ import AppListItemAvatar from './AppList/ListItemAvatar';
 import AppListItemInfo from './AppList/ListItemInfo';
 
 import { getStyledProps, getSpacing } from '../../../styles';
-import { getContactInitials, messageTimeParser } from '../../../helpers';
+import { getAvatarInitials, messageTimeParser } from '../../../helpers';
 
 const ContactListItem = styled(({ isSelected, ...rest }) => <ListItem {...rest} />)`
   && {
@@ -65,13 +65,8 @@ const ContactPanelItem = ({
   onSelect,
   isSelected,
 }) => {
-  const {
-    displayName,
-    firstName,
-    lastName,
-    status,
-  } = contact;
-  const avatarText = getContactInitials(firstName, lastName);
+  const { avatar, displayName, status } = contact;
+  const avatarText = getAvatarInitials(contact);
   const online = status === 'ONLINE';
   const { senderId, content, time } = message;
   const isMyMessage = senderId === myId;
@@ -81,7 +76,7 @@ const ContactPanelItem = ({
 
   return (
     <ContactListItem isSelected={isSelected} onClick={onSelect}>
-      <AppListItemAvatar src={null} text={avatarText} online={online} />
+      <AppListItemAvatar src={avatar && avatar.sm} text={avatarText} online={online} />
       <AppListItemInfo primary={displayName} secondary={secondary} />
       <ContactItemSecondary>
         <ContactItemTime>{messageTimeParser(time)}</ContactItemTime>

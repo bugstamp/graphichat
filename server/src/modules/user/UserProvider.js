@@ -1,11 +1,12 @@
 import { Injectable, Inject, ProviderScope } from '@graphql-modules/di';
 import { PubSub } from 'graphql-subscriptions';
+import sharp from 'sharp';
 import { map, isEmpty, filter } from 'lodash';
 
 import DbProvider from '../common/DbProvider';
 import AuthProvider from '../auth/AuthProvider';
 
-import { getUserDisplayName } from '../../utils/helpers';
+import { getUserDisplayName, fileToBuffer } from '../../utils/helpers';
 
 @Injectable({
   scope: ProviderScope.Session,
@@ -86,6 +87,30 @@ class UserProvider {
       const newUser = await this.db.User.create({ ...form, displayName });
 
       return newUser;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  uploadAvatar = async (file) => {
+    try {
+      const { id } = this.authProvider.user;
+      const encodedFile = await file;
+      const { filename, createReadStream } = encodedFile;
+      const buffer = await fileToBuffer(filename, createReadStream);
+      const compressedJpeg = await sharp(buffer).jpeg({ quality: 80 }).toBuffer();
+      const sm = await sharp(compressedJpeg).resize({ width: 50, height: 50 }).toBuffer();
+      const md = await sharp(compressedJpeg).resize({ width: 640, height: 640 }).toBuffer();
+      const smBase64 = `data:image/jpeg;base64,${sm.toString('base64')}`;
+      const mdBase64 = `data:image/jpeg;base64,${md.toString('base64')}`;
+      const avatar = {
+        sm: smBase64,
+        md: mdBase64,
+      };
+
+      await this.db.User.findByIdAndUpdate(id, { avatar });
+
+      return avatar;
     } catch (e) {
       throw e;
     }

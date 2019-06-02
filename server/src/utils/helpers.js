@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { upperFirst } from 'lodash';
 
 export const getHeaderTokens = (req) => {
@@ -27,3 +28,20 @@ export const removeHeaderTokens = (res) => {
 };
 
 export const getUserDisplayName = ({ firstName, lastName }) => `${upperFirst(firstName)} ${upperFirst(lastName)}`;
+
+export const fileToBuffer = (filename, createReadStream) => new Promise((res, rej) => {
+  const readStream = createReadStream
+    ? createReadStream(filename)
+    : fs.createReadStream(filename);
+  const chunks = [];
+
+  readStream.on('data', (chunk) => {
+    chunks.push(chunk);
+  });
+  readStream.on('error', (err) => {
+    rej(err);
+  });
+  readStream.on('close', () => {
+    res(Buffer.concat(chunks));
+  });
+});

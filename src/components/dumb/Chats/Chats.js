@@ -116,11 +116,11 @@ class Chats extends Component {
               getMyChats: {
                 data: { myContacts, myChats },
                 fetchMore: fetchMoreMessages,
-                loading: getMessagesLoading,
+                loading,
               },
               addMessage: {
-                mutation: addMessageMutation,
-                result: addMessageResult,
+                mutation: addMessage,
+                result: { loading: adding },
               },
             }) => {
               const selectedContact = find(myContacts, { chatId: selected });
@@ -154,8 +154,8 @@ class Chats extends Component {
                           </When>
                           <Otherwise>
                             <MessagePanel
-                              loading={getMessagesLoading}
-                              adding={addMessageResult.loading}
+                              loading={loading}
+                              adding={adding}
                               me={user}
                               contact={selectedContact}
                               chat={selectedChat}
@@ -189,7 +189,7 @@ class Chats extends Component {
 
 
                                 this.updateSendedIds(optimisticId);
-                                addMessageMutation({
+                                addMessage({
                                   variables,
                                   optimisticResponse: {
                                     __typename: 'Mutation',

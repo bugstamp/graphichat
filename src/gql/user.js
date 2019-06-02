@@ -69,6 +69,15 @@ const USER_ACTIVITY_SUBSCRIPTION = gql`
   }
 `;
 
+const UPLOAD_AVATAR = gql`
+  mutation uploadAvatar($file: Upload!) {
+    uploadAvatar(file: $file) {
+      sm
+      md
+    }
+  }
+`;
+
 export default {
   GET_INITIAL_DATA,
   GET_ME,
@@ -76,4 +85,5 @@ export default {
   GET_MY_CHATS,
   SEARCH_USERS,
   USER_ACTIVITY_SUBSCRIPTION,
+  UPLOAD_AVATAR,
 };

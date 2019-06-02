@@ -1,16 +1,18 @@
-import { upperCase } from 'lodash';
+import { upperCase, isEmpty } from 'lodash';
 import moment from 'moment';
 
 import icqBeep from '../assets/audio/icqBeep';
 
-export const getContactInitials = (first = '', last = '') => {
-  if (!first) return '';
+export const getAvatarInitials = (user = null) => {
+  if (!user || isEmpty(user)) return '';
 
-  const firstLater = upperCase(first[0]);
-  if (!last) {
+  const { firstName, lastName } = user;
+  const firstLater = upperCase(firstName[0]);
+
+  if (!lastName) {
     return firstLater;
   }
-  const lastLater = upperCase(last[0]);
+  const lastLater = upperCase(lastName[0]);
 
   return `${firstLater}${lastLater}`;
 };
@@ -56,3 +58,14 @@ export const isSameDay = (date, referenceDate) => {
 };
 
 export const icqBeepPlay = () => icqBeep.play();
+
+export const getBase64 = file => new Promise((res, rej) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    res(reader.result);
+  };
+  reader.onerror = (error) => {
+    rej(error);
+  };
+});

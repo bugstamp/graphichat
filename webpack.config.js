@@ -8,6 +8,5 @@ module.exports = (mode) => {
   if (mode === 'production') {
     return merge(common, prod, { mode });
   }
-
   return merge(common, dev, { mode });
 };

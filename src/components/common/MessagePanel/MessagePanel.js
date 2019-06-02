@@ -10,7 +10,7 @@ import MessagePanelMessages from './MessagePanelMessages';
 import MessagePanelComment from './MessagePanelComment';
 
 import { getSpacing } from '../../../styles';
-import { getContactInitials, userLastDateParser } from '../../../helpers';
+import { getAvatarInitials, userLastDateParser } from '../../../helpers';
 
 const WrapperPaper = styled(Paper)`
   && {
@@ -70,24 +70,17 @@ class MessagePanel extends Component {
       contact,
       chat,
       sendedIds,
-      addMessage,
     } = this.props;
     const { userInfo } = contact;
-    const {
-      firstName,
-      lastName,
-      displayName,
-      status,
-      lastDate,
-    } = userInfo;
-    const { id: chatId, messages } = chat;
+    const { displayName, status, lastDate } = userInfo;
+    const { messages } = chat;
 
     const isOnline = status === 'ONLINE';
     const statusText = isOnline
       ? 'online'
       : userLastDateParser(lastDate);
-    const myAvatarText = getContactInitials(me.firstName, me.lastName);
-    const contactAvatarText = getContactInitials(firstName, lastName);
+    const myAvatarText = getAvatarInitials(me);
+    const contactAvatarText = getAvatarInitials(userInfo);
 
     return (
       <WrapperPaper square elevation={0}>

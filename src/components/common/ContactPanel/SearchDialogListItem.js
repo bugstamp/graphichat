@@ -11,7 +11,7 @@ import AppListItemAvatar from './AppList/ListItemAvatar';
 import AppListItemInfo from './AppList/ListItemInfo';
 
 // import { getStyledProps, getSpacing } from '../../../styles';
-import { getContactInitials } from '../../../helpers';
+import { getAvatarInitials } from '../../../helpers';
 
 const SearchDialogListItem = ({
   item,
@@ -19,14 +19,8 @@ const SearchDialogListItem = ({
   adding,
   added,
 }) => {
-  const {
-    avatar,
-    firstName,
-    lastName,
-    displayName,
-    username,
-  } = item;
-  const avatarText = getContactInitials(firstName, lastName);
+  const { avatar, displayName, username } = item;
+  const avatarText = getAvatarInitials(item);
   const secondary = `@${username}`;
 
   return (

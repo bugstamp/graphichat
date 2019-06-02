@@ -24,7 +24,7 @@ class Navigation extends PureComponent {
 
   render() {
     const { activeTab } = this.state;
-    const { signOut } = this.props;
+    const { toggleSettingsDialog, signOut } = this.props;
 
     return (
       <Wrapper>
@@ -32,6 +32,7 @@ class Navigation extends PureComponent {
         <Tabs
           activeTab={activeTab}
           onChangeTab={this.handleChangeTab}
+          toggleSettingsDialog={toggleSettingsDialog}
           signOut={signOut}
         />
       </Wrapper>

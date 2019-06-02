@@ -7,8 +7,8 @@ import { map } from 'lodash';
 import Tab from '@material-ui/core/Tab';
 
 import PersonIcon from '@material-ui/icons/PersonRounded';
-import GroupIcon from '@material-ui/icons/GroupRounded';
-import BookmarkIcon from '@material-ui/icons/BookmarkRounded';
+// import GroupIcon from '@material-ui/icons/GroupRounded';
+// import BookmarkIcon from '@material-ui/icons/BookmarkRounded';
 import SettingsIcon from '@material-ui/icons/SettingsRounded';
 import LogoutIcon from '@material-ui/icons/ExitToAppRounded';
 
@@ -68,7 +68,12 @@ const links = [
   // },
 ];
 
-const Tabs = ({ activeTab, onChangeTab, signOut }) => {
+const Tabs = ({
+  activeTab,
+  onChangeTab,
+  toggleSettingsDialog,
+  signOut,
+}) => {
   const logoutIconColor = red[900];
 
   return (
@@ -86,7 +91,7 @@ const Tabs = ({ activeTab, onChangeTab, signOut }) => {
           />
         );
       })}
-      <TabItem icon={<SettingsIcon color="action" />} />
+      <TabItem icon={<SettingsIcon color="action" onClick={toggleSettingsDialog} />} />
       <TabItem icon={<LogoutIcon nativeColor={logoutIconColor} />} onClick={signOut} />
       <TabItemIndicator activeTab={activeTab} />
     </Wrapper>

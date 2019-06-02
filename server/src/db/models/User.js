@@ -30,21 +30,24 @@ const tokensConfig = {
   },
 };
 
-const userSocialsSchema = new mongoose.Schema({
+const socialsSchema = new mongoose.Schema({
   google: String,
   facebook: String,
   github: String,
 });
 
-const userContactSettingsSchema = new mongoose.Schema({
-  notifications: {
+const contactSettingsSchema = new mongoose.Schema({
+  sound: {
     type: Boolean,
-    required: true,
+    default: true,
+  },
+  notification: {
+    type: Boolean,
     default: true,
   },
 });
 
-const userContactSchema = new mongoose.Schema({
+const contactSchema = new mongoose.Schema({
   userId: {
     type: String,
     require: true,
@@ -53,11 +56,16 @@ const userContactSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  settings: userContactSettingsSchema,
+  settings: contactSettingsSchema,
+});
+
+const avatarSchema = new mongoose.Schema({
+  sm: String,
+  md: String,
 });
 
 const userSchema = new mongoose.Schema({
-  // avatar: {},
+  avatar: avatarSchema,
   username: {
     type: String,
     unique: true,
@@ -112,8 +120,8 @@ const userSchema = new mongoose.Schema({
     require: true,
     default: EMAIL_UNCONFIRMED,
   },
-  socials: userSocialsSchema,
-  contacts: [userContactSchema],
+  socials: socialsSchema,
+  contacts: [contactSchema],
 });
 
 userSchema.pre('save', async function preSave(next) {
@@ -272,7 +280,13 @@ userSchema.statics = {
   },
   async addContact(id, userId, chatId) {
     try {
-      const { contacts } = await this.findByIdAndUpdate(id, { $push: { contacts: { userId, chatId } } }, { new: true });
+      const { contacts } = await this.findByIdAndUpdate(id,
+        {
+          $push: { contacts: { userId, chatId } },
+        },
+        {
+          new: true,
+        });
       const contact = find(contacts, { userId });
 
       return contact;

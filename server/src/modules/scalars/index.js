@@ -22,6 +22,13 @@ const ScalarsModule = new GraphQLModule({
     scalar UnsignedFloat
     scalar UnsignedInt
     scalar URL
+    scalar Upload
+
+    type File {
+      filename: String!
+      mimetype: String!
+      encoding: String!
+    }
   `,
   resolvers,
 });

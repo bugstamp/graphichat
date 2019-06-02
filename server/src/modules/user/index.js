@@ -42,7 +42,13 @@ const UserModule = new GraphQLModule({
       settings: UserContactSettings
     }
 
+    type UserAvatar {
+      sm: String
+      md: String
+    }
+
     type User {
+      avatar: UserAvatar
       id: ID!
       username: String
       email: EmailAddress!
@@ -96,6 +102,7 @@ const UserModule = new GraphQLModule({
       createUser(form: UserCreateForm): User!
       deleteUser(id: ID!): User!
       removeUserContacts(userId: ID!): User!
+      uploadAvatar(file: Upload!): UserAvatar!
     }
 
     type Subscription {

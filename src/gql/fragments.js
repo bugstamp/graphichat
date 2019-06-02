@@ -10,6 +10,10 @@ export const authPayloadFragment = gql`
 export const myFragment = gql`
   fragment myData on User {
     id
+    avatar {
+      sm
+      md
+    }
     username
     displayName
     firstName
@@ -24,6 +28,10 @@ export const myContactFragment = gql`
     chatId
     userInfo {
       id
+      avatar {
+        sm
+        md
+      }
       username
       displayName
       firstName

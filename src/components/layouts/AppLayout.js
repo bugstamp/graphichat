@@ -20,6 +20,12 @@ class AppLayout extends Component {
     history.push('/');
   }
 
+  onSessionExpired = ({ sessionExpired }) => {
+    if (sessionExpired) {
+      this.signOut();
+    }
+  }
+
   render() {
     const { children } = this.props;
 
@@ -27,25 +33,22 @@ class AppLayout extends Component {
       <AppContext.Consumer>
         {({ setUser, setFetching }) => (
           <AppLayoutContainer
-            signOutProps={{
-              onCompleted: this.signOut,
-            }}
-            checkSessionExpirationProps={{
-              onCompleted: ({ sessionExpired }) => {
-                if (sessionExpired) {
-                  this.signOut();
-                }
-              },
-            }}
+            signOutProps={{ onCompleted: this.signOut }}
+            checkSessionExpirationProps={{ onCompleted: this.onSessionExpired }}
           >
-            {({ signOut, getInitialData: { data: { me }, loading } }) => {
+            {({
+              getInitialData: { data: { me }, loading },
+              signOut: { mutation: signOut },
+              uploadAvatar: { mutation: uploadAvatar, result },
+            }) => {
               return (
                 <AppContent
                   loading={loading}
                   user={me}
-                  setUserToContext={setUser}
                   setFetchingToContext={setFetching}
-                  signOut={signOut.mutation}
+                  setUserToContext={setUser}
+                  signOut={signOut}
+                  uploadAvatar={uploadAvatar}
                 >
                   {children}
                 </AppContent>

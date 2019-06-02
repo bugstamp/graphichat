@@ -8,26 +8,27 @@ import { USER_ACTIVITY_UPDATE } from '../subscriptions';
 
 export default {
   Query: {
-    user: (parent, args, { injector }) => injector.get(UserProvider).getUser(),
-    users: (parent, args, { injector }) => injector.get(UserProvider).getUsers(),
-    me: async (parent, args, { injector }) => {
+    user: (_, args, { injector }) => injector.get(UserProvider).getUser(),
+    users: (_, args, { injector }) => injector.get(UserProvider).getUsers(),
+    me: async (_, args, { injector }) => {
       const me = await injector.get(AuthProvider).getMe();
       await injector.get(AuthProvider).logIn(me.id);
 
       return me;
     },
-    myContacts: (parent, args, { injector }) => injector.get(UserProvider).getMyContacts(),
-    searchUsers: (parent, { searchValue }, { injector }) => injector.get(UserProvider).searchUsers(searchValue),
+    myContacts: (_, args, { injector }) => injector.get(UserProvider).getMyContacts(),
+    searchUsers: (_, { searchValue }, { injector }) => injector.get(UserProvider).searchUsers(searchValue),
   },
   Mutation: {
-    createUser: (parent, { form }, { injector }) => injector.get(UserProvider).createUser(form),
-    deleteUser: (parent, { id }, { injector }) => injector.get(UserProvider).deleteUser(id),
-    removeUserContacts: (parent, { userId }, { injector }) => injector.get(UserProvider).removeUserContacts(userId),
+    createUser: (_, { form }, { injector }) => injector.get(UserProvider).createUser(form),
+    deleteUser: (_, { id }, { injector }) => injector.get(UserProvider).deleteUser(id),
+    removeUserContacts: (_, { userId }, { injector }) => injector.get(UserProvider).removeUserContacts(userId),
+    uploadAvatar: async (_, { file }, { injector }) => injector.get(UserProvider).uploadAvatar(file),
   },
   Subscription: {
     userActivityUpdated: {
       subscribe: withFilter(
-        (parent, args, { injector }) => injector.get(PubSub).asyncIterator([USER_ACTIVITY_UPDATE]),
+        (_, args, { injector }) => injector.get(PubSub).asyncIterator([USER_ACTIVITY_UPDATE]),
         async ({ userActivityUpdated }, variables, { injector }) => {
           const { userId } = userActivityUpdated;
           const { contacts } = await injector.get(AuthProvider).getMe();

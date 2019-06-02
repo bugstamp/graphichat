@@ -1,11 +1,12 @@
 import { adopt } from 'react-adopt';
-import { concat, find } from 'lodash';
+import { concat, find, set } from 'lodash';
 
 import { createMutation, createQuery, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
 import { myContactActivityFragment } from '../../gql/fragments';
 
 const {
+  GET_ME,
   GET_INITIAL_DATA,
   CHAT_CREATED_SUBSCRIPTION,
   SIGN_OUT,
@@ -13,6 +14,7 @@ const {
   GET_MY_CONTACTS,
   CHECK_SESSION_EXPIRATION,
   USER_ACTIVITY_SUBSCRIPTION,
+  UPLOAD_AVATAR,
 } = gql;
 
 export const chatCreatedUpdate = (client, { contact, chat }) => {
@@ -59,6 +61,19 @@ const userActivitySubscription = createSubscription('userActivitySubscription', 
   },
 });
 const signOut = createMutation('signOut', SIGN_OUT);
+const uploadAvatar = createMutation('uploadAvatar', UPLOAD_AVATAR, {
+  update(client, { data: { uploadAvatar: avatar } }) {
+    const { me } = client.readQuery({ query: GET_ME });
+    set(me, 'avatar', avatar);
+
+    client.writeQuery({
+      query: GET_ME,
+      data: {
+        me,
+      },
+    });
+  },
+});
 
 const AppLayoutContainer = adopt({
   chatCreatedSubscription,
@@ -66,6 +81,7 @@ const AppLayoutContainer = adopt({
   getInitialData,
   checkSessionExpiration,
   signOut,
+  uploadAvatar,
 });
 
 export default AppLayoutContainer;

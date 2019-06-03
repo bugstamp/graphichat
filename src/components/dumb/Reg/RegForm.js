@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 // import {} from 'lodash';
 import styled from 'styled-components';
@@ -12,23 +13,30 @@ import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import RegFormStepper from './RegFormStepper';
 
-import { getSpacing } from '../../../styles';
+import { getSpacing, getStyledProps } from '../../../styles';
 
 const Wrapper = styled(Paper)`
   && {
     width: 100%;
     max-width: 375px;
     min-width: 320px;
-    padding: ${getSpacing(5)} ${getSpacing(3)};
+    padding: ${getSpacing(4)} ${getSpacing(3)};
   }
 `;
 
 const Header = styled(Typography)`
-  width: 100%;
-  position: relative;
-  text-align: center;
+  && {
+    width: 100%;
+    position: relative;
+  }
 `;
 
+const Footer = styled(Typography)`
+  && {
+    width: 100%;
+    margin-top: ${getSpacing(2)};
+  }
+`;
 
 const SignUp = ({
   steps,
@@ -81,6 +89,9 @@ const SignUp = ({
           {null}
         </Otherwise>
       </Choose>
+      <Footer align="center">
+        <Link to="/login">I already have a account</Link>
+      </Footer>
     </Wrapper>
   );
 };

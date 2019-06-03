@@ -89,9 +89,7 @@ chatSchema.statics = {
   async getChatWithLastMessage(chatId) {
     try {
       const chat = await this.findById(chatId, {
-        messages: {
-          $slice: -1,
-        },
+        messages: { $slice: -1 },
       });
 
       return chat;

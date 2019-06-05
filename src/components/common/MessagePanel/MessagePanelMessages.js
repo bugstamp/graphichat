@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, createRef } from 'react';
 import styled from 'styled-components';
 import { position } from 'polished';
 import {
@@ -8,6 +8,7 @@ import {
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import RootRef from '@material-ui/core/RootRef';
 
 import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
@@ -27,17 +28,18 @@ const Wrapper = styled.div`
 
 const MessagePanelListScroll = styled.div`
   ${position('absolute', 0, '-17px', 0, 0)};
+  height: 100%;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;
 
 const MessagePanelList = styled(List)`
   && {
-    height: 100%;
-    max-height: 100%;
     display: flex;
     flex-flow: column nowrap;
     flex-direction: column-reverse;
-    overflow-x: hidden;
-    overflow-y: auto;
+    position: relative;
   }
 `;
 
@@ -52,6 +54,18 @@ const MessagePanelListItemMessageWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: ${({ alignItems }) => alignItems};
+`;
+
+const ListScrollbar = styled.div`
+  ${position('absolute', 0, 0, 0, null)}
+  width: 10px;
+  background-color: #ccc;
+
+  div {
+    ${position('absolute', null, 0, 0, 0)}
+    height: 20px;
+    background-color: #000;
+  }
 `;
 
 const MessagePanelHistoryDivider = styled.div`
@@ -115,6 +129,29 @@ const MessagePanelLoading = styled.div`
 `;
 
 class MessagePanelMessages extends Component {
+  listRef = createRef();
+
+  scrollbarRef = createRef();
+
+  scrollbarThumbRef = createRef();
+
+  componentDidMount() {
+    this.listRef.current.addEventListener('scroll', this.onScroll);
+  }
+
+  componentWillUnmount() {
+    this.listRef.current.removeEventListener('scroll', this.onScroll);
+  }
+
+  onScroll = (e) => {
+    const { target } = e;
+    const { scrollTop } = target;
+    console.log(scrollTop);
+    console.log(target.getBoundingClientRect());
+    console.log(this.scrollbarRef.current.getBoundingClientRect());
+    // this.scrollbarRef.current.scrollTop = scrollTop;
+  }
+
   render() {
     const { messages, myId, loading, sendedIds } = this.props;
 
@@ -177,17 +214,26 @@ class MessagePanelMessages extends Component {
 
     return (
       <Wrapper>
+        <RootRef rootRef={this.scrollbarRef}>
+          <ListScrollbar>
+            <RootRef rootRef={this.scrollbarThumbRef}>
+              <div />
+            </RootRef>
+          </ListScrollbar>
+        </RootRef>
         <MessagePanelListScroll>
-          <MessagePanelList disablePadding>
-            <Fragment>
-              {renderMessages()}
-              <If condition={loading}>
-                <MessagePanelLoading>
-                  <CircularProgress color="primary" />
-                </MessagePanelLoading>
-              </If>
-            </Fragment>
-          </MessagePanelList>
+          <RootRef rootRef={this.listRef}>
+            <MessagePanelList disablePadding>
+              <Fragment>
+                {renderMessages()}
+                <If condition={loading}>
+                  <MessagePanelLoading>
+                    <CircularProgress color="primary" />
+                  </MessagePanelLoading>
+                </If>
+              </Fragment>
+            </MessagePanelList>
+          </RootRef>
         </MessagePanelListScroll>
       </Wrapper>
     );

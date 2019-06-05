@@ -1,5 +1,5 @@
 import { PubSub, withFilter } from 'graphql-subscriptions';
-import { find, isEqual } from 'lodash';
+import { find } from 'lodash';
 
 import AuthProvider from '../auth/AuthProvider';
 import UserProvider from './UserProvider';

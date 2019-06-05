@@ -39,7 +39,7 @@ class AppLayout extends Component {
             {({
               getInitialData: { data: { me }, loading },
               signOut: { mutation: signOut },
-              uploadAvatar: { mutation: uploadAvatar, result },
+              uploadAvatar: { mutation: uploadAvatar, result: { loading: uploading } },
             }) => {
               return (
                 <AppContent
@@ -49,6 +49,7 @@ class AppLayout extends Component {
                   setUserToContext={setUser}
                   signOut={signOut}
                   uploadAvatar={uploadAvatar}
+                  uploading={uploading}
                 >
                   {children}
                 </AppContent>

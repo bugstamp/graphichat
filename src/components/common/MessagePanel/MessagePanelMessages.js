@@ -81,7 +81,7 @@ const MessagePanelMessage = styled.div`
   border-radius: 10px;
   opacity: ${({ isAdding }) => (isAdding ? 0.3 : 1)};
   word-break: break-all;
-  ${getStyledProps('theme.typography.body1')};
+  ${getStyledProps('theme.typography.body2')};
 
   &:hover {
     cursor: text;

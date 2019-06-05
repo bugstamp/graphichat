@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import Cropper from 'react-easy-crop';
+// import Cropper from 'react-easy-crop';
 import styled from 'styled-components';
 import { size, position } from 'polished';
 import { isEqual } from 'lodash';
@@ -14,6 +14,7 @@ import Avatar from '@material-ui/core/Avatar';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 
 import Navigation from '../common/Navigation/Navigation';
+import TopLineProgress from '../common/TopLineProgress';
 
 import { getAvatarInitials } from '../../helpers';
 
@@ -105,7 +106,7 @@ class AppContent extends Component {
 
   render() {
     const { settingsDialog, cropDialog, file } = this.state;
-    const { children, user, signOut } = this.props;
+    const { children, user, signOut, uploading } = this.props;
     const avatarText = getAvatarInitials(user);
 
     return (
@@ -128,6 +129,7 @@ class AppContent extends Component {
           </AppContainer>
         </Grid>
         <Dialog open={settingsDialog} onClose={this.toggleSettingsDialog}>
+          <TopLineProgress loading={uploading} />
           <DialogTitle>Settings</DialogTitle>
           <SettingsDialogWrapper>
             <AvatarContainer>

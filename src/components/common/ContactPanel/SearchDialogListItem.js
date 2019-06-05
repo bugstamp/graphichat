@@ -25,7 +25,7 @@ const SearchDialogListItem = ({
 
   return (
     <AppListItem>
-      <AppListItemAvatar src={avatar} text={avatarText} online={false} />
+      <AppListItemAvatar src={avatar && avatar.sm} text={avatarText} online={false} />
       <AppListItemInfo primary={displayName} secondary={secondary} />
       <Button
         color="primary"

@@ -1,5 +1,7 @@
 import { adopt } from 'react-adopt';
-import { concat, find, set, map } from 'lodash';
+import {
+  concat, find, set, map,
+} from 'lodash';
 
 import { createMutation, createQuery, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
@@ -69,9 +71,7 @@ const uploadAvatar = createMutation('uploadAvatar', UPLOAD_AVATAR, {
 
     client.writeQuery({
       query: GET_ME,
-      data: {
-        me,
-      },
+      data: { me },
     });
   },
 });

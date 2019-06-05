@@ -1,5 +1,6 @@
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Dotenv = require('dotenv-webpack');
 
 const paths = require('../paths');
@@ -43,6 +44,15 @@ module.exports = merge([
           use: ['html-loader'],
         },
         {
+          test: /\.css$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            'css-loader',
+          ],
+        },
+        {
           test: /\.(png|jpeg|jpg|gif)$/,
           include: paths.assets,
           use: {
@@ -80,13 +90,15 @@ module.exports = merge([
 
     plugins: [
       new Dotenv({
-        // path: paths.env,
         expand: true,
       }),
       new HtmlWebpackPlugin({
         template: paths.template,
         favicon: paths.favicon,
         inject: 'body',
+      }),
+      new MiniCssExtractPlugin({
+        filename: 'styles.css',
       }),
     ],
 

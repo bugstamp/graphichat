@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import { position } from 'polished';
-import { map, findIndex, includes } from 'lodash';
+import {
+  reverse, map, findIndex, includes,
+} from 'lodash';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -19,21 +21,23 @@ import {
 
 const Wrapper = styled.div`
   flex: 1 auto;
-  width: 100%;
   position: relative;
   overflow: hidden;
 `;
 
+const MessagePanelListScroll = styled.div`
+  ${position('absolute', 0, '-17px', 0, 0)};
+`;
+
 const MessagePanelList = styled(List)`
   && {
-    ${position('absolute', 0, '-17px', 0, 0)}
     height: 100%;
     max-height: 100%;
     display: flex;
-    flex-flow: column;
-    justify-content: flex-end;
+    flex-flow: column nowrap;
+    flex-direction: column-reverse;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 `;
 
@@ -117,7 +121,7 @@ class MessagePanelMessages extends Component {
     const renderMessages = () => {
       let prevMessageTime;
 
-      return map(messages, ({
+      return reverse(map(messages, ({
         id,
         senderId,
         type,
@@ -168,21 +172,23 @@ class MessagePanelMessages extends Component {
             </MessagePanelListItemMessageWrapper>
           </MessagePanelListItem>
         );
-      });
+      }));
     };
 
     return (
       <Wrapper>
-        <MessagePanelList disablePadding>
-          <Fragment>
-            <If condition={loading}>
-              <MessagePanelLoading>
-                <CircularProgress color="primary" />
-              </MessagePanelLoading>
-            </If>
-            {renderMessages()}
-          </Fragment>
-        </MessagePanelList>
+        <MessagePanelListScroll>
+          <MessagePanelList disablePadding>
+            <Fragment>
+              {renderMessages()}
+              <If condition={loading}>
+                <MessagePanelLoading>
+                  <CircularProgress color="primary" />
+                </MessagePanelLoading>
+              </If>
+            </Fragment>
+          </MessagePanelList>
+        </MessagePanelListScroll>
       </Wrapper>
     );
   }

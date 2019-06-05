@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-import { myContactFragment, myChatFragment, myFragment } from './fragments';
+import { myContactFragment, myChatFragment, myFragment, userInfoFragment } from './fragments';
 
 const GET_INITIAL_DATA = gql`
   query GetInitialData {
@@ -78,12 +78,22 @@ const UPLOAD_AVATAR = gql`
   }
 `;
 
+const USER_UPDATE_SUBSCRIPTION = gql`
+  subscription onUserUpdated {
+    userUpdated {
+      ...userInfoData
+    }
+  }
+  ${userInfoFragment}
+`;
+
 export default {
   GET_INITIAL_DATA,
   GET_ME,
   GET_MY_CONTACTS,
   GET_MY_CHATS,
   SEARCH_USERS,
-  USER_ACTIVITY_SUBSCRIPTION,
   UPLOAD_AVATAR,
+  USER_ACTIVITY_SUBSCRIPTION,
+  USER_UPDATE_SUBSCRIPTION,
 };

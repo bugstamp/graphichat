@@ -7,6 +7,7 @@ import DbProvider from '../common/DbProvider';
 import AuthProvider from '../auth/AuthProvider';
 
 import { getUserDisplayName, fileToBuffer } from '../../utils/helpers';
+import { USER_UPDATED } from '../subscriptions';
 
 @Injectable({
   scope: ProviderScope.Session,
@@ -95,8 +96,7 @@ class UserProvider {
   uploadAvatar = async (file) => {
     try {
       const { id } = this.authProvider.user;
-      const encodedFile = await file;
-      const { filename, createReadStream } = encodedFile;
+      const { filename, createReadStream } = await file;
       const buffer = await fileToBuffer(filename, createReadStream);
       const compressedJpeg = await sharp(buffer).jpeg({ quality: 80 }).toBuffer();
       const sm = await sharp(compressedJpeg).resize({ width: 50, height: 50 }).toBuffer();
@@ -108,7 +108,8 @@ class UserProvider {
         md: mdBase64,
       };
 
-      await this.db.User.findByIdAndUpdate(id, { avatar });
+      const user = await this.db.User.findByIdAndUpdate(id, { avatar }, { new: true });
+      await this.pubsub.publish(USER_UPDATED, { userUpdated: user });
 
       return avatar;
     } catch (e) {

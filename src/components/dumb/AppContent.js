@@ -93,7 +93,6 @@ class AppContent extends Component {
     const { uploadAvatar } = this.props;
 
     if (valid) {
-      console.log(file);
       uploadAvatar({ variables: { file } });
     }
   }

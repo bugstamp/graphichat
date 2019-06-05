@@ -1,10 +1,10 @@
 import { PubSub, withFilter } from 'graphql-subscriptions';
-import { find } from 'lodash';
+import { find, isEqual } from 'lodash';
 
 import AuthProvider from '../auth/AuthProvider';
 import UserProvider from './UserProvider';
 
-import { USER_ACTIVITY_UPDATE } from '../subscriptions';
+import { USER_ACTIVITY_UPDATED, USER_UPDATED } from '../subscriptions';
 
 export default {
   Query: {
@@ -28,12 +28,23 @@ export default {
   Subscription: {
     userActivityUpdated: {
       subscribe: withFilter(
-        (_, args, { injector }) => injector.get(PubSub).asyncIterator([USER_ACTIVITY_UPDATE]),
+        (_, args, { injector }) => injector.get(PubSub).asyncIterator([USER_ACTIVITY_UPDATED]),
         async ({ userActivityUpdated }, variables, { injector }) => {
           const { userId } = userActivityUpdated;
           const { contacts } = await injector.get(AuthProvider).getMe();
 
           return !!find(contacts, { userId });
+        },
+      ),
+    },
+    userUpdated: {
+      subscribe: withFilter(
+        (_, args, { injector }) => injector.get(PubSub).asyncIterator([USER_UPDATED]),
+        async ({ userUpdated }, variables, { injector }) => {
+          const { id: userId } = userUpdated;
+          const { id, contacts } = await injector.get(AuthProvider).getMe();
+
+          return (userId !== id) && !!find(contacts, { userId });
         },
       ),
     },

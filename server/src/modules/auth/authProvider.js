@@ -16,7 +16,7 @@ import {
 import { getUserDisplayName } from '../../utils/helpers';
 import nodemailer from '../../utils/nodemailer';
 
-import { USER_ACTIVITY_UPDATE } from '../subscriptions';
+import { USER_ACTIVITY_UPDATED } from '../subscriptions';
 
 @Injectable({
   scope: ProviderScope.Session,
@@ -53,9 +53,9 @@ class AuthProvider {
 
   async onDisconnect() {
     if (this.user) {
-      const { lastDate } = await this.getMe();
+      const { id, lastDate } = await this.getMe();
 
-      await this.logOut(this.user.id, lastDate);
+      await this.logOut(id, lastDate);
     }
     this.user = null;
   }
@@ -264,11 +264,9 @@ class AuthProvider {
   updateUserActivity = async (userId, phase) => {
     const user = await this.db.User.findById(userId);
     const update = await user.logActivity(phase);
-    const result = {
-      userId,
-      ...update,
-    };
-    await this.pubsub.publish(USER_ACTIVITY_UPDATE, { userActivityUpdated: result });
+    const result = { userId, ...update };
+
+    await this.pubsub.publish(USER_ACTIVITY_UPDATED, { userActivityUpdated: result });
 
     return result;
   }

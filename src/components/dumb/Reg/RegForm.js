@@ -13,7 +13,7 @@ import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import RegFormStepper from './RegFormStepper';
 
-import { getSpacing, getStyledProps } from '../../../styles';
+import { getSpacing } from '../../../styles';
 
 const Wrapper = styled(Paper)`
   && {

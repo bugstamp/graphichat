@@ -1,5 +1,5 @@
 import { adopt } from 'react-adopt';
-import { concat, find, set } from 'lodash';
+import { concat, find, set, map } from 'lodash';
 
 import { createMutation, createQuery, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
@@ -14,6 +14,7 @@ const {
   GET_MY_CONTACTS,
   CHECK_SESSION_EXPIRATION,
   USER_ACTIVITY_SUBSCRIPTION,
+  USER_UPDATE_SUBSCRIPTION,
   UPLOAD_AVATAR,
 } = gql;
 
@@ -74,6 +75,22 @@ const uploadAvatar = createMutation('uploadAvatar', UPLOAD_AVATAR, {
     });
   },
 });
+const userUpdateSubscription = createSubscription('userUpdateSubscription', USER_UPDATE_SUBSCRIPTION, {
+  onSubscriptionData({ client, subscriptionData: { data: { userUpdated } } }) {
+    const { id: userId } = userUpdated;
+    const { myContacts } = client.readQuery({ query: GET_MY_CONTACTS });
+    const updatedContacts = map(myContacts, (contact) => {
+      const { userInfo: { id } } = contact;
+
+      if (id === userId) {
+        return { ...contact, userInfo: userUpdated };
+      }
+      return contact;
+    });
+
+    client.writeQuery({ myContacts: updatedContacts });
+  },
+});
 
 const AppLayoutContainer = adopt({
   chatCreatedSubscription,
@@ -82,6 +99,7 @@ const AppLayoutContainer = adopt({
   checkSessionExpiration,
   signOut,
   uploadAvatar,
+  userUpdateSubscription,
 });
 
 export default AppLayoutContainer;

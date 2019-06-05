@@ -107,6 +107,7 @@ const UserModule = new GraphQLModule({
 
     type Subscription {
       userActivityUpdated: UserActivityUpdate!
+      userUpdated: User!
     }
   `,
   resolvers,

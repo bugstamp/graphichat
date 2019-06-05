@@ -22,24 +22,31 @@ export const myFragment = gql`
   }
 `;
 
+export const userInfoFragment = gql`
+  fragment userInfoData on User {
+    id
+    avatar {
+      sm
+      md
+    }
+    username
+    displayName
+    firstName
+    lastName
+    status
+    lastDate
+  }
+`;
+
 export const myContactFragment = gql`
   fragment myContactData on MyContact {
     id
     chatId
     userInfo {
-      id
-      avatar {
-        sm
-        md
-      }
-      username
-      displayName
-      firstName
-      lastName
-      status
-      lastDate
+      ...userInfoData
     }
   }
+  ${userInfoFragment}
 `;
 
 export const messageFragment = gql`

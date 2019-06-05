@@ -91,7 +91,7 @@ const Tabs = ({
           />
         );
       })}
-      <TabItem icon={<SettingsIcon color="action" onClick={toggleSettingsDialog} />} />
+      <TabItem icon={<SettingsIcon color="action" />} onClick={toggleSettingsDialog} />
       <TabItem icon={<LogoutIcon nativeColor={logoutIconColor} />} onClick={signOut} />
       <TabItemIndicator activeTab={activeTab} />
     </Wrapper>

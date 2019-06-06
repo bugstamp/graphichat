@@ -1,4 +1,5 @@
 import React, { Component, Fragment, createRef } from 'react';
+import ReactResizeDetector from 'react-resize-detector';
 import styled from 'styled-components';
 import { position } from 'polished';
 import {
@@ -26,10 +27,12 @@ const Wrapper = styled.div`
   overflow: hidden;
 `;
 
-const MessagePanelListScroll = styled.div`
+const MessagePanelListView = styled.div`
   ${position('absolute', 0, '-17px', 0, 0)};
   height: 100%;
   max-height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
   overflow-x: hidden;
   overflow-y: auto;
 `;
@@ -38,8 +41,8 @@ const MessagePanelList = styled(List)`
   && {
     display: flex;
     flex-flow: column nowrap;
-    flex-direction: column-reverse;
     position: relative;
+    margin-right: ${({ scrollbarPresence }) => !scrollbarPresence && '17px'};
   }
 `;
 
@@ -57,14 +60,13 @@ const MessagePanelListItemMessageWrapper = styled.div`
 `;
 
 const ListScrollbar = styled.div`
-  ${position('absolute', 0, 0, 0, null)}
-  width: 10px;
-  background-color: #ccc;
+  ${position('absolute', 0, 0, 0, null)};
+  width: 2px;
+  background-color: ${getStyledProps('theme.palette.grey.300')};
 
   div {
-    ${position('absolute', null, 0, 0, 0)}
-    height: 20px;
-    background-color: #000;
+    ${position('absolute', null, 0, 0, 0)};
+    background-color: ${getStyledProps('theme.palette.primary.main')};
   }
 `;
 
@@ -131,34 +133,64 @@ const MessagePanelLoading = styled.div`
 class MessagePanelMessages extends Component {
   listRef = createRef();
 
+  listViewRef = createRef();
+
   scrollbarRef = createRef();
 
   scrollbarThumbRef = createRef();
 
+  state = {
+    scrollbarPresence: false,
+    scrollbarThumbHeight: 40,
+  }
+
   componentDidMount() {
-    this.listRef.current.addEventListener('scroll', this.onScroll);
+    this.listViewRef.current.addEventListener('scroll', this.onScroll);
   }
 
   componentWillUnmount() {
-    this.listRef.current.removeEventListener('scroll', this.onScroll);
+    this.listViewRef.current.removeEventListener('scroll', this.onScroll);
   }
 
-  onScroll = (e) => {
-    const { target } = e;
-    const { scrollTop } = target;
-    console.log(scrollTop);
-    console.log(target.getBoundingClientRect());
-    console.log(this.scrollbarRef.current.getBoundingClientRect());
-    // this.scrollbarRef.current.scrollTop = scrollTop;
+  onScroll = () => {
+    this.calculateScrollbarPosition();
+  }
+
+  calculateScrollbarPosition = () => {
+    const { scrollbarThumbHeight } = this.state;
+    const listViewRect = this.listViewRef.current.getBoundingClientRect();
+    const listRect = this.listRef.current.getBoundingClientRect();
+    const { scrollTop } = this.listViewRef.current;
+    const { height: listHeight } = listRect;
+    const { height: listViewHeight } = listViewRect;
+    const scrollHeight = listHeight - listViewHeight;
+    const ratioPercent = scrollTop / scrollHeight;
+    const scrollbarHeight = (listViewHeight - scrollbarThumbHeight);
+    const thumbPosition = scrollbarHeight - (ratioPercent * scrollbarHeight);
+
+    this.scrollbarThumbRef.current.style.bottom = `${thumbPosition}px`;
+  }
+
+  onResize = (width, height) => {
+    const listViewRect = this.listViewRef.current.getBoundingClientRect();
+    const { height: listViewHeight } = listViewRect;
+
+    if (height > listViewHeight) {
+      this.setState({ scrollbarPresence: true });
+      this.calculateScrollbarPosition();
+    } else {
+      this.setState({ scrollbarPresence: false });
+    }
   }
 
   render() {
+    const { scrollbarPresence, scrollbarThumbHeight } = this.state;
     const { messages, myId, loading, sendedIds } = this.props;
 
     const renderMessages = () => {
       let prevMessageTime;
 
-      return reverse(map(messages, ({
+      return map(messages, ({
         id,
         senderId,
         type,
@@ -209,32 +241,38 @@ class MessagePanelMessages extends Component {
             </MessagePanelListItemMessageWrapper>
           </MessagePanelListItem>
         );
-      }));
+      });
     };
 
     return (
       <Wrapper>
-        <RootRef rootRef={this.scrollbarRef}>
-          <ListScrollbar>
-            <RootRef rootRef={this.scrollbarThumbRef}>
-              <div />
-            </RootRef>
-          </ListScrollbar>
-        </RootRef>
-        <MessagePanelListScroll>
-          <RootRef rootRef={this.listRef}>
-            <MessagePanelList disablePadding>
-              <Fragment>
-                {renderMessages()}
-                <If condition={loading}>
-                  <MessagePanelLoading>
-                    <CircularProgress color="primary" />
-                  </MessagePanelLoading>
-                </If>
-              </Fragment>
-            </MessagePanelList>
+        <If condition={scrollbarPresence}>
+          <RootRef rootRef={this.scrollbarRef}>
+            <ListScrollbar>
+              <RootRef rootRef={this.scrollbarThumbRef}>
+                <div style={{ height: `${scrollbarThumbHeight}px` }} />
+              </RootRef>
+            </ListScrollbar>
           </RootRef>
-        </MessagePanelListScroll>
+        </If>
+        <RootRef rootRef={this.listViewRef}>
+          <MessagePanelListView>
+            <RootRef rootRef={this.listRef}>
+              <MessagePanelList disablePadding scrollbarPresence={scrollbarPresence}>
+                <ReactResizeDetector handleHeight onResize={this.onResize}>
+                  <Fragment>
+                    <If condition={loading}>
+                      <MessagePanelLoading>
+                        <CircularProgress color="primary" />
+                      </MessagePanelLoading>
+                    </If>
+                    {renderMessages()}
+                  </Fragment>
+                </ReactResizeDetector>
+              </MessagePanelList>
+            </RootRef>
+          </MessagePanelListView>
+        </RootRef>
       </Wrapper>
     );
   }

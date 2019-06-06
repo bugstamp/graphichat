@@ -1,6 +1,11 @@
 import gql from 'graphql-tag';
 
-import { myContactFragment, myChatFragment, myFragment, userInfoFragment } from './fragments';
+import {
+  myContactFragment,
+  myChatFragment,
+  myFragment,
+  userInfoFragment,
+} from './fragments';
 
 const GET_INITIAL_DATA = gql`
   query GetInitialData {

@@ -1,9 +1,10 @@
 import React, { Component, Fragment, createRef } from 'react';
 import ReactResizeDetector from 'react-resize-detector';
+import { InView } from 'react-intersection-observer';
 import styled from 'styled-components';
 import { position } from 'polished';
 import {
-  reverse, map, findIndex, includes,
+  map, findIndex, includes, isEqual,
 } from 'lodash';
 
 import List from '@material-ui/core/List';
@@ -142,22 +143,28 @@ class MessagePanelMessages extends Component {
   state = {
     scrollbarPresence: false,
     scrollbarThumbHeight: 50,
+    observableId: null,
   }
 
   componentDidMount() {
     this.listViewRef.current.addEventListener('scroll', this.onScroll);
   }
 
+  componentDidUpdate(prevProps) {
+    const { messages } = this.props;
+
+    if (!isEqual(prevProps.messages, messages) && messages.length > 5) {
+      const { id } = messages[4];
+
+      this.setState({ observableId: id });
+    }
+  }
+
   componentWillUnmount() {
     this.listViewRef.current.removeEventListener('scroll', this.onScroll);
   }
 
-  onScroll = ({ target: { scrollTop } }) => {
-    const { getMessages, loading } = this.props;
-
-    if (scrollTop === 0 && !loading) {
-      getMessages();
-    }
+  onScroll = () => {
     this.calculateScrollbarPosition();
   }
 
@@ -188,6 +195,20 @@ class MessagePanelMessages extends Component {
     }
   }
 
+  onIntersectionChange = (inView, { target: { id }}) => {
+    const { observableId } = this.state;
+    const { getMessages, loading } = this.props;
+
+    if (inView && (observableId === id) && !loading) {
+      getMessages();
+      this.setState({ observableId: null });
+    }
+  }
+
+  setObservableId = (observableId = null) => {
+    
+  }
+
   render() {
     const { scrollbarPresence, scrollbarThumbHeight } = this.state;
     const { messages, myId, loading, sendedIds } = this.props;
@@ -216,35 +237,41 @@ class MessagePanelMessages extends Component {
         prevMessageTime = time;
 
         return (
-          <MessagePanelListItem key={id}>
-            <MessagePanelListItemMessageWrapper alignItems={alignItems}>
-              <If condition={isFirst || divider}>
-                <MessagePanelHistoryDivider>
-                  <p />
-                  <span>{messageHistoryDateParser(time)}</span>
-                  <p />
-                </MessagePanelHistoryDivider>
-              </If>
-              <Choose>
-                <When condition={isSystem}>
-                  <MessagePanelSystemMessage>
-                    <p>{content}</p>
-                  </MessagePanelSystemMessage>
-                </When>
-                <Otherwise>
-                  <MessagePanelMessage
-                    isMyMessage={isMyMessage}
-                    isAdding={isAdding}
-                  >
-                    {content}
-                  </MessagePanelMessage>
-                  <MessagePanelMessageTime>
-                    <span>{messageTimeParser(time, 'wide')}</span>
-                  </MessagePanelMessageTime>
-                </Otherwise>
-              </Choose>
-            </MessagePanelListItemMessageWrapper>
-          </MessagePanelListItem>
+          <InView key={id} onChange={this.onIntersectionChange}>
+            {({ ref }) => (
+              <RootRef rootRef={ref}>
+                <MessagePanelListItem id={id}>
+                  <MessagePanelListItemMessageWrapper alignItems={alignItems}>
+                    <If condition={isFirst || divider}>
+                      <MessagePanelHistoryDivider>
+                        <p />
+                        <span>{messageHistoryDateParser(time)}</span>
+                        <p />
+                      </MessagePanelHistoryDivider>
+                    </If>
+                    <Choose>
+                      <When condition={isSystem}>
+                        <MessagePanelSystemMessage>
+                          <p>{content}</p>
+                        </MessagePanelSystemMessage>
+                      </When>
+                      <Otherwise>
+                        <MessagePanelMessage
+                          isMyMessage={isMyMessage}
+                          isAdding={isAdding}
+                        >
+                          {content}
+                        </MessagePanelMessage>
+                        <MessagePanelMessageTime>
+                          <span>{messageTimeParser(time, 'wide')}</span>
+                        </MessagePanelMessageTime>
+                      </Otherwise>
+                    </Choose>
+                  </MessagePanelListItemMessageWrapper>
+                </MessagePanelListItem>
+              </RootRef>
+            )}
+          </InView>
         );
       });
     };

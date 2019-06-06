@@ -94,6 +94,7 @@ class MessagePanel extends Component {
           myId={me.id}
           messages={messages}
           sendedIds={sendedIds}
+          getMessages={this.getMessages}
         />
         <MessagePanelComment
           adding={adding}

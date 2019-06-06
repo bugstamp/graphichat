@@ -34,15 +34,14 @@ const MessagePanelListView = styled.div`
   display: flex;
   flex-direction: column-reverse;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: scroll;
 `;
 
-const MessagePanelList = styled(List)`
+const MessagePanelList = styled(({ scrollbarPresence, ...rest }) => <List {...rest} />)`
   && {
     display: flex;
     flex-flow: column nowrap;
     position: relative;
-    margin-right: ${({ scrollbarPresence }) => !scrollbarPresence && '17px'};
   }
 `;
 
@@ -128,6 +127,7 @@ const MessagePanelMessageTime = styled.div`
 const MessagePanelLoading = styled.div`
   display: flex;
   justify-content: center;
+  padding: ${getSpacing(1)} 0;
 `;
 
 class MessagePanelMessages extends Component {
@@ -141,7 +141,7 @@ class MessagePanelMessages extends Component {
 
   state = {
     scrollbarPresence: false,
-    scrollbarThumbHeight: 40,
+    scrollbarThumbHeight: 50,
   }
 
   componentDidMount() {
@@ -152,7 +152,12 @@ class MessagePanelMessages extends Component {
     this.listViewRef.current.removeEventListener('scroll', this.onScroll);
   }
 
-  onScroll = () => {
+  onScroll = ({ target: { scrollTop } }) => {
+    const { getMessages, loading } = this.props;
+
+    if (scrollTop === 0 && !loading) {
+      getMessages();
+    }
     this.calculateScrollbarPosition();
   }
 

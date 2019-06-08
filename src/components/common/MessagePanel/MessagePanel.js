@@ -100,11 +100,11 @@ class MessagePanel extends Component {
           adding={adding}
           avatars={{
             me: {
-              src: null,
+              src: me.avatar && me.avatar.sm,
               text: myAvatarText,
             },
             contact: {
-              src: null,
+              src: userInfo.avatar && userInfo.avatar.sm,
               text: contactAvatarText,
             },
           }}

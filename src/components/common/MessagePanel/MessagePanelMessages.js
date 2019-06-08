@@ -63,6 +63,8 @@ const ListScrollbar = styled.div`
   ${position('absolute', 0, 0, 0, null)};
   width: 2px;
   background-color: ${getStyledProps('theme.palette.grey.300')};
+  opacity: ${({ show }) => (show ? 1 : 0)};
+  transition: .25s ease;
 
   div {
     ${position('absolute', null, 0, 0, 0)};
@@ -136,18 +138,22 @@ class MessagePanelMessages extends Component {
 
   listViewRef = createRef();
 
-  scrollbarRef = createRef();
-
   scrollbarThumbRef = createRef();
 
   state = {
+    scrollbar: false,
     scrollbarPresence: false,
     scrollbarThumbHeight: 50,
     observableId: null,
   }
 
-  componentDidMount() {
-    this.listViewRef.current.addEventListener('scroll', this.onScroll);
+  shouldComponentUpdate(nextProps, nextState) {
+    const { observableId } = this.state;
+
+    if (!isEqual(observableId, nextState.observableId)) {
+      return false;
+    }
+    return true;
   }
 
   componentDidUpdate(prevProps) {
@@ -156,25 +162,23 @@ class MessagePanelMessages extends Component {
     if (!isEqual(prevProps.messages, messages) && messages.length > 5) {
       const { id } = messages[4];
 
-      this.setState({ observableId: id });
+      this.setObservableId(id);
     }
-  }
-
-  componentWillUnmount() {
-    this.listViewRef.current.removeEventListener('scroll', this.onScroll);
   }
 
   onScroll = () => {
     this.calculateScrollbarPosition();
   }
 
+  toggleScrollbar = () => {
+    this.setState(({ scrollbar }) => ({ scrollbar: !scrollbar }));
+  }
+
   calculateScrollbarPosition = () => {
     const { scrollbarThumbHeight } = this.state;
-    const listViewRect = this.listViewRef.current.getBoundingClientRect();
-    const listRect = this.listRef.current.getBoundingClientRect();
     const { scrollTop } = this.listViewRef.current;
-    const { height: listHeight } = listRect;
-    const { height: listViewHeight } = listViewRect;
+    const { height: listHeight } = this.listRef.current.getBoundingClientRect();
+    const { height: listViewHeight } = this.listViewRef.current.getBoundingClientRect();
     const scrollHeight = listHeight - listViewHeight;
     const ratioPercent = scrollTop / scrollHeight;
     const scrollbarHeight = (listViewHeight - scrollbarThumbHeight);
@@ -188,10 +192,10 @@ class MessagePanelMessages extends Component {
     const { height: listViewHeight } = listViewRect;
 
     if (height > listViewHeight) {
-      this.setState({ scrollbarPresence: true });
+      this.setScrollbarPresence(true);
       this.calculateScrollbarPosition();
     } else {
-      this.setState({ scrollbarPresence: false });
+      this.setScrollbarPresence(false);
     }
   }
 
@@ -201,40 +205,43 @@ class MessagePanelMessages extends Component {
 
     if (inView && (observableId === id) && !loading) {
       getMessages();
-      this.setState({ observableId: null });
+      this.setObservableId();
     }
   }
 
   setObservableId = (observableId = null) => {
-    
+    this.setState({ observableId });
+  }
+
+  setScrollbarPresence = (scrollbarPresence) => {
+    this.setState({ scrollbarPresence });
   }
 
   render() {
-    const { scrollbarPresence, scrollbarThumbHeight } = this.state;
+    const { scrollbar, scrollbarPresence, scrollbarThumbHeight } = this.state;
     const { messages, myId, loading, sendedIds } = this.props;
 
     const renderMessages = () => {
-      let prevMessageTime;
-
       return map(messages, ({
         id,
         senderId,
         type,
         time,
         content,
-      }) => {
+      }, index) => {
         const isSystem = type === 'system';
-        const isFirst = findIndex(messages, { id }) === 0;
+        const isFirst = messages[0].id === id;
         const isMyMessage = senderId === myId;
         const isAdding = includes(sendedIds, id);
         const direction = isMyMessage ? 'start' : 'end';
         const alignItems = isSystem ? 'center' : `flex-${direction}`;
         let divider = false;
 
-        if (prevMessageTime) {
+        if (index > 0) {
+          const { time: prevMessageTime } = messages[index - 1];
+
           divider = !isSameDay(time, prevMessageTime);
         }
-        prevMessageTime = time;
 
         return (
           <InView key={id} onChange={this.onIntersectionChange}>
@@ -279,16 +286,18 @@ class MessagePanelMessages extends Component {
     return (
       <Wrapper>
         <If condition={scrollbarPresence}>
-          <RootRef rootRef={this.scrollbarRef}>
-            <ListScrollbar>
-              <RootRef rootRef={this.scrollbarThumbRef}>
-                <div style={{ height: `${scrollbarThumbHeight}px` }} />
-              </RootRef>
-            </ListScrollbar>
-          </RootRef>
+          <ListScrollbar show={scrollbar}>
+            <RootRef rootRef={this.scrollbarThumbRef}>
+              <div style={{ height: `${scrollbarThumbHeight}px` }} />
+            </RootRef>
+          </ListScrollbar>
         </If>
         <RootRef rootRef={this.listViewRef}>
-          <MessagePanelListView>
+          <MessagePanelListView
+            onScroll={this.onScroll}
+            onMouseEnter={this.toggleScrollbar}
+            onMouseLeave={this.toggleScrollbar}
+          >
             <RootRef rootRef={this.listRef}>
               <MessagePanelList disablePadding scrollbarPresence={scrollbarPresence}>
                 <ReactResizeDetector handleHeight onResize={this.onResize}>

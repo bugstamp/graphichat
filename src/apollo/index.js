@@ -6,6 +6,7 @@ import cache, { initData } from './cache';
 const client = new ApolloClient({
   link,
   cache,
+  resolvers: {},
   credentials: 'include',
 });
 

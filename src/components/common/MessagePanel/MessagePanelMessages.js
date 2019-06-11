@@ -33,15 +33,16 @@ const MessagePanelListView = styled.div`
   height: 100%;
   max-height: 100%;
   display: flex;
-  flex-direction: column-reverse;
+  flex-flow: column;
   overflow-x: hidden;
   overflow-y: scroll;
 `;
 
 const MessagePanelList = styled(({ scrollbarPresence, ...rest }) => <List {...rest} />)`
   && {
+    margin-top: auto;
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: column;
     position: relative;
   }
 `;
@@ -159,9 +160,15 @@ class MessagePanelMessages extends Component {
   componentDidUpdate(prevProps) {
     const { messages } = this.props;
 
-    if (!isEqual(prevProps.messages, messages) && messages.length > 5) {
-      const { id } = messages[4];
+    if (!isEqual(prevProps.messages, messages) && messages.length) {
+      const { id } = messages[0];
+      console.log(messages);
 
+      if (this.state.observableId) {
+        this.scrollToMessage(this.state.observableId)
+      } else {
+        this.scrollToBottom();
+      }
       this.setObservableId(id);
     }
   }
@@ -205,7 +212,6 @@ class MessagePanelMessages extends Component {
 
     if (inView && (observableId === id) && !loading) {
       getMessages();
-      this.setObservableId();
     }
   }
 
@@ -215,6 +221,25 @@ class MessagePanelMessages extends Component {
 
   setScrollbarPresence = (scrollbarPresence) => {
     this.setState({ scrollbarPresence });
+  }
+
+  scrollToBottom = () => {
+    const { height: listHeight } = this.listRef.current.getBoundingClientRect();
+    const { height: listViewHeight } = this.listViewRef.current.getBoundingClientRect();
+
+    if (listHeight > listViewHeight) {
+      this.listViewRef.current.scrollTop = this.listViewRef.current.scrollHeight;
+    }
+  }
+
+  scrollToMessage = (messageId) => {
+    const el = document.getElementById(messageId);
+    console.log(this.listViewRef.current.scrollTop);
+    console.log(el.offsetTop);
+    console.log(el.getBoundingClientRect().height + 3);
+    console.log(this.listRef.current.getBoundingClientRect());
+
+    this.listViewRef.current.scrollTop = el.offsetTop;
   }
 
   render() {
@@ -300,15 +325,15 @@ class MessagePanelMessages extends Component {
           >
             <RootRef rootRef={this.listRef}>
               <MessagePanelList disablePadding scrollbarPresence={scrollbarPresence}>
+                <Fragment>
+                  <If condition={loading}>
+                    <MessagePanelLoading>
+                      <CircularProgress color="primary" />
+                    </MessagePanelLoading>
+                  </If>
+                </Fragment>
                 <ReactResizeDetector handleHeight onResize={this.onResize}>
-                  <Fragment>
-                    <If condition={loading}>
-                      <MessagePanelLoading>
-                        <CircularProgress color="primary" />
-                      </MessagePanelLoading>
-                    </If>
-                    {renderMessages()}
-                  </Fragment>
+                  {renderMessages()}
                 </ReactResizeDetector>
               </MessagePanelList>
             </RootRef>

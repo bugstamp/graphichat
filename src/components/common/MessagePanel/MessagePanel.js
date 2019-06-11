@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import styled from 'styled-components';
 import { isEqual } from 'lodash';
 import uuid from 'uuid/v4';

@@ -263,39 +263,39 @@ class MessagePanelMessages extends Component {
     this.listViewRef.current.scrollTop = el.offsetTop;
   }
 
-  onMouseMove = ({ clientY }, initialClientY) => {
-    const listViewRect = this.listViewRef.current.getBoundingClientRect();
-    const listRect = this.listRef.current.getBoundingClientRect();
-    const diff = initialClientY - clientY;
-    console.log(diff);
-    const scrollThumbRect = this.scrollbarThumbRef.current.getBoundingClientRect();
-    const percentDiff = diff / listViewRect.height;
-    const scrollHeight = (listRect.height - listViewRect.height) - scrollThumbRect.height;
-    const value = percentDiff * scrollHeight;
-
-    this.listViewRef.current.scrollTop = (scrollHeight - value);
-  }
-
   onMouseDown = (e) => {
     e.preventDefault();
     const { dragging } = this.state;
-    const { clientY } = e;
+    const { clientY: initialClientY } = e;
 
     if (!dragging) {
       this.setState({ dragging: true });
     }
-    document.addEventListener('mousemove', event => this.onMouseMove(event, clientY));
-    document.addEventListener('mouseup', this.onMouseUp);
-  }
 
-  onMouseUp = () => {
-    const { dragging } = this.state;
+    const onMouseMove = ({ clientY }) => {
+      const listViewRect = this.listViewRef.current.getBoundingClientRect();
+      const listRect = this.listRef.current.getBoundingClientRect();
+      const scrollThumbRect = this.scrollbarThumbRef.current.getBoundingClientRect();
+      const diff = listViewRect.height - (clientY - listViewRect.top);
+      // console.log(diff);
+      const percentDiff = diff / listViewRect.height;
+      const scrollHeight = (listRect.height - listViewRect.height) - scrollThumbRect.height;
+      const value = percentDiff * scrollHeight;
 
-    if (dragging) {
-      this.setState({ dragging: false, scrollbar: false });
-    }
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
+      this.listViewRef.current.scrollTop = (scrollHeight - value);
+    };
+
+    const onMouseUp = () => {
+      if (dragging) {
+        this.setState({ dragging: false, scrollbar: false });
+      }
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 
   render() {

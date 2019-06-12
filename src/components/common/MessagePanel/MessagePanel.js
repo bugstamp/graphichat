@@ -73,7 +73,7 @@ class MessagePanel extends Component {
     } = this.props;
     const { userInfo } = contact;
     const { displayName, status, lastDate } = userInfo;
-    const { messages } = chat;
+    const { id: chatId, messages } = chat;
 
     const isOnline = status === 'ONLINE';
     const statusText = isOnline
@@ -90,6 +90,7 @@ class MessagePanel extends Component {
           statusText={statusText}
         />
         <MessagePanelMessages
+          chatId={chatId}
           loading={loading}
           myId={me.id}
           messages={messages}

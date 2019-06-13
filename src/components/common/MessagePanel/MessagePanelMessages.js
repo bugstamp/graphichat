@@ -267,22 +267,29 @@ class MessagePanelMessages extends Component {
     e.preventDefault();
     const { dragging } = this.state;
     const { clientY: initialClientY } = e;
+    const listViewRect = this.listViewRef.current.getBoundingClientRect();
+    const scrollThumbRect = this.scrollbarThumbRef.current.getBoundingClientRect();
+    const thumbOffset = scrollThumbRect.bottom - listViewRect.top;
+    const mouseOffset = initialClientY - listViewRect.top;
+    const diff = thumbOffset - mouseOffset;
 
     if (!dragging) {
       this.setState({ dragging: true });
     }
 
     const onMouseMove = ({ clientY }) => {
-      const listViewRect = this.listViewRef.current.getBoundingClientRect();
       const listRect = this.listRef.current.getBoundingClientRect();
-      const scrollThumbRect = this.scrollbarThumbRef.current.getBoundingClientRect();
-      const diff = listViewRect.height - (clientY - listViewRect.top);
-      // console.log(diff);
-      const percentDiff = diff / listViewRect.height;
-      const scrollHeight = (listRect.height - listViewRect.height) - scrollThumbRect.height;
-      const value = percentDiff * scrollHeight;
+      const currentMouseOffset = clientY - listViewRect.top;
+      const positionInView = listViewRect.height - (currentMouseOffset + diff);
+      const ratioPercent = positionInView / listViewRect.height;
+      const scrollHeight = listRect.height - listViewRect.height;
+      const scrollTop = scrollHeight - (ratioPercent * scrollHeight);
+      let valid = scrollTop;
 
-      this.listViewRef.current.scrollTop = (scrollHeight - value);
+      if (scrollTop < 0) valid = 0;
+      if (scrollTop > scrollHeight) valid = scrollHeight;
+
+      this.listViewRef.current.scrollTop = valid;
     };
 
     const onMouseUp = () => {

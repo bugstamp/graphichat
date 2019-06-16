@@ -271,17 +271,19 @@ class MessagePanelMessages extends Component {
     const scrollThumbRect = this.scrollbarThumbRef.current.getBoundingClientRect();
     const thumbOffset = scrollThumbRect.bottom - listViewRect.top;
     const mouseOffset = initialClientY - listViewRect.top;
-    const diff = thumbOffset - mouseOffset;
+    const diffBottom = thumbOffset - mouseOffset;
+    const diffTop = scrollThumbRect.height - diffBottom;
 
     if (!dragging) {
       this.setState({ dragging: true });
     }
 
-    const onMouseMove = ({ clientY }) => {
+    const onMouseMove = (e1) => {
+      const { clientY } = e1;
       const listRect = this.listRef.current.getBoundingClientRect();
       const currentMouseOffset = clientY - listViewRect.top;
-      const positionInView = listViewRect.height - (currentMouseOffset + diff);
-      const ratioPercent = positionInView / listViewRect.height;
+      const positionInView = listViewRect.height - (currentMouseOffset + diffBottom);
+      const ratioPercent = positionInView / (listViewRect.height - scrollThumbRect.height);
       const scrollHeight = listRect.height - listViewRect.height;
       const scrollTop = scrollHeight - (ratioPercent * scrollHeight);
       let valid = scrollTop;

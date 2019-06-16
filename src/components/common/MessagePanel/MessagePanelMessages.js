@@ -3,9 +3,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import { InView } from 'react-intersection-observer';
 import styled from 'styled-components';
 import { position } from 'polished';
-import {
-  map, findIndex, includes, isEqual,
-} from 'lodash';
+import { map, includes, isEqual } from 'lodash';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -63,7 +61,7 @@ const MessagePanelListItemMessageWrapper = styled.div`
 
 const ListScrollbar = styled.div`
   ${position('absolute', 0, 0, 0, null)};
-  width: 4px;
+  width: 2px;
   display: ${({ presence }) => (presence ? 'block' : 'none')};
   background-color: ${getStyledProps('theme.palette.grey.300')};
   opacity: ${({ show }) => (show ? 1 : 0)};
@@ -149,7 +147,6 @@ class MessagePanelMessages extends Component {
     dragging: false,
     scrollbar: false,
     scrollbarPresence: false,
-    scrollbarThumbHeight: 50,
     observableId: null,
   }
 
@@ -164,7 +161,7 @@ class MessagePanelMessages extends Component {
 
   componentDidUpdate(prevProps) {
     const { observableId } = this.state;
-    const { loading, chatId, messages } = this.props;
+    const { adding, loading, chatId, messages } = this.props;
 
     if (!isEqual(prevProps.chatId, chatId)) {
       const { id } = messages[0];
@@ -173,7 +170,13 @@ class MessagePanelMessages extends Component {
       this.scrollToBottom();
     }
 
-    if (!isEqual(prevProps.messages, messages) && isEqual(prevProps.chatId, chatId)) {
+    if (
+      !isEqual(prevProps.messages, messages)
+      &&
+      isEqual(prevProps.chatId, chatId)
+      &&
+      !prevProps.adding
+    ) {
       if (messages.length) {
         const { id } = messages[0];
 
@@ -186,6 +189,10 @@ class MessagePanelMessages extends Component {
       } else {
         this.setObservableId();
       }
+    }
+
+    if (!prevProps.adding && adding) {
+      this.scrollToBottom();
     }
   }
 
@@ -203,15 +210,16 @@ class MessagePanelMessages extends Component {
   }
 
   calculateScrollbarPosition = () => {
-    const { scrollbarThumbHeight } = this.state;
     const { scrollTop } = this.listViewRef.current;
     const { height: listHeight } = this.listRef.current.getBoundingClientRect();
     const { height: listViewHeight } = this.listViewRef.current.getBoundingClientRect();
     const scrollHeight = listHeight - listViewHeight;
     const ratioPercent = scrollTop / scrollHeight;
-    const scrollbarHeight = (listViewHeight - scrollbarThumbHeight);
+    const thumbHeight = (listViewHeight / listHeight) * listViewHeight;
+    const scrollbarHeight = (listViewHeight - thumbHeight);
     const thumbPosition = scrollbarHeight - (ratioPercent * scrollbarHeight);
 
+    this.scrollbarThumbRef.current.style.height = `${thumbHeight}px`;
     this.scrollbarThumbRef.current.style.bottom = `${thumbPosition}px`;
   }
 
@@ -272,7 +280,6 @@ class MessagePanelMessages extends Component {
     const thumbOffset = scrollThumbRect.bottom - listViewRect.top;
     const mouseOffset = initialClientY - listViewRect.top;
     const diffBottom = thumbOffset - mouseOffset;
-    const diffTop = scrollThumbRect.height - diffBottom;
 
     if (!dragging) {
       this.setState({ dragging: true });
@@ -281,17 +288,18 @@ class MessagePanelMessages extends Component {
     const onMouseMove = (e1) => {
       const { clientY } = e1;
       const listRect = this.listRef.current.getBoundingClientRect();
+      const scrollThumbRectHeight = this.scrollbarThumbRef.current.getBoundingClientRect().height;
       const currentMouseOffset = clientY - listViewRect.top;
       const positionInView = listViewRect.height - (currentMouseOffset + diffBottom);
-      const ratioPercent = positionInView / (listViewRect.height - scrollThumbRect.height);
+      const ratioPercent = positionInView / (listViewRect.height - scrollThumbRectHeight);
       const scrollHeight = listRect.height - listViewRect.height;
       const scrollTop = scrollHeight - (ratioPercent * scrollHeight);
-      let valid = scrollTop;
+      let validScrollTop = scrollTop;
 
-      if (scrollTop < 0) valid = 0;
-      if (scrollTop > scrollHeight) valid = scrollHeight;
+      if (scrollTop < 0) validScrollTop = 0;
+      if (scrollTop > scrollHeight) validScrollTop = scrollHeight;
 
-      this.listViewRef.current.scrollTop = valid;
+      this.listViewRef.current.scrollTop = validScrollTop;
     };
 
     const onMouseUp = () => {
@@ -308,7 +316,7 @@ class MessagePanelMessages extends Component {
   }
 
   render() {
-    const { scrollbar, scrollbarPresence, scrollbarThumbHeight } = this.state;
+    const { scrollbar, scrollbarPresence } = this.state;
     const { messages, myId, loading, sendedIds } = this.props;
 
     const renderMessages = () => {
@@ -383,7 +391,6 @@ class MessagePanelMessages extends Component {
         >
           <RootRef rootRef={this.scrollbarThumbRef}>
             <div
-              style={{ height: `${scrollbarThumbHeight}px` }}
               onDragStart={() => false}
               onMouseDown={this.onMouseDown}
             />

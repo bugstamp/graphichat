@@ -92,6 +92,7 @@ class MessagePanel extends Component {
         <MessagePanelMessages
           chatId={chatId}
           loading={loading}
+          adding={adding}
           myId={me.id}
           messages={messages}
           sendedIds={sendedIds}

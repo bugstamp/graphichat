@@ -37,10 +37,10 @@ const MessagePanelListView = styled.div`
 
 const MessagePanelList = styled(({ scrollbarPresence, ...rest }) => <List {...rest} />)`
   && {
-    margin-top: auto;
     display: flex;
     flex-flow: column;
     position: relative;
+    margin-top: auto;
     padding: 17px 0;
     z-index: 10;
   }
@@ -148,12 +148,17 @@ class MessagePanelMessages extends Component {
     scrollbar: false,
     scrollbarPresence: false,
     observableId: null,
+    listHeight: 0,
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { observableId } = this.state;
+    const { observableId, listHeight } = this.state;
 
-    if (!isEqual(observableId, nextState.observableId)) {
+    if (
+      !isEqual(observableId, nextState.observableId)
+      ||
+      !isEqual(listHeight, nextState.listHeight)
+    ) {
       return false;
     }
     return true;
@@ -161,10 +166,15 @@ class MessagePanelMessages extends Component {
 
   componentDidUpdate(prevProps) {
     const { observableId } = this.state;
-    const { adding, loading, chatId, messages } = this.props;
+    const {
+      adding,
+      loading,
+      chatId,
+      messages,
+    } = this.props;
 
     if (!isEqual(prevProps.chatId, chatId)) {
-      const { id } = messages[0];
+      const { id } = messages[messages.length >= 5 ? 4 : messages.length - 1];
 
       this.setObservableId(id);
       this.scrollToBottom();
@@ -178,10 +188,10 @@ class MessagePanelMessages extends Component {
       !adding
     ) {
       if (messages.length) {
-        const { id } = messages[0];
+        const { id } = messages[messages.length >= 4 ? 4 : messages.length];
 
         if (observableId) {
-          this.scrollToMessage(observableId);
+          this.updateScrollTop();
         } else {
           this.scrollToBottom();
         }
@@ -231,6 +241,8 @@ class MessagePanelMessages extends Component {
     const listViewRect = this.listViewRef.current.getBoundingClientRect();
     const { height: listViewHeight } = listViewRect;
 
+    this.setState({ listHeight: height });
+
     if (height > listViewHeight) {
       this.setScrollbarPresence(true);
       this.calculateScrollbarPosition();
@@ -269,10 +281,13 @@ class MessagePanelMessages extends Component {
     }
   }
 
-  scrollToMessage = (messageId) => {
-    const el = document.getElementById(messageId);
+  updateScrollTop = () => {
+    const diff = this.listRef.current.getBoundingClientRect().height - this.state.listHeight;
+    const { scrollTop } = this.listViewRef.current;
 
-    this.listViewRef.current.scrollTop = el.offsetTop;
+    if (scrollTop === 0) {
+      this.listViewRef.current.scrollTop = diff;
+    }
   }
 
   onMouseDown = (e) => {

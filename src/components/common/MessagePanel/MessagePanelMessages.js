@@ -175,7 +175,7 @@ class MessagePanelMessages extends Component {
       &&
       isEqual(prevProps.chatId, chatId)
       &&
-      !prevProps.adding
+      !adding
     ) {
       if (messages.length) {
         const { id } = messages[0];
@@ -191,7 +191,11 @@ class MessagePanelMessages extends Component {
       }
     }
 
-    if (!prevProps.adding && adding) {
+    if (
+      !isEqual(prevProps.messages, messages)
+      &&
+      adding
+    ) {
       this.scrollToBottom();
     }
   }

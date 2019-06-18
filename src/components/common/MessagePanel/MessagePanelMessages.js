@@ -182,9 +182,9 @@ class MessagePanelMessages extends Component {
     }
 
     if (
-      !isEqual(prevProps.messages, messages)
-      &&
       isEqual(prevProps.chatId, chatId)
+      &&
+      !isEqual(prevProps.messages, messages)
       &&
       !adding
     ) {
@@ -198,7 +198,8 @@ class MessagePanelMessages extends Component {
       this.setObservableId(id);
     }
 
-    // if (isEqual(prevProps.messages, messages) && (prevProps.loading && !loading)) {
+    // if (isEqual(prevProps.messages, messages) && prevProps.loading) {
+    //   console.log(true);
     //   this.setObservableId();
     // }
 
@@ -283,8 +284,10 @@ class MessagePanelMessages extends Component {
   }
 
   updateScrollTop = () => {
-    const diff = this.listRef.current.getBoundingClientRect().height - this.state.listHeight;
+    const { listHeight } = this.state;
     const { scrollTop } = this.listViewRef.current;
+    const { height } = this.listRef.current.getBoundingClientRect();
+    const diff = height - listHeight;
 
     if (scrollTop === 0) {
       this.listViewRef.current.scrollTop = diff;
@@ -293,24 +296,24 @@ class MessagePanelMessages extends Component {
 
   onMouseDown = (e) => {
     e.preventDefault();
+
     const { dragging } = this.state;
     const { clientY: initialClientY } = e;
     const listViewRect = this.listViewRef.current.getBoundingClientRect();
     const scrollThumbRect = this.scrollbarThumbRef.current.getBoundingClientRect();
     const thumbOffset = scrollThumbRect.bottom - listViewRect.top;
     const mouseOffset = initialClientY - listViewRect.top;
-    const diffBottom = thumbOffset - mouseOffset;
+    const diff = thumbOffset - mouseOffset;
 
     if (!dragging) {
       this.setState({ dragging: true });
     }
 
-    const onMouseMove = (e1) => {
-      const { clientY } = e1;
+    const onMouseMove = ({ clientY }) => {
       const listRect = this.listRef.current.getBoundingClientRect();
-      const scrollThumbRectHeight = this.scrollbarThumbRef.current.getBoundingClientRect().height;
+      const { height: scrollThumbRectHeight } = this.scrollbarThumbRef.current.getBoundingClientRect();
       const currentMouseOffset = clientY - listViewRect.top;
-      const positionInView = listViewRect.height - (currentMouseOffset + diffBottom);
+      const positionInView = listViewRect.height - (currentMouseOffset + diff);
       const ratioPercent = positionInView / (listViewRect.height - scrollThumbRectHeight);
       const scrollHeight = listRect.height - listViewRect.height;
       const scrollTop = scrollHeight - (ratioPercent * scrollHeight);
@@ -422,15 +425,15 @@ class MessagePanelMessages extends Component {
             onMouseOver={() => !scrollbar && this.toggleScrollbar(true)}
             onMouseLeave={() => this.toggleScrollbar(false)}
           >
+            <Fragment>
+              <MessagePanelLoading>
+                <If condition={loading}>
+                  <CircularProgress size={20} color="primary" />
+                </If>
+              </MessagePanelLoading>
+            </Fragment>
             <RootRef rootRef={this.listRef}>
               <MessagePanelList disablePadding scrollbarPresence={scrollbarPresence}>
-                <Fragment>
-                  <MessagePanelLoading>
-                    <If condition={loading}>
-                      <CircularProgress size={20} color="primary" />
-                    </If>
-                  </MessagePanelLoading>
-                </Fragment>
                 <ReactResizeDetector handleHeight onResize={this.onResize}>
                   {renderMessages()}
                 </ReactResizeDetector>

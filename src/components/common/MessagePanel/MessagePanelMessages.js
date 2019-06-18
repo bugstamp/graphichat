@@ -37,11 +37,9 @@ const MessagePanelListView = styled.div`
 
 const MessagePanelList = styled(({ scrollbarPresence, ...rest }) => <List {...rest} />)`
   && {
-    display: flex;
-    flex-flow: column;
     position: relative;
     margin-top: auto;
-    padding: 17px 0;
+    padding: 0;
     z-index: 10;
   }
 `;
@@ -130,9 +128,10 @@ const MessagePanelMessageTime = styled.div`
 `;
 
 const MessagePanelLoading = styled.div`
-  height: 20px;
+  height: 30px;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: ${getSpacing(1)} 0;
 `;
 
@@ -174,9 +173,11 @@ class MessagePanelMessages extends Component {
     } = this.props;
 
     if (!isEqual(prevProps.chatId, chatId)) {
-      const { id } = messages[messages.length >= 5 ? 4 : messages.length - 1];
+      if (messages.length >= 20) {
+        const { id } = messages[5];
 
-      this.setObservableId(id);
+        this.setObservableId(id);
+      }
       this.scrollToBottom();
     }
 
@@ -187,19 +188,19 @@ class MessagePanelMessages extends Component {
       &&
       !adding
     ) {
-      if (messages.length) {
-        const { id } = messages[messages.length >= 4 ? 4 : messages.length];
+      const { id } = messages[5];
 
-        if (observableId) {
-          this.updateScrollTop();
-        } else {
-          this.scrollToBottom();
-        }
-        this.setObservableId(id);
+      if (observableId) {
+        this.updateScrollTop();
       } else {
-        this.setObservableId();
+        this.scrollToBottom();
       }
+      this.setObservableId(id);
     }
+
+    // if (isEqual(prevProps.messages, messages) && (prevProps.loading && !loading)) {
+    //   this.setObservableId();
+    // }
 
     if (
       !isEqual(prevProps.messages, messages)

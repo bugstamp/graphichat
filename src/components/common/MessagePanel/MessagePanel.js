@@ -24,28 +24,31 @@ const WrapperPaper = styled(Paper)`
 `;
 
 class MessagePanel extends Component {
+  fetchSize = 20;
+
   componentDidMount() {
-    this.getMessages(true);
+    this.getMessages();
   }
 
   componentDidUpdate(prevProps) {
     const { chat: { id } } = this.props;
 
     if (!isEqual(prevProps.chat.id, id)) {
-      this.getMessages(true);
+      this.getMessages();
     }
   }
 
-  getMessages = (initial = false) => {
+  getMessages = (fetchMore = false) => {
     const { fetchMoreMessages, chat } = this.props;
     const { id, messages } = chat;
+    const currentSize = messages.length;
 
-    if (initial) {
-      if (messages.length < 20) {
-        fetchMoreMessages(id, messages.length);
+    if (!fetchMore) {
+      if (currentSize < this.fetchSize) {
+        fetchMoreMessages(id, currentSize);
       }
     } else {
-      fetchMoreMessages(id, messages.length);
+      fetchMoreMessages(id, currentSize);
     }
   }
 
@@ -96,7 +99,9 @@ class MessagePanel extends Component {
           myId={me.id}
           messages={messages}
           sendedIds={sendedIds}
-          getMessages={this.getMessages}
+          getMessages={() => this.getMessages(true)}
+          fetchSize={this.fetchSize}
+          fetchHorizon={5}
         />
         <MessagePanelComment
           adding={adding}

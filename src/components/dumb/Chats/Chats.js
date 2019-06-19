@@ -187,7 +187,6 @@ class Chats extends Component {
                                   optimisticId,
                                 } = variables;
 
-
                                 this.updateSendedIds(optimisticId);
                                 addMessage({
                                   variables,

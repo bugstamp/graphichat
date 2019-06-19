@@ -37,16 +37,15 @@ const MessagePanelListView = styled.div`
 
 const MessagePanelList = styled(({ scrollbarPresence, ...rest }) => <List {...rest} />)`
   && {
-    position: relative;
     margin-top: auto;
-    padding: 0;
     z-index: 10;
   }
 `;
 
 const MessagePanelListItem = styled(ListItem)`
   && {
-    flex-flow: column;
+    padding-top: ${getSpacing(1)};
+    padding-bottom: ${getSpacing(1)};
   }
 `;
 
@@ -132,7 +131,7 @@ const MessagePanelLoading = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: ${getSpacing(1)} 0;
+  visibility: ${({ appeared }) => (appeared ? 'visibility' : 'hidden')}
 `;
 
 class MessagePanelMessages extends Component {
@@ -163,18 +162,22 @@ class MessagePanelMessages extends Component {
     return true;
   }
 
-  componentDidUpdate(prevProps) {
-    const { observableId } = this.state;
+  componentDidUpdate(prevProps, prevState) {
+    const { observableId, listHeight } = this.state;
     const {
       adding,
       loading,
       chatId,
       messages,
+      fetchSize,
+      fetchHorizon,
     } = this.props;
+    const currentSize = messages.length;
+    const validFetchHorizon = fetchHorizon - 1;
 
     if (!isEqual(prevProps.chatId, chatId)) {
-      if (messages.length >= 20) {
-        const { id } = messages[5];
+      if (currentSize >= fetchSize) {
+        const { id } = messages[validFetchHorizon];
 
         this.setObservableId(id);
       }
@@ -188,27 +191,31 @@ class MessagePanelMessages extends Component {
       &&
       !adding
     ) {
-      const { id } = messages[5];
+      if (currentSize >= fetchSize) {
+        const { id } = messages[validFetchHorizon];
+
+        this.setObservableId(id);
+      }
 
       if (observableId) {
         this.updateScrollTop();
       } else {
         this.scrollToBottom();
       }
-      this.setObservableId(id);
     }
 
-    // if (isEqual(prevProps.messages, messages) && prevProps.loading) {
-    //   console.log(true);
-    //   this.setObservableId();
+    // if (!isEqual(prevProps.loading, loading)) {
+    //   console.log(prevProps.messages.length, messages.length);
+    //   console.log(prevProps.loading, loading);
     // }
 
-    if (
-      !isEqual(prevProps.messages, messages)
-      &&
-      adding
-    ) {
-      this.scrollToBottom();
+    if (!isEqual(prevProps.messages, messages)) {
+      // console.log(this.listViewRef.current.scrollTop);
+      // console.log(prevState.listHeight, listHeight);
+
+      if (adding) {
+        this.scrollToBottom();
+      }
     }
   }
 
@@ -235,7 +242,7 @@ class MessagePanelMessages extends Component {
     const scrollbarHeight = (listViewHeight - thumbHeight);
     const thumbPosition = scrollbarHeight - (ratioPercent * scrollbarHeight);
 
-    this.scrollbarThumbRef.current.style.height = `${thumbHeight}px`;
+    this.scrollbarThumbRef.current.style.height = `${Math.max(20, thumbHeight)}px`;
     this.scrollbarThumbRef.current.style.bottom = `${thumbPosition}px`;
   }
 
@@ -425,17 +432,15 @@ class MessagePanelMessages extends Component {
             onMouseOver={() => !scrollbar && this.toggleScrollbar(true)}
             onMouseLeave={() => this.toggleScrollbar(false)}
           >
-            <Fragment>
-              <MessagePanelLoading>
-                <If condition={loading}>
-                  <CircularProgress size={20} color="primary" />
-                </If>
-              </MessagePanelLoading>
-            </Fragment>
             <RootRef rootRef={this.listRef}>
               <MessagePanelList disablePadding scrollbarPresence={scrollbarPresence}>
                 <ReactResizeDetector handleHeight onResize={this.onResize}>
-                  {renderMessages()}
+                  <Fragment>
+                    <MessagePanelLoading appeared={loading}>
+                      <CircularProgress size={20} color="primary" />
+                    </MessagePanelLoading>
+                    {renderMessages()}
+                  </Fragment>
                 </ReactResizeDetector>
               </MessagePanelList>
             </RootRef>

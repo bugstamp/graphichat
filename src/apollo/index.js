@@ -8,6 +8,7 @@ const client = new ApolloClient({
   cache,
   resolvers: {},
   credentials: 'include',
+  assumeImmutableResults: true,
 });
 
 client.onResetStore(initData);

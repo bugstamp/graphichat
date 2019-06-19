@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
 import {
-  isEmpty, isEqual, find, map, concat, set, filter,
+  isEmpty, isEqual, find, map, concat, set, filter, assign,
 } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
@@ -125,6 +125,7 @@ class Chats extends Component {
             }) => {
               const selectedContact = find(myContacts, { chatId: selected });
               const selectedChat = find(myChats, { id: selected });
+              console.log(selectedChat);
 
               return (
                 <Wrapper square elevation={0}>
@@ -163,7 +164,7 @@ class Chats extends Component {
                               fetchMoreMessages={(chatId, skip) => fetchMoreMessages({
                                 query: GET_CHAT_MESSAGES,
                                 variables: { chatId, skip },
-                                updateQuery: (prev, { fetchMoreResult }) => {
+                                updateQuery: (prev, { fetchMoreResult, variables }) => {
                                   const { chatMessages } = fetchMoreResult;
                                   const updatedMyChats = map(prev.myChats, (chat) => {
                                     const { id, messages } = chat;
@@ -175,7 +176,7 @@ class Chats extends Component {
                                     }
                                     return chat;
                                   });
-                                  return set(prev, myChats, updatedMyChats);
+                                  return { ...prev, myChats: [...updatedMyChats] };
                                 },
                               })}
                               addMessage={(variables) => {

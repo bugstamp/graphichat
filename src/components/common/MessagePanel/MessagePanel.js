@@ -84,7 +84,6 @@ class MessagePanel extends Component {
       : userLastDateParser(lastDate);
     const myAvatarText = getAvatarInitials(me);
     const contactAvatarText = getAvatarInitials(userInfo);
-    console.log(loading, messages.length);
 
     return (
       <WrapperPaper square elevation={0}>

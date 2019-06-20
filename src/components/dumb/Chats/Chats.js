@@ -125,7 +125,6 @@ class Chats extends Component {
             }) => {
               const selectedContact = find(myContacts, { chatId: selected });
               const selectedChat = find(myChats, { id: selected });
-              console.log(selectedChat);
 
               return (
                 <Wrapper square elevation={0}>
@@ -164,19 +163,20 @@ class Chats extends Component {
                               fetchMoreMessages={(chatId, skip) => fetchMoreMessages({
                                 query: GET_CHAT_MESSAGES,
                                 variables: { chatId, skip },
-                                updateQuery: (prev, { fetchMoreResult, variables }) => {
+                                updateQuery: (prev, { fetchMoreResult }) => {
                                   const { chatMessages } = fetchMoreResult;
-                                  const updatedMyChats = map(prev.myChats, (chat) => {
+                                  const { myChats: chats } = prev;
+                                  const updatedChats = map(chats, (chat) => {
                                     const { id, messages } = chat;
 
                                     if (id === chatId) {
                                       const updatedMessages = concat(chatMessages, messages);
 
-                                      return set(chat, 'messages', updatedMessages);
+                                      return { ...chat, messages: updatedMessages };
                                     }
                                     return chat;
                                   });
-                                  return { ...prev, myChats: [...updatedMyChats] };
+                                  return { ...prev, myChats: updatedChats };
                                 },
                               })}
                               addMessage={(variables) => {

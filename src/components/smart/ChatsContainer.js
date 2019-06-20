@@ -3,7 +3,7 @@ import { map } from 'lodash';
 
 import { createQuery, createMutation, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
-import { icqBeepPlay } from '../../helpers';
+// import { icqBeepPlay } from '../../helpers';
 
 const {
   GET_MY_CHATS,

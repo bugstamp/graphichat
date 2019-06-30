@@ -84,13 +84,16 @@ class Chats extends Component {
   }
 
   updateSendedIds = (optimisticId, action = 'add') => {
-    if (action === 'add') {
-      this.setState(({ sendedIds }) => ({ sendedIds: concat(sendedIds, optimisticId) }));
-    } else if (action === 'remove') {
-      this.setState(({ sendedIds }) => ({
-        sendedIds: filter(sendedIds, id => id !== optimisticId),
-      }));
-    }
+    this.setState(({ sendedIds }) => {
+      let newSendedIds = sendedIds;
+
+      if (action === 'add') {
+        newSendedIds = concat(sendedIds, optimisticId);
+      } else if (action === 'remove') {
+        newSendedIds = filter(sendedIds, id => id !== optimisticId);
+      }
+      return ({ sendedIds: newSendedIds });
+    });
   }
 
   render() {

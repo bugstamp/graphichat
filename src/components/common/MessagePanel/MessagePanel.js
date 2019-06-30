@@ -73,7 +73,7 @@ class MessagePanel extends Component {
       optimisticId,
     };
 
-    this.updateSendedIds(optimisticId);
+    updateSendedIds(optimisticId);
     addMessage({
       variables,
       optimisticResponse: {

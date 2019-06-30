@@ -14,10 +14,15 @@ const {
 const addMessageUpdate = (client, { chatId, message }) => {
   const { myContacts, myChats } = client.readQuery({ query: GET_MY_CHATS });
   const updatedMyChats = map(myChats, (chat) => {
-    const { id } = chat;
+    const { id, messages } = chat;
 
     if (id === chatId) {
-      chat.messages.push(message);
+      const newMessages = [...messages, message];
+
+      return {
+        ...chat,
+        messages: newMessages,
+      };
     }
     return chat;
   });

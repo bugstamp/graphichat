@@ -1,6 +1,6 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { isEqual } from 'lodash';
+import { isEqual, map, concat } from 'lodash';
 import uuid from 'uuid/v4';
 
 import Paper from '@material-ui/core/Paper';
@@ -11,6 +11,9 @@ import MessagePanelComment from './MessagePanelComment';
 
 import { getSpacing } from '../../../styles';
 import { getAvatarInitials, userLastDateParser } from '../../../helpers';
+import gql from '../../../gql';
+
+const { GET_CHAT_MESSAGES } = gql;
 
 const WrapperPaper = styled(Paper)`
   && {
@@ -39,31 +42,87 @@ class MessagePanel extends Component {
   }
 
   getMessages = (fetchMore = false) => {
-    const { fetchMoreMessages, chat } = this.props;
-    const { id, messages } = chat;
-    const currentSize = messages.length;
+    const { chat } = this.props;
+    const { id: chatId, messages } = chat;
+    const skip = messages.length;
 
     if (!fetchMore) {
-      if (currentSize < this.fetchSize) {
-        fetchMoreMessages(id, currentSize);
+      if (skip < this.fetchSize) {
+        this.fetchMoreMessages({ chatId, skip });
       }
     } else {
-      fetchMoreMessages(id, currentSize);
+      this.fetchMoreMessages({ chatId, skip });
     }
   }
 
   addMessage = (content) => {
-    const { chat: { id: chatId }, addMessage } = this.props;
-    const optimisticId = uuid();
+    const {
+      chat: { id: chatId },
+      me,
+      updateSendedIds,
+      addMessage,
+    } = this.props;
+    const { id } = me;
     const time = new Date();
+    const optimisticId = uuid();
 
-    addMessage({
+    const variables = {
       chatId,
       content,
       time,
       optimisticId,
+    };
+
+    this.updateSendedIds(optimisticId);
+    addMessage({
+      variables,
+      optimisticResponse: {
+        __typename: 'Mutation',
+        addMessage: {
+          chatId,
+          optimistic: true,
+          optimisticId,
+          message: {
+            id: optimisticId,
+            senderId: id,
+            content,
+            time,
+            type: 'text',
+            seen: false,
+            edited: false,
+            __typename: 'ChatMessage',
+          },
+          __typename: 'MessageUpdate',
+        },
+      },
     });
   }
+
+  fetchMoreMessages = (variables) => {
+    const { fetchMoreMessages } = this.props;
+
+    fetchMoreMessages({
+      query: GET_CHAT_MESSAGES,
+      variables,
+      updateQuery: (prev, { fetchMoreResult }) => {
+        const { myChats: chats } = prev;
+        const { chatMessages } = fetchMoreResult;
+        const { chatId } = variables;
+        const updatedChats = map(chats, (chat) => {
+          const { id, messages } = chat;
+
+          if (id === chatId) {
+            const updatedMessages = concat(chatMessages, messages);
+
+            return { ...chat, messages: updatedMessages };
+          }
+          return chat;
+        });
+
+        return { ...prev, myChats: updatedChats };
+      },
+    });
+  };
 
   render() {
     const {
@@ -84,7 +143,6 @@ class MessagePanel extends Component {
       : userLastDateParser(lastDate);
     const myAvatarText = getAvatarInitials(me);
     const contactAvatarText = getAvatarInitials(userInfo);
-    console.log(loading, messages.length);
 
     return (
       <WrapperPaper square elevation={0}>

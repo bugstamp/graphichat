@@ -4,7 +4,7 @@ import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
 import {
-  isEmpty, isEqual, find, map, concat, set, filter, assign,
+  isEmpty, isEqual, find, concat, filter,
 } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
@@ -18,10 +18,7 @@ import MessagePanel from '../../common/MessagePanel/MessagePanel';
 
 import ChatsContainer from '../../smart/ChatsContainer';
 
-import gql from '../../../gql';
 import { getStyledProps, getSpacing } from '../../../styles';
-
-const { GET_CHAT_MESSAGES } = gql;
 
 const Wrapper = styled(Paper)`
   && {
@@ -125,7 +122,6 @@ class Chats extends Component {
             }) => {
               const selectedContact = find(myContacts, { chatId: selected });
               const selectedChat = find(myChats, { id: selected });
-              console.log(selectedChat);
 
               return (
                 <Wrapper square elevation={0}>
@@ -161,57 +157,9 @@ class Chats extends Component {
                               contact={selectedContact}
                               chat={selectedChat}
                               sendedIds={sendedIds}
-                              fetchMoreMessages={(chatId, skip) => fetchMoreMessages({
-                                query: GET_CHAT_MESSAGES,
-                                variables: { chatId, skip },
-                                updateQuery: (prev, { fetchMoreResult, variables }) => {
-                                  const { chatMessages } = fetchMoreResult;
-                                  const updatedMyChats = map(prev.myChats, (chat) => {
-                                    const { id, messages } = chat;
-
-                                    if (id === chatId) {
-                                      const updatedMessages = concat(chatMessages, messages);
-
-                                      return set(chat, 'messages', updatedMessages);
-                                    }
-                                    return chat;
-                                  });
-                                  return { ...prev, myChats: [...updatedMyChats] };
-                                },
-                              })}
-                              addMessage={(variables) => {
-                                const { id } = user;
-                                const {
-                                  chatId,
-                                  content,
-                                  time,
-                                  optimisticId,
-                                } = variables;
-
-                                this.updateSendedIds(optimisticId);
-                                addMessage({
-                                  variables,
-                                  optimisticResponse: {
-                                    __typename: 'Mutation',
-                                    addMessage: {
-                                      chatId,
-                                      optimistic: true,
-                                      optimisticId,
-                                      message: {
-                                        id: optimisticId,
-                                        senderId: id,
-                                        content,
-                                        time,
-                                        type: 'text',
-                                        seen: false,
-                                        edited: false,
-                                        __typename: 'ChatMessage',
-                                      },
-                                      __typename: 'MessageUpdate',
-                                    },
-                                  },
-                                });
-                              }}
+                              fetchMoreMessages={fetchMoreMessages}
+                              addMessage={addMessage}
+                              updateSendedIds={this.updateSendedIds}
                             />
                           </Otherwise>
                         </Choose>

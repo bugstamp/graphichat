@@ -1,9 +1,8 @@
-import 'whatwg-fetch';
 import React from 'react';
 import { render } from 'react-dom';
 import { Router } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
-// import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './registerServiceWorker';
 
 import App from './components/App';
 
@@ -21,4 +20,4 @@ const renderApp = (Component) => {
 };
 
 renderApp(App);
-// registerServiceWorker();
+registerServiceWorker();

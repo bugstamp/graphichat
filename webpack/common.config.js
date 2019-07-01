@@ -103,7 +103,6 @@ module.exports = merge([
     ],
 
     resolve: {
-      modules: [paths.modules],
       extensions: ['.js', '.jsx', '.json', '*'],
     },
   },

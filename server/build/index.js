@@ -1,10 +1,6 @@
 "use strict";
 
-require("core-js/modules/web.dom.iterable");
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es6.object.keys");
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
 
 require("reflect-metadata");
 
@@ -32,38 +28,38 @@ var _routers = _interopRequireDefault(require("./routers"));
 
 var _modules = _interopRequireDefault(require("./modules"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 (function () {
-  var enterModule = require('react-hot-loader').enterModule;
-
+  var enterModule = (typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal : require('react-hot-loader')).enterModule;
   enterModule && enterModule(module);
 })();
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+var __signature__ = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.default.signature : function (a) {
+  return a;
+};
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+const {
+  tokenVerification
+} = _middlewares.default;
+const {
+  verification
+} = _routers.default;
+const port = process.env.PORT;
+const apolloPath = process.env.APOLLO_PATH;
+const apolloUrl = process.env.APOLLO_URL;
+const wsPath = process.env.WS_PATH;
+const wsUrl = process.env.WS_URL;
 
-var tokenVerification = _middlewares.default.tokenVerification;
-var verification = _routers.default.verification;
-var port = process.env.PORT;
-var apolloPath = process.env.APOLLO_PATH;
-var apolloUrl = process.env.APOLLO_URL;
-var wsPath = process.env.WS_PATH;
-var wsUrl = process.env.WS_URL;
-
-var startServer = function startServer(_ref) {
-  var schema = _ref.schema,
-      subscriptions = _ref.subscriptions;
-  var app = (0, _express.default)();
-  var apolloServer = new _apolloServerExpress.ApolloServer({
-    schema: schema,
+const startServer = ({
+  schema,
+  subscriptions
+}) => {
+  const app = (0, _express.default)();
+  const apolloServer = new _apolloServerExpress.ApolloServer({
+    schema,
     formatError: _apolloErrors.formatError,
-    context: function context(session) {
-      return session;
-    }
+    context: session => session
   });
-  var corsOptions = {
+  const corsOptions = {
     exposedHeaders: ['x-token', 'x-refresh-token']
   };
   app.use(_express.default.static(_paths.default.public));
@@ -71,22 +67,26 @@ var startServer = function startServer(_ref) {
   app.use(tokenVerification);
   app.use(verification);
   apolloServer.applyMiddleware({
-    app: app,
+    app,
     path: apolloPath
   });
-  app.get('*', function (req, res) {
+  app.get('/service-worker.js', (req, res) => {
+    res.sendFile(_paths.default.publicSw);
+  });
+  app.get('*', (req, res) => {
     res.sendFile(_paths.default.html);
   });
-  var ws = (0, _http.createServer)(app);
-  ws.listen(port, function () {
-    console.log("Server ready at ".concat(apolloUrl));
-    console.log("Subscriptions ready at ".concat(wsUrl));
+  const ws = (0, _http.createServer)(app);
+  ws.listen(port, () => {
+    console.log(`Server ready at ${apolloUrl}`);
+    console.log(`Subscriptions ready at ${wsUrl}`);
 
-    _subscriptionsTransportWs.SubscriptionServer.create(_objectSpread({
-      schema: schema,
+    _subscriptionsTransportWs.SubscriptionServer.create({
+      schema,
       execute: _graphql.execute,
-      subscribe: _graphql.subscribe
-    }, subscriptions), {
+      subscribe: _graphql.subscribe,
+      ...subscriptions
+    }, {
       server: ws,
       path: wsPath
     });
@@ -97,9 +97,7 @@ startServer(_modules.default);
 ;
 
 (function () {
-  var reactHotLoader = require('react-hot-loader').default;
-
-  var leaveModule = require('react-hot-loader').leaveModule;
+  var reactHotLoader = (typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal : require('react-hot-loader')).default;
 
   if (!reactHotLoader) {
     return;
@@ -113,7 +111,11 @@ startServer(_modules.default);
   reactHotLoader.register(wsPath, "wsPath", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
   reactHotLoader.register(wsUrl, "wsUrl", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
   reactHotLoader.register(startServer, "startServer", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
-  leaveModule(module);
 })();
 
 ;
+
+(function () {
+  var leaveModule = (typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal : require('react-hot-loader')).leaveModule;
+  leaveModule && leaveModule(module);
+})();

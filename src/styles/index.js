@@ -12,9 +12,10 @@ export const getStyledProps = (path, unit = '') => (props) => {
   }
   return value;
 };
+
 export const getSpacing = (num = 1) => (props) => {
-  const defaultPadding = getStyledProps('theme.spacing.unit')(props);
-  const padding = defaultPadding * num;
+  const spacingFunc = getStyledProps('theme.spacing')(props);
+  const padding = spacingFunc(num);
 
   return `${padding}px`;
 };

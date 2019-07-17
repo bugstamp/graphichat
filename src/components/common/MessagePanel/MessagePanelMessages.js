@@ -22,6 +22,7 @@ import {
 const Wrapper = styled.div`
   flex: 1 auto;
   position: relative;
+  padding: ${getSpacing(1)} 0;
   overflow: hidden;
 `;
 
@@ -34,9 +35,12 @@ const MessagePanelListView = styled.div`
   z-index: 15;
 `;
 
-const MessagePanelListScrollable = styled(List)`
+const MessagePanelListScrollable = styled.div`
+  margin-top: auto;
+`;
+
+const MessagePanelList = styled(List)`
   && {
-    margin-top: auto;
     z-index: 10;
   }
 `;
@@ -65,10 +69,14 @@ const ListScrollbar = styled.div`
   z-index: 20;
   cursor: pointer;
 
-  div {
+  button {
+    width: 100%;
     position: relative;
+    padding: 0;
     background-color: ${getStyledProps('theme.palette.primary.main')};
+    border: none;
     will-change: transform;
+    cursor: pointer;
   }
 `;
 
@@ -127,7 +135,7 @@ const MessagePanelMessageTime = styled.div`
   }
 `;
 
-const MessagePanelLoading = styled.div`
+const MessagePanelFetchMore = styled.div`
   height: 30px;
   display: flex;
   justify-content: center;
@@ -143,6 +151,7 @@ class MessagePanelMessages extends Component {
   scrollbarThumbRef = createRef();
 
   state = {
+    scrollbarDragging: false,
     scrollbar: false,
     scrollbarPresence: false,
     listHeight: 0,
@@ -164,6 +173,7 @@ class MessagePanelMessages extends Component {
       adding,
       messages,
     } = this.props;
+
     if (!isEqual(prevProps.chatId, chatId)) {
       this.scrollToBottom();
     }
@@ -174,24 +184,23 @@ class MessagePanelMessages extends Component {
       !isEqual(prevProps.messages, messages)
     ) {
       if (!adding) {
-        this.updateScrollPosition();
+        this.updateScrollTopAfterFetchMore();
       } else {
         this.scrollToBottom();
       }
     }
   }
 
-  onScroll = () => {
-    this.calculateScrollbarPosition();
+  toggleScrollbar = (scrollbar) => {
+    const { scrollbarDragging, scrollbarPresence } = this.state;
+
+    if (scrollbarPresence && !scrollbarDragging) {
+      this.setState({ scrollbar });
+    }
   }
 
-  toggleScrollbar = (scrollbar) => {
-    const { scrollbarPresence } = this.state;
-
-    if (!scrollbarPresence) {
-      return;
-    }
-    this.setState({ scrollbar });
+  toggleScrollbarDragging = () => {
+    this.setState(({ scrollbarDragging }) => ({ scrollbarDragging: !scrollbarDragging }));
   }
 
   calculateScrollbarPosition = () => {
@@ -208,6 +217,10 @@ class MessagePanelMessages extends Component {
     this.scrollbarThumbRef.current.style.transform = `translate(0, ${thumbPosition}px)`;
   }
 
+  onScroll = () => {
+    this.calculateScrollbarPosition();
+  }
+
   onResize = (width, height) => {
     const listViewRect = this.listViewRef.current.getBoundingClientRect();
     const { height: listViewHeight } = listViewRect;
@@ -222,22 +235,18 @@ class MessagePanelMessages extends Component {
     }
   }
 
-  onIntersectionChange = (inView, { target: { id } }) => {
+  onIntersectionChange = (inView, { target }) => {
     const {
-      fetchHorizon,
       messages,
-      loading,
+      fetchTreshold,
       getMessages,
     } = this.props;
-    const validFetchHorizon = fetchHorizon - 1;
-    const observableItem = messages[validFetchHorizon];
+    const rowIndex = Number(target.getAttribute('row-index'));
+    const index = messages.length - rowIndex;
+    const tresholdIndex = fetchTreshold;
 
-    if (observableItem) {
-      const { id: observableId } = observableItem;
-
-      if (inView && (observableId === id) && !loading) {
-        getMessages();
-      }
+    if (inView && (index === tresholdIndex)) {
+      getMessages();
     }
   }
 
@@ -250,18 +259,22 @@ class MessagePanelMessages extends Component {
     const { height: listViewHeight } = this.listViewRef.current.getBoundingClientRect();
 
     if (listHeight > listViewHeight) {
-      this.listViewRef.current.scrollTop = this.listViewRef.current.scrollHeight;
+      this.updateScrollTop(this.listViewRef.current.scrollHeight);
     }
   }
 
-  updateScrollPosition = () => {
+  updateScrollTop = (scrollTop) => {
+    this.listViewRef.current.scrollTop = scrollTop;
+  }
+
+  updateScrollTopAfterFetchMore = () => {
     const { listHeight } = this.state;
     const { scrollTop } = this.listViewRef.current;
     const { height } = this.listScrollableRef.current.getBoundingClientRect();
     const diff = height - listHeight;
 
     if (scrollTop < diff) {
-      this.listViewRef.current.scrollTop = diff + scrollTop;
+      this.updateScrollTop(diff + scrollTop);
     }
   }
 
@@ -274,6 +287,8 @@ class MessagePanelMessages extends Component {
     const thumbOffset = scrollThumbRect.bottom - listViewRect.top;
     const mouseOffset = initialClientY - listViewRect.top;
     const diff = thumbOffset - mouseOffset;
+
+    this.toggleScrollbarDragging();
 
     const onMouseMove = ({ clientY }) => {
       const listRect = this.listScrollableRef.current.getBoundingClientRect();
@@ -294,6 +309,8 @@ class MessagePanelMessages extends Component {
     const onMouseUp = () => {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+
+      this.toggleScrollbarDragging();
     };
 
     document.addEventListener('mousemove', onMouseMove);
@@ -317,6 +334,8 @@ class MessagePanelMessages extends Component {
         time,
         content,
       }, index) => {
+        const rowIndex = messages.length - index;
+        const key = `row-${rowIndex}`;
         const isSystem = type === 'system';
         const isFirst = messages[0].id === id;
         const isMyMessage = senderId === myId;
@@ -332,9 +351,9 @@ class MessagePanelMessages extends Component {
         }
 
         return (
-          <InView key={id} onChange={this.onIntersectionChange}>
+          <InView key={key} onChange={this.onIntersectionChange} triggerOnce>
             {({ ref }) => (
-              <MessagePanelListItem ref={ref} id={id}>
+              <MessagePanelListItem ref={ref} row-index={rowIndex}>
                 <MessagePanelListItemMessageWrapper alignItems={alignItems}>
                   <If condition={isFirst || divider}>
                     <MessagePanelHistoryDivider>
@@ -373,22 +392,26 @@ class MessagePanelMessages extends Component {
       <Wrapper
         onMouseEnter={() => this.toggleScrollbar(true)}
         onMouseLeave={() => this.toggleScrollbar(false)}
+        onWheel={() => !scrollbar && this.toggleScrollbar(true)}
       >
         <ListScrollbar show={scrollbar} presence={scrollbarPresence}>
-          <div
+          <button
+            type="button"
             ref={this.scrollbarThumbRef}
             onDragStart={() => false}
             onMouseDown={this.onMouseDown}
           />
         </ListScrollbar>
         <MessagePanelListView ref={this.listViewRef} onScroll={this.onScroll}>
-          <MessagePanelListScrollable ref={this.listScrollableRef} disablePadding>
+          <MessagePanelListScrollable ref={this.listScrollableRef}>
             <ReactResizeDetector onResize={this.onResize} handleHeight>
               <Fragment>
-                <MessagePanelLoading appeared={loading}>
+                <MessagePanelFetchMore appeared={loading}>
                   <CircularProgress size={20} color="primary" />
-                </MessagePanelLoading>
-                {renderMessages()}
+                </MessagePanelFetchMore>
+                <MessagePanelList disablePadding>
+                  {renderMessages()}
+                </MessagePanelList>
               </Fragment>
             </ReactResizeDetector>
           </MessagePanelListScrollable>

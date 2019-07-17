@@ -8,7 +8,6 @@ import { map, includes, isEqual } from 'lodash';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import RootRef from '@material-ui/core/RootRef';
 
 import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
@@ -35,7 +34,7 @@ const MessagePanelListView = styled.div`
   z-index: 15;
 `;
 
-const MessagePanelListScrollable = styled(({ scrollbarPresence, ...rest }) => <List {...rest} />)`
+const MessagePanelListScrollable = styled(List)`
   && {
     margin-top: auto;
     z-index: 10;
@@ -335,37 +334,35 @@ class MessagePanelMessages extends Component {
         return (
           <InView key={id} onChange={this.onIntersectionChange}>
             {({ ref }) => (
-              <RootRef rootRef={ref}>
-                <MessagePanelListItem id={id}>
-                  <MessagePanelListItemMessageWrapper alignItems={alignItems}>
-                    <If condition={isFirst || divider}>
-                      <MessagePanelHistoryDivider>
-                        <p />
-                        <span>{messageHistoryDateParser(time)}</span>
-                        <p />
-                      </MessagePanelHistoryDivider>
-                    </If>
-                    <Choose>
-                      <When condition={isSystem}>
-                        <MessagePanelSystemMessage>
-                          <p>{content}</p>
-                        </MessagePanelSystemMessage>
-                      </When>
-                      <Otherwise>
-                        <MessagePanelMessage
-                          isMyMessage={isMyMessage}
-                          isAdding={isAdding}
-                        >
-                          {content}
-                        </MessagePanelMessage>
-                        <MessagePanelMessageTime>
-                          <span>{messageTimeParser(time, 'wide')}</span>
-                        </MessagePanelMessageTime>
-                      </Otherwise>
-                    </Choose>
-                  </MessagePanelListItemMessageWrapper>
-                </MessagePanelListItem>
-              </RootRef>
+              <MessagePanelListItem ref={ref} id={id}>
+                <MessagePanelListItemMessageWrapper alignItems={alignItems}>
+                  <If condition={isFirst || divider}>
+                    <MessagePanelHistoryDivider>
+                      <p />
+                      <span>{messageHistoryDateParser(time)}</span>
+                      <p />
+                    </MessagePanelHistoryDivider>
+                  </If>
+                  <Choose>
+                    <When condition={isSystem}>
+                      <MessagePanelSystemMessage>
+                        <p>{content}</p>
+                      </MessagePanelSystemMessage>
+                    </When>
+                    <Otherwise>
+                      <MessagePanelMessage
+                        isMyMessage={isMyMessage}
+                        isAdding={isAdding}
+                      >
+                        {content}
+                      </MessagePanelMessage>
+                      <MessagePanelMessageTime>
+                        <span>{messageTimeParser(time, 'wide')}</span>
+                      </MessagePanelMessageTime>
+                    </Otherwise>
+                  </Choose>
+                </MessagePanelListItemMessageWrapper>
+              </MessagePanelListItem>
             )}
           </InView>
         );
@@ -377,33 +374,25 @@ class MessagePanelMessages extends Component {
         onMouseEnter={() => this.toggleScrollbar(true)}
         onMouseLeave={() => this.toggleScrollbar(false)}
       >
-        <ListScrollbar
-          show={scrollbar}
-          presence={scrollbarPresence}
-        >
-          <RootRef rootRef={this.scrollbarThumbRef}>
-            <div
-              onDragStart={() => false}
-              onMouseDown={this.onMouseDown}
-            />
-          </RootRef>
+        <ListScrollbar show={scrollbar} presence={scrollbarPresence}>
+          <div
+            ref={this.scrollbarThumbRef}
+            onDragStart={() => false}
+            onMouseDown={this.onMouseDown}
+          />
         </ListScrollbar>
-        <RootRef rootRef={this.listViewRef}>
-          <MessagePanelListView onScroll={this.onScroll}>
-            <RootRef rootRef={this.listScrollableRef}>
-              <MessagePanelListScrollable disablePadding scrollbarPresence={scrollbarPresence}>
-                <ReactResizeDetector handleHeight onResize={this.onResize}>
-                  <Fragment>
-                    <MessagePanelLoading appeared={loading}>
-                      <CircularProgress size={20} color="primary" />
-                    </MessagePanelLoading>
-                    {renderMessages()}
-                  </Fragment>
-                </ReactResizeDetector>
-              </MessagePanelListScrollable>
-            </RootRef>
-          </MessagePanelListView>
-        </RootRef>
+        <MessagePanelListView ref={this.listViewRef} onScroll={this.onScroll}>
+          <MessagePanelListScrollable ref={this.listScrollableRef} disablePadding>
+            <ReactResizeDetector onResize={this.onResize} handleHeight>
+              <Fragment>
+                <MessagePanelLoading appeared={loading}>
+                  <CircularProgress size={20} color="primary" />
+                </MessagePanelLoading>
+                {renderMessages()}
+              </Fragment>
+            </ReactResizeDetector>
+          </MessagePanelListScrollable>
+        </MessagePanelListView>
       </Wrapper>
     );
   }

@@ -160,7 +160,7 @@ class MessagePanel extends Component {
           sendedIds={sendedIds}
           getMessages={() => this.getMessages(true)}
           fetchSize={this.fetchSize}
-          fetchTreshold={5}
+          fetchThreshold={5}
         />
         <MessagePanelComment
           adding={adding}

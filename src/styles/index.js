@@ -53,4 +53,9 @@ export const GlobalStyle = createGlobalStyle`
       display: flex;
     }
   }
+
+  body.disable-pointer-events,
+  body.disable-pointer-events * {
+    pointer-events: none !important;
+  }
 `;

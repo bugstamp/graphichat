@@ -4,7 +4,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import { InView } from 'react-intersection-observer';
 import styled from 'styled-components';
 import { position } from 'polished';
-import { map, includes, isEqual, debounce } from 'lodash';
+import { map, includes, isEqual } from 'lodash';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -138,17 +138,19 @@ const ListFetchMore = styled.div`
 `;
 
 class AppList extends Component {
-  listScrollable = createRef();
+  constructor(props) {
+    super(props);
 
-  listView = createRef();
+    this.listScrollable = createRef();
+    this.listView = createRef();
+    this.scrollbarThumb = createRef();
 
-  scrollbarThumb = createRef();
-
-  state = {
-    scrollbar: false,
-    scrollbarPresence: false,
-    scrollbarDragging: false,
-    listHeight: 0,
+    this.state = {
+      scrollbar: false,
+      scrollbarPresence: false,
+      scrollbarDragging: false,
+      listHeight: 0,
+    };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -282,21 +284,15 @@ class AppList extends Component {
 
   onIntersectionChange = (inView, { target }) => {
     const {
-      fetchThreshold,
+      fetchTreshold,
       messages,
       getMessages,
-      startFrom,
     } = this.props;
     const rowIndex = Number(target.getAttribute('row-index'));
-    let index = rowIndex;
-    let thresholdIndex = messages.length - fetchThreshold;
+    const index = messages.length - rowIndex;
+    const tresholdIndex = fetchTreshold;
 
-    if (startFrom === 'bottom') {
-      index = messages.length - rowIndex;
-      thresholdIndex = fetchThreshold;
-    }
-
-    if (inView && (index === thresholdIndex)) {
+    if (inView && (index === tresholdIndex)) {
       getMessages();
     }
   }
@@ -336,7 +332,6 @@ class AppList extends Component {
       myId,
       loading,
       sendedIds,
-      startFrom,
     } = this.props;
 
     const renderMessages = () => {
@@ -347,9 +342,7 @@ class AppList extends Component {
         time,
         content,
       }, index) => {
-        const rowIndex = startFrom === 'bottom'
-          ? (messages.length - index)
-          : (index + 1);
+        const rowIndex = messages.length - index;
         const key = `row-${rowIndex}`;
         const isSystem = type === 'system';
         const isFirst = messages[0].id === id;
@@ -425,19 +418,12 @@ class AppList extends Component {
           <ListScrollable ref={this.listScrollable}>
             <ReactResizeDetector onResize={this.onResize} handleHeight>
               <Fragment>
-                <If condition={startFrom === 'bottom'}>
-                  <ListFetchMore appeared={loading}>
-                    <CircularProgress size={20} color="primary" />
-                  </ListFetchMore>
-                </If>
+                <ListFetchMore appeared={loading}>
+                  <CircularProgress size={20} color="primary" />
+                </ListFetchMore>
                 <List disablePadding>
                   {renderMessages()}
                 </List>
-                <If condition={startFrom === 'top'}>
-                  <ListFetchMore appeared={loading}>
-                    <CircularProgress size={20} color="primary" />
-                  </ListFetchMore>
-                </If>
               </Fragment>
             </ReactResizeDetector>
           </ListScrollable>
@@ -448,11 +434,11 @@ class AppList extends Component {
 }
 
 AppList.defaultProps = {
-  fetchMore: false,
-  startFrom: 'bottom',
+  type: 'list',
+  startFrom: 'top',
 };
 AppList.propTypes = {
-  fetchMore: PropTypes.bool,
+  type: PropTypes.oneOf(['list', 'fetchMore']),
   startFrom: PropTypes.oneOf(['top', 'bottom']),
 };
 

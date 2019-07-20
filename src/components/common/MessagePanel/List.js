@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactResizeDetector from 'react-resize-detector';
 import styled from 'styled-components';
 import { position } from 'polished';
-import { isEqual, isFunciton } from 'lodash';
+import { isEqual, isFunction } from 'lodash';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -93,6 +93,8 @@ class List extends Component {
   getListHeight = () => this.listScrollable.current.getBoundingClientRect().height || 0;
 
   getListViewHeight = () => this.listView.current.getBoundingClientRect().height || 0;
+
+  getScrollTop = () => this.listView.current.scrollTop;
 
   setScrollbar = (scrollbar) => {
     const { scrollbarDragging, scrollbarPresence } = this.state;
@@ -187,7 +189,7 @@ class List extends Component {
 
     this.calculateScrollbarPosition(scrollTop);
 
-    if (onScroll && isFunciton(onScroll)) {
+    if (onScroll && isFunction(onScroll)) {
       onScroll({ scrollTop });
     }
   }
@@ -203,7 +205,7 @@ class List extends Component {
       this.setScrollbarPresence(false);
     }
 
-    if (onResize && (isFunciton(onResize))) {
+    if (onResize && (isFunction(onResize))) {
       onResize({ width, height });
     }
   }
@@ -229,14 +231,44 @@ class List extends Component {
     }
   }
 
+  rowRenderer = (rowData, index) => {
+    const {
+      lazyLoad,
+      startFrom,
+      data,
+      rowRenderer,
+      onIntersectionChange,
+    } = this.props;
+    const rowIndex = startFrom === 'bottom'
+      ? (data.length - index)
+      : (index + 1);
+    const rowProps = {
+      index,
+      rowIndex,
+      rowData,
+    };
+
+    if (lazyLoad) {
+      return (
+        <InView
+          key={rowIndex}
+          onChange={onIntersectionChange}
+          triggerOnce
+        >
+          {({ ref }) => rowRenderer({ ref, ...rowProps })}
+        </InView>
+      );
+    }
+    return rowRenderer(rowProps);
+  }
+
   render() {
     const { scrollbar, scrollbarPresence } = this.state;
     const {
       loading,
       data,
-      fetchMore,
+      lazyLoad,
       startFrom,
-      rowRenderer,
     } = this.props;
 
     return (
@@ -255,7 +287,7 @@ class List extends Component {
         </ListScrollbar>
         <ListView ref={this.listView} onScroll={this.onScroll}>
           <Choose>
-            <When condition={!fetchMore && loading}>
+            <When condition={!lazyLoad && loading}>
               <ListLoading>
                 <CircularProgress size={20} color="primary" />
               </ListLoading>
@@ -269,13 +301,7 @@ class List extends Component {
                         <CircularProgress size={20} color="primary" />
                       </ListFetchMore>
                     </If>
-                    <ListItems
-                      fetchMore={fetchMore}
-                      startFrom={startFrom}
-                      data={data}
-                      rowRenderer={rowRenderer}
-                      onIntersectionChange={this.onIntersectionChange}
-                    />
+                    <ListItems data={data} rowRenderer={this.rowRenderer} />
                     <If condition={startFrom === 'top'}>
                       <ListFetchMore appeared={loading}>
                         <CircularProgress size={20} color="primary" />
@@ -295,21 +321,25 @@ class List extends Component {
 List.defaultProps = {
   loading: false,
   data: [],
-  fetchMore: false,
+  lazyLoad: false,
+  fetchMore: () => {},
   fetchMoreThreshold: 10,
   startFrom: 'top',
   onResize: () => {},
   onScroll: () => {},
+  onIntersectionChange: () => {},
 };
 List.propTypes = {
   loading: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.any),
   rowRenderer: PropTypes.func.isRequired,
-  fetchMore: PropTypes.bool,
+  lazyLoad: PropTypes.bool,
+  fetchMore: PropTypes.func,
   fetchMoreThreshold: PropTypes.number,
   startFrom: PropTypes.oneOf(['top', 'bottom']),
   onResize: PropTypes.func,
   onScroll: PropTypes.func,
+  onIntersectionChange: PropTypes.func,
 };
 
 export default List;

@@ -59,7 +59,7 @@ class MessagePanel extends Component {
     const {
       chat: { id: chatId },
       me,
-      updateSendedIds,
+      updateOptimisticIds,
       addMessage,
     } = this.props;
     const { id } = me;
@@ -73,7 +73,7 @@ class MessagePanel extends Component {
       optimisticId,
     };
 
-    updateSendedIds(optimisticId);
+    updateOptimisticIds(optimisticId);
     addMessage({
       variables,
       optimisticResponse: {
@@ -131,7 +131,7 @@ class MessagePanel extends Component {
       me,
       contact,
       chat,
-      sendedIds,
+      optimisticIds,
     } = this.props;
     const { userInfo } = contact;
     const { displayName, status, lastDate } = userInfo;
@@ -157,9 +157,8 @@ class MessagePanel extends Component {
           adding={adding}
           myId={me.id}
           messages={messages}
-          sendedIds={sendedIds}
+          optimisticIds={optimisticIds}
           getMessages={() => this.getMessages(true)}
-          fetchSize={this.fetchSize}
           fetchThreshold={5}
         />
         <MessagePanelComment

@@ -137,7 +137,7 @@ const ListFetchMore = styled.div`
   visibility: ${({ appeared }) => (appeared ? 'visibility' : 'hidden')}
 `;
 
-class AppList extends Component {
+class MessagePanelMessages extends Component {
   listScrollable = createRef();
 
   listView = createRef();
@@ -447,13 +447,7 @@ class AppList extends Component {
   }
 }
 
-AppList.defaultProps = {
-  fetchMore: false,
-  startFrom: 'bottom',
-};
-AppList.propTypes = {
-  fetchMore: PropTypes.bool,
-  startFrom: PropTypes.oneOf(['top', 'bottom']),
-};
+MessagePanelMessages.defaultProps = {};
+MessagePanelMessages.propTypes = {};
 
-export default AppList;
+export default MessagePanelMessages;

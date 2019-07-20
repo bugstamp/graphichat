@@ -1,24 +1,15 @@
 import React, { Component, Fragment, createRef } from 'react';
 import PropTypes from 'prop-types';
 import ReactResizeDetector from 'react-resize-detector';
-import { InView } from 'react-intersection-observer';
 import styled from 'styled-components';
 import { position } from 'polished';
-import { map, includes, isEqual } from 'lodash';
+import { isEqual, isFunciton } from 'lodash';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import grey from '@material-ui/core/colors/grey';
-import blue from '@material-ui/core/colors/blue';
+import ListItems from './ListItems';
 
-import { getStyledProps, getSpacing } from '../../../styles';
-import {
-  messageTimeParser,
-  messageHistoryDateParser,
-  isSameDay,
-} from '../../../helpers';
+import { getStyledProps } from '../../../styles';
 
 const ListWrapper = styled.div`
   flex: 1 auto;
@@ -28,8 +19,6 @@ const ListWrapper = styled.div`
 
 const ListView = styled.div`
   ${position('absolute', 0, '-17px', 0, 0)};
-  display: flex;
-  flex-flow: column;
   overflow-x: hidden;
   overflow-y: scroll;
   z-index: 15;
@@ -37,20 +26,6 @@ const ListView = styled.div`
 
 const ListScrollable = styled.div`
   margin-top: auto;
-`;
-
-const MessagePanelListItem = styled(ListItem)`
-  && {
-  padding-top: ${getSpacing(1)};
-  padding-bottom: ${getSpacing(1)};
-  }
-`;
-
-const MessagePanelListItemMessageWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-flow: column;
-  align-items: ${({ alignItems }) => alignItems};
 `;
 
 const ListScrollbar = styled.div`
@@ -74,61 +49,6 @@ const ListScrollbarThumb = styled.button`
   cursor: pointer;
 `;
 
-const MessagePanelHistoryDivider = styled.div`
-  width: 100%;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  margin: ${getSpacing(1)} 0;
-
-  p {
-    height: 1px;
-    flex: 1 auto;
-    display: inline-flex;
-    background-color: ${grey[500]};
-    border-radius: 2px;
-  }
-
-  span {
-  padding: 0 ${getSpacing(2)};
-    color: ${grey[500]};
-  }
-`;
-
-const MessagePanelMessage = styled.div`
-  max-width: 49%;
-  padding: ${getSpacing(1)};
-  ${({ isMyMessage }) => ({
-    [`border-bottom-${isMyMessage ? 'left' : 'right'}-radius`]: 0,
-  })};
-  background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
-  border-radius: 5px;
-  opacity: ${({ isAdding }) => (isAdding ? 0.3 : 1)};
-  word-break: break-all;
-  ${getStyledProps('theme.typography.body2')};
-
-  &:hover {
-    cursor: text;
-  }
-`;
-
-const MessagePanelSystemMessage = styled.div`
-  padding: ${getSpacing(1)};
-  color: ${grey[500]};
-  background-color: ${grey[100]};
-  border-radius: 10px;
-`;
-
-const MessagePanelMessageTime = styled.div`
-  display: flex;
-  justify-content: flex-start;
-
-  span {
-  ${getStyledProps('theme.typography.caption')};
-  color: ${getStyledProps('theme.palette.text.secondary')};
-  }
-`;
-
 const ListFetchMore = styled.div`
   height: 30px;
   display: flex;
@@ -137,61 +57,44 @@ const ListFetchMore = styled.div`
   visibility: ${({ appeared }) => (appeared ? 'visibility' : 'hidden')}
 `;
 
-class AppList extends Component {
+const ListLoading = styled.div`
+  ${position('absolute', '50%', 0, 0, '50%')};
+  transform: translate(-50%, -50%);
+`;
+
+class List extends Component {
   constructor(props) {
     super(props);
 
-    this.listScrollable = createRef();
-    this.listView = createRef();
     this.scrollbarThumb = createRef();
+    this.listView = createRef();
+    this.listScrollable = createRef();
 
     this.state = {
       scrollbar: false,
       scrollbarPresence: false,
       scrollbarDragging: false,
-      listHeight: 0,
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { listHeight, scrollbarDragging } = this.state;
+    const { scrollbarDragging } = this.state;
 
-    if (
-      !isEqual(listHeight, nextState.listHeight)
-      ||
-      !isEqual(scrollbarDragging, nextState.scrollbarDragging)
-    ) {
+    if (!isEqual(scrollbarDragging, nextState.scrollbarDragging)) {
       return false;
     }
     return true;
   }
 
-  componentDidUpdate(prevProps) {
-    const {
-      chatId,
-      loading,
-      adding,
-      messages,
-    } = this.props;
-
-    if (!isEqual(prevProps.chatId, chatId)) {
-      this.scrollToBottom();
-    }
-
-    if (
-      isEqual(prevProps.chatId, chatId)
-      &&
-      !isEqual(prevProps.messages, messages)
-    ) {
-      if (!adding) {
-        this.updateScrollTopAfterFetchMore();
-      } else {
-        this.scrollToBottom();
-      }
-    }
+  toggleScrollbarDragging = () => {
+    this.setState(({ scrollbarDragging }) => ({ scrollbarDragging: !scrollbarDragging }));
   }
 
-  toggleScrollbar = (scrollbar) => {
+  getListHeight = () => this.listScrollable.current.getBoundingClientRect().height || 0;
+
+  getListViewHeight = () => this.listView.current.getBoundingClientRect().height || 0;
+
+  setScrollbar = (scrollbar) => {
     const { scrollbarDragging, scrollbarPresence } = this.state;
 
     if (scrollbarPresence && !scrollbarDragging) {
@@ -199,12 +102,24 @@ class AppList extends Component {
     }
   }
 
-  toggleScrollbarDragging = () => {
-    this.setState(({ scrollbarDragging }) => ({ scrollbarDragging: !scrollbarDragging }));
+  setScrollbarPresence = (scrollbarPresence) => {
+    this.setState({ scrollbarPresence });
   }
 
-  calculateScrollbarPosition = () => {
-    const { scrollTop } = this.listView.current;
+  setScrollTop = (scrollTop) => {
+    this.listView.current.scrollTop = scrollTop;
+  }
+
+  scrollToBottom = () => {
+    const { height: listHeight } = this.listScrollable.current.getBoundingClientRect();
+    const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
+
+    if (listHeight > listViewHeight) {
+      this.setScrollTop(this.listView.current.scrollHeight);
+    }
+  }
+
+  calculateScrollbarPosition = (scrollTop) => {
     const { height: listHeight } = this.listScrollable.current.getBoundingClientRect();
     const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
     const listScrollHeight = listHeight - listViewHeight;
@@ -265,14 +180,21 @@ class AppList extends Component {
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  onScroll = () => {
-    this.calculateScrollbarPosition();
+  onScroll = (e) => {
+    e.preventDefault();
+    const { onScroll } = this.props;
+    const { scrollTop } = this.listView.current;
+
+    this.calculateScrollbarPosition(scrollTop);
+
+    if (onScroll && isFunciton(onScroll)) {
+      onScroll({ scrollTop });
+    }
   }
 
   onResize = (width, height) => {
+    const { onResize } = this.props;
     const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
-
-    this.setState({ listHeight: height });
 
     if (height > listViewHeight) {
       this.setScrollbarPresence(true);
@@ -280,131 +202,48 @@ class AppList extends Component {
     } else {
       this.setScrollbarPresence(false);
     }
+
+    if (onResize && (isFunciton(onResize))) {
+      onResize({ width, height });
+    }
   }
 
   onIntersectionChange = (inView, { target }) => {
     const {
-      fetchTreshold,
-      messages,
-      getMessages,
+      startFrom,
+      fetchMoreThreshold,
+      data,
+      fetchMore,
     } = this.props;
     const rowIndex = Number(target.getAttribute('row-index'));
-    const index = messages.length - rowIndex;
-    const tresholdIndex = fetchTreshold;
+    let index = rowIndex;
+    let thresholdIndex = data.length - fetchMoreThreshold;
 
-    if (inView && (index === tresholdIndex)) {
-      getMessages();
+    if (startFrom === 'bottom') {
+      index = data.length - rowIndex;
+      thresholdIndex = fetchMoreThreshold;
     }
-  }
 
-  setScrollbarPresence = (scrollbarPresence) => {
-    this.setState({ scrollbarPresence });
-  }
-
-  scrollToBottom = () => {
-    const { height: listHeight } = this.listScrollable.current.getBoundingClientRect();
-    const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
-
-    if (listHeight > listViewHeight) {
-      this.updateScrollTop(this.listView.current.scrollHeight);
-    }
-  }
-
-  updateScrollTop = (scrollTop) => {
-    this.listView.current.scrollTop = scrollTop;
-  }
-
-  updateScrollTopAfterFetchMore = () => {
-    const { listHeight } = this.state;
-    const { scrollTop } = this.listView.current;
-    const { height } = this.listScrollable.current.getBoundingClientRect();
-    const diff = height - listHeight;
-
-    if (scrollTop < diff) {
-      this.updateScrollTop(diff + scrollTop);
+    if ((index === thresholdIndex) && inView) {
+      fetchMore();
     }
   }
 
   render() {
     const { scrollbar, scrollbarPresence } = this.state;
     const {
-      messages,
-      myId,
       loading,
-      sendedIds,
+      data,
+      fetchMore,
+      startFrom,
+      rowRenderer,
     } = this.props;
-
-    const renderMessages = () => {
-      return map(messages, ({
-        id,
-        senderId,
-        type,
-        time,
-        content,
-      }, index) => {
-        const rowIndex = messages.length - index;
-        const key = `row-${rowIndex}`;
-        const isSystem = type === 'system';
-        const isFirst = messages[0].id === id;
-        const isMyMessage = senderId === myId;
-        const isAdding = includes(sendedIds, id);
-        const direction = isMyMessage ? 'start' : 'end';
-        const alignItems = isSystem ? 'center' : `flex-${direction}`;
-        let divider = false;
-
-        if (index > 0) {
-          const { time: prevMessageTime } = messages[index - 1];
-
-          divider = !isSameDay(time, prevMessageTime);
-        }
-
-        return (
-          <InView
-            key={key}
-            onChange={this.onIntersectionChange}
-            triggerOnce
-          >
-            {({ ref }) => (
-              <MessagePanelListItem ref={ref} row-index={rowIndex}>
-                <MessagePanelListItemMessageWrapper alignItems={alignItems}>
-                  <If condition={isFirst || divider}>
-                    <MessagePanelHistoryDivider>
-                      <p />
-                      <span>{messageHistoryDateParser(time)}</span>
-                      <p />
-                    </MessagePanelHistoryDivider>
-                  </If>
-                  <Choose>
-                    <When condition={isSystem}>
-                      <MessagePanelSystemMessage>
-                        <p>{content}</p>
-                      </MessagePanelSystemMessage>
-                    </When>
-                    <Otherwise>
-                      <MessagePanelMessage
-                        isMyMessage={isMyMessage}
-                        isAdding={isAdding}
-                      >
-                        {content}
-                      </MessagePanelMessage>
-                      <MessagePanelMessageTime>
-                        <span>{messageTimeParser(time, 'wide')}</span>
-                      </MessagePanelMessageTime>
-                    </Otherwise>
-                  </Choose>
-                </MessagePanelListItemMessageWrapper>
-              </MessagePanelListItem>
-            )}
-          </InView>
-        );
-      });
-    };
 
     return (
       <ListWrapper
-        onMouseEnter={() => this.toggleScrollbar(true)}
-        onMouseLeave={() => this.toggleScrollbar(false)}
-        onWheel={() => !scrollbar && this.toggleScrollbar(true)}
+        onMouseEnter={() => this.setScrollbar(true)}
+        onMouseLeave={() => this.setScrollbar(false)}
+        onWheel={() => !scrollbar && this.setScrollbar(true)}
       >
         <ListScrollbar show={scrollbar} presence={scrollbarPresence}>
           <ListScrollbarThumb
@@ -415,31 +254,62 @@ class AppList extends Component {
           />
         </ListScrollbar>
         <ListView ref={this.listView} onScroll={this.onScroll}>
-          <ListScrollable ref={this.listScrollable}>
-            <ReactResizeDetector onResize={this.onResize} handleHeight>
-              <Fragment>
-                <ListFetchMore appeared={loading}>
-                  <CircularProgress size={20} color="primary" />
-                </ListFetchMore>
-                <List disablePadding>
-                  {renderMessages()}
-                </List>
-              </Fragment>
-            </ReactResizeDetector>
-          </ListScrollable>
+          <Choose>
+            <When condition={!fetchMore && loading}>
+              <ListLoading>
+                <CircularProgress size={20} color="primary" />
+              </ListLoading>
+            </When>
+            <Otherwise>
+              <ListScrollable ref={this.listScrollable}>
+                <ReactResizeDetector onResize={this.onResize} handleHeight>
+                  <Fragment>
+                    <If condition={startFrom === 'bottom'}>
+                      <ListFetchMore appeared={loading}>
+                        <CircularProgress size={20} color="primary" />
+                      </ListFetchMore>
+                    </If>
+                    <ListItems
+                      fetchMore={fetchMore}
+                      startFrom={startFrom}
+                      data={data}
+                      rowRenderer={rowRenderer}
+                      onIntersectionChange={this.onIntersectionChange}
+                    />
+                    <If condition={startFrom === 'top'}>
+                      <ListFetchMore appeared={loading}>
+                        <CircularProgress size={20} color="primary" />
+                      </ListFetchMore>
+                    </If>
+                  </Fragment>
+                </ReactResizeDetector>
+              </ListScrollable>
+            </Otherwise>
+          </Choose>
         </ListView>
       </ListWrapper>
     );
   }
 }
 
-AppList.defaultProps = {
-  type: 'list',
+List.defaultProps = {
+  loading: false,
+  data: [],
+  fetchMore: false,
+  fetchMoreThreshold: 10,
   startFrom: 'top',
+  onResize: () => {},
+  onScroll: () => {},
 };
-AppList.propTypes = {
-  type: PropTypes.oneOf(['list', 'fetchMore']),
+List.propTypes = {
+  loading: PropTypes.bool,
+  data: PropTypes.arrayOf(PropTypes.any),
+  rowRenderer: PropTypes.func.isRequired,
+  fetchMore: PropTypes.bool,
+  fetchMoreThreshold: PropTypes.number,
   startFrom: PropTypes.oneOf(['top', 'bottom']),
+  onResize: PropTypes.func,
+  onScroll: PropTypes.func,
 };
 
-export default AppList;
+export default List;

@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { AppContext } from '../../context/AppProvider';
 import ContactPanel, { NoContactInfo } from '../../common/ContactPanel/ContactPanel';
-import MessagePanel from '../../common/MessagePanel/MessagePanel';
+import Messages from './Messages';
 
 import ChatsContainer from '../../smart/ChatsContainer';
 
@@ -153,7 +153,7 @@ class Chats extends Component {
                             </NoContactInfo>
                           </When>
                           <Otherwise>
-                            <MessagePanel
+                            <Messages
                               loading={loading}
                               adding={adding}
                               me={user}

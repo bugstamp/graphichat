@@ -2,12 +2,12 @@ import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { includes, isEqual } from 'lodash';
 
-import List from './List';
-import MessageListItem from './MessageListItem';
+import MessagesListItem from './MessagesListItem';
+import List from '../../../common/List';
 
-import { isSameDay } from '../../../helpers';
+import { isSameDay } from '../../../../helpers';
 
-class MessagePanelMessages extends Component {
+class MessagesList extends Component {
   list = createRef();
 
   state = {
@@ -26,7 +26,6 @@ class MessagePanelMessages extends Component {
   componentDidUpdate(prevProps) {
     const {
       chatId,
-      loading,
       adding,
       messages,
     } = this.props;
@@ -54,14 +53,14 @@ class MessagePanelMessages extends Component {
 
   updateScrollTopAfterFetchMore = () => {
     const { listHeight } = this.state;
-    const scrollTop = this.list.getScrollTop();
-    const height = this.list.getListHeight();
+    const scrollTop = this.list.current.getScrollTop();
+    const height = this.list.current.getListHeight();
     const diff = height - listHeight;
 
     if (scrollTop < diff) {
       const nextScrollTop = diff + scrollTop;
 
-      this.list.setScrollTop(nextScrollTop);
+      this.list.current.setScrollTop(nextScrollTop);
     }
   }
 
@@ -94,7 +93,7 @@ class MessagePanelMessages extends Component {
     }
 
     return (
-      <MessageListItem
+      <MessagesListItem
         ref={ref}
         rowIndex={rowIndex}
         alignItems={alignItems}
@@ -124,6 +123,7 @@ class MessagePanelMessages extends Component {
         fetchMore={getMessages}
         fetchMoreThreshold={10}
         startFrom="bottom"
+        rowRenderer={this.rowRenderer}
         onResize={this.onResize}
         lazyLoad
       />
@@ -131,7 +131,20 @@ class MessagePanelMessages extends Component {
   }
 }
 
-MessagePanelMessages.defaultProps = {};
-MessagePanelMessages.propTypes = {};
+MessagesList.defaultProps = {
+  chatId: null,
+  myId: null,
+  messages: [],
+  optimisticIds: [],
+};
+MessagesList.propTypes = {
+  chatId: PropTypes.string,
+  myId: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+  adding: PropTypes.bool.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.object),
+  getMessages: PropTypes.func.isRequired,
+  optimisticIds: PropTypes.arrayOf(PropTypes.string),
+};
 
-export default MessagePanelMessages;
+export default MessagesList;

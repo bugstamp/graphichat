@@ -8,13 +8,17 @@ class ListItems extends PureComponent {
   render() {
     const { data, rowRenderer } = this.props;
 
-    if (isEmpty(data)) {
-      return null;
-    }
     return (
-      <List disablePadding>
-        {map(data, (item, index) => rowRenderer(item, index))}
-      </List>
+      <Choose>
+        <When condition={isEmpty(data)}>
+          {null}
+        </When>
+        <Otherwise>
+          <List disablePadding>
+            {map(data, (item, index) => rowRenderer(item, index))}
+          </List>
+        </Otherwise>
+      </Choose>
     );
   }
 }

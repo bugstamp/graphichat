@@ -6,7 +6,7 @@ import SettingsIcon from '@material-ui/icons/SettingsRounded';
 import SearchIcon from '@material-ui/icons/SearchRounded';
 import green from '@material-ui/core/colors/green';
 
-import { getStyledProps } from '../../../styles';
+import { getStyledProps } from '../../../../styles';
 
 const Wrapper = styled.div`
   width: 100%;

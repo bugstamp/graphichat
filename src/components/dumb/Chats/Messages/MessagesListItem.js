@@ -8,16 +8,13 @@ import ListItem from '@material-ui/core/ListItem';
 import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
 
-import { getStyledProps, getSpacing } from '../../../styles';
-import {
-  messageTimeParser,
-  messageHistoryDateParser,
-} from '../../../helpers';
+import { getStyledProps, getSpacing } from '../../../../styles';
+import { messageTimeParser, messageHistoryDateParser } from '../../../../helpers';
 
 const MessagePanelListItem = styled(ListItem)`
   && {
-  padding-top: ${getSpacing(1)};
-  padding-bottom: ${getSpacing(1)};
+    padding-top: ${getSpacing(1)};
+    padding-bottom: ${getSpacing(1)};
   }
 `;
 
@@ -44,7 +41,7 @@ const MessagePanelHistoryDivider = styled.div`
   }
 
   span {
-  padding: 0 ${getSpacing(2)};
+    padding: 0 ${getSpacing(2)};
     color: ${grey[500]};
   }
 `;
@@ -78,12 +75,12 @@ const MessagePanelMessageTime = styled.div`
   justify-content: flex-start;
 
   span {
-  ${getStyledProps('theme.typography.caption')};
-  color: ${getStyledProps('theme.palette.text.secondary')};
+    ${getStyledProps('theme.typography.caption')};
+    color: ${getStyledProps('theme.palette.text.secondary')};
   }
 `;
 
-const MessageListItem = forwardRef((props, ref) => {
+const MessagesListItem = forwardRef((props, ref) => {
   const {
     rowIndex,
     alignItems,
@@ -129,4 +126,16 @@ const MessageListItem = forwardRef((props, ref) => {
   );
 });
 
-export default MessageListItem;
+MessagesListItem.propTypes = {
+  rowIndex: PropTypes.number.isRequired,
+  alignItems: PropTypes.string.isRequired,
+  isFirst: PropTypes.bool.isRequired,
+  isSystem: PropTypes.bool.isRequired,
+  isMyMessage: PropTypes.bool.isRequired,
+  isAdding: PropTypes.bool.isRequired,
+  divider: PropTypes.bool.isRequired,
+  time: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
+  content: PropTypes.string.isRequired,
+};
+
+export default MessagesListItem;

@@ -5,17 +5,17 @@ import uuid from 'uuid/v4';
 
 import Paper from '@material-ui/core/Paper';
 
-import MessagePanelTopBar from './MessagePanelTopBar';
-import MessagePanelMessages from './MessagePanelMessages';
-import MessagePanelComment from './MessagePanelComment';
+import MessagesTopBar from './MessagesTopBar';
+import MessagesList from './MessagesList';
+import MessagesComment from './MessagesComment';
 
-import { getSpacing } from '../../../styles';
-import { getAvatarInitials, userLastDateParser } from '../../../helpers';
-import gql from '../../../gql';
+import { getSpacing } from '../../../../styles';
+import { getAvatarInitials, userLastDateParser } from '../../../../helpers';
+import gql from '../../../../gql';
 
 const { GET_CHAT_MESSAGES } = gql;
 
-const WrapperPaper = styled(Paper)`
+const Wrapper = styled(Paper)`
   && {
     width: 100%;
     height: 100%;
@@ -26,8 +26,8 @@ const WrapperPaper = styled(Paper)`
   }
 `;
 
-class MessagePanel extends Component {
-  fetchSize = 20;
+class Messages extends Component {
+  fetchSize = 30;
 
   componentDidMount() {
     this.getMessages();
@@ -145,13 +145,13 @@ class MessagePanel extends Component {
     const contactAvatarText = getAvatarInitials(userInfo);
 
     return (
-      <WrapperPaper square elevation={0}>
-        <MessagePanelTopBar
+      <Wrapper square elevation={0}>
+        <MessagesTopBar
           name={displayName}
           isOnline={isOnline}
           statusText={statusText}
         />
-        <MessagePanelMessages
+        <MessagesList
           chatId={chatId}
           loading={loading}
           adding={adding}
@@ -161,7 +161,7 @@ class MessagePanel extends Component {
           getMessages={() => this.getMessages(true)}
           fetchThreshold={5}
         />
-        <MessagePanelComment
+        <MessagesComment
           adding={adding}
           avatars={{
             me: {
@@ -175,9 +175,9 @@ class MessagePanel extends Component {
           }}
           submit={this.addMessage}
         />
-      </WrapperPaper>
+      </Wrapper>
     );
   }
 }
 
-export default MessagePanel;
+export default Messages;

@@ -11,10 +11,10 @@ import RootRef from '@material-ui/core/RootRef';
 import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/orange';
 
-import AppListItemAvatar from '../ContactPanel/AppList/ListItemAvatar';
-import TopLineProgress from '../TopLineProgress';
+import AppListItemAvatar from '../../../common/ContactPanel/AppList/ListItemAvatar';
+import TopLineProgress from '../../../common/TopLineProgress';
 
-import { getStyledProps, getSpacing } from '../../../styles';
+import { getStyledProps, getSpacing } from '../../../../styles';
 
 const Wrapper = styled.div`
   display: flex;

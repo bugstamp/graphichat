@@ -16,8 +16,6 @@ import ChatsContainer from '../../smart/ChatsContainer';
 import Contacts, { NoContactInfo } from './Contacts';
 import Messages from './Messages';
 
-import { AppContext } from '../../context/AppProvider';
-
 import { getStyledProps, getSpacing } from '../../../styles';
 
 const Wrapper = styled(Paper)`
@@ -98,88 +96,86 @@ class Chats extends Component {
 
   render() {
     const { selected, sendedIds } = this.state;
+    const { initialLoading } = this.props;
 
     return (
-      <AppContext.Consumer>
-        {({ user, fetching }) => (
-          <ChatsContainer
-            messageAddedSubscriptionProps={{
-              variables: { chatId: selected },
-            }}
-            addMessageProps={{
-              onCompleted: ({ addMessage: { optimisticId } }) => {
-                this.updateSendedIds(optimisticId, 'remove');
-              },
-            }}
-          >
-            {({
-              getMyChats: {
-                data: { myContacts, myChats },
-                fetchMore: fetchMoreMessages,
-                loading,
-              },
-              addMessage: {
-                mutation: addMessage,
-                result: { loading: adding },
-              },
-            }) => {
-              const selectedContact = find(myContacts, { chatId: selected });
-              const selectedChat = find(myChats, { id: selected });
+      <ChatsContainer
+        messageAddedSubscriptionProps={{
+          variables: { chatId: selected },
+        }}
+        addMessageProps={{
+          onCompleted: ({ addMessage: { optimisticId } }) => {
+            this.updateSendedIds(optimisticId, 'remove');
+          },
+        }}
+      >
+        {({
+          getMe: { data: { me = {} } },
+          getMyChats: {
+            data: { myContacts = [], myChats = [] },
+            fetchMore: fetchMoreMessages,
+            loading,
+          },
+          addMessage: {
+            mutation: addMessage,
+            result: { loading: adding },
+          },
+        }) => {
+          const selectedContact = find(myContacts, { chatId: selected });
+          const selectedChat = find(myChats, { id: selected });
 
-              return (
-                <Wrapper square elevation={0}>
-                  <Grid container spacing={0}>
-                    <Grid item xs={12} sm={4} lg={3}>
-                      <Contacts
-                        loading={fetching}
-                        me={user}
-                        contacts={myContacts}
-                        chats={myChats}
-                        selected={selected}
-                        selectChat={chatId => this.selectChat(chatId, true)}
-                      />
-                    </Grid>
-                    <Hidden xsDown>
-                      <Grid item sm={8} lg={6}>
-                        <Choose>
-                          <When condition={isEmpty(myContacts)}>
-                            {null}
-                          </When>
-                          <When condition={!selected}>
-                            <NoContactInfo>
-                              <Typography variant="subtitle2">
-                                <p>Please select a chat to start messaging</p>
-                              </Typography>
-                            </NoContactInfo>
-                          </When>
-                          <Otherwise>
-                            <Messages
-                              loading={loading}
-                              adding={adding}
-                              me={user}
-                              contact={selectedContact}
-                              chat={selectedChat}
-                              sendedIds={sendedIds}
-                              fetchMoreMessages={fetchMoreMessages}
-                              addMessage={addMessage}
-                              updateSendedIds={this.updateSendedIds}
-                            />
-                          </Otherwise>
-                        </Choose>
-                      </Grid>
-                    </Hidden>
-                    <Hidden mdDown>
-                      <Grid item lg={3}>
-                        <InfoPanel square elevation={0}>{null}</InfoPanel>
-                      </Grid>
-                    </Hidden>
+          return (
+            <Wrapper square elevation={0}>
+              <Grid container spacing={0}>
+                <Grid item xs={12} sm={4} lg={3}>
+                  <Contacts
+                    loading={initialLoading}
+                    me={me}
+                    contacts={myContacts}
+                    chats={myChats}
+                    selected={selected}
+                    selectChat={chatId => this.selectChat(chatId, true)}
+                  />
+                </Grid>
+                <Hidden xsDown>
+                  <Grid item sm={8} lg={6}>
+                    <Choose>
+                      <When condition={isEmpty(myContacts)}>
+                        {null}
+                      </When>
+                      <When condition={!selected}>
+                        <NoContactInfo>
+                          <Typography variant="subtitle2">
+                            <p>Please select a chat to start messaging</p>
+                          </Typography>
+                        </NoContactInfo>
+                      </When>
+                      <Otherwise>
+                        <Messages
+                          loading={loading}
+                          adding={adding}
+                          me={me}
+                          contact={selectedContact}
+                          chat={selectedChat}
+                          sendedIds={sendedIds}
+                          fetchMoreMessages={fetchMoreMessages}
+                          addMessage={addMessage}
+                          updateSendedIds={this.updateSendedIds}
+                        />
+                      </Otherwise>
+                    </Choose>
                   </Grid>
-                </Wrapper>
-              );
-            }}
-          </ChatsContainer>
-        )}
-      </AppContext.Consumer>
+                </Hidden>
+                <Hidden mdDown>
+                  <Grid item lg={3}>
+                    <InfoPanel square elevation={0}>{null}</InfoPanel>
+                  </Grid>
+                </Hidden>
+              </Grid>
+            </Wrapper>
+          );
+        }}
+      </ChatsContainer>
     );
   }
 }

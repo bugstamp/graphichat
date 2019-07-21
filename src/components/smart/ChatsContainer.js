@@ -6,6 +6,7 @@ import gql from '../../gql';
 // import { icqBeepPlay } from '../../helpers';
 
 const {
+  GET_ME,
   GET_MY_CHATS,
   ADD_MESSAGE,
   MESSAGE_ADDED_SUBSCRIPTION,
@@ -36,6 +37,7 @@ const addMessageUpdate = (client, { chatId, message }) => {
   });
 };
 
+const getMe = createQuery('getMe', GET_ME);
 const getMyChats = createQuery('getMyChats', GET_MY_CHATS, {
   notifyOnNetworkStatusChange: true,
 });
@@ -52,6 +54,7 @@ const messageAddedSubscription = createSubscription('messageAddedSubscription', 
 });
 
 const ContactsContainer = adopt({
+  getMe,
   getMyChats,
   addMessage,
   messageAddedSubscription,

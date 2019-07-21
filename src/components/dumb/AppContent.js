@@ -1,8 +1,8 @@
-import React, { Component, createRef } from 'react';
+import React, { Component, createRef, cloneElement } from 'react';
 // import Cropper from 'react-easy-crop';
 import styled from 'styled-components';
-import { size, position } from 'polished';
-import { isEqual } from 'lodash';
+import { size } from 'polished';
+// import {} from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -47,35 +47,9 @@ const Avatar = styled(MaterialAvatar)`
 class AppContent extends Component {
   state = {
     settingsDialog: false,
-    cropDialog: false,
-    file: null,
   }
 
-  inputRef = createRef();
-
-  componentDidMount() {
-    const { loading, setFetchingToContext } = this.props;
-
-    if (loading) {
-      setFetchingToContext(loading);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const {
-      loading,
-      user,
-      setUserToContext,
-      setFetchingToContext,
-    } = this.props;
-
-    if (!prevProps.user && user) {
-      setUserToContext(user);
-    }
-    if (!isEqual(prevProps.loading, loading)) {
-      setFetchingToContext(loading);
-    }
-  }
+  input = createRef();
 
   toggleSettingsDialog = () => {
     this.setState(({ settingsDialog }) => ({ settingsDialog: !settingsDialog }));
@@ -99,15 +73,21 @@ class AppContent extends Component {
   }
 
   onAvatarClick = () => {
-    if (this.inputRef) {
-      this.inputRef.current.click();
+    if (this.input) {
+      this.input.current.click();
     }
   }
 
   render() {
-    const { settingsDialog, cropDialog, file } = this.state;
-    const { children, user, signOut, uploading } = this.props;
-    const avatar = getAvatar(user, 'md');
+    const { settingsDialog } = this.state;
+    const {
+      children,
+      loading,
+      me,
+      uploading,
+      signOut,
+    } = this.props;
+    const avatar = getAvatar(me, 'md');
 
     return (
       <Grid container spacing={0} justify="center">
@@ -123,7 +103,7 @@ class AppContent extends Component {
                 </Grid>
               </Hidden>
               <Grid item xs>
-                {children}
+                {cloneElement(children, { initialLoading: loading })}
               </Grid>
             </Grid>
           </AppContainer>
@@ -134,7 +114,7 @@ class AppContent extends Component {
           <SettingsDialogWrapper>
             <AvatarContainer>
               <input
-                ref={this.inputRef}
+                ref={this.input}
                 type="file"
                 accept="image/png, image/jpg, image/jpeg"
                 onChange={this.onChangeAvatar}
@@ -150,11 +130,6 @@ class AppContent extends Component {
             </AvatarContainer>
           </SettingsDialogWrapper>
         </Dialog>
-        {/* <Dialog open={cropDialog} onClose={this.toggleCropDialog}>
-          <DialogContent>
-            <Cropper />
-          </DialogContent>
-        </Dialog> */}
       </Grid>
     );
   }

@@ -6,8 +6,8 @@ import { position } from 'polished';
 import MaterialListItem from '@material-ui/core/ListItem';
 // import red from '@material-ui/core/colors/red';
 
-import ListItemAvatar from '../../../common/ContactPanel/AppList/ListItemAvatar';
-import ListItemInfo from '../../../common/ContactPanel/AppList/ListItemInfo';
+import ListItemAvatar from '../../../common/List/ListItemAvatar';
+import ListItemInfo from '../../../common/List/ListItemInfo';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
 

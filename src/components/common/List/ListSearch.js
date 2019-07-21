@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/SearchRounded';
 
-import { getStyledProps, getSpacing } from '../../../../styles';
+import { getStyledProps, getSpacing } from '../../../styles';
 
 const Wrapper = styled.div`
   width: 100%;

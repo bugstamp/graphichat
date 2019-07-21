@@ -5,7 +5,7 @@ import { find, filter, upperCase } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
 
-import ListSearch from '../../../common/ContactPanel/AppList/ListSearch';
+import ListSearch from '../../../common/List/ListSearch';
 import ContactsList from './ContactsList';
 import ContactsFooter from './ContactsFooter';
 import SearchDialog from '../SearchDialog';

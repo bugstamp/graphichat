@@ -2,18 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 // import {} from 'polished';
 
-import ListItem from '@material-ui/core/ListItem';
+import MaterialListItem from '@material-ui/core/ListItem';
 
-import { getSpacing } from '../../../../styles';
+import { getSpacing } from '../../../styles';
 
-const ListItemStyled = styled(ListItem)`
+const ListItemStyled = styled(MaterialListItem)`
   && {
     padding: 0 ${getSpacing(1)};
     margin-bottom: ${getSpacing(1)};
   }
 `;
 
-const AppListItem = ({ children, onClick }) => {
+const ListItem = ({ children, onClick }) => {
   return (
     <ListItemStyled onClick={onClick}>
       {children}
@@ -21,4 +21,4 @@ const AppListItem = ({ children, onClick }) => {
   );
 };
 
-export default AppListItem;
+export default ListItem;

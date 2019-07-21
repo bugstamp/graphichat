@@ -6,9 +6,9 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DoneIcon from '@material-ui/icons/DoneRounded';
 
-import AppListItem from '../../../common/ContactPanel/AppList/ListItem';
-import AppListItemAvatar from '../../../common/ContactPanel/AppList/ListItemAvatar';
-import AppListItemInfo from '../../../common/ContactPanel/AppList/ListItemInfo';
+import ListItem from '../../../common/List/ListItem';
+import ListItemAvatar from '../../../common/List/ListItemAvatar';
+import ListItemInfo from '../../../common/List/ListItemInfo';
 
 const SearchDialogListItem = ({
   avatar,
@@ -19,9 +19,9 @@ const SearchDialogListItem = ({
   onClick,
 }) => {
   return (
-    <AppListItem>
-      <AppListItemAvatar {...avatar} online={false} />
-      <AppListItemInfo primary={displayName} secondary={username} />
+    <ListItem>
+      <ListItemAvatar {...avatar} online={false} />
+      <ListItemInfo primary={displayName} secondary={username} />
       <Button
         color="primary"
         variant="contained"
@@ -41,7 +41,7 @@ const SearchDialogListItem = ({
           </Otherwise>
         </Choose>
       </Button>
-    </AppListItem>
+    </ListItem>
   );
 };
 

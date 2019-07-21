@@ -5,7 +5,7 @@ import { ellipsis } from 'polished';
 
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { getSpacing } from '../../../../styles';
+import { getSpacing } from '../../../styles';
 
 const ListItemTextStyled = styled(ListItemText)`
   && {

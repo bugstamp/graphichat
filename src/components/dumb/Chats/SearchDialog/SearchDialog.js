@@ -9,7 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 
 import SearchDialogContainer from '../../../smart/SearchDialogContainer';
-import ListSearch from '../../../common/ContactPanel/AppList/ListSearch';
+import ListSearch from '../../../common/List/ListSearch';
 import SearchDialogList from './SearchDialogList';
 
 import { getSpacing } from '../../../../styles';

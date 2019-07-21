@@ -67,11 +67,10 @@ const signOut = createMutation('signOut', SIGN_OUT);
 const uploadAvatar = createMutation('uploadAvatar', UPLOAD_AVATAR, {
   update(client, { data: { uploadAvatar: avatar } }) {
     const { me } = client.readQuery({ query: GET_ME });
-    set(me, 'avatar', avatar);
 
     client.writeQuery({
       query: GET_ME,
-      data: { me },
+      data: { me: { ...me, avatar } },
     });
   },
 });

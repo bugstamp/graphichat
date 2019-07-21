@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { size } from 'polished';
-import {
-  map, isEmpty, find, filter, upperCase,
-} from 'lodash';
+import { find, filter, upperCase } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
 
 import ListSearch from '../../../common/ContactPanel/AppList/ListSearch';
 import ContactsList from './ContactsList';
 import ContactsFooter from './ContactsFooter';
-import SearchDialog from './SearchDialog';
+import SearchDialog from '../SearchDialog';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
 
@@ -96,9 +94,7 @@ class ContactPanel extends Component {
           getLastChatMessage={this.getLastChatMessage}
         />
         <ContactsFooter toggleSearchDialog={this.toggleSearchDialog} />
-        <If condition={searchDialog}>
-          <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
-        </If>
+        <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
       </Wrapper>
     );
   }

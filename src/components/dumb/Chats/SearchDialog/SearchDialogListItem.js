@@ -10,35 +10,30 @@ import AppListItem from '../../../common/ContactPanel/AppList/ListItem';
 import AppListItemAvatar from '../../../common/ContactPanel/AppList/ListItemAvatar';
 import AppListItemInfo from '../../../common/ContactPanel/AppList/ListItemInfo';
 
-// import { getStyledProps, getSpacing } from '../../../styles';
-import { getAvatar } from '../../../../helpers';
-
 const SearchDialogListItem = ({
-  item,
-  openConfirmDialog,
-  adding,
-  added,
+  avatar,
+  displayName,
+  username,
+  isAdding,
+  isAdded,
+  onClick,
 }) => {
-  const { avatar, displayName, username } = item;
-  const { src, text } = getAvatar(item);
-  const secondary = `@${username}`;
-
   return (
     <AppListItem>
-      <AppListItemAvatar src={src} text={text} online={false} />
-      <AppListItemInfo primary={displayName} secondary={secondary} />
+      <AppListItemAvatar {...avatar} online={false} />
+      <AppListItemInfo primary={displayName} secondary={username} />
       <Button
         color="primary"
         variant="contained"
         size="small"
-        onClick={() => openConfirmDialog(item)}
-        disabled={added}
+        onClick={onClick}
+        disabled={isAdded}
       >
         <Choose>
-          <When condition={adding}>
+          <When condition={isAdding}>
             <CircularProgress size={20} color="inherit" />
           </When>
-          <When condition={added}>
+          <When condition={isAdded}>
             <DoneIcon />
           </When>
           <Otherwise>

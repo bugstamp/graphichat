@@ -6,12 +6,12 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DoneIcon from '@material-ui/icons/DoneRounded';
 
-import AppListItem from './AppList/ListItem';
-import AppListItemAvatar from './AppList/ListItemAvatar';
-import AppListItemInfo from './AppList/ListItemInfo';
+import AppListItem from '../../../common/ContactPanel/AppList/ListItem';
+import AppListItemAvatar from '../../../common/ContactPanel/AppList/ListItemAvatar';
+import AppListItemInfo from '../../../common/ContactPanel/AppList/ListItemInfo';
 
 // import { getStyledProps, getSpacing } from '../../../styles';
-import { getAvatarInitials } from '../../../helpers';
+import { getAvatar } from '../../../../helpers';
 
 const SearchDialogListItem = ({
   item,
@@ -20,12 +20,12 @@ const SearchDialogListItem = ({
   added,
 }) => {
   const { avatar, displayName, username } = item;
-  const avatarText = getAvatarInitials(item);
+  const { src, text } = getAvatar(item);
   const secondary = `@${username}`;
 
   return (
     <AppListItem>
-      <AppListItemAvatar src={avatar && avatar.sm} text={avatarText} online={false} />
+      <AppListItemAvatar src={src} text={text} online={false} />
       <AppListItemInfo primary={displayName} secondary={secondary} />
       <Button
         color="primary"

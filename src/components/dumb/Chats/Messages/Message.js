@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
 
-import ListItem from '@material-ui/core/ListItem';
+import MaterialListItem from '@material-ui/core/ListItem';
 
 import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
@@ -11,21 +11,21 @@ import blue from '@material-ui/core/colors/blue';
 import { getStyledProps, getSpacing } from '../../../../styles';
 import { messageTimeParser, messageHistoryDateParser } from '../../../../helpers';
 
-const MessagePanelListItem = styled(ListItem)`
+const ListItem = styled(MaterialListItem)`
   && {
     padding-top: ${getSpacing(1)};
     padding-bottom: ${getSpacing(1)};
   }
 `;
 
-const MessagePanelListItemMessageWrapper = styled.div`
+const Wrapper = styled.div`
   width: 100%;
   display: flex;
   flex-flow: column;
   align-items: ${({ alignItems }) => alignItems};
 `;
 
-const MessagePanelHistoryDivider = styled.div`
+const HistoryDivider = styled.div`
   width: 100%;
   height: 20px;
   display: flex;
@@ -41,12 +41,12 @@ const MessagePanelHistoryDivider = styled.div`
   }
 
   span {
-    padding: 0 ${getSpacing(2)};
+  padding: 0 ${getSpacing(2)};
     color: ${grey[500]};
   }
 `;
 
-const MessagePanelMessage = styled.div`
+const Content = styled.div`
   max-width: 49%;
   padding: ${getSpacing(1)};
   ${({ isMyMessage }) => ({
@@ -63,24 +63,24 @@ const MessagePanelMessage = styled.div`
   }
 `;
 
-const MessagePanelSystemMessage = styled.div`
+const SystemMessage = styled.div`
   padding: ${getSpacing(1)};
   color: ${grey[500]};
   background-color: ${grey[100]};
   border-radius: 10px;
 `;
 
-const MessagePanelMessageTime = styled.div`
+const Time = styled.div`
   display: flex;
   justify-content: flex-start;
 
   span {
-    ${getStyledProps('theme.typography.caption')};
-    color: ${getStyledProps('theme.palette.text.secondary')};
+  ${getStyledProps('theme.typography.caption')};
+  color: ${getStyledProps('theme.palette.text.secondary')};
   }
 `;
 
-const MessagesListItem = forwardRef((props, ref) => {
+const Message = forwardRef((props, ref) => {
   const {
     rowIndex,
     alignItems,
@@ -94,39 +94,39 @@ const MessagesListItem = forwardRef((props, ref) => {
   } = props;
 
   return (
-    <MessagePanelListItem ref={ref} row-index={rowIndex}>
-      <MessagePanelListItemMessageWrapper alignItems={alignItems}>
+    <ListItem ref={ref} row-index={rowIndex}>
+      <Wrapper alignItems={alignItems}>
         <If condition={isFirst || divider}>
-          <MessagePanelHistoryDivider>
+          <HistoryDivider>
             <p />
             <span>{messageHistoryDateParser(time)}</span>
             <p />
-          </MessagePanelHistoryDivider>
+          </HistoryDivider>
         </If>
         <Choose>
           <When condition={isSystem}>
-            <MessagePanelSystemMessage>
+            <SystemMessage>
               <p>{content}</p>
-            </MessagePanelSystemMessage>
+            </SystemMessage>
           </When>
           <Otherwise>
-            <MessagePanelMessage
+            <Content
               isMyMessage={isMyMessage}
               isAdding={isAdding}
             >
               {content}
-            </MessagePanelMessage>
-            <MessagePanelMessageTime>
+            </Content>
+            <Time>
               <span>{messageTimeParser(time, 'wide')}</span>
-            </MessagePanelMessageTime>
+            </Time>
           </Otherwise>
         </Choose>
-      </MessagePanelListItemMessageWrapper>
-    </MessagePanelListItem>
+      </Wrapper>
+    </ListItem>
   );
 });
 
-MessagesListItem.propTypes = {
+Message.propTypes = {
   rowIndex: PropTypes.number.isRequired,
   alignItems: PropTypes.string.isRequired,
   isFirst: PropTypes.bool.isRequired,
@@ -138,4 +138,4 @@ MessagesListItem.propTypes = {
   content: PropTypes.string.isRequired,
 };
 
-export default MessagesListItem;
+export default Message;

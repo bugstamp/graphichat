@@ -11,13 +11,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import SearchDialogContainer from '../../smart/SearchDialogContainer';
-
-import ListSearch from './AppList/ListSearch';
-import List from './AppList/List';
+import SearchDialogContainer from '../../../smart/SearchDialogContainer';
+import ListSearch from '../../../common/ContactPanel/AppList/ListSearch';
+import List from '../../../common/ContactPanel/AppList/List';
 import SearchDialogListItem from './SearchDialogListItem';
 
-import { getSpacing } from '../../../styles';
+import { getSpacing } from '../../../../styles';
 
 const ListWrapper = styled.div`
   height: 200px;

@@ -4,7 +4,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import { InView } from 'react-intersection-observer';
 import styled from 'styled-components';
 import { position } from 'polished';
-import { debounce, isEqual, isFunction } from 'lodash';
+import { debounce, isEmpty, isEqual, isFunction } from 'lodash';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -12,31 +12,41 @@ import ListItems from './ListItems';
 
 import { getStyledProps } from '../../../styles';
 
-const ListWrapper = styled.div`
+const Wrapper = styled.div`
   flex: 1 auto;
   position: relative;
   overflow: hidden;
 `;
 
-const ListView = styled.div`
+const View = styled.div`
   ${position('absolute', 0, '-17px', 0, 0)};
-  display: flex;
-  flex-flow: column;
   overflow-x: hidden;
   overflow-y: scroll;
   z-index: 15;
+
+  ${({ startFrom }) => startFrom === 'bottom' && `
+    display: flex;
+    flex-flow: column;
+  `}
 `;
 
-const ListScrollable = styled.div`
+const Scrollable = styled.div`
   margin-top: auto;
-  pointer-events: ${({ pointer }) => (!pointer ? 'none !important' : 'auto')};
 
-  > * {
-    pointer-events: ${({ pointer }) => (!pointer ? 'none !important' : 'auto')};
-  }
+  ${({ pointer }) => {
+    const pointerEvents = !pointer ? 'none !important' : 'auto';
+
+    return `
+      pointer-events: ${pointerEvents};
+
+      * {
+        pointer-events: ${pointerEvents};
+      }
+    `;
+  }};
 `;
 
-const ListScrollbar = styled.div`
+const Scrollbar = styled.div`
   ${position('absolute', 0, 0, 0, null)};
   width: 3px;
   display: ${({ presence }) => (presence ? 'block' : 'none')};
@@ -47,7 +57,7 @@ const ListScrollbar = styled.div`
   cursor: pointer;
 `;
 
-const ListScrollbarThumb = styled.button`
+const ScrollbarThumb = styled.button`
   width: 100%;
   position: relative;
   padding: 0;
@@ -57,7 +67,7 @@ const ListScrollbarThumb = styled.button`
   cursor: pointer;
 `;
 
-const ListFetchMore = styled.div`
+const FetchMore = styled.div`
   height: 30px;
   display: flex;
   justify-content: center;
@@ -65,8 +75,8 @@ const ListFetchMore = styled.div`
   visibility: ${({ visible }) => (visible ? 'visibility' : 'hidden')}
 `;
 
-const ListLoading = styled.div`
-  ${position('absolute', '50%', 0, 0, '50%')};
+const Loading = styled.div`
+  ${position('absolute', '50%', null, null, '50%')};
   transform: translate(-50%, -50%);
 `;
 
@@ -307,52 +317,71 @@ class List extends Component {
       data,
       lazyLoad,
       startFrom,
+      noContentComponent: NoContent,
+      spinnerSize,
     } = this.props;
 
     return (
-      <ListWrapper
+      <Wrapper
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
         onMouseOver={this.onMouseOver}
         onFocus={this.onMouseOver}
       >
-        <ListScrollbar show={scrollbar} presence={scrollbarPresence}>
-          <ListScrollbarThumb
+        <Scrollbar show={scrollbar} presence={scrollbarPresence}>
+          <ScrollbarThumb
             ref={this.scrollbarThumb}
             type="button"
             onDragStart={() => false}
             onMouseDown={this.onMouseDown}
           />
-        </ListScrollbar>
-        <ListView ref={this.listView} onScroll={this.onScroll}>
+        </Scrollbar>
+        <View
+          ref={this.listView}
+          onScroll={this.onScroll}
+          startFrom={startFrom}
+        >
           <Choose>
             <When condition={!lazyLoad && loading}>
-              <ListLoading>
-                <CircularProgress size={20} color="primary" />
-              </ListLoading>
+              <Loading>
+                <CircularProgress size={spinnerSize} color="primary" />
+              </Loading>
+            </When>
+            <When condition={!loading && isEmpty(data)}>
+              <Choose>
+                <When condition={NoContent}>
+                  <NoContent />
+                </When>
+                <Otherwise>
+                  {null}
+                </Otherwise>
+              </Choose>
             </When>
             <Otherwise>
-              <ListScrollable ref={this.listScrollable} pointer={pointerEvents}>
+              <Scrollable ref={this.listScrollable} pointer={pointerEvents}>
                 <ReactResizeDetector onResize={this.onResize} handleHeight>
                   <Fragment>
-                    <If condition={startFrom === 'bottom'}>
-                      <ListFetchMore visible={loading}>
-                        <CircularProgress size={20} color="primary" />
-                      </ListFetchMore>
+                    <If condition={lazyLoad && startFrom === 'bottom'}>
+                      <FetchMore visible={loading}>
+                        <CircularProgress size={spinnerSize} color="primary" />
+                      </FetchMore>
                     </If>
-                    <ListItems data={data} rowRenderer={this.rowRenderer} />
-                    <If condition={startFrom === 'top'}>
-                      <ListFetchMore visible={loading}>
-                        <CircularProgress size={20} color="primary" />
-                      </ListFetchMore>
+                    <ListItems
+                      data={data}
+                      rowRenderer={this.rowRenderer}
+                    />
+                    <If condition={lazyLoad && startFrom === 'top'}>
+                      <FetchMore visible={loading}>
+                        <CircularProgress size={spinnerSize} color="primary" />
+                      </FetchMore>
                     </If>
                   </Fragment>
                 </ReactResizeDetector>
-              </ListScrollable>
+              </Scrollable>
             </Otherwise>
           </Choose>
-        </ListView>
-      </ListWrapper>
+        </View>
+      </Wrapper>
     );
   }
 }
@@ -366,6 +395,8 @@ List.defaultProps = {
   startFrom: 'top',
   onResize: () => {},
   onScroll: () => {},
+  noContentComponent: null,
+  spinnerSize: 20,
 };
 List.propTypes = {
   loading: PropTypes.bool,
@@ -377,6 +408,8 @@ List.propTypes = {
   startFrom: PropTypes.oneOf(['top', 'bottom']),
   onResize: PropTypes.func,
   onScroll: PropTypes.func,
+  noContentComponent: PropTypes.func,
+  spinnerSize: PropTypes.number,
 };
 
 export default List;

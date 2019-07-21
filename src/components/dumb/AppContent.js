@@ -10,13 +10,13 @@ import Hidden from '@material-ui/core/Hidden';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import Avatar from '@material-ui/core/Avatar';
+import MaterialAvatar from '@material-ui/core/Avatar';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 
 import Navigation from '../common/Navigation/Navigation';
 import TopLineProgress from '../common/TopLineProgress';
 
-import { getAvatarInitials } from '../../helpers';
+import { getAvatar } from '../../helpers';
 
 const AppContainer = styled(Paper)`
   ${size('100%')};
@@ -36,7 +36,7 @@ const AvatarContainer = styled.div`
   position: relative;
 `;
 
-const AvatarStyled = styled(Avatar)`
+const Avatar = styled(MaterialAvatar)`
   && {
     width: 100%;
     height: 100%;
@@ -107,7 +107,7 @@ class AppContent extends Component {
   render() {
     const { settingsDialog, cropDialog, file } = this.state;
     const { children, user, signOut, uploading } = this.props;
-    const avatarText = getAvatarInitials(user);
+    const avatar = getAvatar(user, 'md');
 
     return (
       <Grid container spacing={0} justify="center">
@@ -140,13 +140,13 @@ class AppContent extends Component {
                 onChange={this.onChangeAvatar}
                 style={{ display: 'none' }}
               />
-              <AvatarStyled
-                src={(user && user.avatar) && user.avatar.md}
-                alt={avatarText}
+              <Avatar
+                src={avatar.src}
+                alt={avatar.text}
                 onClick={this.onAvatarClick}
               >
                 <CameraIcon fontSize="large" />
-              </AvatarStyled>
+              </Avatar>
             </AvatarContainer>
           </SettingsDialogWrapper>
         </Dialog>

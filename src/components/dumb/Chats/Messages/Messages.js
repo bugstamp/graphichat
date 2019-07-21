@@ -10,7 +10,7 @@ import MessagesList from './MessagesList';
 import MessagesComment from './MessagesComment';
 
 import { getSpacing } from '../../../../styles';
-import { getAvatarInitials, userLastDateParser } from '../../../../helpers';
+import { getAvatar, userLastDateParser } from '../../../../helpers';
 import gql from '../../../../gql';
 
 const { GET_CHAT_MESSAGES } = gql;
@@ -141,8 +141,8 @@ class Messages extends Component {
     const statusText = isOnline
       ? 'online'
       : userLastDateParser(lastDate);
-    const myAvatarText = getAvatarInitials(me);
-    const contactAvatarText = getAvatarInitials(userInfo);
+    const myAvatar = getAvatar(me);
+    const contactAvatar = getAvatar(userInfo);
 
     return (
       <Wrapper square elevation={0}>
@@ -164,14 +164,8 @@ class Messages extends Component {
         <MessagesComment
           adding={adding}
           avatars={{
-            me: {
-              src: me.avatar && me.avatar.sm,
-              text: myAvatarText,
-            },
-            contact: {
-              src: userInfo.avatar && userInfo.avatar.sm,
-              text: contactAvatarText,
-            },
+            me: myAvatar,
+            contact: contactAvatar,
           }}
           submit={this.addMessage}
         />

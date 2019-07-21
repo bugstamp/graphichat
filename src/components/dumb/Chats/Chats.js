@@ -12,11 +12,11 @@ import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 
-import { AppContext } from '../../context/AppProvider';
-import ContactPanel, { NoContactInfo } from '../../common/ContactPanel/ContactPanel';
+import ChatsContainer from '../../smart/ChatsContainer';
+import Contacts, { NoContactInfo } from './Contacts';
 import Messages from './Messages';
 
-import ChatsContainer from '../../smart/ChatsContainer';
+import { AppContext } from '../../context/AppProvider';
 
 import { getStyledProps, getSpacing } from '../../../styles';
 
@@ -130,7 +130,7 @@ class Chats extends Component {
                 <Wrapper square elevation={0}>
                   <Grid container spacing={0}>
                     <Grid item xs={12} sm={4} lg={3}>
-                      <ContactPanel
+                      <Contacts
                         loading={fetching}
                         me={user}
                         contacts={myContacts}

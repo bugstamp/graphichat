@@ -2,8 +2,8 @@ import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { includes, isEqual } from 'lodash';
 
-import MessagesListItem from './MessagesListItem';
 import List from '../../../common/List';
+import Message from './Message';
 
 import { isSameDay } from '../../../../helpers';
 
@@ -93,7 +93,7 @@ class MessagesList extends Component {
     }
 
     return (
-      <MessagesListItem
+      <Message
         ref={ref}
         rowIndex={rowIndex}
         alignItems={alignItems}
@@ -121,7 +121,7 @@ class MessagesList extends Component {
         loading={loading}
         data={messages}
         fetchMore={getMessages}
-        fetchMoreThreshold={10}
+        fetchMoreThreshold={5}
         startFrom="bottom"
         rowRenderer={this.rowRenderer}
         onResize={this.onResize}

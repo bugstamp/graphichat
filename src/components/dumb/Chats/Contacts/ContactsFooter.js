@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/AddRounded';
 
-import { getSpacing } from '../../../styles';
+import { getSpacing } from '../../../../styles';
 
 const ListPanelFooter = styled.div`
   display: flex;

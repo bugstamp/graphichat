@@ -13,8 +13,9 @@ import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 
 import ChatsContainer from '../../smart/ChatsContainer';
-import Contacts, { NoContactInfo } from './Contacts';
+import Contacts from './Contacts';
 import Messages from './Messages';
+import { NoContentWrapper } from '../../common/List';
 
 import { getStyledProps, getSpacing } from '../../../styles';
 
@@ -39,7 +40,7 @@ const InfoPanel = styled(Paper)`
 class Chats extends Component {
   state = {
     selected: null,
-    sendedIds: [],
+    optimisticIds: [],
   }
 
   componentDidMount() {
@@ -81,21 +82,21 @@ class Chats extends Component {
     }
   }
 
-  updateSendedIds = (optimisticId, action = 'add') => {
-    this.setState(({ sendedIds }) => {
-      let newSendedIds = sendedIds;
+  updateOptimisticIds = (optimisticId, action = 'add') => {
+    this.setState(({ optimisticIds }) => {
+      let newSendedIds = optimisticIds;
 
       if (action === 'add') {
-        newSendedIds = concat(sendedIds, optimisticId);
+        newSendedIds = concat(optimisticIds, optimisticId);
       } else if (action === 'remove') {
-        newSendedIds = filter(sendedIds, id => id !== optimisticId);
+        newSendedIds = filter(optimisticIds, id => id !== optimisticId);
       }
-      return ({ sendedIds: newSendedIds });
+      return ({ optimisticIds: newSendedIds });
     });
   }
 
   render() {
-    const { selected, sendedIds } = this.state;
+    const { selected, optimisticIds } = this.state;
     const { initialLoading } = this.props;
 
     return (
@@ -105,7 +106,7 @@ class Chats extends Component {
         }}
         addMessageProps={{
           onCompleted: ({ addMessage: { optimisticId } }) => {
-            this.updateSendedIds(optimisticId, 'remove');
+            this.updateOptimisticIds(optimisticId, 'remove');
           },
         }}
       >
@@ -144,11 +145,18 @@ class Chats extends Component {
                         {null}
                       </When>
                       <When condition={!selected}>
-                        <NoContactInfo>
+                        <NoContentWrapper>
                           <Typography variant="subtitle2">
                             <p>Please select a chat to start messaging</p>
                           </Typography>
-                        </NoContactInfo>
+                        </NoContentWrapper>
+                      </When>
+                      <When condition={!selectedChat}>
+                        <NoContentWrapper>
+                          <Typography variant="subtitle2">
+                            <p>Selected chat is undefined</p>
+                          </Typography>
+                        </NoContentWrapper>
                       </When>
                       <Otherwise>
                         <Messages
@@ -157,10 +165,10 @@ class Chats extends Component {
                           me={me}
                           contact={selectedContact}
                           chat={selectedChat}
-                          sendedIds={sendedIds}
+                          optimisticIds={optimisticIds}
                           fetchMoreMessages={fetchMoreMessages}
                           addMessage={addMessage}
-                          updateSendedIds={this.updateSendedIds}
+                          updateOptimisticIds={this.updateOptimisticIds}
                         />
                       </Otherwise>
                     </Choose>

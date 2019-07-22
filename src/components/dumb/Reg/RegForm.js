@@ -36,6 +36,12 @@ const Header = styled(Typography)`
   }
 `;
 
+const Info = styled(Typography)`
+  && {
+    text-align: center;
+  }
+`;
+
 const Footer = styled(Typography)`
   && {
     width: 100%;
@@ -61,7 +67,9 @@ const SignUp = ({
       </Header>
       <Choose>
         <When condition={completed}>
-          {'Your account had been successfuly completed.Check your email and confirm registration.'}
+          <Info>
+            {'Your account had been successfuly completed.Check your email and confirm registration.'}
+          </Info>
         </When>
         <When condition={activeStep === 0}>
           <Form

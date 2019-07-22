@@ -71,7 +71,7 @@ class SearchDialog extends PureComponent {
       >
         {({
           searchUsers: { loading, data, refetch },
-          createChat,
+          createChat: { mutation: createChat, result: { loading: adding } },
           getMyContacts: { data: { myContacts } },
         }) => {
           return (
@@ -81,7 +81,7 @@ class SearchDialog extends PureComponent {
                   Search contact
                 </DialogTitle>
                 <SubTitle variant="subtitle2">
-                  Search contact by name or use "@" as a first character for searching by username.
+                  Search contact by name or use &quot;@&quot; as a first character for searching by username.
                 </SubTitle>
                 <DialogContent>
                   <ListSearch
@@ -93,7 +93,7 @@ class SearchDialog extends PureComponent {
                     loading={loading}
                     data={data && data.searchUsers}
                     myContacts={myContacts}
-                    adding={createChat.result.loading}
+                    adding={adding}
                     selectedUserId={selectedUser.id}
                     openConfirmDialog={this.openConfirmDialog}
                   />
@@ -118,7 +118,7 @@ class SearchDialog extends PureComponent {
                       variant="contained"
                       size="small"
                       onClick={() => {
-                        createChat.mutation({ variables: { userId: selectedUser.id } });
+                        createChat({ variables: { userId: selectedUser.id } });
                         this.closeConfirmDialog();
                       }}
                     >

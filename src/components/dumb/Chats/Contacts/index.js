@@ -1,7 +1,3 @@
-import Contacts, { NoContactInfo } from './Contacts';
-
-export {
-  NoContactInfo,
-};
+import Contacts from './Contacts';
 
 export default Contacts;

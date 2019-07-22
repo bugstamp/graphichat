@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { size } from 'polished';
 import { find, filter, upperCase } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
@@ -20,17 +19,6 @@ const Wrapper = styled(Paper)`
     background-color: ${getStyledProps('theme.palette.background.default')};
     padding: ${getSpacing(2)};
     padding-top: ${getSpacing(3)};
-  }
-`;
-
-export const NoContactInfo = styled.div`
-  ${size('100%')};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  p {
-    text-align: center;
   }
 `;
 

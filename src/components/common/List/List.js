@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import ReactResizeDetector from 'react-resize-detector';
 import { InView } from 'react-intersection-observer';
 import styled from 'styled-components';
-import { position } from 'polished';
-import { debounce, isEmpty, isEqual, isFunction } from 'lodash';
+import { size, position } from 'polished';
+import {
+  debounce, isEmpty, isEqual, isFunction,
+} from 'lodash';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -28,6 +30,13 @@ const View = styled.div`
     display: flex;
     flex-flow: column;
   `}
+`;
+
+export const NoContentWrapper = styled.div`
+  ${size('100%')};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Scrollable = styled.div`
@@ -105,7 +114,19 @@ class List extends Component {
     return true;
   }
 
-  toggleScrollbarDragging = () => {
+  componentDidUpdate(prevProps) {
+    const { loading, data, lazyLoad } = this.props;
+
+    if (
+      (!isEqual(prevProps.data, data) && isEmpty(data))
+      ||
+      (!isEqual(prevProps.loading, loading) && loading && !lazyLoad)
+    ) {
+      this._setScrollbarPresence(false);
+    }
+  }
+
+  _toggleScrollbarDragging = () => {
     this.setState(({ scrollbarDragging }) => ({ scrollbarDragging: !scrollbarDragging }));
   }
 
@@ -115,7 +136,7 @@ class List extends Component {
 
   getScrollTop = () => this.listView.current.scrollTop;
 
-  setScrollbar = (scrollbar) => {
+  _setScrollbar = (scrollbar) => {
     const { scrollbarDragging, scrollbarPresence } = this.state;
 
     if (scrollbarPresence && !scrollbarDragging) {
@@ -123,7 +144,7 @@ class List extends Component {
     }
   }
 
-  setScrollbarPresence = (scrollbarPresence) => {
+  _setScrollbarPresence = (scrollbarPresence) => {
     this.setState({ scrollbarPresence });
   }
 
@@ -140,7 +161,7 @@ class List extends Component {
     }
   }
 
-  calculateScrollbarPosition = (scrollTop) => {
+  _calculateScrollbarPosition = (scrollTop) => {
     const { height: listHeight } = this.listScrollable.current.getBoundingClientRect();
     const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
     const listScrollHeight = listHeight - listViewHeight;
@@ -168,7 +189,7 @@ class List extends Component {
     const mouseOffset = initialClientY - viewPrevTopOffsett;
     const diff = thumbOffset - mouseOffset;
 
-    this.toggleScrollbarDragging();
+    this._toggleScrollbarDragging();
 
     const onMouseMove = ({ clientY }) => {
       const {
@@ -191,7 +212,7 @@ class List extends Component {
     };
 
     const onMouseUp = () => {
-      this.toggleScrollbarDragging();
+      this._toggleScrollbarDragging();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -201,7 +222,7 @@ class List extends Component {
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  onScroll = (e) => {
+  _onScroll = (e) => {
     e.preventDefault();
     const { onScroll } = this.props;
     const { scrollTop } = this.listView.current;
@@ -211,7 +232,7 @@ class List extends Component {
     this.enablePointerEvents();
     timer = this.disablePointerEvents();
 
-    this.calculateScrollbarPosition(scrollTop);
+    this._calculateScrollbarPosition(scrollTop);
 
     if (onScroll && isFunction(onScroll)) {
       onScroll({ scrollTop });
@@ -219,22 +240,26 @@ class List extends Component {
   }
 
   disablePointerEvents = () => {
-    this.setState({ pointerEvents: false });
+    const { pointerEvents } = this.props;
+
+    if (pointerEvents) {
+      this.setState({ pointerEvents: false });
+    }
   }
 
   enablePointerEvents = debounce(() => {
     this.setState({ pointerEvents: true });
   }, 500);
 
-  onResize = (width, height) => {
+  _onResize = (width, height) => {
     const { onResize } = this.props;
     const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
 
     if (height > listViewHeight) {
-      this.setScrollbarPresence(true);
-      this.calculateScrollbarPosition();
+      this._setScrollbarPresence(true);
+      this._calculateScrollbarPosition();
     } else {
-      this.setScrollbarPresence(false);
+      this._setScrollbarPresence(false);
     }
 
     if (onResize && (isFunction(onResize))) {
@@ -242,7 +267,7 @@ class List extends Component {
     }
   }
 
-  onObserverChange = (inView, { target }) => {
+  _onObserverChange = (inView, { target }) => {
     const {
       data,
       startFrom,
@@ -263,7 +288,7 @@ class List extends Component {
     }
   }
 
-  rowRenderer = (rowData, index) => {
+  _onRowRenderer = (rowData, index) => {
     const {
       lazyLoad,
       startFrom,
@@ -283,7 +308,7 @@ class List extends Component {
       return (
         <InView
           key={rowIndex}
-          onChange={this.onObserverChange}
+          onChange={this._onObserverChange}
           triggerOnce
         >
           {({ ref }) => rowRenderer({ ref, ...rowProps })}
@@ -293,12 +318,14 @@ class List extends Component {
     return rowRenderer(rowProps);
   }
 
-  onMouseEnter = () => {
-    this.setScrollbar(true);
+  onMouseEnter = (e) => {
+    e.preventDefault();
+    this._setScrollbar(true);
   }
 
-  onMouseLeave = () => {
-    this.setScrollbar(false);
+  onMouseLeave = (e) => {
+    e.preventDefault();
+    this._setScrollbar(false);
   }
 
   onMouseOver = (e) => {
@@ -306,7 +333,7 @@ class List extends Component {
     const { scrollbar } = this.state;
 
     if (!scrollbar) {
-      this.setScrollbar(true);
+      this._setScrollbar(true);
     }
   }
 
@@ -338,7 +365,7 @@ class List extends Component {
         </Scrollbar>
         <View
           ref={this.listView}
-          onScroll={this.onScroll}
+          onScroll={this._onScroll}
           startFrom={startFrom}
         >
           <Choose>
@@ -350,7 +377,9 @@ class List extends Component {
             <When condition={!loading && isEmpty(data)}>
               <Choose>
                 <When condition={NoContent}>
-                  <NoContent />
+                  <NoContentWrapper>
+                    <NoContent />
+                  </NoContentWrapper>
                 </When>
                 <Otherwise>
                   {null}
@@ -359,7 +388,7 @@ class List extends Component {
             </When>
             <Otherwise>
               <Scrollable ref={this.listScrollable} pointer={pointerEvents}>
-                <ReactResizeDetector onResize={this.onResize} handleHeight>
+                <ReactResizeDetector onResize={this._onResize} handleHeight>
                   <Fragment>
                     <If condition={lazyLoad && startFrom === 'bottom'}>
                       <FetchMore visible={loading}>
@@ -367,8 +396,12 @@ class List extends Component {
                       </FetchMore>
                     </If>
                     <ListItems
+                      scrollbar={scrollbar}
+                      scrollbarPresence={scrollbarPresence}
+                      loading={loading}
+                      pointerEvents={pointerEvents}
                       data={data}
-                      rowRenderer={this.rowRenderer}
+                      rowRenderer={this._onRowRenderer}
                     />
                     <If condition={lazyLoad && startFrom === 'top'}>
                       <FetchMore visible={loading}>

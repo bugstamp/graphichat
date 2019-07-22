@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-import Typography from '@material-ui/core/Typography';
+import MaterialTypography from '@material-ui/core/Typography';
 
 import List from '../../../common/List';
 import Contact from './Contact';
 
 import { getAvatar, messageTimeParser } from '../../../../helpers';
+
+const Typography = styled(MaterialTypography)`
+  && {
+    p {
+      text-align: center;
+    }
+  }
+`;
 
 const NoContacts = () => (
   <Typography variant="subtitle2">

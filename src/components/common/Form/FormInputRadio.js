@@ -2,22 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
 import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import MaterialRadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputLabel from '@material-ui/core/InputLabel';
-import { map } from 'lodash';
 import styled from 'styled-components';
 // import { position } from 'polished';
+import { map } from 'lodash';
 
-const RadioFormControlStyled = styled(FormControl)`
+const RadioFormControl = styled(FormControl)`
   && {
     position: relative;
     margin-bottom: 1.5em;
   }
 `;
 
-const RadioGroupStyled = styled(RadioGroup)`
+const RadioGroup = styled(MaterialRadioGroup)`
   && {
     display: flex;
     flex-flow: row nowrap;
@@ -28,26 +27,15 @@ const RadioGroupStyled = styled(RadioGroup)`
 
 const FormInputRadio = ({
   name,
-  // type,
-  label,
   values,
-  initialValue,
-  // placeholder,
-  // required,
-  // autoComplete,
-  // error,
-  // isError,
   validate,
   validateField,
   onChange,
-  // onBlur,
-  // ...rest,
 }) => (
   <Field name={name} validate={value => validate(value, name)}>
     {({ field }) => (
-      <RadioFormControlStyled variant="standard" fullWidth>
-        <InputLabel shrink>{label}</InputLabel>
-        <RadioGroupStyled
+      <RadioFormControl variant="standard" fullWidth>
+        <RadioGroup
           {...field}
           name={name}
           onChange={(event) => {
@@ -64,10 +52,18 @@ const FormInputRadio = ({
               label={value}
             />
           ))}
-        </RadioGroupStyled>
-      </RadioFormControlStyled>
+        </RadioGroup>
+      </RadioFormControl>
     )}
   </Field>
 );
+
+FormInputRadio.propTypes = {
+  name: PropTypes.string.isRequired,
+  values: PropTypes.arrayOf(PropTypes.string).isRequired,
+  validate: PropTypes.func.isRequired,
+  validateField: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default FormInputRadio;

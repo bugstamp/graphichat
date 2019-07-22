@@ -1,6 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
 // import {} from 'lodash';
@@ -13,15 +12,19 @@ import Button from '@material-ui/core/Button';
 import Form from '../../common/Form/Form';
 import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
+import TopProgressLine from '../../common/TopProgressLine';
 
 import { getSpacing } from '../../../styles';
+import { mutationProps } from '../../propTypes';
 
 const Wrapper = styled(Paper)`
   && {
     width: 100%;
     max-width: 375px;
     min-width: 320px;
+    position: relative;
     padding: ${getSpacing(5)} ${getSpacing(3)};
+    overflow: hidden;
   }
 `;
 
@@ -44,6 +47,7 @@ const LoginForm = ({
 }) => {
   return (
     <Wrapper elevation={8}>
+      <TopProgressLine loading={signIn.result.loading} />
       <Header variant="h1" color="primary" align="center" gutterBottom>
         <AccountCircleIcon fontSize="inherit" color="primary" />
       </Header>
@@ -69,6 +73,12 @@ const LoginForm = ({
       />
     </Wrapper>
   );
+};
+
+LoginForm.propTypes = {
+  signIn: PropTypes.shape(mutationProps).isRequired,
+  signInBySocial: PropTypes.shape(mutationProps).isRequired,
+  toSignUp: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

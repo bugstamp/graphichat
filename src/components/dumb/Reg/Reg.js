@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import queryString from 'query-string';
 import styled from 'styled-components';
@@ -120,5 +120,11 @@ class SignUp extends Component {
     );
   }
 }
+
+SignUp.propTypes = {
+  location: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  toggleNotification: PropTypes.func.isRequired,
+};
 
 export default withNotification(SignUp);

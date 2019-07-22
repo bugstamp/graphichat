@@ -12,7 +12,7 @@ import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/orange';
 
 import AppListItemAvatar from '../../../common/List/ListItemAvatar';
-import TopLineProgress from '../../../common/TopLineProgress';
+import TopProgressLine from '../../../common/TopProgressLine';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
 
@@ -124,7 +124,7 @@ class MessagePanelComment extends Component {
 
     return (
       <Wrapper>
-        <TopLineProgress height="1px" loading={adding} bordered />
+        <TopProgressLine height="1px" loading={adding} bordered />
         <MessagePanelCommentAvatar>
           <AppListItemAvatar {...me} />
         </MessagePanelCommentAvatar>

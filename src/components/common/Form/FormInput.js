@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
-import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { position } from 'polished';
 
@@ -36,7 +35,7 @@ const FormInput = ({
   validateField,
   onChange,
   onBlur,
-  ...rest,
+  ...rest
 }) => {
   return (
     <Field name={name} validate={value => validate(value, name)}>
@@ -71,6 +70,27 @@ const FormInput = ({
       )}
     </Field>
   );
+};
+
+FormInput.defaultProps = {
+  label: '',
+  placeholder: '',
+  error: undefined,
+  isError: false,
+};
+FormInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  required: PropTypes.bool.isRequired,
+  autoComplete: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  isError: PropTypes.bool,
+  validate: PropTypes.func.isRequired,
+  validateField: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
 };
 
 export default FormInput;

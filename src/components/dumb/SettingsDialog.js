@@ -9,7 +9,7 @@ import MaterialDialogContent from '@material-ui/core/DialogContent';
 import MaterialAvatar from '@material-ui/core/Avatar';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 
-import TopLineProgress from '../common/TopLineProgress';
+import TopProgressLine from '../common/TopProgressLine';
 
 const DialogContent = styled(MaterialDialogContent)`
   && {
@@ -64,7 +64,7 @@ class SettingsDialog extends PureComponent {
 
     return (
       <Dialog open={open} onClose={toggle}>
-        <TopLineProgress loading={avatarUploading} />
+        <TopProgressLine loading={avatarUploading} />
         <DialogTitle>Settings</DialogTitle>
         <DialogContent>
           <AvatarWrapper>

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { backgrounds } from 'polished';
+
+import Grid from '@material-ui/core/Grid';
 
 import LoginContainer from '../../smart/LoginContainer';
 import LoginForm from './LoginForm';
@@ -73,5 +74,10 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  toggleNotification: PropTypes.func.isRequired,
+};
 
 export default withNotification(Login);

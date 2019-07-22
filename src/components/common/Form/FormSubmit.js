@@ -1,8 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 const SubmitButton = styled(Button)`
   && {
@@ -20,15 +20,16 @@ const FormSubmit = ({ loading, text }) => (
     disabled={loading}
     fullWidth
   >
-    <Choose>
-      <When condition={loading}>
-        <CircularProgress size={26} />
-      </When>
-      <Otherwise>
-        {text}
-      </Otherwise>
-    </Choose>
+    {text}
   </SubmitButton>
 );
+
+FormSubmit.defaultProps = {
+  loading: false,
+};
+FormSubmit.propTypes = {
+  loading: PropTypes.bool,
+  text: PropTypes.string.isRequired,
+};
 
 export default FormSubmit;

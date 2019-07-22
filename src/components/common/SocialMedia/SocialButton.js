@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -16,5 +16,11 @@ const SocialButton = ({ loading, onClick, icon }) => (
     <FontAwesomeIcon icon={icon} size="lg" />
   </Button>
 );
+
+SocialButton.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  icon: PropTypes.oneOfType([PropTypes.node, PropTypes.object]).isRequired,
+};
 
 export default SocialButton;

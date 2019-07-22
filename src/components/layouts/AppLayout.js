@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
-// import { isEmpty } from 'lodash';
 import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
+// import { isEmpty } from 'lodash';
 
 import AppLayoutContainer from '../smart/AppLayoutContainer';
 import AppContent from '../dumb/AppContent';
@@ -30,21 +30,35 @@ class AppLayout extends Component {
 
     return (
       <AppLayoutContainer
-        signOutProps={{ onCompleted: this.signOut }}
-        checkSessionExpirationProps={{ onCompleted: this.onSessionExpired }}
+        signOutProps={{
+          onCompleted: this.signOut,
+        }}
+        checkSessionExpirationProps={{
+          onCompleted: this.onSessionExpired,
+        }}
       >
         {({
-          getInitialData: { data: { me }, loading },
-          signOut: { mutation: signOut },
-          uploadAvatar: { mutation: uploadAvatar, result: { loading: uploading } },
+          getInitialData: {
+            data: { me },
+            loading,
+          },
+          signOut: {
+            mutation: signOut,
+          },
+          uploadAvatar: {
+            mutation: uploadAvatar,
+            result: {
+              loading: avatarUploading,
+            },
+          },
         }) => {
           return (
             <AppContent
               loading={loading}
               me={me}
               signOut={signOut}
+              avatarUploading={avatarUploading}
               uploadAvatar={uploadAvatar}
-              uploading={uploading}
             >
               {children}
             </AppContent>
@@ -57,6 +71,8 @@ class AppLayout extends Component {
 
 AppLayout.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  client: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default hot(module)(withApollo(withRouter(AppLayout)));

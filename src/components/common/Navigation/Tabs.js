@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { map } from 'lodash';
@@ -96,6 +96,13 @@ const Tabs = ({
       <TabItemIndicator activeTab={activeTab} />
     </Wrapper>
   );
+};
+
+Tabs.propTypes = {
+  activeTab: PropTypes.number.isRequired,
+  onChangeTab: PropTypes.func.isRequired,
+  toggleSettingsDialog: PropTypes.func.isRequired,
+  signOut: PropTypes.func.isRequired,
 };
 
 export default Tabs;

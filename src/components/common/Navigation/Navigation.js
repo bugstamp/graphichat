@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
 // import {} from 'lodash';
@@ -39,5 +40,10 @@ class Navigation extends PureComponent {
     );
   }
 }
+
+Navigation.propTypes = {
+  toggleSettingsDialog: PropTypes.func.isRequired,
+  signOut: PropTypes.func.isRequired,
+};
 
 export default Navigation;

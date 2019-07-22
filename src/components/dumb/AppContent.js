@@ -1,5 +1,5 @@
-import React, { Component, createRef, cloneElement } from 'react';
-// import Cropper from 'react-easy-crop';
+import React, { Component, cloneElement } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { size } from 'polished';
 // import {} from 'lodash';
@@ -7,14 +7,10 @@ import { size } from 'polished';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import MaterialAvatar from '@material-ui/core/Avatar';
-import CameraIcon from '@material-ui/icons/CameraAlt';
 
 import Navigation from '../common/Navigation/Navigation';
-import TopLineProgress from '../common/TopLineProgress';
+
+import SettingsDialog from './SettingsDialog';
 
 import { getAvatar } from '../../helpers';
 
@@ -23,59 +19,13 @@ const AppContainer = styled(Paper)`
   display: flex;
 `;
 
-const SettingsDialogWrapper = styled(DialogContent)`
-  && {
-    min-width: 400px;
-  }
-`;
-
-const AvatarContainer = styled.div`
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-  position: relative;
-`;
-
-const Avatar = styled(MaterialAvatar)`
-  && {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
-`;
-
 class AppContent extends Component {
   state = {
     settingsDialog: false,
   }
 
-  input = createRef();
-
   toggleSettingsDialog = () => {
     this.setState(({ settingsDialog }) => ({ settingsDialog: !settingsDialog }));
-  }
-
-  toggleCropDialog = () => {
-    this.setState(({ cropDialog }) => ({ cropDialog: !cropDialog }));
-  }
-
-  onChangeAvatar = async ({
-    target: {
-      files: [file],
-      validity: { valid },
-    },
-  }) => {
-    const { uploadAvatar } = this.props;
-
-    if (valid) {
-      uploadAvatar({ variables: { file } });
-    }
-  }
-
-  onAvatarClick = () => {
-    if (this.input) {
-      this.input.current.click();
-    }
   }
 
   render() {
@@ -84,8 +34,9 @@ class AppContent extends Component {
       children,
       loading,
       me,
-      uploading,
+      avatarUploading,
       signOut,
+      uploadAvatar,
     } = this.props;
     const avatar = getAvatar(me, 'md');
 
@@ -108,31 +59,38 @@ class AppContent extends Component {
             </Grid>
           </AppContainer>
         </Grid>
-        <Dialog open={settingsDialog} onClose={this.toggleSettingsDialog}>
-          <TopLineProgress loading={uploading} />
-          <DialogTitle>Settings</DialogTitle>
-          <SettingsDialogWrapper>
-            <AvatarContainer>
-              <input
-                ref={this.input}
-                type="file"
-                accept="image/png, image/jpg, image/jpeg"
-                onChange={this.onChangeAvatar}
-                style={{ display: 'none' }}
-              />
-              <Avatar
-                src={avatar.src}
-                alt={avatar.text}
-                onClick={this.onAvatarClick}
-              >
-                <CameraIcon fontSize="large" />
-              </Avatar>
-            </AvatarContainer>
-          </SettingsDialogWrapper>
-        </Dialog>
+        <SettingsDialog
+          open={settingsDialog}
+          toggle={this.toggleSettingsDialog}
+          avatar={avatar}
+          avatarUploading={avatarUploading}
+          uploadAvatar={uploadAvatar}
+        />
       </Grid>
     );
   }
 }
+
+AppContent.defaultProps = {
+  me: {},
+};
+AppContent.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
+  loading: PropTypes.bool.isRequired,
+  me: PropTypes.shape({
+    avatar: PropTypes.shape({
+      sm: PropTypes.string,
+      md: PropTypes.string,
+    }),
+    displayName: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    status: PropTypes.oneOf(['ONLINE', 'OFFLINE']),
+    username: PropTypes.string,
+  }),
+  avatarUploading: PropTypes.bool.isRequired,
+  signOut: PropTypes.func.isRequired,
+  uploadAvatar: PropTypes.func.isRequired,
+};
 
 export default AppContent;

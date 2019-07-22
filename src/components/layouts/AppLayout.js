@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
-// import { isEmpty } from 'lodash';
 
 import AppLayoutContainer from '../smart/AppLayoutContainer';
 import AppContent from '../dumb/AppContent';

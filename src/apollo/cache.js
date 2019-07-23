@@ -11,6 +11,15 @@ const initialState = {
   },
   myContacts: [],
   myChats: [],
+  selectedChat: {
+    contact: {
+      __typename: 'MyContact',
+    },
+    chat: {
+      __typename: 'Chat',
+    },
+    __typename: 'SelectedChat',
+  },
 };
 
 export const initData = () => {

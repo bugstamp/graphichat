@@ -3,9 +3,7 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
-import {
-  isEmpty, isEqual, find, concat, filter,
-} from 'lodash';
+import { isEmpty, concat, filter } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -39,30 +37,7 @@ const InfoPanel = styled(Paper)`
 
 class Chats extends Component {
   state = {
-    selected: null,
     optimisticIds: [],
-  }
-
-  componentDidMount() {
-    const selected = this.checkRoute();
-
-    if (selected) {
-      this.selectChat(selected);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { location } = this.props;
-
-    if (!isEqual(prevProps.location, location)) {
-      const selected = this.checkRoute();
-
-      if (!selected) {
-        this.selectChat(null);
-      } else {
-        this.selectChat(selected);
-      }
-    }
   }
 
   checkRoute = () => {
@@ -72,14 +47,10 @@ class Chats extends Component {
     return chatId;
   }
 
-  selectChat = (chatId, changeRoute = false) => {
+  changeRoute = (chatId) => {
     const { history } = this.props;
 
-    this.setState({ selected: chatId });
-
-    if (changeRoute) {
-      history.push(`/chats?chatId=${chatId}`);
-    }
+    history.push(`/chats?chatId=${chatId}`);
   }
 
   updateOptimisticIds = (optimisticId, action = 'add') => {
@@ -105,23 +76,19 @@ class Chats extends Component {
   }
 
   render() {
-    const { selected, optimisticIds } = this.state;
+    const { optimisticIds } = this.state;
     const { initialLoading } = this.props;
-    const selectedChatId = this.checkRoute();
+    const selectedChatId = initialLoading ? null : this.checkRoute();
 
     return (
       <ChatsContainer
         messageAddedSubscriptionProps={{
-          variables: { chatId: selected },
+          variables: { chatId: selectedChatId },
         }}
         addMessageProps={{
           onCompleted: ({ addMessage: { optimisticId } }) => {
             this.updateOptimisticIds(optimisticId, 'remove');
           },
-        }}
-        getSelectedChatProps={{
-          variables: { chatId: selectedChatId },
-          skip: initialLoading || !selectedChatId,
         }}
       >
         {({
@@ -130,8 +97,6 @@ class Chats extends Component {
           },
           getMyChats: {
             data: { myContacts = [], myChats = [] },
-            fetchMore: fetchMoreMessages,
-            loading,
           },
           addMessage: {
             mutation: addMessage,
@@ -139,21 +104,21 @@ class Chats extends Component {
               loading: adding,
             },
           },
-          // selectChat: {
-          //   mutation: selectChat,
-          // },
+          selectChat: {
+            mutation: selectChat,
+          },
           getSelectedChat: {
-            data = {},
-          }
+            data: { selectedChat = { contact: {}, chat: {} } },
+            fetchMore: fetchMoreMessages,
+            loading,
+          },
         }) => {
-          const selectedContact = find(myContacts, { chatId: selected });
-          const selectedChat = find(myChats, { id: selected });
+          const { contact, chat } = selectedChat;
           let unselectedText;
-          console.log(data);
 
-          if (!selected) {
+          if (!selectedChatId) {
             unselectedText = 'Please select a chat to start messaging';
-          } else if (!selectedChat) {
+          } else if (isEmpty(chat)) {
             unselectedText = 'Selected chat is undefined';
           }
 
@@ -166,11 +131,9 @@ class Chats extends Component {
                     myId={me.id}
                     contacts={myContacts}
                     chats={myChats}
-                    selected={selected}
-                    selectChat={(chatId) => {
-                      // selectChat({ variables: { chatId } });
-                      this.selectChat(chatId, true);
-                    }}
+                    selectedChatId={selectedChatId}
+                    selectChat={selectChat}
+                    changeRoute={this.changeRoute}
                   />
                 </Grid>
                 <Hidden xsDown>
@@ -179,7 +142,7 @@ class Chats extends Component {
                       <When condition={isEmpty(myContacts)}>
                         {null}
                       </When>
-                      <When condition={!selected || !selectedChat}>
+                      <When condition={!selectedChatId || isEmpty(chat)}>
                         <NoContentWrapper>
                           <Typography variant="subtitle2">
                             <p>{unselectedText}</p>
@@ -191,8 +154,8 @@ class Chats extends Component {
                           loading={loading}
                           adding={adding}
                           me={me}
-                          contact={selectedContact}
-                          chat={selectedChat}
+                          contact={contact}
+                          chat={chat}
                           optimisticIds={optimisticIds}
                           fetchMoreMessages={fetchMoreMessages}
                           addMessage={addMessage}

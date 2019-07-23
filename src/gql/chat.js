@@ -33,8 +33,8 @@ export const CHAT_CREATED_SUBSCRIPTION = gql`
 `;
 
 export const GET_SELECTED_CHAT = gql`
-  query getSelectedChat($chatId: String) {
-    selectedChat(chatId: $chatId) @client {
+  query getSelectedChat {
+    selectedChat @client {
       contact {
         ...myContactData
       }

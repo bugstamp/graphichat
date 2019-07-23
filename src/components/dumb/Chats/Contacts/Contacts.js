@@ -35,7 +35,11 @@ class ContactPanel extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { searchValue } = this.state;
-    const { contacts } = this.props;
+    const { selectedChatId, selectChat, contacts } = this.props;
+
+    if (!isEqual(prevProps.selectedChatId, selectedChatId)) {
+      selectChat({ variables: { chatId: selectedChatId } });
+    }
 
     if (
       !isEqual(prevState.searchValue, searchValue)
@@ -82,8 +86,8 @@ class ContactPanel extends Component {
     const {
       loading,
       myId,
-      selected,
-      selectChat,
+      selectedChatId,
+      changeRoute,
     } = this.props;
 
     return (
@@ -94,8 +98,8 @@ class ContactPanel extends Component {
           data={sortedContacts}
           myId={myId}
           searchValue={searchValue}
-          selectedChat={selected}
-          selectChat={selectChat}
+          selectedChatId={selectedChatId}
+          changeRoute={changeRoute}
           getLastChatMessage={this.getLastChatMessage}
         />
         <ContactsFooter toggleSearchDialog={this.toggleSearchDialog} />
@@ -107,17 +111,18 @@ class ContactPanel extends Component {
 
 ContactPanel.defaultProps = {
   myId: null,
-  selected: null,
+  selectedChatId: null,
   contacts: [],
   chats: [],
 };
 ContactPanel.propTypes = {
   loading: PropTypes.bool.isRequired,
   myId: PropTypes.string,
-  selected: PropTypes.string,
+  selectedChatId: PropTypes.string,
   contacts: PropTypes.arrayOf(PropTypes.shape(contactProps)),
   chats: PropTypes.arrayOf(PropTypes.shape(chatProps)),
   selectChat: PropTypes.func.isRequired,
+  changeRoute: PropTypes.func.isRequired,
 };
 
 export default ContactPanel;

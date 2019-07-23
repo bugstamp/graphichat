@@ -17,7 +17,7 @@ import {
   formAsyncValidationFieldsProps,
 } from '../../propTypes';
 
-const FormWrapper = styled.form`
+const Wrapper = styled.form`
   width: 100%;
 `;
 
@@ -74,7 +74,7 @@ class Form extends Component {
     const { loading } = result;
 
     return (
-      <FormWrapper onSubmit={handleSubmit}>
+      <Wrapper onSubmit={handleSubmit}>
         {
           map(fields, (field) => {
             const {
@@ -148,7 +148,7 @@ class Form extends Component {
           })
         }
         <FormSubmit loading={loading} text={submitButtonText} />
-      </FormWrapper>
+      </Wrapper>
     );
   }
 }

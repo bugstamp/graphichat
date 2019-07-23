@@ -55,7 +55,9 @@ const messageAddedSubscription = createSubscription('messageAddedSubscription', 
   },
 });
 
-const getSelectedChat = createQuery('getSelectedChat', GET_SELECTED_CHAT);
+const getSelectedChat = createQuery('getSelectedChat', GET_SELECTED_CHAT, {
+  notifyOnNetworkStatusChange: true,
+});
 const selectChat = createMutation('selectChat', SELECT_CHAT);
 
 const ContactsContainer = adopt({
@@ -63,7 +65,7 @@ const ContactsContainer = adopt({
   getMyChats,
   addMessage,
   messageAddedSubscription,
-  // selectChat,
+  selectChat,
   getSelectedChat,
 });
 

@@ -11,8 +11,8 @@ class ContactsList extends Component {
   rowRenderer = ({ rowIndex, rowData }) => {
     const {
       myId,
-      selectedChat,
-      selectChat,
+      selectedChatId,
+      changeRoute,
       getLastChatMessage,
     } = this.props;
     const { chatId, userInfo } = rowData;
@@ -22,7 +22,7 @@ class ContactsList extends Component {
     const { senderId, content, time } = message;
     const parsedTime = messageTimeParser(time);
 
-    const isSelected = selectedChat === chatId;
+    const isSelected = selectedChatId === chatId;
     const online = status === 'ONLINE';
     const isMyMessage = senderId === myId;
     const messageText = isMyMessage
@@ -39,7 +39,7 @@ class ContactsList extends Component {
         time={parsedTime}
         online={online}
         isSelected={isSelected}
-        onSelect={() => selectChat(chatId)}
+        onSelect={() => changeRoute(chatId)}
       />
     );
   }
@@ -61,15 +61,15 @@ class ContactsList extends Component {
 
 ContactsList.defaultProps = {
   myId: null,
-  selectedChat: null,
+  selectedChatId: null,
 };
 ContactsList.propTypes = {
   loading: PropTypes.bool.isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   myId: PropTypes.string,
   searchValue: PropTypes.string.isRequired,
-  selectedChat: PropTypes.string,
-  selectChat: PropTypes.func.isRequired,
+  selectedChatId: PropTypes.string,
+  changeRoute: PropTypes.func.isRequired,
   getLastChatMessage: PropTypes.func.isRequired,
 };
 

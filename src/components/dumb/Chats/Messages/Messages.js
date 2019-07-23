@@ -13,7 +13,10 @@ import { getSpacing } from '../../../../styles';
 import { getAvatar, userLastDateParser } from '../../../../helpers';
 import gql from '../../../../gql';
 
-const { GET_CHAT_MESSAGES } = gql;
+const {
+  GET_CHAT_MESSAGES,
+  GET_SELECTED_CHAT,
+} = gql;
 
 const Wrapper = styled(Paper)`
   && {
@@ -34,7 +37,7 @@ class Messages extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { chat: { id } } = this.props;
+    const { chat: { id, messages } } = this.props;
 
     if (!isEqual(prevProps.chat.id, id)) {
       this.getMessages();
@@ -101,25 +104,53 @@ class Messages extends Component {
   fetchMoreMessages = (variables) => {
     const { fetchMoreMessages } = this.props;
 
+    // fetchMoreMessages({
+    //   query: GET_CHAT_MESSAGES,
+    //   variables,
+    //   updateQuery: (prev, { fetchMoreResult }) => {
+    //     const { myChats: chats } = prev;
+    //     const { chatMessages } = fetchMoreResult;
+    //     const { chatId } = variables;
+    //     const updatedChats = map(chats, (chat) => {
+    //       const { id, messages } = chat;
+    //
+    //       if (id === chatId) {
+    //         const updatedMessages = concat(chatMessages, messages);
+    //
+    //         return { ...chat, messages: updatedMessages };
+    //       }
+    //       return chat;
+    //     });
+    //
+    //     return { ...prev, myChats: updatedChats };
+    //   },
+    // });
     fetchMoreMessages({
       query: GET_CHAT_MESSAGES,
       variables,
       updateQuery: (prev, { fetchMoreResult }) => {
-        const { myChats: chats } = prev;
+        const { selectedChat } = prev;
         const { chatMessages } = fetchMoreResult;
-        const { chatId } = variables;
-        const updatedChats = map(chats, (chat) => {
-          const { id, messages } = chat;
+        const { chat, ...rest } = selectedChat;
+        const { messages } = chat;
+        // const { chatId } = variables;
+        // const updatedChats = map(chats, (chat) => {
+        //   const { id, messages } = chat;
+        //
+        //   if (id === chatId) {
+        //     const updatedMessages = concat(chatMessages, messages);
+        //
+        //     return { ...chat, messages: updatedMessages };
+        //   }
+        //   return chat;
+        // });
 
-          if (id === chatId) {
-            const updatedMessages = concat(chatMessages, messages);
-
-            return { ...chat, messages: updatedMessages };
-          }
-          return chat;
-        });
-
-        return { ...prev, myChats: updatedChats };
+        return {
+          selectedChat: {
+            ...rest,
+            chat: { ...chat, messages: concat(chatMessages, messages) },
+          },
+        };
       },
     });
   };

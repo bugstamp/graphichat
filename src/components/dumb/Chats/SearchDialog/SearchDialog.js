@@ -9,7 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 
 import SearchDialogContainer from '../../../smart/SearchDialogContainer';
-import ListSearch from '../../../common/List/ListSearch';
+import SearchBox from '../../../common/SearchBox';
 import SearchDialogList from './SearchDialogList';
 
 import { getSpacing } from '../../../../styles';
@@ -84,7 +84,7 @@ class SearchDialog extends PureComponent {
                   Search contact by name or use &quot;@&quot; as a first character for searching by username.
                 </SubTitle>
                 <DialogContent>
-                  <ListSearch
+                  <SearchBox
                     value={searchValue}
                     onChange={value => this.onChangeSearchValue(value, refetch)}
                     autoFocus

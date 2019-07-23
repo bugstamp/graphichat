@@ -1,28 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-import MaterialTypography from '@material-ui/core/Typography';
 
 import List from '../../../common/List';
 import Contact from './Contact';
+import NoContacts from './NoContacts';
 
 import { getAvatar, messageTimeParser } from '../../../../helpers';
-
-const Typography = styled(MaterialTypography)`
-  && {
-    p {
-      text-align: center;
-    }
-  }
-`;
-
-const NoContacts = () => (
-  <Typography variant="subtitle2">
-    <p>Your contact list is empty.</p>
-    <p>Click on the &quot;+&quot; icon to find your contacts</p>
-  </Typography>
-);
 
 class ContactsList extends Component {
   rowRenderer = ({ rowIndex, rowData }) => {
@@ -62,14 +45,14 @@ class ContactsList extends Component {
   }
 
   render() {
-    const { loading, data } = this.props;
+    const { loading, data, searchValue } = this.props;
 
     return (
       <List
         loading={loading}
         data={data}
         rowRenderer={this.rowRenderer}
-        noContentComponent={() => (<NoContacts />)}
+        noContentComponent={() => (<NoContacts searchValue={searchValue} />)}
         spinnerSize={40}
       />
     );
@@ -84,6 +67,7 @@ ContactsList.propTypes = {
   loading: PropTypes.bool.isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   myId: PropTypes.string,
+  searchValue: PropTypes.string.isRequired,
   selectedChat: PropTypes.string,
   selectChat: PropTypes.func.isRequired,
   getLastChatMessage: PropTypes.func.isRequired,

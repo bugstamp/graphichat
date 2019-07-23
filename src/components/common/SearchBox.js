@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/SearchRounded';
 
-import { getStyledProps, getSpacing } from '../../../styles';
+import { getStyledProps, getSpacing } from '../../styles';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')}
 `;
 
-const SearchIconWrapper = styled.div`
+const IconWrapper = styled.div`
   flex: 0 40px;
   display: inline-flex;
   justify-content: center;
@@ -26,33 +26,35 @@ const SearchIconWrapper = styled.div`
   color: ${getStyledProps('theme.palette.primary.light')};
 `;
 
-const SearchInput = styled(InputBase)`
+const Input = styled(InputBase)`
   && {
     flex: 1 auto;
     color: inherit;
   }
 `;
 
-const ListSearch = ({ searchValue, onChange, autoFocus }) => (
+const SearchBox = ({ value, onChange, autoFocus }) => (
   <Wrapper>
-    <SearchIconWrapper>
+    <IconWrapper>
       <SearchIcon />
-    </SearchIconWrapper>
-    <SearchInput
+    </IconWrapper>
+    <Input
       type="text"
-      value={searchValue}
-      onChange={({ target: { value } }) => onChange(value)}
+      value={value}
+      onChange={({ target }) => onChange(target.value)}
       placeholder="Search..."
       autoFocus={autoFocus}
     />
   </Wrapper>
 );
 
-ListSearch.defaultProps = {
+SearchBox.defaultProps = {
   autoFocus: false,
 };
-ListSearch.props = {
+SearchBox.propTypes = {
   autoFocus: PropTypes.bool,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
-export default ListSearch;
+export default SearchBox;

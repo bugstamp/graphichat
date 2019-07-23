@@ -124,6 +124,13 @@ class Chats extends Component {
         }) => {
           const selectedContact = find(myContacts, { chatId: selected });
           const selectedChat = find(myChats, { id: selected });
+          let unselectedText;
+
+          if (!selected) {
+            unselectedText = 'Please select a chat to start messaging';
+          } else if (!selectedChat) {
+            unselectedText = 'Selected chat is undefined';
+          }
 
           return (
             <Wrapper square elevation={0}>
@@ -131,7 +138,7 @@ class Chats extends Component {
                 <Grid item xs={12} sm={4} lg={3}>
                   <Contacts
                     loading={initialLoading}
-                    me={me}
+                    myId={me.id}
                     contacts={myContacts}
                     chats={myChats}
                     selected={selected}
@@ -144,17 +151,10 @@ class Chats extends Component {
                       <When condition={isEmpty(myContacts)}>
                         {null}
                       </When>
-                      <When condition={!selected}>
+                      <When condition={!selected || !selectedChat}>
                         <NoContentWrapper>
                           <Typography variant="subtitle2">
-                            <p>Please select a chat to start messaging</p>
-                          </Typography>
-                        </NoContentWrapper>
-                      </When>
-                      <When condition={!selectedChat}>
-                        <NoContentWrapper>
-                          <Typography variant="subtitle2">
-                            <p>Selected chat is undefined</p>
+                            <p>{unselectedText}</p>
                           </Typography>
                         </NoContentWrapper>
                       </When>

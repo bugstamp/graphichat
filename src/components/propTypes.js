@@ -28,4 +28,41 @@ export const formAsyncValidationFieldsProps = {
   validation: PropTypes.shape(mutationProps),
 };
 
+export const messageProps = {
+  content: PropTypes.string,
+  edited: PropTypes.bool,
+  id: PropTypes.string,
+  seen: PropTypes.bool,
+  senderId: PropTypes.string,
+  time: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+  type: PropTypes.oneOf(['system', 'text']),
+  __typename: PropTypes.string,
+};
+
+export const chatProps = {
+  id: PropTypes.string,
+  messages: PropTypes.arrayOf(PropTypes.shape(messageProps)),
+};
+
+export const userInfoProps = {
+  avatar: PropTypes.shape({
+    sm: PropTypes.string,
+    md: PropTypes.string,
+  }),
+  displayName: PropTypes.string,
+  firstName: PropTypes.string,
+  lastName: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+  status: PropTypes.string,
+  username: PropTypes.string,
+  lastDate: PropTypes.string,
+  __typename: PropTypes.string,
+};
+
+export const contactProps = {
+  chatId: PropTypes.string,
+  id: PropTypes.string,
+  userInfo: PropTypes.shape(userInfoProps),
+  __typename: PropTypes.string,
+};
+
 export default undefined;

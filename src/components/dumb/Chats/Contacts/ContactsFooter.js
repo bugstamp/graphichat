@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Fab from '@material-ui/core/Fab';
@@ -12,18 +13,18 @@ const ListPanelFooter = styled.div`
   padding: ${getSpacing(1)} 0;
 `;
 
-class ContactPanelFooter extends Component {
-  render() {
-    const { toggleSearchDialog } = this.props;
+const ContactPanelFooter = ({ toggleSearchDialog }) => {
+  return (
+    <ListPanelFooter>
+      <Fab color="primary" size="medium" onClick={toggleSearchDialog}>
+        <AddIcon />
+      </Fab>
+    </ListPanelFooter>
+  );
+};
 
-    return (
-      <ListPanelFooter>
-        <Fab color="primary" size="medium" onClick={toggleSearchDialog}>
-          <AddIcon />
-        </Fab>
-      </ListPanelFooter>
-    );
-  }
-}
+ContactPanelFooter.propTypes = {
+  toggleSearchDialog: PropTypes.func.isRequired,
+};
 
 export default ContactPanelFooter;

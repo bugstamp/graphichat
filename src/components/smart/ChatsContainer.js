@@ -8,6 +8,8 @@ import gql from '../../gql';
 const {
   GET_ME,
   GET_MY_CHATS,
+  SELECT_CHAT,
+  GET_SELECTED_CHAT,
   ADD_MESSAGE,
   MESSAGE_ADDED_SUBSCRIPTION,
 } = gql;
@@ -53,11 +55,16 @@ const messageAddedSubscription = createSubscription('messageAddedSubscription', 
   },
 });
 
+const getSelectedChat = createQuery('getSelectedChat', GET_SELECTED_CHAT);
+const selectChat = createMutation('selectChat', SELECT_CHAT);
+
 const ContactsContainer = adopt({
   getMe,
   getMyChats,
   addMessage,
   messageAddedSubscription,
+  // selectChat,
+  getSelectedChat,
 });
 
 export default ContactsContainer;

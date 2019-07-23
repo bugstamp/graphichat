@@ -84,13 +84,22 @@ class Chats extends Component {
 
   updateOptimisticIds = (optimisticId, action = 'add') => {
     this.setState(({ optimisticIds }) => {
-      let newSendedIds = optimisticIds;
+      let newSendedIds;
 
-      if (action === 'add') {
-        newSendedIds = concat(optimisticIds, optimisticId);
-      } else if (action === 'remove') {
-        newSendedIds = filter(optimisticIds, id => id !== optimisticId);
+      switch (action) {
+        case 'add': {
+          newSendedIds = concat(optimisticIds, optimisticId);
+          break;
+        }
+        case 'remove': {
+          newSendedIds = filter(optimisticIds, id => id !== optimisticId);
+          break;
+        }
+        default: {
+          newSendedIds = optimisticIds;
+        }
       }
+
       return ({ optimisticIds: newSendedIds });
     });
   }
@@ -98,6 +107,7 @@ class Chats extends Component {
   render() {
     const { selected, optimisticIds } = this.state;
     const { initialLoading } = this.props;
+    const selectedChatId = this.checkRoute();
 
     return (
       <ChatsContainer
@@ -109,9 +119,15 @@ class Chats extends Component {
             this.updateOptimisticIds(optimisticId, 'remove');
           },
         }}
+        getSelectedChatProps={{
+          variables: { chatId: selectedChatId },
+          skip: initialLoading || !selectedChatId,
+        }}
       >
         {({
-          getMe: { data: { me = {} } },
+          getMe: {
+            data: { me = {} },
+          },
           getMyChats: {
             data: { myContacts = [], myChats = [] },
             fetchMore: fetchMoreMessages,
@@ -119,12 +135,21 @@ class Chats extends Component {
           },
           addMessage: {
             mutation: addMessage,
-            result: { loading: adding },
+            result: {
+              loading: adding,
+            },
           },
+          // selectChat: {
+          //   mutation: selectChat,
+          // },
+          getSelectedChat: {
+            data = {},
+          }
         }) => {
           const selectedContact = find(myContacts, { chatId: selected });
           const selectedChat = find(myChats, { id: selected });
           let unselectedText;
+          console.log(data);
 
           if (!selected) {
             unselectedText = 'Please select a chat to start messaging';
@@ -142,7 +167,10 @@ class Chats extends Component {
                     contacts={myContacts}
                     chats={myChats}
                     selected={selected}
-                    selectChat={chatId => this.selectChat(chatId, true)}
+                    selectChat={(chatId) => {
+                      // selectChat({ variables: { chatId } });
+                      this.selectChat(chatId, true);
+                    }}
                   />
                 </Grid>
                 <Hidden xsDown>

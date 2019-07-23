@@ -1,11 +1,15 @@
 import { adopt } from 'react-adopt';
 import {
-  concat, find, set, map,
+  concat, find, map,
 } from 'lodash';
 
 import { createMutation, createQuery, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
 import { myContactActivityFragment } from '../../gql/fragments';
+
+// import storage from '../../storage';
+// import clientInstance from '../../apollo';
+// import history from '../../router/history';
 
 const {
   GET_ME,
@@ -63,7 +67,13 @@ const userActivitySubscription = createSubscription('userActivitySubscription', 
     });
   },
 });
-const signOut = createMutation('signOut', SIGN_OUT);
+const signOut = createMutation('signOut', SIGN_OUT, {
+  // onCompleted() {
+  //   storage.removeTokens();
+  //   clientInstance.resetStore();
+  //   history.push('/');
+  // },
+});
 const uploadAvatar = createMutation('uploadAvatar', UPLOAD_AVATAR, {
   update(client, { data: { uploadAvatar: avatar } }) {
     const { me } = client.readQuery({ query: GET_ME });

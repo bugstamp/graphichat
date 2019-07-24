@@ -7,9 +7,9 @@ import { createMutation, createQuery, createSubscription } from '../../apollo/ut
 import gql from '../../gql';
 import { myContactActivityFragment } from '../../gql/fragments';
 
-// import storage from '../../storage';
-// import clientInstance from '../../apollo';
-// import history from '../../router/history';
+import history from '../../router/history';
+import storage from '../../storage';
+import originalClient from '../../apollo';
 
 const {
   GET_ME,
@@ -68,11 +68,11 @@ const userActivitySubscription = createSubscription('userActivitySubscription', 
   },
 });
 const signOut = createMutation('signOut', SIGN_OUT, {
-  // onCompleted() {
-  //   storage.removeTokens();
-  //   clientInstance.resetStore();
-  //   history.push('/');
-  // },
+  onCompleted() {
+    storage.removeTokens();
+    originalClient.resetStore();
+    history.push('/');
+  },
 });
 const uploadAvatar = createMutation('uploadAvatar', UPLOAD_AVATAR, {
   update(client, { data: { uploadAvatar: avatar } }) {

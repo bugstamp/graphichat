@@ -39,6 +39,19 @@ export const messageProps = {
   __typename: PropTypes.string,
 };
 
+export const meProps = {
+  id: PropTypes.string,
+  avatar: PropTypes.shape({
+    sm: PropTypes.string,
+    md: PropTypes.string,
+  }),
+  displayName: PropTypes.string,
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  status: PropTypes.oneOf(['ONLINE', 'OFFLINE']),
+  username: PropTypes.string,
+};
+
 export const chatProps = {
   id: PropTypes.string,
   messages: PropTypes.arrayOf(PropTypes.shape(messageProps)),

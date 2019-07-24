@@ -7,6 +7,7 @@ import UserModule from './user';
 import ChatModule from './chat';
 
 const AppModule = new GraphQLModule({
+  name: 'app',
   imports: [
     ScalarsModule,
     CommonModule,

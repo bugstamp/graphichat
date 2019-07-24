@@ -7,35 +7,12 @@ import { withApollo } from 'react-apollo';
 import AppLayoutContainer from '../smart/AppLayoutContainer';
 import AppContent from '../dumb/AppContent';
 
-import storage from '../../storage';
-
 class AppLayout extends Component {
-  signOut = () => {
-    const { history, client } = this.props;
-
-    storage.removeTokens();
-    client.resetStore();
-    history.push('/');
-  }
-
-  onSessionExpired = ({ sessionExpired }) => {
-    if (sessionExpired) {
-      this.signOut();
-    }
-  }
-
   render() {
     const { children } = this.props;
 
     return (
-      <AppLayoutContainer
-        signOutProps={{
-          onCompleted: this.signOut,
-        }}
-        checkSessionExpirationProps={{
-          onCompleted: this.onSessionExpired,
-        }}
-      >
+      <AppLayoutContainer>
         {({
           getInitialData: {
             data: { me },
@@ -50,6 +27,11 @@ class AppLayout extends Component {
               loading: avatarUploading,
             },
           },
+          checkSessionExpiration: {
+            data: {
+              sessionExpired = false,
+            },
+          },
         }) => {
           return (
             <AppContent
@@ -58,6 +40,7 @@ class AppLayout extends Component {
               signOut={signOut}
               avatarUploading={avatarUploading}
               uploadAvatar={uploadAvatar}
+              sessionExpired={sessionExpired}
             >
               {children}
             </AppContent>

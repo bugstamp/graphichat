@@ -57,7 +57,7 @@ const AuthModule = new GraphQLModule({
       signUpAsyncValidation(field: String!, value: String!): AsyncValidationResult
       signInBySocial(social: SocialProfile!, profile: SocialUserProfile!): AuthPayload
       signUpBySocial(social: SocialProfile!, profile: SocialUserProfile!): AuthPayload
-      signOut: Boolean
+      signOut(userId: String!): Boolean
     }
   `,
   resolvers,

@@ -20,7 +20,7 @@ const tokensConfig = {
   },
   refresh: {
     secret: process.env.REFRESH_TOKEN_SECRET,
-    expiresIn: '2m',
+    expiresIn: '10m',
     model: ['id', 'regStatus'],
   },
   register: {

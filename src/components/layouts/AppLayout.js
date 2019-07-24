@@ -4,8 +4,8 @@ import { hot } from 'react-hot-loader';
 import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
 
-import AppLayoutContainer from '../smart/AppLayoutContainer';
-import AppContent from '../dumb/AppContent';
+import AppLayoutContainer from '../containers/AppLayoutContainer';
+import MainContent from '../pages/MainContent';
 
 class AppLayout extends Component {
   render() {
@@ -34,7 +34,7 @@ class AppLayout extends Component {
           },
         }) => {
           return (
-            <AppContent
+            <MainContent
               loading={loading}
               me={me}
               signOut={signOut}
@@ -43,7 +43,7 @@ class AppLayout extends Component {
               sessionExpired={sessionExpired}
             >
               {children}
-            </AppContent>
+            </MainContent>
           );
         }}
       </AppLayoutContainer>

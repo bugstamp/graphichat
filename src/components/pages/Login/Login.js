@@ -5,7 +5,7 @@ import { backgrounds } from 'polished';
 
 import Grid from '@material-ui/core/Grid';
 
-import LoginContainer from '../../smart/LoginContainer';
+import LoginContainer from '../../containers/LoginContainer';
 import LoginForm from './LoginForm';
 
 import withNotification from '../../common/HOC/withNotification';

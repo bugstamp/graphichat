@@ -15,12 +15,12 @@ import withNotification from '../common/HOC/withNotification';
 import { getAvatar } from '../../helpers';
 import { meProps } from '../propTypes';
 
-const AppContainer = styled(Paper)`
+const MainContainer = styled(Paper)`
   ${size('100%')};
   display: flex;
 `;
 
-class AppContent extends Component {
+class MainContent extends Component {
   state = {
     settingsDialog: false,
   }
@@ -59,7 +59,7 @@ class AppContent extends Component {
     return (
       <Grid container spacing={0} justify="center">
         <Grid item xs={12} lg={10}>
-          <AppContainer square>
+          <MainContainer square>
             <Grid container spacing={0}>
               <Hidden smDown>
                 <Grid item>
@@ -73,7 +73,7 @@ class AppContent extends Component {
                 {cloneElement(children, { initialLoading: loading })}
               </Grid>
             </Grid>
-          </AppContainer>
+          </MainContainer>
         </Grid>
         <SettingsDialog
           open={settingsDialog}
@@ -87,10 +87,10 @@ class AppContent extends Component {
   }
 }
 
-AppContent.defaultProps = {
+MainContent.defaultProps = {
   me: {},
 };
-AppContent.propTypes = {
+MainContent.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
   loading: PropTypes.bool.isRequired,
   me: PropTypes.shape(meProps),
@@ -101,4 +101,4 @@ AppContent.propTypes = {
   toggleNotification: PropTypes.func.isRequired,
 };
 
-export default withNotification(AppContent);
+export default withNotification(MainContent);

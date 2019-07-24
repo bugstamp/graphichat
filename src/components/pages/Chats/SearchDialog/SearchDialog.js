@@ -8,7 +8,7 @@ import MaterialDialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 
-import SearchDialogContainer from '../../../smart/SearchDialogContainer';
+import SearchDialogContainer from '../../../containers/SearchDialogContainer';
 import SearchBox from '../../../common/SearchBox';
 import SearchDialogList from './SearchDialogList';
 

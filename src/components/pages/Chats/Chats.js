@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 
-import ChatsContainer from '../../smart/ChatsContainer';
+import ChatsContainer from '../../containers/ChatsContainer';
 import Contacts from './Contacts';
 import Messages from './Messages';
 import { NoContentWrapper } from '../../common/List';

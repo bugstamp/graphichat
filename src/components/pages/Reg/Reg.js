@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import styled from 'styled-components';
 import { backgrounds } from 'polished';
 
-import RegContainer from '../../smart/RegContainer';
+import RegContainer from '../../containers/RegContainer';
 import RegForm from './RegForm';
 
 import withNotification from '../../common/HOC/withNotification';

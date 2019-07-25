@@ -7,7 +7,7 @@ import Message from './Message';
 
 import { isSameDay } from '../../../../helpers';
 
-class MessagesList extends Component {
+class ChatMessages extends Component {
   list = createRef();
 
   state = {
@@ -131,13 +131,13 @@ class MessagesList extends Component {
   }
 }
 
-MessagesList.defaultProps = {
+ChatMessages.defaultProps = {
   chatId: null,
   myId: null,
   messages: [],
   optimisticIds: [],
 };
-MessagesList.propTypes = {
+ChatMessages.propTypes = {
   chatId: PropTypes.string,
   myId: PropTypes.string,
   loading: PropTypes.bool.isRequired,
@@ -147,4 +147,4 @@ MessagesList.propTypes = {
   optimisticIds: PropTypes.arrayOf(PropTypes.string),
 };
 
-export default MessagesList;
+export default ChatMessages;

@@ -43,8 +43,7 @@ class UserProvider {
 
   getMyContacts = async () => {
     try {
-      const { id } = this.authProvider.user;
-      const { contacts } = await this.db.User.findById(id);
+      const { contacts } = await this.authProvider.getMe();
       const myContacts = [];
 
       if (!isEmpty(contacts)) {

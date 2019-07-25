@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -17,7 +18,7 @@ const Wrapper = styled.div`
   z-index: 20;
 `;
 
-const MessagePanelTopBarName = styled.div`
+const UserName = styled.div`
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -27,28 +28,38 @@ const MessagePanelTopBarName = styled.div`
   }
 `;
 
-const MessagePanelTopBarStatus = styled.span`
+const UserStatus = styled.span`
   ${getStyledProps('theme.typography.caption')};
   color: ${({ online, ...rest }) => (online
     ? green[600]
     : getStyledProps('theme.palette.grey.500')(rest))};
 `;
 
-const MessagePanelTopBar = ({ name, statusText, isOnline }) => (
+const ChatTopBar = ({
+  name,
+  statusText,
+  isOnline,
+}) => (
   <Wrapper>
     <IconButton>
       <SearchIcon />
     </IconButton>
-    <MessagePanelTopBarName>
+    <UserName>
       <p>{name}</p>
-      <MessagePanelTopBarStatus online={isOnline}>
+      <UserStatus online={isOnline}>
         {statusText}
-      </MessagePanelTopBarStatus>
-    </MessagePanelTopBarName>
+      </UserStatus>
+    </UserName>
     <IconButton>
       <SettingsIcon />
     </IconButton>
   </Wrapper>
 );
 
-export default MessagePanelTopBar;
+ChatTopBar.propTypes = {
+  name: PropTypes.string.isRequired,
+  statusText: PropTypes.string.isRequired,
+  isOnline: PropTypes.bool.isRequired,
+};
+
+export default ChatTopBar;

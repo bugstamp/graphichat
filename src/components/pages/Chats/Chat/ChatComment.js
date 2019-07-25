@@ -1,4 +1,5 @@
 import React, { Component, createRef } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { position } from 'polished';
 
@@ -6,15 +7,15 @@ import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import MoodIcon from '@material-ui/icons/MoodRounded';
 import SendIcon from '@material-ui/icons/SendRounded';
-import RootRef from '@material-ui/core/RootRef';
 
 import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/orange';
 
-import AppListItemAvatar from '../../../common/List/ListItemAvatar';
+import ListItemAvatar from '../../../common/List/ListItemAvatar';
 import TopProgressLine from '../../../common/TopProgressLine';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
+import { userAvatarProps } from '../../../propTypes';
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,13 +25,13 @@ const Wrapper = styled.div`
   padding-top: ${getSpacing(1)};
 `;
 
-const MessagePanelCommentAvatar = styled.div`
+const UserAvatar = styled.div`
   display: flex;
   align-items: flex-start;
   padding: ${getSpacing(2)};
 `;
 
-const MessagePanelCommentForm = styled.form`
+const Form = styled.form`
   width: 100%;
   display: flex;
   flex-flow: column;
@@ -38,7 +39,7 @@ const MessagePanelCommentForm = styled.form`
   position: relative;
 `;
 
-const MessagePanelCommentInput = styled(Input)`
+const FormInput = styled(Input)`
   && {
     width: 100%;
     min-height: 80px;
@@ -51,7 +52,7 @@ const MessagePanelCommentInput = styled(Input)`
   }
 `;
 
-const MessagePanelCommentSmiles = styled.div`
+const Emoji = styled.div`
   ${position('absolute', 0, 0, null, null)}
   font-size: 28px;
   color: ${grey[500]};
@@ -63,7 +64,7 @@ const MessagePanelCommentSmiles = styled.div`
   }
 `;
 
-const MessagePanelCommentSubmit = styled.div`
+const Submit = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
@@ -79,7 +80,7 @@ const MessagePanelCommentSubmit = styled.div`
   }
 `;
 
-class MessagePanelComment extends Component {
+class ChatComment extends Component {
   submitButtonRef = createRef();
 
   inputRef = createRef();
@@ -95,17 +96,16 @@ class MessagePanelComment extends Component {
 
     if (value) {
       submit(value);
-      this.clear();
+      this.clearValue();
     }
   }
 
   onChange = () => {
     const { value } = this.inputRef.current;
-
     this.setState({ value });
   }
 
-  clear = () => {
+  clearValue = () => {
     this.setState({ value: '' });
     this.inputRef.current.focus();
   }
@@ -120,19 +120,25 @@ class MessagePanelComment extends Component {
 
   render() {
     const { value } = this.state;
-    const { adding, avatars: { me, contact } } = this.props;
+    const {
+      adding,
+      avatars: {
+        me,
+        contact,
+      },
+    } = this.props;
 
     return (
       <Wrapper>
         <TopProgressLine height="1px" loading={adding} bordered />
-        <MessagePanelCommentAvatar>
-          <AppListItemAvatar {...me} />
-        </MessagePanelCommentAvatar>
-        <MessagePanelCommentForm onSubmit={this.onSubmit}>
-          <MessagePanelCommentSmiles>
+        <UserAvatar>
+          <ListItemAvatar {...me} />
+        </UserAvatar>
+        <Form onSubmit={this.onSubmit}>
+          <Emoji>
             <MoodIcon fontSize="inherit" color="inherit" />
-          </MessagePanelCommentSmiles>
-          <MessagePanelCommentInput
+          </Emoji>
+          <FormInput
             inputRef={this.inputRef}
             value={value}
             onChange={this.onChange}
@@ -140,25 +146,33 @@ class MessagePanelComment extends Component {
             placeholder="Write a message..."
             multiline
           />
-          <MessagePanelCommentSubmit>
-            <RootRef rootRef={this.submitButtonRef}>
-              <Button
-                variant="text"
-                color="primary"
-                type="submit"
-              >
-                {'Send'}
-                <SendIcon />
-              </Button>
-            </RootRef>
-          </MessagePanelCommentSubmit>
-        </MessagePanelCommentForm>
-        <MessagePanelCommentAvatar>
-          <AppListItemAvatar {...contact} />
-        </MessagePanelCommentAvatar>
+          <Submit>
+            <Button
+              ref={this.submitButtonRef}
+              variant="text"
+              color="primary"
+              type="submit"
+            >
+              {'Send'}
+              <SendIcon />
+            </Button>
+          </Submit>
+        </Form>
+        <UserAvatar>
+          <ListItemAvatar {...contact} />
+        </UserAvatar>
       </Wrapper>
     );
   }
 }
 
-export default MessagePanelComment;
+ChatComment.propTypes = {
+  avatars: PropTypes.shape({
+    me: PropTypes.shape(userAvatarProps).isRequired,
+    contact: PropTypes.shape(userAvatarProps).isRequired,
+  }).isRequired,
+  adding: PropTypes.bool.isRequired,
+  submit: PropTypes.func.isRequired,
+};
+
+export default ChatComment;

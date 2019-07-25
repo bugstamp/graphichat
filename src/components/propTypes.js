@@ -57,11 +57,13 @@ export const chatProps = {
   messages: PropTypes.arrayOf(PropTypes.shape(messageProps)),
 };
 
+export const userAvatarProps = {
+  sm: PropTypes.string,
+  md: PropTypes.string,
+};
+
 export const userInfoProps = {
-  avatar: PropTypes.shape({
-    sm: PropTypes.string,
-    md: PropTypes.string,
-  }),
+  avatar: PropTypes.shape(userAvatarProps),
   displayName: PropTypes.string,
   firstName: PropTypes.string,
   lastName: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),

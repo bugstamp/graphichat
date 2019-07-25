@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components';
@@ -10,9 +11,12 @@ import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 
-import ChatsContainer from '../../containers/ChatsContainer';
+import ChatsContainer, {
+  fetchMoreMessagesUpdate,
+  getAddMessageOptimisticResponse,
+} from '../../containers/ChatsContainer';
 import Contacts from './Contacts';
-import Messages from './Messages';
+import Chat from './Chat';
 import { NoContentWrapper } from '../../common/List';
 
 import { getStyledProps, getSpacing } from '../../../styles';
@@ -70,7 +74,6 @@ class Chats extends Component {
           newSendedIds = optimisticIds;
         }
       }
-
       return ({ optimisticIds: newSendedIds });
     });
   }
@@ -114,6 +117,8 @@ class Chats extends Component {
           },
         }) => {
           const { contact, chat } = selectedChat;
+          const contactsListIsEmpty = isEmpty(myContacts);
+          const chatIsUndefined = isEmpty(chat);
           let unselectedText;
 
           if (!selectedChatId) {
@@ -139,10 +144,10 @@ class Chats extends Component {
                 <Hidden xsDown>
                   <Grid item sm={8} lg={6}>
                     <Choose>
-                      <When condition={isEmpty(myContacts)}>
+                      <When condition={contactsListIsEmpty}>
                         {null}
                       </When>
-                      <When condition={!selectedChatId || isEmpty(chat)}>
+                      <When condition={!selectedChatId || chatIsUndefined}>
                         <NoContentWrapper>
                           <Typography variant="subtitle2">
                             <p>{unselectedText}</p>
@@ -150,15 +155,17 @@ class Chats extends Component {
                         </NoContentWrapper>
                       </When>
                       <Otherwise>
-                        <Messages
+                        <Chat
                           loading={loading}
                           adding={adding}
                           me={me}
-                          contact={contact}
+                          userInfo={contact.userInfo}
                           chat={chat}
                           optimisticIds={optimisticIds}
                           fetchMoreMessages={fetchMoreMessages}
+                          fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
                           addMessage={addMessage}
+                          getAddMessageOptimisticResponse={getAddMessageOptimisticResponse}
                           updateOptimisticIds={this.updateOptimisticIds}
                         />
                       </Otherwise>
@@ -178,5 +185,11 @@ class Chats extends Component {
     );
   }
 }
+
+Chats.propTypes = {
+  location: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  initialLoading: PropTypes.bool.isRequired,
+};
 
 export default withRouter(Chats);

@@ -54,7 +54,7 @@ const SIGN_UP_BY_SOCIAL = gql`
 `;
 
 const SIGN_OUT = gql`
-  mutation SignOut($userId: String!) {
+  mutation SignOut($userId: String) {
     signOut(userId: $userId)
   }
 `;

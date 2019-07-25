@@ -12,7 +12,7 @@ import paths from '../../paths';
 
 import middlewares from './middlewares';
 import routers from './routers';
-import AppModule from './modules';
+import appModule from './modules/appModule';
 
 const { tokenVerification } = middlewares;
 const { verification } = routers;
@@ -65,4 +65,4 @@ const startServer = ({ schema, subscriptions }) => {
   });
 };
 
-startServer(AppModule);
+startServer(appModule);

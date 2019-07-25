@@ -251,9 +251,15 @@ class AuthProvider {
 
   signOut = async (userId) => {
     try {
-      const { id, lastDate } = await this.db.User.findById(userId);
+      let user;
+
+      if (this.user) {
+        user = await this.db.User.findById(this.user.id);
+      } else {
+        user = await this.db.User.findById(userId);
+      }
+      const { id, lastDate } = user;
       await this.logOut(id, lastDate);
-      this.user = null;
 
       return true;
     } catch (e) {

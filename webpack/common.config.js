@@ -10,7 +10,7 @@ module.exports = merge([
     entry: {
       app: [
         'core-js',
-        'regenerator-runtime',
+        'regenerator-runtime/runtime',
         paths.index,
       ],
     },

@@ -11,7 +11,7 @@
     "build": "npm run prod && npm run build-server",
     "start": "node ./server/build/index.js",
     "test": "jest",
-    "heroku-postbuild": "ng build --prod"
+    "heroku-postbuild": "npm run build --prod"
   },
   "engines": {
     "node": "v10.14.2",

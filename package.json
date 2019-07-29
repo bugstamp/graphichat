@@ -12,6 +12,10 @@
     "start": "node ./server/build/index.js",
     "test": "jest"
   },
+  "engines": {
+    "node": "v10.14.2",
+    "yarn": "1.13.0"
+  },
   "dependencies": {
     "@babel/node": "^7.4.5",
     "@fortawesome/fontawesome-svg-core": "^1.2.8",

@@ -17,7 +17,6 @@ module.exports = (api) => {
     'lodash',
     'jsx-control-statements',
     'babel-plugin-styled-components',
-    ['@babel/plugin-transform-runtime', { corejs: 3 }],
     ['@babel/plugin-proposal-decorators', { legacy: true }],
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     '@babel/plugin-proposal-export-default-from',

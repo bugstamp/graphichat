@@ -9,7 +9,8 @@ module.exports = merge([
   {
     entry: {
       app: [
-        '@babel/polyfill',
+        'core-js',
+        'regenerator-runtime',
         paths.index,
       ],
     },

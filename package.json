@@ -10,7 +10,8 @@
     "build-server": "rm -rf ./server/build/* && babel -d ./server/build ./server/src/index.js",
     "build": "npm run prod && npm run build-server",
     "start": "node ./server/build/index.js",
-    "test": "jest"
+    "test": "jest",
+    "heroku-postbuild": "ng build --prod"
   },
   "engines": {
     "node": "v10.14.2",

@@ -11,17 +11,23 @@ import FormInputRadio from './FormInputRadio';
 import AsyncFormInput from './AsyncFormInput';
 import FormSubmit from './FormSubmit';
 
-const FormWrapper = styled.form`
+import {
+  formFieldsProps,
+  mutationResultProps,
+  formAsyncValidationFieldsProps,
+} from '../../propTypes';
+
+const Wrapper = styled.form`
   width: 100%;
 `;
 
 class Form extends Component {
   componentDidUpdate(prevProps) {
-    const { result: { error }, setFieldError } = this.props;
+    const { result, setFieldError } = this.props;
 
-    if (!prevProps.result.error && error) {
-      if (error.graphQLErrors) {
-        const { graphQLErrors } = error;
+    if (!prevProps.result.error && result.error) {
+      if (result.error.graphQLErrors) {
+        const { graphQLErrors } = result.error;
         const { message, data: { invalidField } } = graphQLErrors[0];
 
         if (invalidField) {
@@ -63,13 +69,12 @@ class Form extends Component {
       result,
       submitButtonText,
       validateField,
-      validate,
       asyncValidationFields,
     } = this.props;
     const { loading } = result;
 
     return (
-      <FormWrapper onSubmit={handleSubmit}>
+      <Wrapper onSubmit={handleSubmit}>
         {
           map(fields, (field) => {
             const {
@@ -143,10 +148,31 @@ class Form extends Component {
           })
         }
         <FormSubmit loading={loading} text={submitButtonText} />
-      </FormWrapper>
+      </Wrapper>
     );
   }
 }
+
+Form.defaultProps = {
+  errors: {},
+  touched: {},
+  submitButtonText: 'Submit',
+  asyncValidationFields: [],
+};
+Form.propTypes = {
+  fields: PropTypes.arrayOf(PropTypes.shape(formFieldsProps)).isRequired,
+  errors: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
+  touched: PropTypes.objectOf(PropTypes.bool),
+  handleChange: PropTypes.func.isRequired,
+  handleBlur: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  setFieldError: PropTypes.func.isRequired,
+  result: PropTypes.shape(mutationResultProps).isRequired,
+  submitButtonText: PropTypes.string,
+  validateField: PropTypes.func.isRequired,
+  validationSchema: PropTypes.objectOf(PropTypes.any).isRequired,
+  asyncValidationFields: PropTypes.arrayOf(PropTypes.shape(formAsyncValidationFieldsProps)),
+};
 
 export default withFormik({
   mapPropsToValues: ({ initialValues }) => initialValues,

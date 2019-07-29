@@ -5,6 +5,8 @@ export default async (req, res, next) => {
   const tokens = getHeaderTokens(req);
   const { token, refreshToken } = tokens;
 
+  req.user = null;
+
   if (token) {
     try {
       const { user, newTokens } = await db.User.verifyTokens(token, refreshToken);
@@ -13,12 +15,9 @@ export default async (req, res, next) => {
         res = setHeaderTokens(res, newTokens);
       }
       req.user = user;
-      next();
     } catch (e) {
-      req.user = undefined;
-      res.status(401).send(e);
+      res.status(401);
     }
-  } else {
-    next();
   }
+  next();
 };

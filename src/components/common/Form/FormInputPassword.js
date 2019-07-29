@@ -45,4 +45,8 @@ class FormInputPassword extends PureComponent {
   }
 }
 
+FormInputPassword.propTypes = {
+  type: PropTypes.string.isRequired,
+};
+
 export default FormInputPassword;

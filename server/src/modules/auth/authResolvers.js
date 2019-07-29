@@ -8,6 +8,6 @@ export default {
     signUpAsyncValidation: (parent, { field, value }, { injector }) => injector.get(AuthProvider).signUpAsyncValidation(field, value),
     signInBySocial: (parent, { social, profile }, { injector }) => injector.get(AuthProvider).signInBySocial(social, profile),
     signUpBySocial: (parent, { social, profile }, { injector }) => injector.get(AuthProvider).signUpBySocial(social, profile),
-    signOut: (parent, { social, profile }, { injector }) => injector.get(AuthProvider).signOut(social, profile),
+    signOut: (parent, { userId }, { injector }) => injector.get(AuthProvider).signOut(userId),
   },
 };

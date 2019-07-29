@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
-// import styled from 'styled-components';
-// import { isEmpty } from 'lodash';
-// import {} from 'polished';
 import { withRouter } from 'react-router';
 
 import Grid from '@material-ui/core/Grid';

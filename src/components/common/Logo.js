@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleRounded';
-
 import blue from '@material-ui/core/colors/blue';
 import indigo from '@material-ui/core/colors/indigo';
 
@@ -16,12 +15,12 @@ const Wrapper = styled.div`
   margin-bottom: 100%;
 `;
 
-const Icon = styled(({ above, ...rest }) => <ChatBubbleIcon {...rest} />)`
+const Icon = styled(({ top, ...rest }) => <ChatBubbleIcon {...rest} />)`
   && {
-    color: ${({ above }) => (above ? blue[500] : indigo[500])};
-    opacity: ${({ above }) => (above ? 1 : 0.5)};
+    color: ${({ top }) => (top ? blue[500] : indigo[500])};
+    opacity: ${({ top }) => (top ? 1 : 0.5)};
 
-    ${({ above }) => above && `
+    ${({ top }) => top && `
       position: absolute;
       top: 10%;
       left: 50%;
@@ -32,7 +31,7 @@ const Icon = styled(({ above, ...rest }) => <ChatBubbleIcon {...rest} />)`
 
 const Logo = () => (
   <Wrapper>
-    <Icon fontSize="inherit" above />
+    <Icon fontSize="inherit" top />
     <Icon fontSize="inherit" />
   </Wrapper>
 );

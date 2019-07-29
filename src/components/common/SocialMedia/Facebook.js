@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 import blue from '@material-ui/core/colors/blue';
@@ -13,7 +14,6 @@ const Facebook = ({ loading, mutation }) => (
       fields="first_name,last_name,id,email,gender"
       appId={process.env.FACEBOOK_APP_ID}
       callback={({
-        // eslint-disable-next-line
         userID: id,
         email,
         first_name: firstName,
@@ -32,10 +32,19 @@ const Facebook = ({ loading, mutation }) => (
         },
       })}
       render={({ onClick }) => (
-        <SocialButton loading={loading} onClick={onClick} icon={faFacebook} />
+        <SocialButton
+          loading={loading}
+          onClick={onClick}
+          icon={faFacebook}
+        />
       )}
     />
   </Social>
 );
+
+Facebook.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  mutation: PropTypes.func.isRequired,
+};
 
 export default Facebook;

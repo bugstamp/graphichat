@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import CheckIcon from '@material-ui/icons/CheckRounded';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import FormInput from './FormInput';
+
+import { mutationResultProps } from '../../propTypes';
 
 class AsyncFormInput extends PureComponent {
   state = {
@@ -53,5 +56,9 @@ class AsyncFormInput extends PureComponent {
     );
   }
 }
+
+AsyncFormInput.propTypes = {
+  result: PropTypes.shape(mutationResultProps).isRequired,
+};
 
 export default AsyncFormInput;

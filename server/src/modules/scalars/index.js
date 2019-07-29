@@ -1,36 +1,3 @@
-import { GraphQLModule } from '@graphql-modules/core';
-import { gql } from 'apollo-server-express';
+import scalarsModule from './scalarsModule';
 
-import resolvers from './scalarsResolvers';
-
-const ScalarsModule = new GraphQLModule({
-  name: 'scalars',
-  typeDefs: gql`
-    scalar DateTime
-    scalar EmailAddress
-    scalar NegativeFloat
-    scalar NegativeInt
-    scalar NonNegativeFloat
-    scalar NonNegativeInt
-    scalar NonPositiveFloat
-    scalar NonPositiveInt
-    scalar PhoneNumber
-    scalar PositiveFloat
-    scalar PositiveInt
-    scalar PostalCode
-    scalar RegularExpression
-    scalar UnsignedFloat
-    scalar UnsignedInt
-    scalar URL
-    scalar Upload
-
-    type File {
-      filename: String!
-      mimetype: String!
-      encoding: String!
-    }
-  `,
-  resolvers,
-});
-
-export default ScalarsModule;
+export default scalarsModule;

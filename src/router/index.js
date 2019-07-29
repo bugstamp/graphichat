@@ -2,9 +2,9 @@ import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 import importedComponent from 'react-imported-component';
 
-import Login from '../components/dumb/Login/Login';
-import Reg from '../components/dumb/Reg/Reg';
-import Chats from '../components/dumb/Chats/Chats';
+import Login from '../components/pages/Login/Login';
+import Reg from '../components/pages/Reg/Reg';
+import Chats from '../components/pages/Chats/Chats';
 import NotFound from '../components/common/NotFound';
 import PageLoader from '../components/common/PageLoader';
 

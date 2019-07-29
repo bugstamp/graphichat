@@ -3,18 +3,32 @@ import moment from 'moment';
 
 import icqBeep from '../assets/audio/icqBeep';
 
-export const getAvatarInitials = (user = null) => {
-  if (!user || isEmpty(user)) return '';
+export const getAvatar = (user = {}, size = 'sm') => {
+  let src = '';
+  let text = '';
 
-  const { firstName, lastName } = user;
-  const firstLater = upperCase(firstName[0]);
+  if (!isEmpty(user)) {
+    const { avatar, firstName, lastName } = user;
+    let firstLater = '';
+    let lastLater = '';
 
-  if (!lastName) {
-    return firstLater;
+    if (avatar && avatar[size]) {
+      src = avatar[size];
+    }
+
+    if (firstName) {
+      firstLater = upperCase(firstName[0]);
+    }
+    if (lastName) {
+      lastLater = upperCase(lastName[0]);
+    }
+    text = `${firstLater}${lastLater}`;
   }
-  const lastLater = upperCase(lastName[0]);
 
-  return `${firstLater}${lastLater}`;
+  return {
+    src,
+    text,
+  };
 };
 
 export const historyDateParser = date => moment(date).format('dddd, MMMM D, YYYY');
@@ -58,14 +72,3 @@ export const isSameDay = (date, referenceDate) => {
 };
 
 export const icqBeepPlay = () => icqBeep.play();
-
-export const getBase64 = file => new Promise((res, rej) => {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => {
-    res(reader.result);
-  };
-  reader.onerror = (error) => {
-    rej(error);
-  };
-});

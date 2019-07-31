@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server --env development",
     "prod": "webpack --env production",
     "server": "nodemon --exec babel-node -- ./server/src/index.js",
-    "build-server": "rm -rf ./server/build/* && babel -d ./server/build ./server/src/index.js",
+    "build-server": "rm -rf ./server/build/* && babel ./server/src --out-dir ./server/build",
     "build": "npm run prod && npm run build-server",
     "start": "node ./server/build/index.js",
     "test": "jest",

@@ -103,14 +103,14 @@ startServer(_appModule.default);
     return;
   }
 
-  reactHotLoader.register(tokenVerification, "tokenVerification", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
-  reactHotLoader.register(verification, "verification", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
-  reactHotLoader.register(port, "port", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
-  reactHotLoader.register(apolloPath, "apolloPath", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
-  reactHotLoader.register(apolloUrl, "apolloUrl", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
-  reactHotLoader.register(wsPath, "wsPath", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
-  reactHotLoader.register(wsUrl, "wsUrl", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
-  reactHotLoader.register(startServer, "startServer", "C:\\Users\\Professional\\Google \u0414\u0438\u0441\u043A\\web\\projects\\react\\test-graphql\\server\\src\\index.js");
+  reactHotLoader.register(tokenVerification, "tokenVerification", "E:\\Projects\\graphichat\\server\\src\\index.js");
+  reactHotLoader.register(verification, "verification", "E:\\Projects\\graphichat\\server\\src\\index.js");
+  reactHotLoader.register(port, "port", "E:\\Projects\\graphichat\\server\\src\\index.js");
+  reactHotLoader.register(apolloPath, "apolloPath", "E:\\Projects\\graphichat\\server\\src\\index.js");
+  reactHotLoader.register(apolloUrl, "apolloUrl", "E:\\Projects\\graphichat\\server\\src\\index.js");
+  reactHotLoader.register(wsPath, "wsPath", "E:\\Projects\\graphichat\\server\\src\\index.js");
+  reactHotLoader.register(wsUrl, "wsUrl", "E:\\Projects\\graphichat\\server\\src\\index.js");
+  reactHotLoader.register(startServer, "startServer", "E:\\Projects\\graphichat\\server\\src\\index.js");
 })();
 
 ;

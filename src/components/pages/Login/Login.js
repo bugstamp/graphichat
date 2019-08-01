@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withApollo } from 'react-apollo';
 import styled from 'styled-components';
 import { backgrounds } from 'polished';
 
@@ -10,8 +11,11 @@ import LoginForm from './LoginForm';
 
 import withNotification from '../../common/HOC/withNotification';
 import storage from '../../../storage';
+import gql from '../../../gql';
 
 import bgImage from '../../../assets/images/login-bg__1920_95.jpg';
+
+const { CHECK_SESSION_EXPIRATION } = gql;
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
@@ -20,6 +24,15 @@ const Wrapper = styled(Grid)`
 `;
 
 class Login extends Component {
+  componentDidMount() {
+    const { client, toggleNotification } = this.props;
+    const { sessionExpired } = client.readQuery({ query: CHECK_SESSION_EXPIRATION });
+
+    if (sessionExpired) {
+      toggleNotification('SessionExpired was expired');
+    }
+  }
+
   handleSuccess = ({ token, refreshToken }) => {
     const { history } = this.props;
 
@@ -57,7 +70,10 @@ class Login extends Component {
           onError: this.handleError,
         }}
       >
-        {({ signIn, signInBySocial }) => (
+        {({
+          signIn,
+          signInBySocial,
+        }) => (
           <Wrapper
             justify="center"
             alignItems="center"
@@ -78,6 +94,9 @@ class Login extends Component {
 Login.propTypes = {
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   toggleNotification: PropTypes.func.isRequired,
+  client: PropTypes.shape({
+    readQuery: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
-export default withNotification(Login);
+export default withApollo(withNotification(Login));

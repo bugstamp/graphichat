@@ -10,7 +10,6 @@ import Hidden from '@material-ui/core/Hidden';
 
 import SettingsDialog from './SettingsDialog';
 import Navigation from '../common/Navigation/Navigation';
-import withNotification from '../common/HOC/withNotification';
 
 import { getAvatar } from '../../helpers';
 import { meProps } from '../propTypes';
@@ -20,17 +19,16 @@ const MainContainer = styled(Paper)`
   display: flex;
 `;
 
-class MainContent extends Component {
+class MainPage extends Component {
   state = {
     settingsDialog: false,
   }
 
   componentDidUpdate = (prevProps) => {
-    const { sessionExpired, toggleNotification } = this.props;
+    const { sessionExpired } = this.props;
 
     if (!isEqual(prevProps.sessionExpired, sessionExpired) && sessionExpired) {
       this.signOut();
-      toggleNotification('SessionExpired was expired');
     }
   }
 
@@ -87,10 +85,10 @@ class MainContent extends Component {
   }
 }
 
-MainContent.defaultProps = {
+MainPage.defaultProps = {
   me: {},
 };
-MainContent.propTypes = {
+MainPage.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
   loading: PropTypes.bool.isRequired,
   me: PropTypes.shape(meProps),
@@ -98,7 +96,6 @@ MainContent.propTypes = {
   avatarUploading: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
   uploadAvatar: PropTypes.func.isRequired,
-  toggleNotification: PropTypes.func.isRequired,
 };
 
-export default withNotification(MainContent);
+export default MainPage;

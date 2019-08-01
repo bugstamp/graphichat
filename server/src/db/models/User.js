@@ -15,12 +15,12 @@ import {
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
-    expiresIn: 60,
+    expiresIn: 30,
     model: ['id', 'regStatus'],
   },
   refresh: {
     secret: process.env.REFRESH_TOKEN_SECRET,
-    expiresIn: '10m',
+    expiresIn: 60,
     model: ['id', 'regStatus'],
   },
   register: {

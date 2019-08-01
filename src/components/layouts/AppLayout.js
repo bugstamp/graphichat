@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import { withRouter } from 'react-router';
-import { withApollo } from 'react-apollo';
 
 import AppLayoutContainer from '../containers/AppLayoutContainer';
-import MainContent from '../pages/MainContent';
+import MainPage from '../pages/MainPage';
 
 class AppLayout extends Component {
   render() {
@@ -34,7 +33,7 @@ class AppLayout extends Component {
           },
         }) => {
           return (
-            <MainContent
+            <MainPage
               loading={loading}
               me={me}
               signOut={signOut}
@@ -43,7 +42,7 @@ class AppLayout extends Component {
               sessionExpired={sessionExpired}
             >
               {children}
-            </MainContent>
+            </MainPage>
           );
         }}
       </AppLayoutContainer>
@@ -53,8 +52,6 @@ class AppLayout extends Component {
 
 AppLayout.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
-  history: PropTypes.objectOf(PropTypes.any).isRequired,
-  client: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default hot(module)(withApollo(withRouter(AppLayout)));
+export default hot(module)(withRouter(AppLayout));

@@ -31,6 +31,8 @@ const startServer = ({ schema, subscriptions }) => {
     schema,
     formatError,
     context: session => session,
+    introspection: true,
+    playground: true,
   });
   const corsOptions = {
     exposedHeaders: ['x-token', 'x-refresh-token'],

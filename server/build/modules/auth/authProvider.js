@@ -397,8 +397,8 @@ exports.default = _default2;
     return;
   }
 
-  reactHotLoader.register(AuthProvider, "AuthProvider", "E:\\Projects\\graphichat\\server\\src\\modules\\auth\\authProvider.js");
-  reactHotLoader.register(_default, "default", "E:\\Projects\\graphichat\\server\\src\\modules\\auth\\authProvider.js");
+  reactHotLoader.register(AuthProvider, "AuthProvider", "E:\\Projects\\graphichat\\server\\src\\modules\\auth\\AuthProvider.js");
+  reactHotLoader.register(_default, "default", "E:\\Projects\\graphichat\\server\\src\\modules\\auth\\AuthProvider.js");
 })();
 
 ;

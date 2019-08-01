@@ -14,10 +14,10 @@ module.exports = merge([
   }),
   {
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
       new Dotenv({
         expand: true,
       }),
+      new webpack.HotModuleReplacementPlugin(),
     ],
 
     devtool: 'cheap-module-eval-source-map',

@@ -23,9 +23,6 @@ const apolloUrl = process.env.APOLLO_URL;
 const wsPath = process.env.WS_PATH;
 const wsUrl = process.env.WS_URL;
 
-console.log(process.env);
-console.log(process.env.PORT);
-
 const startServer = ({ schema, subscriptions }) => {
   const app = express();
   const apolloServer = new ApolloServer({

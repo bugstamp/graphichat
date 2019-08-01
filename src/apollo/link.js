@@ -9,10 +9,6 @@ import { isEmpty } from 'lodash';
 import storage from '../storage';
 import client from './index';
 
-console.log('client');
-console.log(process.env.APOLLO_URL);
-console.log(process.env.WS_URL);
-
 const httpLink = createUploadLink({
   uri: process.env.APOLLO_URL,
 });

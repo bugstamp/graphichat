@@ -17,9 +17,6 @@ import appModule from './modules/appModule';
 const { tokenVerification } = middlewares;
 const { verification } = routers;
 
-console.log('server');
-console.log(process.env);
-
 const port = process.env.PORT;
 const apolloPath = process.env.APOLLO_PATH;
 const apolloUrl = process.env.APOLLO_URL;

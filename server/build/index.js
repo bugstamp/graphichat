@@ -43,13 +43,12 @@ const {
 const {
   verification
 } = _routers.default;
-console.log('server');
-console.log(process.env);
 const port = process.env.PORT;
 const apolloPath = process.env.APOLLO_PATH;
 const apolloUrl = process.env.APOLLO_URL;
 const wsPath = process.env.WS_PATH;
 const wsUrl = process.env.WS_URL;
+console.log(process.env);
 
 const startServer = ({
   schema,
@@ -79,9 +78,10 @@ const startServer = ({
     res.sendFile(_paths.default.html);
   });
   const ws = (0, _http.createServer)(app);
-  ws.listen(port, () => {
+  ws.listen(port, req => {
     console.log(`Server ready at ${apolloUrl}`);
     console.log(`Subscriptions ready at ${wsUrl}`);
+    console.log(req.get('X-Forwarded-Protocol') + '://' + req.get('host') + req.originalUrl);
 
     _subscriptionsTransportWs.SubscriptionServer.create({
       schema,

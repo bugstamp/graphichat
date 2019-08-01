@@ -64,8 +64,6 @@ const startServer = ({ schema, subscriptions }) => {
       server: ws,
       path: wsPath,
     });
-  }).then(({ url }) => {
-    console.log(url);
   });
 };
 

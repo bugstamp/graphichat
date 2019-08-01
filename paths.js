@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
   root: path.resolve(__dirname),
   env: path.resolve(__dirname, '/.env'),
+  prodEnv: path.resolve(__dirname, '/.env.prod'),
   src: path.resolve(__dirname, 'src'),
   index: path.resolve(__dirname, 'src/index.js'),
   srcSw: path.resolve(__dirname, 'src/sw.js'),

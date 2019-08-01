@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const VisualizerPlugin = require('webpack-visualizer-plugin');
+const Dotenv = require('dotenv-webpack');
 
 const paths = require('../paths');
 
@@ -36,6 +37,9 @@ module.exports = merge([
     },
 
     plugins: [
+      new Dotenv({
+        path: paths.prodEnv,
+      }),
       new CleanWebpackPlugin([`${paths.public}/*`], {
         root: paths.root,
         exclude: [],

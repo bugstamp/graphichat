@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const Dotenv = require('dotenv-webpack');
 
 const devServer = require('./devServer');
 
@@ -14,6 +15,9 @@ module.exports = merge([
   {
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
+      new Dotenv({
+        expand: true,
+      }),
     ],
 
     devtool: 'cheap-module-eval-source-map',

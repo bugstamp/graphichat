@@ -17,6 +17,7 @@ import appModule from './modules/appModule';
 const { tokenVerification } = middlewares;
 const { verification } = routers;
 
+console.log('server');
 console.log(process.env);
 
 const port = process.env.PORT;

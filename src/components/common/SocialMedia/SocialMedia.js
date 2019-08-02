@@ -12,7 +12,7 @@ const SocialMediaWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 3em;
+  margin-top: 2em;
 `;
 
 const SocialMediaNote = styled.p`

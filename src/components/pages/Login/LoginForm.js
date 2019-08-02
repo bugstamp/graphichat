@@ -20,6 +20,7 @@ import { mutationProps } from '../../propTypes';
 const Wrapper = styled(Paper)`
   && {
     width: 100%;
+    height: 100%;
     max-width: 375px;
     min-width: 320px;
     position: relative;
@@ -46,7 +47,7 @@ const LoginForm = ({
   toSignUp,
 }) => {
   return (
-    <Wrapper elevation={8}>
+    <Wrapper elevation={8} square>
       <TopProgressLine loading={signIn.result.loading} />
       <Header variant="h1" color="primary" align="center" gutterBottom>
         <AccountCircleIcon fontSize="inherit" color="primary" />
@@ -69,7 +70,6 @@ const LoginForm = ({
       <SocialMedia
         mutation={signInBySocial.mutation}
         result={signInBySocial.result}
-        note="Sign In with social media:"
       />
     </Wrapper>
   );

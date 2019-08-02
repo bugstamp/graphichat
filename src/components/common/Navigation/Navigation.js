@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-// import {} from 'polished';
+import { size } from 'polished';
 // import {} from 'lodash';
 
 import Tabs from './Tabs';
@@ -12,6 +12,12 @@ import { getSpacing } from '../../../styles';
 const Wrapper = styled.div`
   width: 60px;
   padding-top: ${getSpacing(2)};
+`;
+
+const LogoWrapper = styled.div`
+  ${size('60px', '60px')};
+  display: flex;
+  justify-content: center;
 `;
 
 class Navigation extends PureComponent {
@@ -29,7 +35,9 @@ class Navigation extends PureComponent {
 
     return (
       <Wrapper>
-        <Logo />
+        <LogoWrapper>
+          <Logo />
+        </LogoWrapper>
         <Tabs
           activeTab={activeTab}
           onChangeTab={this.handleChangeTab}

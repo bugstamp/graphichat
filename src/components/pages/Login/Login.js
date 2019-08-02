@@ -6,17 +6,19 @@ import { backgrounds } from 'polished';
 import { fadeInUp, fadeIn } from 'react-animations';
 
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Drawer from '@material-ui/core/Drawer';
 import blue from '@material-ui/core/colors/blue';
 
 import LoginContainer from '../../containers/LoginContainer';
 import LoginForm from './LoginForm';
 
+import Logo from '../../common/Logo';
 import withNotification from '../../common/HOC/withNotification';
 import storage from '../../../storage';
 import gql from '../../../gql';
 
-import { getStyledProps } from '../../../styles';
+import { getStyledProps, getSpacing } from '../../../styles';
 import bgImage from '../../../assets/images/login-bg__1920_95.jpg';
 
 const { CHECK_SESSION_EXPIRATION } = gql;
@@ -24,6 +26,7 @@ const { CHECK_SESSION_EXPIRATION } = gql;
 const Wrapper = styled(Grid)`
   flex: 1 auto;
   display: flex;
+  position: relative;
   ${backgrounds(`url(${bgImage})`, 'center no-repeat')}
   background-size: cover;
 `;
@@ -31,7 +34,7 @@ const Wrapper = styled(Grid)`
 const fadeInUpAnimation = keyframes`${fadeInUp}`;
 const fadeInAnimation = keyframes`${fadeIn}`;
 
-const PresentationContainer = styled.div`
+const Presentation = styled.div`
   flex: 1 auto;
   display: flex;
   flex-flow: column;
@@ -40,9 +43,12 @@ const PresentationContainer = styled.div`
 `;
 
 const Title = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-bottom: ${getSpacing(1)};
   animation: 1s ${fadeInUpAnimation};
   animation-delay: 1s;
-  animation-duration: 1s;
   animation-fill-mode: forwards;
   background: linear-gradient(to right, ${blue[100]} 0%, ${blue[500]} 100%);
   -webkit-background-clip: text;
@@ -50,6 +56,7 @@ const Title = styled.div`
   opacity: 0;
 
   h1 {
+    margin-left: ${getSpacing(1)};
     font-weight: bold;
   }
 `;
@@ -57,18 +64,28 @@ const Title = styled.div`
 const SubTitle = styled.div`
   animation: 1s ${fadeInAnimation};
   animation-delay: 1.5s;
-  animation-duration: 1.2s;
   animation-fill-mode: forwards;
-  opacity: 0;
   color: #fff;
+  padding: 0 ${getSpacing(1)};
+  text-align: center;
+  opacity: 0;
 
   h4 {
     font-weight: bold;
   }
-`;
 
-const FormContainer = styled.div`
+  button {
+    display: inline-block;
+    border: none;
+    outline: none;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
 
+    &:hover {
+      color: ${getStyledProps('theme.palette.primary.main')}
+    }
+  }
 `;
 
 class Login extends Component {
@@ -115,6 +132,8 @@ class Login extends Component {
   }
 
   render() {
+    const { form } = this.state;
+
     return (
       <LoginContainer
         signInProps={{
@@ -131,21 +150,28 @@ class Login extends Component {
           signInBySocial,
         }) => (
           <Wrapper container>
-            <PresentationContainer>
+            <Presentation>
               <Title>
-                <Typography variant="h1" align="center" gutterBottom>GraphiChat</Typography>
+                <Logo fontSize={60} />
+                <Typography variant="h1" align="center">GraphiChat</Typography>
               </Title>
               <SubTitle>
-                <div role="button">
-                  <Typography variant="h4" align="center" gutterBottom>Try it now!</Typography>
-                </div>
+                <Typography variant="h4" align="center" gutterBottom>
+                  {'A lightweight, useful and speed full web chat app'}
+                  {' based on the modern GraphQL API'}
+                </Typography>
+                <button type="button" onClick={this.toggleForm}>
+                  <Typography variant="h4" align="center">Try it now!</Typography>
+                </button>
               </SubTitle>
-            </PresentationContainer>
-            <LoginForm
-              signIn={signIn}
-              signInBySocial={signInBySocial}
-              toSignUp={this.toSignUp}
-            />
+            </Presentation>
+            <Drawer open={form} onClose={this.toggleForm} anchor="right">
+              <LoginForm
+                signIn={signIn}
+                signInBySocial={signInBySocial}
+                toSignUp={this.toSignUp}
+              />
+            </Drawer>
           </Wrapper>
         )}
       </LoginContainer>

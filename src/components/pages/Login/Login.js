@@ -133,7 +133,7 @@ class Login extends Component {
               <BrandTitle />
               <SubTitle>
                 <Typography variant="h4" align="center" gutterBottom>
-                  {'A lightweight, useful and speed full web chat app'}
+                  {'A lightweight, simple and useful web chat app'}
                   {' based on the modern GraphQL API'}
                 </Typography>
                 <button type="button" onClick={this.toggleForm}>

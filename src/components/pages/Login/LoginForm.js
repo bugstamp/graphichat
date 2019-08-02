@@ -4,8 +4,8 @@ import styled from 'styled-components';
 // import {} from 'polished';
 // import {} from 'lodash';
 
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 import Button from '@material-ui/core/Button';
 
@@ -45,35 +45,33 @@ const LoginForm = ({
   signIn,
   signInBySocial,
   toSignUp,
-}) => {
-  return (
-    <Wrapper elevation={8} square>
-      <TopProgressLine loading={signIn.result.loading} />
-      <Header variant="h1" color="primary" align="center" gutterBottom>
-        <AccountCircleIcon fontSize="inherit" color="primary" />
-      </Header>
-      <Form
-        {...formConfig('signIn')}
-        mutation={signIn.mutation}
-        result={signIn.result}
-        submitButtonText="Sign In"
-      />
-      <SignUpButton
-        onClick={toSignUp}
-        color="primary"
-        size="large"
-        variant="outlined"
-        fullWidth
-      >
-        {'Sign Up'}
-      </SignUpButton>
-      <SocialMedia
-        mutation={signInBySocial.mutation}
-        result={signInBySocial.result}
-      />
-    </Wrapper>
-  );
-};
+}) => (
+  <Wrapper elevation={8} square>
+    <TopProgressLine loading={signIn.result.loading} />
+    <Header variant="h1" color="primary" align="center" gutterBottom>
+      <AccountCircleIcon fontSize="inherit" color="primary" />
+    </Header>
+    <Form
+      {...formConfig('signIn')}
+      mutation={signIn.mutation}
+      result={signIn.result}
+      submitButtonText="Sign In"
+    />
+    <SignUpButton
+      onClick={toSignUp}
+      color="primary"
+      size="large"
+      variant="outlined"
+      fullWidth
+    >
+      {'Sign Up'}
+    </SignUpButton>
+    <SocialMedia
+      mutation={signInBySocial.mutation}
+      result={signInBySocial.result}
+    />
+  </Wrapper>
+);
 
 LoginForm.propTypes = {
   signIn: PropTypes.shape(mutationProps).isRequired,

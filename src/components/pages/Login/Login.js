@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
 import styled, { keyframes } from 'styled-components';
 import { backgrounds } from 'polished';
-import { fadeInUp, fadeIn } from 'react-animations';
+import { fadeIn } from 'react-animations';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
-import blue from '@material-ui/core/colors/blue';
 
 import LoginContainer from '../../containers/LoginContainer';
 import LoginForm from './LoginForm';
+import BrandTitle from './BrandTitle';
 
-import Logo from '../../common/Logo';
 import withNotification from '../../common/HOC/withNotification';
 import storage from '../../../storage';
 import gql from '../../../gql';
@@ -23,6 +22,8 @@ import bgImage from '../../../assets/images/login-bg__1920_95.jpg';
 
 const { CHECK_SESSION_EXPIRATION } = gql;
 
+const fadeInAnimation = keyframes`${fadeIn}`;
+
 const Wrapper = styled(Grid)`
   flex: 1 auto;
   display: flex;
@@ -31,34 +32,12 @@ const Wrapper = styled(Grid)`
   background-size: cover;
 `;
 
-const fadeInUpAnimation = keyframes`${fadeInUp}`;
-const fadeInAnimation = keyframes`${fadeIn}`;
-
 const Presentation = styled.div`
   flex: 1 auto;
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: center;
-`;
-
-const Title = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  margin-bottom: ${getSpacing(1)};
-  animation: 1s ${fadeInUpAnimation};
-  animation-delay: 1s;
-  animation-fill-mode: forwards;
-  background: linear-gradient(to right, ${blue[100]} 0%, ${blue[500]} 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  opacity: 0;
-
-  h1 {
-    margin-left: ${getSpacing(1)};
-    font-weight: bold;
-  }
 `;
 
 const SubTitle = styled.div`
@@ -151,10 +130,7 @@ class Login extends Component {
         }) => (
           <Wrapper container>
             <Presentation>
-              <Title>
-                <Logo fontSize={60} />
-                <Typography variant="h1" align="center">GraphiChat</Typography>
-              </Title>
+              <BrandTitle />
               <SubTitle>
                 <Typography variant="h4" align="center" gutterBottom>
                   {'A lightweight, useful and speed full web chat app'}

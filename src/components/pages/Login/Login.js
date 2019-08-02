@@ -42,7 +42,7 @@ const Presentation = styled.div`
 
 const SubTitle = styled.div`
   animation: 1s ${fadeInAnimation};
-  animation-delay: 1.5s;
+  animation-delay: 1s;
   animation-fill-mode: forwards;
   color: #fff;
   padding: 0 ${getSpacing(1)};

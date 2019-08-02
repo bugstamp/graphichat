@@ -2,8 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-// import {} from 'polished';
-// import {} from 'lodash';
 
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -88,7 +86,6 @@ const SignUp = ({
           <SocialMedia
             mutation={signUpBySocial.mutation}
             result={signUpBySocial.result}
-            note="Sign Up with social media:"
           />
         </When>
         <When condition={activeStep === 1}>

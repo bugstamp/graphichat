@@ -59,4 +59,9 @@ const RegFormStepper = ({ activeStep, steps }) => (
   </Stepper>
 );
 
+RegFormStepper.propTypes = {
+  activeStep: PropTypes.string.isRequired,
+  steps: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
 export default RegFormStepper;

@@ -17,7 +17,7 @@ const Title = styled.div`
   align-items: center;
   margin-bottom: ${getSpacing(1)};
   animation: 1s ${fadeInUpAnimation};
-  animation-delay: 1s;
+  animation-delay: .5s;
   animation-fill-mode: forwards;
   background: linear-gradient(to right, ${blue[100]} 0%, ${blue[500]} 100%);
   -webkit-background-clip: text;

@@ -4,7 +4,12 @@ import Grid from '@material-ui/core/Grid';
 import queryString from 'query-string';
 import styled, { keyframes } from 'styled-components';
 import { backgrounds } from 'polished';
-import { fadeInRight, fadeInLeft } from 'react-animations';
+import {
+  fadeIn,
+  fadeInRight,
+  fadeInLeft,
+  hinge,
+} from 'react-animations';
 import { map } from 'lodash';
 
 import Typography from '@material-ui/core/Typography';
@@ -17,20 +22,22 @@ import withNotification from '../../common/HOC/withNotification';
 import { checkToken } from '../../../router/PrivateRoute';
 import storage from '../../../storage';
 
+import { getSpacing } from '../../../styles';
 import bgImage from '../../../assets/images/reg-bg__1920_95.jpg';
+import { isEven } from '../../../helpers';
 
+const fadeInAnimation = keyframes`${fadeIn}`;
 const fadeInRightAnimation = keyframes`${fadeInRight}`;
 const fadeInLeftAnimation = keyframes`${fadeInLeft}`;
-
-const isEven = (n) => {
-  return n % 2 === 0;
-};
+const hingeAnimation = keyframes`${hinge}`;
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
   display: flex;
+  position: relative;
   ${backgrounds(`url(${bgImage})`, 'center no-repeat')}
   background-size: cover;
+  overflow: hidden;
 `;
 
 const Presentation = styled.div`
@@ -44,18 +51,45 @@ const Presentation = styled.div`
 const SubTitle = styled.div`
   color: #fff;
   text-align: center;
-  opacity: 0;
-
-  h4 {
-    display: inline;
-    font-weight: bold;
-  }
 `;
 
 const SubTitleWord = styled(Typography)`
   && {
-    animation: 1s ${({ even }) => even === 'true' ? fadeInLeftAnimation : fadeInRightAnimation};
+    display: inline;
+    margin-right: ${getSpacing(1)};
+    font-weight: bold;
+    opacity: 0;
+    animation: 1s ${({ even }) => (even === 'even' ? fadeInLeftAnimation : fadeInRightAnimation)};
+    animation-delay: ${({ delay }) => `${delay}s`};
+    animation-fill-mode: forwards;
   }
+`;
+
+const Enjoy = styled.div`
+  margin-top: ${getSpacing(4)};
+  color: #fff;
+  opacity: 0;
+  animation: 2s ${hingeAnimation};
+  animation-delay: 2.5s;
+  animation-fill-mode: forwards;
+
+  h3 {
+    font-weight: bold;
+  }
+`;
+
+const FormWrapper = styled.div`
+  height: 100%;
+  position: relative;
+  top: 0;
+  right: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  animation: 1.5s ${fadeInAnimation};
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
 `;
 
 class SignUp extends Component {
@@ -141,15 +175,17 @@ class SignUp extends Component {
               <BrandTitle />
               <SubTitle>
                 {
-                  map(['Simple', 'Fun', 'Fast', 'Useful', 'Powerful'], (word, index) => {
-                    const even = isEven(index + 1);
+                  map(['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'], (word, index) => {
+                    const even = isEven(index + 1) ? 'even' : 'odd';
+                    const delay = ((index + 1) / 5) + 1;
 
                     return (
                       <SubTitleWord
                         key={index + 1}
                         variant="h4"
                         align="center"
-                        even={`${even}`}
+                        even={even}
+                        delay={delay}
                       >
                         {word}
                       </SubTitleWord>
@@ -157,17 +193,28 @@ class SignUp extends Component {
                   })
                 }
               </SubTitle>
+              <Enjoy>
+                <Typography
+                  variant="h3"
+                  align="center"
+                  color="inherit"
+                >
+                  Enjoy!
+                </Typography>
+              </Enjoy>
             </Presentation>
-            <RegForm
-              steps={this.steps}
-              activeStep={activeStep}
-              completed={completed}
-              signUpAsyncValidationUsername={signUpAsyncValidationUsername}
-              signUpAsyncValidationEmail={signUpAsyncValidationEmail}
-              signUp={signUp}
-              signUpCompletion={signUpCompletion}
-              signUpBySocial={signUpBySocial}
-            />
+            <FormWrapper>
+              <RegForm
+                steps={this.steps}
+                activeStep={activeStep}
+                completed={completed}
+                signUpAsyncValidationUsername={signUpAsyncValidationUsername}
+                signUpAsyncValidationEmail={signUpAsyncValidationEmail}
+                signUp={signUp}
+                signUpCompletion={signUpCompletion}
+                signUpBySocial={signUpBySocial}
+              />
+            </FormWrapper>
           </Wrapper>
         )}
       </RegContainer>

@@ -18,7 +18,7 @@ import storage from '../../../storage';
 import gql from '../../../gql';
 
 import { getStyledProps, getSpacing } from '../../../styles';
-import bgImage from '../../../assets/images/login-bg__1920_95.jpg';
+import bgImage from '../../../assets/images/login-bg__1920_65.jpg';
 
 const { CHECK_SESSION_EXPIRATION } = gql;
 

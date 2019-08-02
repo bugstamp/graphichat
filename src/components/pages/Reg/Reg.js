@@ -23,7 +23,7 @@ import { checkToken } from '../../../router/PrivateRoute';
 import storage from '../../../storage';
 
 import { getSpacing } from '../../../styles';
-import bgImage from '../../../assets/images/reg-bg__1920_95.jpg';
+import bgImage from '../../../assets/images/reg-bg__1920_65.jpg';
 import { isEven } from '../../../helpers';
 
 const fadeInAnimation = keyframes`${fadeIn}`;

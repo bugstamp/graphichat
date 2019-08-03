@@ -1,7 +1,7 @@
 import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { size } from 'polished';
+// import {} from 'polished';
 import { isEqual } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
@@ -11,12 +11,31 @@ import Hidden from '@material-ui/core/Hidden';
 import SettingsDialog from './SettingsDialog';
 import Navigation from '../common/Navigation/Navigation';
 
+import { getStyledProps } from '../../styles';
 import { getAvatar } from '../../helpers';
 import { meProps } from '../propTypes';
 
-const MainContainer = styled(Paper)`
-  ${size('100%')};
+const AppWrapper = styled(Grid)`
+  && {
+    background-color: ${getStyledProps('theme.palette.primary.light')};
+  }
+`;
+
+const MainPageWrapper = styled(Paper)`
+  flex: 1 auto;
   display: flex;
+  overflow: hidden;
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const mediaDownLg = breakpoints.up('lg');
+
+    return `
+      ${mediaDownLg} {
+        margin: 20px 40px;
+      }
+    `;
+  }};
 `;
 
 class MainPage extends Component {
@@ -55,24 +74,22 @@ class MainPage extends Component {
     const avatar = getAvatar(me, 'md');
 
     return (
-      <Grid container spacing={0} justify="center">
-        <Grid item xs={12} lg={10}>
-          <MainContainer square>
-            <Grid container spacing={0}>
-              <Hidden smDown>
-                <Grid item>
-                  <Navigation
-                    toggleSettingsDialog={this.toggleSettingsDialog}
-                    signOut={this.signOut}
-                  />
-                </Grid>
-              </Hidden>
-              <Grid item xs>
-                {cloneElement(children, { initialLoading: loading })}
+      <AppWrapper container spacing={0} justify="center">
+        <MainPageWrapper>
+          <Grid container spacing={0}>
+            <Hidden smDown>
+              <Grid item>
+                <Navigation
+                  toggleSettingsDialog={this.toggleSettingsDialog}
+                  signOut={this.signOut}
+                />
               </Grid>
+            </Hidden>
+            <Grid item xs>
+              {cloneElement(children, { initialLoading: loading })}
             </Grid>
-          </MainContainer>
-        </Grid>
+          </Grid>
+        </MainPageWrapper>
         <SettingsDialog
           open={settingsDialog}
           toggle={this.toggleSettingsDialog}
@@ -80,7 +97,7 @@ class MainPage extends Component {
           avatarUploading={avatarUploading}
           uploadAvatar={uploadAvatar}
         />
-      </Grid>
+      </AppWrapper>
     );
   }
 }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
 import styled, { keyframes } from 'styled-components';
 import { backgrounds } from 'polished';
-import { fadeIn } from 'react-animations';
+import { fadeIn, headShake } from 'react-animations';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -23,6 +23,7 @@ import bgImage from '../../../assets/images/login-bg__1920_65.jpg';
 const { CHECK_SESSION_EXPIRATION } = gql;
 
 const fadeInAnimation = keyframes`${fadeIn}`;
+const headShakeAnimation = keyframes`${headShake}`;
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
@@ -60,6 +61,9 @@ const SubTitle = styled.div`
     color: inherit;
     background-color: transparent;
     cursor: pointer;
+    animation: 1.5s ${headShakeAnimation};
+    animation-delay: 2s;
+    animation-iteration-count: ${({ stopShake }) => !stopShake && 'infinite'};
 
     &:hover {
       color: ${getStyledProps('theme.palette.primary.main')}
@@ -131,7 +135,7 @@ class Login extends Component {
           <Wrapper container>
             <Presentation>
               <BrandTitle />
-              <SubTitle>
+              <SubTitle stopShake={form}>
                 <Typography variant="h4" align="center" gutterBottom>
                   {'A lightweight, simple and useful web chat app'}
                   {' based on the modern GraphQL API'}

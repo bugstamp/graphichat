@@ -273,6 +273,7 @@ class List extends Component {
       startFrom,
       fetchMore,
       fetchMoreThreshold,
+      onObserverChange,
     } = this.props;
     const rowIndex = Number(target.getAttribute('row-index'));
     let index = rowIndex;
@@ -285,6 +286,10 @@ class List extends Component {
 
     if ((index === thresholdIndex) && inView) {
       fetchMore();
+    }
+
+    if (onObserverChange) {
+      onObserverChange();
     }
   }
 
@@ -423,13 +428,14 @@ List.defaultProps = {
   loading: false,
   data: [],
   lazyLoad: false,
-  fetchMore: () => {},
+  fetchMore: null,
   fetchMoreThreshold: 10,
   startFrom: 'top',
-  onResize: () => {},
-  onScroll: () => {},
+  onResize: null,
+  onScroll: null,
   noContentComponent: null,
   spinnerSize: 20,
+  onObserverChange: null,
 };
 List.propTypes = {
   loading: PropTypes.bool,
@@ -443,6 +449,7 @@ List.propTypes = {
   onScroll: PropTypes.func,
   noContentComponent: PropTypes.func,
   spinnerSize: PropTypes.number,
+  onObserverChange: PropTypes.func,
 };
 
 export default List;

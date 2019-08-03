@@ -21,7 +21,7 @@ import { NoContentWrapper } from '../../common/List';
 
 import { getStyledProps, getSpacing } from '../../../styles';
 
-const Wrapper = styled(Paper)`
+const Wrapper = styled.div`
   && {
     ${size('100%')};
     display: flex;
@@ -29,7 +29,7 @@ const Wrapper = styled(Paper)`
   }
 `;
 
-const InfoPanel = styled(Paper)`
+const InfoPanel = styled.div`
   && {
     height: 100%;
     display: flex;
@@ -128,7 +128,7 @@ class Chats extends Component {
           }
 
           return (
-            <Wrapper square elevation={0}>
+            <Wrapper>
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} lg={3}>
                   <Contacts
@@ -174,7 +174,7 @@ class Chats extends Component {
                 </Hidden>
                 <Hidden mdDown>
                   <Grid item lg={3}>
-                    <InfoPanel square elevation={0}>{null}</InfoPanel>
+                    <InfoPanel>{null}</InfoPanel>
                   </Grid>
                 </Hidden>
               </Grid>

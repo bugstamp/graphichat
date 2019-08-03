@@ -20,14 +20,13 @@ const tabItemHeight = 60;
 const tabItemHeightPx = `${tabItemHeight}px`;
 
 const Wrapper = styled.div`
-  min-width: 100%;
-  height: auto;
+  flex: 1 auto;
   display: flex;
   flex-flow: column;
   position: relative;
 
-  a:last-of-type {
-    margin-bottom: 100%;
+  button:first-of-type {
+    margin-top: auto;
   }
 `;
 

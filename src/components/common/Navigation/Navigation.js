@@ -7,17 +7,21 @@ import { size } from 'polished';
 import Tabs from './Tabs';
 import Logo from '../Logo';
 
-import { getSpacing } from '../../../styles';
+// import { getSpacing } from '../../../styles';
 
 const Wrapper = styled.div`
   width: 60px;
-  padding-top: ${getSpacing(2)};
+  height: 100%;
+  display: flex;
+  flex-flow: column;
 `;
 
 const LogoWrapper = styled.div`
-  ${size('60px', '60px')};
+  ${size('60px')};
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-bottom: 60px;
 `;
 
 class Navigation extends PureComponent {

@@ -7,7 +7,6 @@ import { size } from 'polished';
 import { isEmpty, concat, filter } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 

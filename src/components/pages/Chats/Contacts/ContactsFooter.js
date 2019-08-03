@@ -2,23 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import Fab from '@material-ui/core/Fab';
+import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddRounded';
 
 import { getSpacing } from '../../../../styles';
 
 const ListPanelFooter = styled.div`
   display: flex;
-  justify-content: flex-end;
-  padding: ${getSpacing(1)} 0;
+  justify-content: center;
+  padding: ${getSpacing(1)} ${getSpacing(4)};
+
+  button {
+    width: 100%;
+  }
 `;
 
 const ContactPanelFooter = ({ toggleSearchDialog }) => {
   return (
     <ListPanelFooter>
-      <Fab color="primary" size="medium" onClick={toggleSearchDialog}>
+      <Button color="primary" variant="contained" size="large" onClick={toggleSearchDialog}>
         <AddIcon />
-      </Fab>
+        Add Contact
+      </Button>
     </ListPanelFooter>
   );
 };

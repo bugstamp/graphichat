@@ -17,7 +17,7 @@ const NoContacts = ({ searchValue }) => (
     <Choose>
       <When condition={!searchValue}>
         <p>Your contact list is empty.</p>
-        <p>Click on the &quot;+&quot; icon to find your contacts</p>
+        <p>Click on the "add contact" button to find your contacts</p>
       </When>
       <Otherwise>
         {null}

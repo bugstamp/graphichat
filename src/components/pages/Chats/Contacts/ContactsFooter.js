@@ -20,7 +20,12 @@ const ListPanelFooter = styled.div`
 const ContactPanelFooter = ({ toggleSearchDialog }) => {
   return (
     <ListPanelFooter>
-      <Button color="primary" variant="contained" size="large" onClick={toggleSearchDialog}>
+      <Button
+        color="primary"
+        variant="contained"
+        size="large"
+        onClick={toggleSearchDialog}
+      >
         <AddIcon />
         Add Contact
       </Button>

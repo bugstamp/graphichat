@@ -14,7 +14,7 @@ import LogoutIcon from '@material-ui/icons/ExitToAppRounded';
 
 import red from '@material-ui/core/colors/red';
 
-import { getStyledProps } from '../../../styles';
+import { getStyledProps, getSpacing } from '../../../styles';
 
 const tabItemHeight = 60;
 const tabItemHeightPx = `${tabItemHeight}px`;
@@ -24,6 +24,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-flow: column;
   position: relative;
+  padding-bottom: ${getSpacing(1)};
 
   button:first-of-type {
     margin-top: auto;

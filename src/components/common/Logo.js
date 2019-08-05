@@ -8,8 +8,8 @@ import indigo from '@material-ui/core/colors/indigo';
 
 const Wrapper = styled.div`
   position: relative;
-  height: ${({ fontSize }) => `${fontSize}px`};
-  font-size: ${({ fontSize }) => `${fontSize}px`};
+  height: ${({ size }) => `${size}px`};
+  font-size: ${({ size }) => `${size}px`};
 `;
 
 const Icon = styled(({ top, ...rest }) => <ChatBubbleIcon {...rest} />)`
@@ -26,19 +26,19 @@ const Icon = styled(({ top, ...rest }) => <ChatBubbleIcon {...rest} />)`
   }
 `;
 
-const Logo = ({ fontSize }) => (
-  <Wrapper fontSize={fontSize}>
+const Logo = ({ size }) => (
+  <Wrapper size={size}>
     <Icon fontSize="inherit" top />
     <Icon fontSize="inherit" />
   </Wrapper>
 );
 
 Logo.defaultProps = {
-  fontSize: 35,
+  size: 35,
 };
 
 Logo.propTypes = {
-  fontSize: PropTypes.number,
+  size: PropTypes.number,
 };
 
 export default Logo;

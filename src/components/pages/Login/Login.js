@@ -1,79 +1,37 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { backgrounds } from 'polished';
-import { fadeIn, headShake } from 'react-animations';
 
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
 
 import LoginContainer from '../../containers/LoginContainer';
 import LoginForm from './LoginForm';
-import BrandTitle from './BrandTitle';
+import LoginPresentation from './LoginPresentation';
 
 import withNotification from '../../common/HOC/withNotification';
 import storage from '../../../storage';
 import gql from '../../../gql';
 
-import { getStyledProps, getSpacing } from '../../../styles';
 import bgImage from '../../../assets/images/login-bg__1920_65.jpg';
+// import {} from '../../../styles';
 
 const { CHECK_SESSION_EXPIRATION } = gql;
-
-const fadeInAnimation = keyframes`${fadeIn}`;
-const headShakeAnimation = keyframes`${headShake}`;
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
   display: flex;
   position: relative;
   ${backgrounds(`url(${bgImage})`, 'center no-repeat')}
-  background-size: cover;
-`;
-
-const Presentation = styled.div`
-  flex: 1 auto;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const SubTitle = styled.div`
-  animation: 1s ${fadeInAnimation};
-  animation-delay: 1s;
-  animation-fill-mode: forwards;
-  color: #fff;
-  padding: 0 ${getSpacing(1)};
-  text-align: center;
-  opacity: 0;
-
-  h4 {
-    font-weight: bold;
-  }
-
-  button {
-    display: inline-block;
-    border: none;
-    outline: none;
-    color: inherit;
-    background-color: transparent;
-    cursor: pointer;
-    animation: 1.5s ${headShakeAnimation};
-    animation-delay: 2s;
-    animation-iteration-count: ${({ stopShake }) => !stopShake && 'infinite'};
-
-    &:hover {
-      color: ${getStyledProps('theme.palette.primary.main')}
-    }
-  }
+  background-size: content;
+  background-position: center;
 `;
 
 class Login extends Component {
   state = {
-    form: false,
+    formDrawer: false,
   }
 
   componentDidMount() {
@@ -85,8 +43,8 @@ class Login extends Component {
     }
   }
 
-  toggleForm = () => {
-    this.setState(({ form }) => ({ form: !form }));
+  toggleFormDrawer = () => {
+    this.setState(({ formDrawer }) => ({ formDrawer: !formDrawer }));
   }
 
   handleSuccess = ({ token, refreshToken }) => {
@@ -115,7 +73,7 @@ class Login extends Component {
   }
 
   render() {
-    const { form } = this.state;
+    const { formDrawer } = this.state;
 
     return (
       <LoginContainer
@@ -133,19 +91,8 @@ class Login extends Component {
           signInBySocial,
         }) => (
           <Wrapper container>
-            <Presentation>
-              <BrandTitle />
-              <SubTitle stopShake={form}>
-                <Typography variant="h4" align="center" gutterBottom>
-                  {'A lightweight, simple and useful web chat app'}
-                  {' based on the modern GraphQL API'}
-                </Typography>
-                <button type="button" onClick={this.toggleForm}>
-                  <Typography variant="h4" align="center">Try it now!</Typography>
-                </button>
-              </SubTitle>
-            </Presentation>
-            <Drawer open={form} onClose={this.toggleForm} anchor="right">
+            <LoginPresentation formDrawer={formDrawer} toggleFormDrawer={this.toggleFormDrawer} />
+            <Drawer open={formDrawer} onClose={this.toggleFormDrawer} anchor="right">
               <LoginForm
                 signIn={signIn}
                 signInBySocial={signInBySocial}

@@ -37,9 +37,11 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     min-height: 100%;
-    font-family: ${getStyledProps('theme.typography.fontFamily')};
-    font-size: ${getStyledProps('theme.typography.fontSize')}px;
-    font-weight: ${getStyledProps('theme.typography.fontWeightRegular')};
+    font-family: ${getStyledProps('theme.typography.body1.fontFamily')};
+    font-size: ${getStyledProps('theme.typography.body1.fontSize')};
+    font-weight: ${getStyledProps('theme.typography.body1.fontWeight')};
+    line-height: ${getStyledProps('theme.typography.body1.lineHeight')};
+    letter-spacing: ${getStyledProps('theme.typography.body1.letterSpacing')};
     color: #000;
     background-color: #fff;
     overflow-y: auto;
@@ -52,10 +54,19 @@ export const GlobalStyle = createGlobalStyle`
       ${size('inherit')};
       display: flex;
     }
-  }
 
-  body.disable-pointer-events,
-  body.disable-pointer-events * {
-    pointer-events: none !important;
+    ${(props) => {
+      const breakpoints = getStyledProps('theme.breakpoints')(props);
+      const smDown = breakpoints.down('sm');
+
+      return `
+      ${smDown} {
+        font-size: ${getStyledProps('theme.typography.body2.fontSize')};
+        font-weight: ${getStyledProps('theme.typography.body2.fontWeight')};
+        line-height: ${getStyledProps('theme.typography.body2.lineHeight')};
+        letter-spacing: ${getStyledProps('theme.typography.body2.letterSpacing')};
+      }
+      `;
+    }}
   }
 `;

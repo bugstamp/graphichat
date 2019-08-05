@@ -1,6 +1,6 @@
 # GraphiChat
 
-Created simple chat app for testing/learning GraphQL API and the following stack/features:
+Simple chat app for learning/testing GraphQL API with the following stack:
 
 Server:
  -Node/Express
@@ -18,9 +18,8 @@ UI:
 Testing:
  -Jest
  -Enzyme
-Features:
+Other features:
  -OAuth with refresh token
- -Social Login/Registration
+ -Social login/registration
  -List with custom scrollbar and lazy loading
  -GraphQL subscriptions/file uploading/deploying
- -Docker containerization

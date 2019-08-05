@@ -25,7 +25,7 @@ const Wrapper = styled(Paper)`
     min-width: 320px;
     position: relative;
     padding: ${getSpacing(5)} ${getSpacing(3)};
-    overflow: hidden;
+    overflow: hidden auto;
   }
 `;
 

@@ -24,8 +24,8 @@ const Wrapper = styled(Grid)`
   flex: 1 auto;
   display: flex;
   position: relative;
-  ${backgrounds(`url(${bgImage})`, 'center no-repeat')}
-  background-size: content;
+  ${backgrounds(`url(${bgImage})`, 'no-repeat')};
+  background-size: cover;
   background-position: center;
 `;
 

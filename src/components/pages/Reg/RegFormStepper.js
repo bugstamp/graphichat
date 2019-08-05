@@ -60,7 +60,7 @@ const RegFormStepper = ({ activeStep, steps }) => (
 );
 
 RegFormStepper.propTypes = {
-  activeStep: PropTypes.string.isRequired,
+  activeStep: PropTypes.number.isRequired,
   steps: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

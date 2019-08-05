@@ -4,85 +4,46 @@ import Grid from '@material-ui/core/Grid';
 import queryString from 'query-string';
 import styled, { keyframes } from 'styled-components';
 import { backgrounds } from 'polished';
-import {
-  fadeIn,
-  fadeInRight,
-  fadeInLeft,
-  hinge,
-} from 'react-animations';
-import { map } from 'lodash';
+import { fadeIn } from 'react-animations';
 
-import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
 
 import RegContainer from '../../containers/RegContainer';
 import RegForm from './RegForm';
-import BrandTitle from '../Login/BrandTitle';
+import RegPresentation from './RegPresentation';
 
 import withNotification from '../../common/HOC/withNotification';
 import { checkToken } from '../../../router/PrivateRoute';
 import storage from '../../../storage';
 
-import { getSpacing } from '../../../styles';
+import { getStyledProps } from '../../../styles';
 import bgImage from '../../../assets/images/reg-bg__1920_65.jpg';
-import { isEven } from '../../../helpers';
 
 const fadeInAnimation = keyframes`${fadeIn}`;
-const fadeInRightAnimation = keyframes`${fadeInRight}`;
-const fadeInLeftAnimation = keyframes`${fadeInLeft}`;
-const hingeAnimation = keyframes`${hinge}`;
 
 const Wrapper = styled(Grid)`
   flex: 1 auto;
   display: flex;
   position: relative;
   ${backgrounds(`url(${bgImage})`, 'center no-repeat')}
-  background-size: cover;
+  background-size: content;
+  background-position: center;
   overflow: hidden;
-`;
 
-const Presentation = styled.div`
-  flex: 1 auto;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-`;
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const downSm = breakpoints.down('sm');
 
-const SubTitle = styled.div`
-  color: #fff;
-  text-align: center;
-`;
-
-const SubTitleWord = styled(Typography)`
-  && {
-    display: inline;
-    margin-right: ${getSpacing(1)};
-    font-weight: bold;
-    opacity: 0;
-    animation: 1s ${({ even }) => (even === 'even' ? fadeInLeftAnimation : fadeInRightAnimation)};
-    animation-delay: ${({ delay }) => `${delay}s`};
-    animation-fill-mode: forwards;
-  }
-`;
-
-const Enjoy = styled.div`
-  margin-top: ${getSpacing(4)};
-  color: #fff;
-  opacity: 0;
-  animation: 2s ${hingeAnimation};
-  animation-delay: 2.5s;
-  animation-fill-mode: forwards;
-
-  h3 {
-    font-weight: bold;
-  }
+    return `
+      ${downSm} {
+        flex-flow: column;
+      }
+    `;
+  }}
 `;
 
 const FormWrapper = styled.div`
-  height: 100%;
-  position: relative;
-  top: 0;
-  right: 200px;
+  flex: 1 auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -90,6 +51,23 @@ const FormWrapper = styled.div`
   animation: 1.5s ${fadeInAnimation};
   animation-delay: 1s;
   animation-fill-mode: forwards;
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const upMd = breakpoints.up('md');
+    const downSm = breakpoints.down('xs');
+
+    return `
+      ${upMd} {
+        flex: 0;
+        padding-right: 5%;
+      }
+      ${downSm} {
+        animation-play-state: paused;
+        opacity: 1;
+      }
+    `;
+  }}
 `;
 
 class SignUp extends Component {
@@ -171,38 +149,9 @@ class SignUp extends Component {
           signUpBySocial,
         }) => (
           <Wrapper container>
-            <Presentation>
-              <BrandTitle />
-              <SubTitle>
-                {
-                  map(['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'], (word, index) => {
-                    const even = isEven(index + 1) ? 'even' : 'odd';
-                    const delay = ((index + 1) / 5) + 1;
-
-                    return (
-                      <SubTitleWord
-                        key={index + 1}
-                        variant="h4"
-                        align="center"
-                        even={even}
-                        delay={delay}
-                      >
-                        {word}
-                      </SubTitleWord>
-                    );
-                  })
-                }
-              </SubTitle>
-              <Enjoy>
-                <Typography
-                  variant="h3"
-                  align="center"
-                  color="inherit"
-                >
-                  Enjoy!
-                </Typography>
-              </Enjoy>
-            </Presentation>
+            <Hidden xsDown>
+              <RegPresentation />
+            </Hidden>
             <FormWrapper>
               <RegForm
                 steps={this.steps}

@@ -1,0 +1,102 @@
+import React from 'react';
+import {
+  fadeInRight,
+  fadeInLeft,
+  hinge,
+} from 'react-animations';
+import styled, { keyframes } from 'styled-components';
+import { map } from 'lodash';
+
+import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
+
+import BrandTitle from '../Login/BrandTitle';
+
+import { getSpacing } from '../../../styles';
+import { isEven } from '../../../helpers';
+
+const fadeInRightAnimation = keyframes`${fadeInRight}`;
+const fadeInLeftAnimation = keyframes`${fadeInLeft}`;
+const hingeAnimation = keyframes`${hinge}`;
+
+const Presentation = styled.div`
+  flex: 1 auto;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SubTitle = styled.div`
+  color: #fff;
+  text-align: center;
+`;
+
+const SubTitleWord = styled(Typography)`
+  && {
+    display: inline;
+    margin-right: ${getSpacing(1)};
+    font-weight: bold;
+    opacity: 0;
+    animation: 1s ${({ even }) => (even === 'even' ? fadeInLeftAnimation : fadeInRightAnimation)};
+    animation-delay: ${({ delay }) => `${delay}s`};
+    animation-fill-mode: forwards;
+  }
+`;
+
+const Enjoy = styled.div`
+  margin-top: ${getSpacing(3)};
+  color: #fff;
+  opacity: 0;
+  animation: 2s ${hingeAnimation};
+  animation-delay: 2.5s;
+  animation-fill-mode: forwards;
+
+  p {
+    font-weight: bold;
+  }
+`;
+
+const RegPresentation = () => {
+  return (
+    <Presentation>
+      <BrandTitle />
+      <Hidden smDown>
+        <SubTitle>
+          {
+            map(['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'], (word, index) => {
+              const num = index + 1;
+              const even = isEven(num) ? 'even' : 'odd';
+              const delay = ((num) / 5) + 1;
+
+              return (
+                <SubTitleWord
+                  key={num}
+                  component="p"
+                  variant="h4"
+                  align="center"
+                  even={even}
+                  delay={delay}
+                >
+                  {word}
+                </SubTitleWord>
+              );
+            })
+          }
+        </SubTitle>
+        <Enjoy>
+          <Typography
+            component="p"
+            variant="h4"
+            align="center"
+            color="inherit"
+          >
+            Enjoy!
+          </Typography>
+        </Enjoy>
+      </Hidden>
+    </Presentation>
+  );
+};
+
+export default RegPresentation;

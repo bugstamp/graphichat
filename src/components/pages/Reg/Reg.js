@@ -6,8 +6,6 @@ import styled, { keyframes } from 'styled-components';
 import { backgrounds } from 'polished';
 import { fadeIn } from 'react-animations';
 
-import Hidden from '@material-ui/core/Hidden';
-
 import RegContainer from '../../containers/RegContainer';
 import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
@@ -25,8 +23,8 @@ const Wrapper = styled(Grid)`
   flex: 1 auto;
   display: flex;
   position: relative;
-  ${backgrounds(`url(${bgImage})`, 'center no-repeat')}
-  background-size: content;
+  ${backgrounds(`url(${bgImage})`, 'no-repeat')}
+  background-size: cover;
   background-position: center;
   overflow: hidden;
 
@@ -43,7 +41,7 @@ const Wrapper = styled(Grid)`
 `;
 
 const FormWrapper = styled.div`
-  flex: 1 auto;
+  flex: 1 40%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,15 +52,11 @@ const FormWrapper = styled.div`
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const upMd = breakpoints.up('md');
-    const downSm = breakpoints.down('xs');
+    const downLg = breakpoints.down('lg');
+    const xsDown = breakpoints.down('xs');
 
     return `
-      ${upMd} {
-        flex: 0;
-        padding-right: 5%;
-      }
-      ${downSm} {
+      ${xsDown} {
         animation-play-state: paused;
         opacity: 1;
       }
@@ -149,9 +143,7 @@ class SignUp extends Component {
           signUpBySocial,
         }) => (
           <Wrapper container>
-            <Hidden xsDown>
-              <RegPresentation />
-            </Hidden>
+            <RegPresentation />
             <FormWrapper>
               <RegForm
                 steps={this.steps}

@@ -23,22 +23,22 @@ const Wrapper = styled(Paper)`
     max-width: 375px;
     min-width: 320px;
     position: relative;
-    padding: ${getSpacing(2)} ${getSpacing(3)};
+    padding: ${getSpacing(4)} ${getSpacing(3)};
     overflow: hidden auto;
 
-    ${(props) => {
-      const breakpoints = getStyledProps('theme.breakpoints')(props);
-      const xsDown = breakpoints.down('xs');
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const xsDown = breakpoints.down('xs');
 
-      return `
-        ${xsDown} {
-          max-width: 100%;
-          height: 100%;
-          border-radius: 0;
-          padding: ${getSpacing(1)};
-        }
-      `;
-    }}
+    return `
+      ${xsDown} {
+        max-width: 100%;
+        height: 100%;
+        border-radius: 0;
+        padding: ${getSpacing(1)};
+      }
+    `;
+  }}
   }
 `;
 

@@ -12,7 +12,7 @@ import Hidden from '@material-ui/core/Hidden';
 
 import BrandTitle from '../Login/BrandTitle';
 
-import { getSpacing } from '../../../styles';
+import { getStyledProps, getSpacing } from '../../../styles';
 import { isEven } from '../../../helpers';
 
 const fadeInRightAnimation = keyframes`${fadeInRight}`;
@@ -20,11 +20,25 @@ const fadeInLeftAnimation = keyframes`${fadeInLeft}`;
 const hingeAnimation = keyframes`${hinge}`;
 
 const Presentation = styled.div`
-  flex: 1 auto;
+  flex: 1 60%;
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: center;
+
+  ${'' /* p {
+    ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const smDown = breakpoints.down('sm');
+    const { fontSize } = getStyledProps('theme.typography.h5')(props);
+
+    return `
+      ${smDown} {
+        font-size: ${fontSize};
+      }
+    `;
+  }}
+  } */}
 `;
 
 const SubTitle = styled.div`

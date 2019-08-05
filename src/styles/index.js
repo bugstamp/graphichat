@@ -13,18 +13,14 @@ export const getStyledProps = (path, unit = '') => (props) => {
   return value;
 };
 
-export const getSpacing = (num = 1) => (props) => {
+export const getSpacing = (num = 1, unit = 'px') => (props) => {
   const spacingFunc = getStyledProps('theme.spacing')(props);
   const padding = spacingFunc(num);
 
-  return `${padding}px`;
+  return `${padding}${unit}`;
 };
 
-export const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-  },
-});
+export const theme = createMuiTheme({});
 
 export const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -37,11 +33,6 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     min-height: 100%;
-    font-family: ${getStyledProps('theme.typography.body1.fontFamily')};
-    font-size: ${getStyledProps('theme.typography.body1.fontSize')};
-    font-weight: ${getStyledProps('theme.typography.body1.fontWeight')};
-    line-height: ${getStyledProps('theme.typography.body1.lineHeight')};
-    letter-spacing: ${getStyledProps('theme.typography.body1.letterSpacing')};
     color: #000;
     background-color: #fff;
     overflow-y: auto;
@@ -55,18 +46,15 @@ export const GlobalStyle = createGlobalStyle`
       display: flex;
     }
 
-    ${(props) => {
-      const breakpoints = getStyledProps('theme.breakpoints')(props);
-      const smDown = breakpoints.down('sm');
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const xsDown = breakpoints.down('xs');
 
-      return `
-      ${smDown} {
-        font-size: ${getStyledProps('theme.typography.body2.fontSize')};
-        font-weight: ${getStyledProps('theme.typography.body2.fontWeight')};
-        line-height: ${getStyledProps('theme.typography.body2.lineHeight')};
-        letter-spacing: ${getStyledProps('theme.typography.body2.letterSpacing')};
+    return `
+      ${xsDown} {
+        font-size: 12px;
       }
-      `;
-    }}
+    `;
+  }}
   }
 `;

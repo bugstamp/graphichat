@@ -4,7 +4,6 @@ import styled, { keyframes } from 'styled-components';
 import { fadeIn, headShake } from 'react-animations';
 
 import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import BrandTitle from './BrandTitle';
 
@@ -31,13 +30,16 @@ const SubTitle = styled.div`
   opacity: 0;
 
   p {
+    font-weight: bold;
+
     ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const upSm = breakpoints.up('sm');
+    const smDown = breakpoints.down('sm');
+    const fontSize = getStyledProps('theme.typography.h5.fontSize')(props);
 
     return `
-      ${upSm} {
-        font-weight: bold;
+      ${smDown} {
+        font-size: ${fontSize};
       }
     `;
   }};
@@ -61,27 +63,16 @@ const SubTitle = styled.div`
 `;
 
 const LoginPresentation = ({ formDrawer, toggleFormDrawer }) => {
-  const downSm = useMediaQuery(theme => theme.breakpoints.down('sm'));
-  const downXs = useMediaQuery(theme => theme.breakpoints.down('xs'));
-  let typographyVariant = 'h3';
-
-  if (downSm) {
-    typographyVariant = 'h4';
-  }
-  if (downXs) {
-    typographyVariant = 'h6';
-  }
-
   return (
     <Wrapper>
       <BrandTitle />
       <SubTitle stopShake={formDrawer}>
-        <Typography component="p" variant={typographyVariant} align="center" paragraph>
+        <Typography component="p" variant="h4" align="center" paragraph>
           {'A lightweight, simple and useful web chat app'}
           {' based on the modern GraphQL API'}
         </Typography>
         <button type="button" onClick={toggleFormDrawer}>
-          <Typography component="p" variant={typographyVariant} align="center">Try it now!</Typography>
+          <Typography component="p" variant="h4" align="center">Try it now!</Typography>
         </button>
       </SubTitle>
     </Wrapper>

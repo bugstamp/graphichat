@@ -28,14 +28,19 @@ const Wrapper = styled(Paper)`
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const spacing = getStyledProps('theme.spacing')(props);
+    const smDown = breakpoints.down('sm');
     const xsDown = breakpoints.down('xs');
 
     return `
-      ${xsDown} {
+      ${smDown} {
         max-width: 100%;
         height: 100%;
         border-radius: 0;
-        padding: ${getSpacing(1)};
+        padding: ${spacing(4)}px ${spacing(20)}px;
+      }
+      ${xsDown} {
+        padding: ${spacing(2)}px;
       }
     `;
   }}

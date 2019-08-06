@@ -6,6 +6,8 @@ import styled, { keyframes } from 'styled-components';
 import { backgrounds } from 'polished';
 import { fadeIn } from 'react-animations';
 
+import Hidden from '@material-ui/core/Hidden';
+
 import RegContainer from '../../containers/RegContainer';
 import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
@@ -20,24 +22,27 @@ import bgImage from '../../../assets/images/reg-bg__1920_65.jpg';
 const fadeInAnimation = keyframes`${fadeIn}`;
 
 const Wrapper = styled(Grid)`
-  flex: 1 auto;
-  display: flex;
-  position: relative;
-  ${backgrounds(`url(${bgImage})`, 'no-repeat')}
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
+  && {
+    flex: 1 auto;
+    display: flex;
+    flex-flow: row nowrap;
+    position: relative;
+    ${backgrounds(`url(${bgImage})`, 'no-repeat')}
+    background-size: cover;
+    background-position: center;
+    overflow: hidden auto;
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const downSm = breakpoints.down('sm');
+    const smDown = breakpoints.down('sm');
 
     return `
-      ${downSm} {
+      ${smDown} {
         flex-flow: column;
       }
     `;
   }}
+  }
 `;
 
 const FormWrapper = styled.div`
@@ -52,11 +57,10 @@ const FormWrapper = styled.div`
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const downLg = breakpoints.down('lg');
-    const xsDown = breakpoints.down('xs');
+    const smDown = breakpoints.down('sm');
 
     return `
-      ${xsDown} {
+      ${smDown} {
         animation-play-state: paused;
         opacity: 1;
       }
@@ -143,7 +147,9 @@ class SignUp extends Component {
           signUpBySocial,
         }) => (
           <Wrapper container>
-            <RegPresentation />
+            <Hidden smDown>
+              <RegPresentation />
+            </Hidden>
             <FormWrapper>
               <RegForm
                 steps={this.steps}

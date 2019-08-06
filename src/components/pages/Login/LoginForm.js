@@ -14,7 +14,7 @@ import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import TopProgressLine from '../../common/TopProgressLine';
 
-import { getSpacing } from '../../../styles';
+import { getSpacing, getStyledProps } from '../../../styles';
 import { mutationProps } from '../../propTypes';
 
 const Wrapper = styled(Paper)`
@@ -26,6 +26,18 @@ const Wrapper = styled(Paper)`
     position: relative;
     padding: ${getSpacing(5)} ${getSpacing(3)};
     overflow: hidden auto;
+
+    ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const spacing = getStyledProps('theme.spacing')(props);
+    const xsDown = breakpoints.down('xs');
+
+    return `
+      ${xsDown} {
+        padding: ${spacing(2)}px;
+      }
+    `;
+  }}
   }
 `;
 

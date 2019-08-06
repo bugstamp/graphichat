@@ -8,7 +8,6 @@ import styled, { keyframes } from 'styled-components';
 import { map } from 'lodash';
 
 import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
 
 import BrandTitle from '../Login/BrandTitle';
 
@@ -25,20 +24,6 @@ const Presentation = styled.div`
   flex-flow: column;
   align-items: center;
   justify-content: center;
-
-  ${'' /* p {
-    ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const smDown = breakpoints.down('sm');
-    const { fontSize } = getStyledProps('theme.typography.h5')(props);
-
-    return `
-      ${smDown} {
-        font-size: ${fontSize};
-      }
-    `;
-  }}
-  } */}
 `;
 
 const SubTitle = styled.div`
@@ -75,40 +60,38 @@ const RegPresentation = () => {
   return (
     <Presentation>
       <BrandTitle />
-      <Hidden smDown>
-        <SubTitle>
-          {
-            map(['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'], (word, index) => {
-              const num = index + 1;
-              const even = isEven(num) ? 'even' : 'odd';
-              const delay = ((num) / 5) + 1;
+      <SubTitle>
+        {
+          map(['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'], (word, index) => {
+            const num = index + 1;
+            const even = isEven(num) ? 'even' : 'odd';
+            const delay = ((num) / 5) + 1;
 
-              return (
-                <SubTitleWord
-                  key={num}
-                  component="p"
-                  variant="h4"
-                  align="center"
-                  even={even}
-                  delay={delay}
-                >
-                  {word}
-                </SubTitleWord>
-              );
-            })
-          }
-        </SubTitle>
-        <Enjoy>
-          <Typography
-            component="p"
-            variant="h4"
-            align="center"
-            color="inherit"
-          >
-            Enjoy!
-          </Typography>
-        </Enjoy>
-      </Hidden>
+            return (
+              <SubTitleWord
+                key={num}
+                component="p"
+                variant="h4"
+                align="center"
+                even={even}
+                delay={delay}
+              >
+                {word}
+              </SubTitleWord>
+            );
+          })
+        }
+      </SubTitle>
+      <Enjoy>
+        <Typography
+          component="p"
+          variant="h4"
+          align="center"
+          color="inherit"
+        >
+          Enjoy!
+        </Typography>
+      </Enjoy>
     </Presentation>
   );
 };

@@ -129,7 +129,7 @@ class Chats extends Component {
           return (
             <Wrapper>
               <Grid container spacing={0}>
-                <Grid item xs={12} sm={4} lg={3}>
+                <Grid item xs={12} sm={5} lg={3}>
                   <Contacts
                     loading={initialLoading}
                     myId={me.id}
@@ -141,7 +141,7 @@ class Chats extends Component {
                   />
                 </Grid>
                 <Hidden xsDown>
-                  <Grid item sm={8} lg={6}>
+                  <Grid item sm={7} lg={6}>
                     <Choose>
                       <When condition={contactsListIsEmpty}>
                         {null}

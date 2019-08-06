@@ -1,31 +1,55 @@
 import React, { PureComponent, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import MaterialDialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 import SearchDialogContainer from '../../../containers/SearchDialogContainer';
 import SearchBox from '../../../common/SearchBox';
 import SearchDialogList from './SearchDialogList';
 
-import { getSpacing } from '../../../../styles';
+import { getSpacing, getStyledProps } from '../../../../styles';
 
-const SubTitle = styled(Typography)`
-  && {
-    padding: 0 ${getSpacing(3)};
-    padding-bottom: ${getSpacing(1)};
-  }
+const DialogInner = styled.div`
+  height: 500px;
+  display: flex;
+  flex-flow: column;
+  padding: ${getSpacing(2)};
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const smDown = breakpoints.down('sm');
+
+    return `
+      ${smDown} {
+        height: 100%;
+      }
+    `;
+  }}
+`;
+
+const DialogTitle = styled.div`
+  padding: 0;
+  padding-bottom: ${getSpacing(1)};
 `;
 
 const DialogContent = styled(MaterialDialogContent)`
   && {
-    height: 300px;
+    flex: 1 auto;
     display: flex;
     flex-flow: column;
+    padding: 0;
+  }
+`;
+
+const SearchDialogActions = styled(DialogActions)`
+  && {
+    padding: 0;
   }
 `;
 
@@ -60,7 +84,8 @@ class SearchDialog extends PureComponent {
 
   render() {
     const { searchValue, confirmDialog, selectedUser } = this.state;
-    const { open, toggle } = this.props;
+    const { open, toggle, width } = this.props;
+    const fullScreen = !isWidthUp('md', width);
 
     return (
       <SearchDialogContainer
@@ -76,31 +101,40 @@ class SearchDialog extends PureComponent {
         }) => {
           return (
             <Fragment>
-              <Dialog open={open} onClose={toggle} scroll="body">
-                <DialogTitle>
-                  Search contact
-                </DialogTitle>
-                <SubTitle variant="subtitle2">
-                  Search contact by name or use &quot;@&quot; as a first character for searching by username.
-                </SubTitle>
-                <DialogContent>
-                  <SearchBox
-                    value={searchValue}
-                    onChange={value => this.onChangeSearchValue(value, refetch)}
-                    autoFocus
-                  />
-                  <SearchDialogList
-                    loading={loading}
-                    data={data && data.searchUsers}
-                    myContacts={myContacts}
-                    adding={adding}
-                    selectedUserId={selectedUser.id}
-                    openConfirmDialog={this.openConfirmDialog}
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={toggle} color="primary">Close</Button>
-                </DialogActions>
+              <Dialog
+                open={open}
+                onClose={toggle}
+                scroll="body"
+                fullScreen={fullScreen}
+              >
+                <DialogInner>
+                  <DialogTitle>
+                    <Typography variant="h6" gutterBottom>
+                      Search contact
+                    </Typography>
+                    <Typography variant="subtitle2">
+                      Search contact by name or use &quot;@&quot; as a first character for searching by username.
+                    </Typography>
+                  </DialogTitle>
+                  <DialogContent>
+                    <SearchBox
+                      value={searchValue}
+                      onChange={value => this.onChangeSearchValue(value, refetch)}
+                      autoFocus
+                    />
+                    <SearchDialogList
+                      loading={loading}
+                      data={data && data.searchUsers}
+                      myContacts={myContacts}
+                      adding={adding}
+                      selectedUserId={selectedUser.id}
+                      openConfirmDialog={this.openConfirmDialog}
+                    />
+                  </DialogContent>
+                  <SearchDialogActions>
+                    <Button onClick={toggle} color="primary">Close</Button>
+                  </SearchDialogActions>
+                </DialogInner>
               </Dialog>
               <If condition={confirmDialog}>
                 <Dialog open={confirmDialog} onClose={toggle}>
@@ -135,4 +169,10 @@ class SearchDialog extends PureComponent {
   }
 }
 
-export default SearchDialog;
+SearchDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  width: PropTypes.string.isRequired,
+};
+
+export default withWidth()(SearchDialog);

@@ -22,20 +22,26 @@ const AppWrapper = styled(Grid)`
 `;
 
 const MainPageWrapper = styled(Paper)`
-  flex: 1 auto;
-  display: flex;
-  overflow: hidden;
+  && {
+    flex: 1 auto;
+    display: flex;
+    overflow: hidden;
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const mediaDownLg = breakpoints.up('lg');
+    const lgUp = breakpoints.up('lg');
+    const mdDown = breakpoints.down('md');
 
     return `
-      ${mediaDownLg} {
+      ${lgUp} {
         margin: 20px 40px;
+      }
+      ${mdDown} {
+        border-radius: 0;
       }
     `;
   }};
+  }
 `;
 
 class MainPage extends Component {

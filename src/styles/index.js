@@ -32,6 +32,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    min-width: 320px;
     min-height: 100%;
     color: #000;
     background-color: #fff;

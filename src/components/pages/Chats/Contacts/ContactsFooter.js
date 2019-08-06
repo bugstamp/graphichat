@@ -5,15 +5,25 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddRounded';
 
-import { getSpacing } from '../../../../styles';
+import { getSpacing, getStyledProps } from '../../../../styles';
 
 const ListPanelFooter = styled.div`
   display: flex;
   justify-content: center;
-  padding: ${getSpacing(1)} ${getSpacing(4)};
 
   button {
-    width: 100%;
+    width: 75%;
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const xsDown = breakpoints.down('xs');
+
+    return `
+      ${xsDown} {
+        width: 100%;
+      }
+    `;
+  }}
   }
 `;
 
@@ -23,7 +33,7 @@ const ContactPanelFooter = ({ toggleSearchDialog }) => {
       <Button
         color="primary"
         variant="contained"
-        size="large"
+        size="small"
         onClick={toggleSearchDialog}
       >
         <AddIcon />

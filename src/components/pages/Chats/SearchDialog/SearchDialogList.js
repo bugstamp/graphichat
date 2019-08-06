@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { find } from 'lodash';
 
 import List from '../../../common/List';
@@ -10,7 +10,6 @@ import { getAvatar } from '../../../../helpers';
 class SearchDialogList extends Component {
   rowRenderer = ({ rowIndex, rowData }) => {
     const {
-      loading,
       myContacts,
       adding,
       selectedUserId,
@@ -47,5 +46,17 @@ class SearchDialogList extends Component {
     );
   }
 }
+
+SearchDialogList.defaultProps = {
+  selectedUserId: null,
+};
+SearchDialogList.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  // data: PropTypes.func.isRequired,
+  // myContacts: PropTypes.func.isRequired,
+  adding: PropTypes.bool.isRequired,
+  selectedUserId: PropTypes.string,
+  openConfirmDialog: PropTypes.func.isRequired,
+};
 
 export default SearchDialogList;

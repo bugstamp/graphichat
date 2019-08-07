@@ -141,10 +141,10 @@ class SearchDialog extends PureComponent {
               >
                 <SearchDialogTitle disableTypography>
                   <Typography variant="h6">
-                    Search contact
+                    Search user
                   </Typography>
                   <Typography variant="subtitle2">
-                    Search contact by name or use &quot;@&quot; as a first character for searching by username.
+                    Search user by name or use &quot;@&quot; as a first character for searching by username.
                   </Typography>
                 </SearchDialogTitle>
                 <SearchDialogContent dividers>

@@ -16,8 +16,7 @@ const NoContacts = ({ searchValue }) => (
   <Typography variant="subtitle2">
     <Choose>
       <When condition={!searchValue}>
-        <p>Your contact list is empty.</p>
-        <p>Click on the "add contact" button to find your contacts</p>
+        <p>Your chat list is empty.</p>
       </When>
       <Otherwise>
         {null}

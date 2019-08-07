@@ -6,6 +6,7 @@ import {
 } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import SearchBox from '../../../common/SearchBox';
 import ContactsList from './ContactsList';
@@ -21,12 +22,20 @@ const Wrapper = styled(Paper)`
     display: flex;
     flex-flow: column;
     background-color: ${getStyledProps('theme.palette.background.default')};
-    padding: ${getSpacing(2)};
-    padding-top: ${getSpacing(3)};
   }
 `;
 
-class ContactPanel extends Component {
+const ContactsHeader = styled.div`
+  display: flex;
+  flex-flow: column;
+  padding: ${getSpacing(2)};
+
+  h6 {
+    margin-bottom: ${getSpacing(1)};
+  }
+`;
+
+class Contacts extends Component {
   state = {
     searchDialog: false,
     searchValue: '',
@@ -84,6 +93,7 @@ class ContactPanel extends Component {
   render() {
     const { searchDialog, searchValue, sortedContacts } = this.state;
     const {
+      title,
       loading,
       myId,
       selectedChatId,
@@ -92,7 +102,10 @@ class ContactPanel extends Component {
 
     return (
       <Wrapper square elevation={0}>
-        <SearchBox value={searchValue} onChange={this.onChangeSearchValue} />
+        <ContactsHeader>
+          <Typography variant="h6" align="center" color="primary">{title}</Typography>
+          <SearchBox value={searchValue} onChange={this.onChangeSearchValue} />
+        </ContactsHeader>
         <ContactsList
           loading={loading}
           data={sortedContacts}
@@ -109,13 +122,13 @@ class ContactPanel extends Component {
   }
 }
 
-ContactPanel.defaultProps = {
+Contacts.defaultProps = {
   myId: null,
   selectedChatId: null,
   contacts: [],
   chats: [],
 };
-ContactPanel.propTypes = {
+Contacts.propTypes = {
   loading: PropTypes.bool.isRequired,
   myId: PropTypes.string,
   selectedChatId: PropTypes.string,
@@ -125,4 +138,4 @@ ContactPanel.propTypes = {
   changeRoute: PropTypes.func.isRequired,
 };
 
-export default ContactPanel;
+export default Contacts;

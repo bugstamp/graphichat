@@ -131,6 +131,7 @@ class Chats extends Component {
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={5} lg={3}>
                   <Contacts
+                    title="Chats"
                     loading={initialLoading}
                     myId={me.id}
                     contacts={myContacts}

@@ -10,6 +10,7 @@ import { getSpacing, getStyledProps } from '../../../../styles';
 const ListPanelFooter = styled.div`
   display: flex;
   justify-content: center;
+  padding: ${getSpacing(2)};
 
   button {
     width: 75%;
@@ -37,7 +38,7 @@ const ContactPanelFooter = ({ toggleSearchDialog }) => {
         onClick={toggleSearchDialog}
       >
         <AddIcon />
-        Add Contact
+        Add Chat
       </Button>
     </ListPanelFooter>
   );

@@ -5,14 +5,13 @@ import styled from 'styled-components';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/SearchRounded';
 
-import { getStyledProps, getSpacing } from '../../styles';
+import { getStyledProps } from '../../styles';
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
   align-items: stretch;
-  margin-bottom: ${getSpacing(1)};
   color: ${getStyledProps('theme.palette.grey.600')};
   background-color: #fff;
   border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')}

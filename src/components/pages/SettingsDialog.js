@@ -65,7 +65,7 @@ class SettingsDialog extends PureComponent {
     return (
       <Dialog open={open} onClose={toggle}>
         <TopProgressLine loading={avatarUploading} />
-        <DialogTitle>Settings</DialogTitle>
+        <DialogTitle>Profile Settings</DialogTitle>
         <DialogContent>
           <AvatarWrapper>
             <input

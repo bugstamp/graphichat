@@ -27,7 +27,7 @@ const TopProgressLine = ({ height, loading, bordered }) => (
 
 TopProgressLine.defaultProps = {
   bordered: false,
-  height: '2px',
+  height: '3px',
 };
 TopProgressLine.propTypes = {
   height: PropTypes.string,

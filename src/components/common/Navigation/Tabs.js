@@ -24,7 +24,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-flow: column;
   position: relative;
-  padding-bottom: ${getSpacing(1)};
 
   button:first-of-type {
     margin-top: auto;

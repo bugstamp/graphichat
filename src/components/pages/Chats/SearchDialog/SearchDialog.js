@@ -4,7 +4,8 @@ import styled from 'styled-components';
 
 import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
-import MaterialDialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
@@ -13,13 +14,20 @@ import SearchDialogContainer from '../../../containers/SearchDialogContainer';
 import SearchBox from '../../../common/SearchBox';
 import SearchDialogList from './SearchDialogList';
 
-import { getSpacing, getStyledProps } from '../../../../styles';
+import { getStyledProps } from '../../../../styles';
 
-const DialogInner = styled.div`
-  height: 500px;
+const DialogBody = styled.div`
+  && {
+    display: flex;
+    flex-flow: column;
+    background-color: #fff;
+  }
+`;
+
+const DialogContentInner = styled.div`
+  height: 300px;
   display: flex;
   flex-flow: column;
-  padding: ${getSpacing(2)};
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
@@ -33,23 +41,35 @@ const DialogInner = styled.div`
   }}
 `;
 
-const DialogTitle = styled.div`
-  padding: 0;
-  padding-bottom: ${getSpacing(1)};
-`;
-
-const DialogContent = styled(MaterialDialogContent)`
+const SearchDialogTitle = styled(DialogTitle)`
   && {
-    flex: 1 auto;
-    display: flex;
-    flex-flow: column;
-    padding: 0;
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const spacing = getStyledProps('theme.spacing')(props);
+    const smDown = breakpoints.down('sm');
+
+    return `
+      ${smDown} {
+        padding: ${spacing(1)}px ${spacing(2)}px;
+      }
+    `;
+  }}
   }
 `;
 
-const SearchDialogActions = styled(DialogActions)`
+const SearchDialogContent = styled(DialogContent)`
   && {
-    padding: 0;
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const spacing = getStyledProps('theme.spacing')(props);
+    const smDown = breakpoints.down('sm');
+
+    return `
+      ${smDown} {
+        padding: ${spacing(1)}px ${spacing(2)}px;
+      }
+    `;
+  }}
   }
 `;
 
@@ -64,7 +84,9 @@ class SearchDialog extends PureComponent {
     this.setState(
       () => ({ searchValue: value }),
       () => {
-        refetch();
+        if (value !== '@') {
+          refetch();
+        }
       },
     );
   }
@@ -91,32 +113,42 @@ class SearchDialog extends PureComponent {
       <SearchDialogContainer
         searchUsersProps={{
           variables: { searchValue },
-          skip: !searchValue,
+          skip: !searchValue || searchValue === '@',
         }}
       >
         {({
-          searchUsers: { loading, data, refetch },
-          createChat: { mutation: createChat, result: { loading: adding } },
-          getMyContacts: { data: { myContacts } },
+          searchUsers: {
+            loading,
+            data,
+            refetch,
+          },
+          createChat: {
+            mutation: createChat,
+            result: { loading: adding },
+          },
+          getMyContacts: {
+            data: { myContacts },
+          },
         }) => {
           return (
             <Fragment>
               <Dialog
                 open={open}
                 onClose={toggle}
-                scroll="body"
                 fullScreen={fullScreen}
+                PaperComponent={DialogBody}
+                scroll="paper"
               >
-                <DialogInner>
-                  <DialogTitle>
-                    <Typography variant="h6" gutterBottom>
-                      Search contact
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      Search contact by name or use &quot;@&quot; as a first character for searching by username.
-                    </Typography>
-                  </DialogTitle>
-                  <DialogContent>
+                <SearchDialogTitle disableTypography>
+                  <Typography variant="h6">
+                    Search contact
+                  </Typography>
+                  <Typography variant="subtitle2">
+                    Search contact by name or use &quot;@&quot; as a first character for searching by username.
+                  </Typography>
+                </SearchDialogTitle>
+                <SearchDialogContent dividers>
+                  <DialogContentInner>
                     <SearchBox
                       value={searchValue}
                       onChange={value => this.onChangeSearchValue(value, refetch)}
@@ -130,11 +162,11 @@ class SearchDialog extends PureComponent {
                       selectedUserId={selectedUser.id}
                       openConfirmDialog={this.openConfirmDialog}
                     />
-                  </DialogContent>
-                  <SearchDialogActions>
-                    <Button onClick={toggle} color="primary">Close</Button>
-                  </SearchDialogActions>
-                </DialogInner>
+                  </DialogContentInner>
+                </SearchDialogContent>
+                <DialogActions>
+                  <Button onClick={toggle} color="primary">Close</Button>
+                </DialogActions>
               </Dialog>
               <If condition={confirmDialog}>
                 <Dialog open={confirmDialog} onClose={toggle}>

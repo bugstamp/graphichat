@@ -13,6 +13,7 @@ import { getStyledProps, getSpacing } from '../../../../styles';
 
 const ListItem = styled(({ isSelected, ...rest }) => <MaterialListItem {...rest} />)`
   && {
+    margin: 10px;
     padding-right: 60px;
     padding-left: ${getSpacing(1)};
     ${({ isSelected }) => isSelected && `

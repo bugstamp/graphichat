@@ -41,7 +41,6 @@ export const NoContentWrapper = styled.div`
 
 const Scrollable = styled.div`
   margin-top: auto;
-  padding-right: 17px;
 
   ${({ pointer }) => {
     const pointerEvents = !pointer ? 'none !important' : 'auto';

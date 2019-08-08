@@ -12,7 +12,6 @@ import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/orange';
 
 import ListItemAvatar from '../../../common/List/ListItemAvatar';
-import TopProgressLine from '../../../common/TopProgressLine';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
 import { userAvatarProps } from '../../../propTypes';
@@ -121,7 +120,6 @@ class ChatComment extends Component {
   render() {
     const { value } = this.state;
     const {
-      adding,
       avatars: {
         me,
         contact,
@@ -130,7 +128,6 @@ class ChatComment extends Component {
 
     return (
       <Wrapper>
-        <TopProgressLine height="1px" loading={adding} bordered />
         <UserAvatar>
           <ListItemAvatar {...me} />
         </UserAvatar>
@@ -171,7 +168,6 @@ ChatComment.propTypes = {
     me: PropTypes.shape(userAvatarProps).isRequired,
     contact: PropTypes.shape(userAvatarProps).isRequired,
   }).isRequired,
-  adding: PropTypes.bool.isRequired,
   submit: PropTypes.func.isRequired,
 };
 

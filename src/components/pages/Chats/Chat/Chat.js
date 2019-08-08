@@ -130,7 +130,6 @@ class Chat extends Component {
           fetchThreshold={5}
         />
         <ChatComment
-          adding={adding}
           avatars={{
             me: myAvatar,
             contact: contactAvatar,

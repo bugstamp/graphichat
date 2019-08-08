@@ -21,6 +21,18 @@ const DialogBody = styled.div`
     display: flex;
     flex-flow: column;
     background-color: #fff;
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const borderRadius = getStyledProps('theme.shape.borderRadius')(props);
+    const mdUp = breakpoints.up('md');
+
+    return `
+      ${mdUp} {
+        border-radius: ${borderRadius}px;
+      }
+    `;
+  }}
   }
 `;
 

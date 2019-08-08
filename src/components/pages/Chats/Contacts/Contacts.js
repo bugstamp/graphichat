@@ -103,7 +103,7 @@ class Contacts extends Component {
     return (
       <Wrapper square elevation={0}>
         <ContactsHeader>
-          <Typography variant="h6" align="center" color="primary">{title}</Typography>
+          <Typography variant="h6" align="center" color="textPrimary">{title}</Typography>
           <SearchBox value={searchValue} onChange={this.onChangeSearchValue} />
         </ContactsHeader>
         <ContactsList

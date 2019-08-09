@@ -7,6 +7,7 @@ import { isEqual } from 'lodash';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
+import Drawer from '@material-ui/core/Drawer';
 
 import SettingsDialog from './SettingsDialog';
 import Navigation from '../common/Navigation/Navigation';
@@ -47,6 +48,7 @@ const MainPageWrapper = styled(Paper)`
 class MainPage extends Component {
   state = {
     settingsDialog: false,
+    leftNav: false,
   }
 
   componentDidUpdate = (prevProps) => {
@@ -61,6 +63,10 @@ class MainPage extends Component {
     this.setState(({ settingsDialog }) => ({ settingsDialog: !settingsDialog }));
   }
 
+  toggleLeftNav = () => {
+    this.setState(({ leftNav }) => ({ leftNav: !leftNav }));
+  }
+
   signOut = () => {
     const { me, signOut } = this.props;
     const { id } = me;
@@ -69,7 +75,7 @@ class MainPage extends Component {
   }
 
   render() {
-    const { settingsDialog } = this.state;
+    const { settingsDialog, leftNav } = this.state;
     const {
       children,
       loading,
@@ -81,6 +87,16 @@ class MainPage extends Component {
 
     return (
       <AppWrapper container spacing={0} justify="center">
+        <Hidden mdUp xsDown>
+          <Drawer open={leftNav} onClose={this.toggleLeftNav}>
+            <Navigation
+              leftNav={leftNav}
+              toggleSettingsDialog={this.toggleSettingsDialog}
+              toggleLeftNav={this.toggleLeftNav}
+              signOut={this.signOut}
+            />
+          </Drawer>
+        </Hidden>
         <MainPageWrapper>
           <Grid container spacing={0}>
             <Hidden smDown>
@@ -92,7 +108,11 @@ class MainPage extends Component {
               </Grid>
             </Hidden>
             <Grid item xs>
-              {cloneElement(children, { initialLoading: loading })}
+              {cloneElement(children, {
+                initialLoading: loading,
+                leftNav,
+                toggleLeftNav: this.toggleLeftNav,
+              })}
             </Grid>
           </Grid>
         </MainPageWrapper>

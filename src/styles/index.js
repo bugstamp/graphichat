@@ -49,10 +49,10 @@ export const GlobalStyle = createGlobalStyle`
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const xsDown = breakpoints.down('xs');
+    const smDown = breakpoints.down('sm');
 
     return `
-      ${xsDown} {
+      ${smDown} {
         font-size: 12px;
       }
     `;

@@ -29,6 +29,14 @@ class Navigation extends PureComponent {
     activeTab: 0,
   }
 
+  componentWillUnmount() {
+    const { leftNav, toggleLeftNav } = this.props;
+
+    if (leftNav) {
+      toggleLeftNav();
+    }
+  }
+
   handleChangeTab = (index) => {
     this.setState({ activeTab: index });
   }

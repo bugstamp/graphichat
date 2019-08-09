@@ -79,7 +79,7 @@ class Chats extends Component {
 
   render() {
     const { optimisticIds } = this.state;
-    const { initialLoading } = this.props;
+    const { initialLoading, toggleLeftNav } = this.props;
     const selectedChatId = initialLoading ? null : this.checkRoute();
 
     return (
@@ -139,6 +139,7 @@ class Chats extends Component {
                     selectedChatId={selectedChatId}
                     selectChat={selectChat}
                     changeRoute={this.changeRoute}
+                    toggleLeftNav={toggleLeftNav}
                   />
                 </Grid>
                 <Hidden xsDown>

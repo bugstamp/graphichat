@@ -54,6 +54,7 @@ class ContactsList extends Component {
         rowRenderer={this.rowRenderer}
         noContentComponent={() => (<NoContacts searchValue={searchValue} />)}
         spinnerSize={40}
+        listProps={{ gutters: 2, disablePadding: true }}
       />
     );
   }

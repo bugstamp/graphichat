@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { map, isEmpty, isEqual } from 'lodash';
+import styled from 'styled-components';
+// import {} from 'polished';
 
-import List from '@material-ui/core/List';
+import MaterialList from '@material-ui/core/List';
+
+import { getSpacing } from '../../../styles';
+
+const List = styled(MaterialList)`
+  && {
+    ${({ gutters, ...rest }) => `
+      padding: 0 ${getSpacing(gutters)(rest)};
+    `}
+  }
+`;
 
 class ListItems extends Component {
   shouldComponentUpdate(nextProps) {
@@ -28,7 +40,7 @@ class ListItems extends Component {
   }
 
   render() {
-    const { data, rowRenderer } = this.props;
+    const { data, rowRenderer, listProps } = this.props;
 
     return (
       <Choose>
@@ -36,7 +48,7 @@ class ListItems extends Component {
           {null}
         </When>
         <Otherwise>
-          <List disablePadding>
+          <List {...listProps}>
             {map(data, (item, index) => rowRenderer(item, index))}
           </List>
         </Otherwise>
@@ -51,6 +63,11 @@ ListItems.defaultProps = {
   scrollbar: false,
   scrollbarPresence: false,
   pointerEvents: false,
+  listProps: {
+    gutters: 0,
+    disablePadding: true,
+    dense: false,
+  },
 };
 ListItems.propTypes = {
   loading: PropTypes.bool,
@@ -59,6 +76,7 @@ ListItems.propTypes = {
   scrollbar: PropTypes.bool,
   scrollbarPresence: PropTypes.bool,
   pointerEvents: PropTypes.bool,
+  listProps: PropTypes.objectOf(PropTypes.any),
 };
 
 export default ListItems;

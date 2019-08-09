@@ -27,7 +27,7 @@ const Wrapper = styled(Paper)`
     padding: ${getSpacing(5)} ${getSpacing(3)};
     overflow: hidden auto;
 
-    ${(props) => {
+  ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
     const spacing = getStyledProps('theme.spacing')(props);
     const xsDown = breakpoints.down('xs');

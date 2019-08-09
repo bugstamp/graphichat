@@ -6,6 +6,7 @@ import List from '../../../common/List';
 import SearchDialogListItem from './SearchDialogListItem';
 
 import { getAvatar } from '../../../../helpers';
+import { contactProps, userInfoProps } from '../../../propTypes';
 
 class SearchDialogList extends Component {
   rowRenderer = ({ rowIndex, rowData }) => {
@@ -42,6 +43,7 @@ class SearchDialogList extends Component {
         loading={loading}
         data={data}
         rowRenderer={this.rowRenderer}
+        lisProps={{ gutters: 2, disablePadding: true }}
       />
     );
   }
@@ -49,11 +51,13 @@ class SearchDialogList extends Component {
 
 SearchDialogList.defaultProps = {
   selectedUserId: null,
+  myContacts: [],
+  data: [],
 };
 SearchDialogList.propTypes = {
   loading: PropTypes.bool.isRequired,
-  // data: PropTypes.func.isRequired,
-  // myContacts: PropTypes.func.isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape(userInfoProps)),
+  myContacts: PropTypes.arrayOf(PropTypes.shape(contactProps)),
   adding: PropTypes.bool.isRequired,
   selectedUserId: PropTypes.string,
   openConfirmDialog: PropTypes.func.isRequired,

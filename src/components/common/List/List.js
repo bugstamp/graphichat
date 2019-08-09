@@ -21,15 +21,27 @@ const Wrapper = styled.div`
 `;
 
 const View = styled.div`
-  ${position('absolute', 0, '-17px', 0, 0)};
+  ${position('absolute', 0, 0, 0, 0)};
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   z-index: 15;
 
   ${({ startFrom }) => startFrom === 'bottom' && `
     display: flex;
     flex-flow: column;
   `}
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const { scrollbarPresence } = props;
+    const lgUp = breakpoints.up('lg');
+
+    return `
+      ${lgUp} {
+        right: ${!scrollbarPresence ? 0 : '-17px'};
+      }
+    `;
+  }}
 `;
 
 export const NoContentWrapper = styled.div`
@@ -40,6 +52,7 @@ export const NoContentWrapper = styled.div`
 `;
 
 const Scrollable = styled.div`
+  width: 100%;
   margin-top: auto;
 
   ${({ pointer }) => {
@@ -58,12 +71,24 @@ const Scrollable = styled.div`
 const Scrollbar = styled.div`
   ${position('absolute', 0, 0, 0, null)};
   width: 3px;
-  display: ${({ presence }) => (presence ? 'block' : 'none')};
+  display: none;
   background-color: ${getStyledProps('theme.palette.grey.300')};
   opacity: ${({ show }) => (show ? 1 : 0)};
   transition: .25s ease;
   z-index: 20;
   cursor: pointer;
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const { presence } = props;
+    const lgUp = breakpoints.up('lg');
+
+    return `
+      ${lgUp} {
+        display: ${(presence ? 'block' : 'none')};
+      }
+    `;
+  }}
 `;
 
 const ScrollbarThumb = styled.button`
@@ -351,6 +376,7 @@ class List extends Component {
       startFrom,
       noContentComponent: NoContent,
       spinnerSize,
+      listProps,
     } = this.props;
 
     return (
@@ -372,6 +398,7 @@ class List extends Component {
           ref={this.listView}
           onScroll={this._onScroll}
           startFrom={startFrom}
+          scrollbarPresence={scrollbarPresence}
         >
           <Choose>
             <When condition={!lazyLoad && loading}>
@@ -392,7 +419,10 @@ class List extends Component {
               </Choose>
             </When>
             <Otherwise>
-              <Scrollable ref={this.listScrollable} pointer={pointerEvents}>
+              <Scrollable
+                ref={this.listScrollable}
+                pointer={pointerEvents}
+              >
                 <ReactResizeDetector onResize={this._onResize} handleHeight>
                   <Fragment>
                     <If condition={lazyLoad && startFrom === 'bottom'}>
@@ -407,6 +437,7 @@ class List extends Component {
                       pointerEvents={pointerEvents}
                       data={data}
                       rowRenderer={this._onRowRenderer}
+                      listProps={listProps}
                     />
                     <If condition={lazyLoad && startFrom === 'top'}>
                       <FetchMore visible={loading}>
@@ -436,6 +467,7 @@ List.defaultProps = {
   noContentComponent: null,
   spinnerSize: 20,
   onObserverChange: null,
+  listProps: {},
 };
 List.propTypes = {
   loading: PropTypes.bool,
@@ -450,6 +482,7 @@ List.propTypes = {
   noContentComponent: PropTypes.func,
   spinnerSize: PropTypes.number,
   onObserverChange: PropTypes.func,
+  listProps: PropTypes.objectOf(PropTypes.any),
 };
 
 export default List;

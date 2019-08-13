@@ -9,6 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import Slide from '@material-ui/core/Slide';
+import Fade from '@material-ui/core/Fade';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 import SearchDialogContainer from '../../../containers/SearchDialogContainer';
@@ -122,7 +123,7 @@ class SearchDialog extends PureComponent {
     const { open, toggle, width } = this.props;
 
     const fullScreen = !isWidthUp('md', width);
-    const TransitionComponent = fullScreen ? Slide : null;
+    const TransitionComponent = fullScreen ? Slide : Fade;
     const TransitionProps = fullScreen
       ? { direction: 'up' }
       : {};

@@ -1,13 +1,11 @@
 import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-// import {} from 'polished';
 import { isEqual } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
-import Drawer from '@material-ui/core/Drawer';
 
 import SettingsDialog from './SettingsDialog';
 import Navigation from '../common/Navigation/Navigation';
@@ -82,15 +80,6 @@ class MainPage extends Component {
 
     return (
       <AppWrapper container spacing={0} justify="center">
-        {/* <Hidden mdUp xsDown>
-          <Drawer open={leftNav} onClose={this.toggleLeftNav}>
-            <Navigation
-          leftNav={leftNav}
-          toggleSettingsDialog={this.toggleSettingsDialog}
-          signOut={this.signOut}
-            />
-          </Drawer>
-        </Hidden> */}
         <MainPageWrapper>
           <Grid container spacing={0}>
             <Hidden smDown>

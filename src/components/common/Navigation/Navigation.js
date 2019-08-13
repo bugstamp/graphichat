@@ -2,12 +2,9 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { size } from 'polished';
-// import {} from 'lodash';
 
 import Tabs from './Tabs';
 import Logo from '../Logo';
-
-// import { getSpacing } from '../../../styles';
 
 const NavigationStyled = styled.div`
   width: 60px;

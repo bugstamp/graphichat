@@ -20,7 +20,7 @@ const Wrapper = styled(Paper)`
     height: 100%;
     display: flex;
     flex-flow: column;
-    padding: ${getSpacing(2)} 0;
+    padding: ${getSpacing(1)} 0;
     background-color: #fff;
   }
 `;

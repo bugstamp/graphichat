@@ -22,7 +22,7 @@ class ListItems extends Component {
       scrollbar,
       scrollbarPresence,
       loading,
-      pointerEvents
+      pointerEvents,
     } = this.props;
 
     if (
@@ -40,7 +40,13 @@ class ListItems extends Component {
   }
 
   render() {
-    const { data, rowRenderer, listProps } = this.props;
+    const {
+      data,
+      rowRenderer,
+      gutters,
+      disablePadding,
+      dense,
+    } = this.props;
 
     return (
       <Choose>
@@ -48,7 +54,11 @@ class ListItems extends Component {
           {null}
         </When>
         <Otherwise>
-          <List {...listProps}>
+          <List
+            gutters={gutters}
+            disablePadding={disablePadding}
+            dense={dense}
+          >
             {map(data, (item, index) => rowRenderer(item, index))}
           </List>
         </Otherwise>
@@ -63,11 +73,9 @@ ListItems.defaultProps = {
   scrollbar: false,
   scrollbarPresence: false,
   pointerEvents: false,
-  listProps: {
-    gutters: 0,
-    disablePadding: true,
-    dense: false,
-  },
+  gutters: 0,
+  disablePadding: true,
+  dense: false,
 };
 ListItems.propTypes = {
   loading: PropTypes.bool,
@@ -76,7 +84,9 @@ ListItems.propTypes = {
   scrollbar: PropTypes.bool,
   scrollbarPresence: PropTypes.bool,
   pointerEvents: PropTypes.bool,
-  listProps: PropTypes.objectOf(PropTypes.any),
+  gutters: PropTypes.number,
+  disablePadding: PropTypes.bool,
+  dense: PropTypes.bool,
 };
 
 export default ListItems;

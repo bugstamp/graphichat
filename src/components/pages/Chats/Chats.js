@@ -79,7 +79,7 @@ class Chats extends Component {
 
   render() {
     const { optimisticIds } = this.state;
-    const { initialLoading, toggleLeftNav } = this.props;
+    const { initialLoading } = this.props;
     const selectedChatId = initialLoading ? null : this.checkRoute();
 
     return (
@@ -129,7 +129,7 @@ class Chats extends Component {
           return (
             <Wrapper>
               <Grid container spacing={0}>
-                <Grid item xs={12} sm={5} lg={3}>
+                <Grid item xs={12} sm={12} md={5} lg={3}>
                   <Contacts
                     title="Chats"
                     loading={initialLoading}
@@ -139,11 +139,10 @@ class Chats extends Component {
                     selectedChatId={selectedChatId}
                     selectChat={selectChat}
                     changeRoute={this.changeRoute}
-                    toggleLeftNav={toggleLeftNav}
                   />
                 </Grid>
-                <Hidden xsDown>
-                  <Grid item sm={7} lg={6}>
+                <Hidden smDown>
+                  <Grid item md={7} lg={6}>
                     <Choose>
                       <When condition={contactsListIsEmpty}>
                         {null}

@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { position, size } from 'polished';
 import {
   find, filter, upperCase, isEqual,
 } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
-import MenuIcon from '@material-ui/icons/MenuRounded';
 
 import SearchBox from '../../../common/SearchBox';
 import ContactsList from './ContactsList';
@@ -35,29 +32,6 @@ const ContactsHeader = styled.div`
 
   h6 {
     margin-bottom: ${getSpacing(1)};
-  }
-`;
-
-const Title = styled.div`
-  position: relative;
-
-  h6 {
-    margin-bottom: 0;
-  }
-`;
-
-const NavButton = styled.button`
-  && {
-    ${size('24px')};
-    ${position('absolute', '50%', null, null, 0)};
-    min-height: auto;
-    font-size: 24px;
-    transform: translateY(-50%);
-    border: 0;
-    padding: 0;
-    margin: 0;
-    background-color: transparent;
-    outline: none;
   }
 `;
 
@@ -124,22 +98,14 @@ class Contacts extends Component {
       myId,
       selectedChatId,
       changeRoute,
-      toggleLeftNav,
     } = this.props;
 
     return (
       <Wrapper square elevation={0}>
         <ContactsHeader>
-          <Title>
-            <Hidden mdUp xsDown>
-              <NavButton onClick={toggleLeftNav}>
-                <MenuIcon color="primary" fontSize="inherit" />
-              </NavButton>
-            </Hidden>
-            <Typography variant="h6" align="center" color="textPrimary">
-              {title}
-            </Typography>
-          </Title>
+          <Typography variant="h6" align="center" color="textPrimary">
+            {title}
+          </Typography>
           <SearchBox value={searchValue} onChange={this.onChangeSearchValue} />
         </ContactsHeader>
         <ContactsList
@@ -172,6 +138,7 @@ Contacts.propTypes = {
   chats: PropTypes.arrayOf(PropTypes.shape(chatProps)),
   selectChat: PropTypes.func.isRequired,
   changeRoute: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default Contacts;

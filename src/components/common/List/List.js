@@ -437,7 +437,7 @@ class List extends Component {
                       pointerEvents={pointerEvents}
                       data={data}
                       rowRenderer={this._onRowRenderer}
-                      listProps={listProps}
+                      {...listProps}
                     />
                     <If condition={lazyLoad && startFrom === 'top'}>
                       <FetchMore visible={loading}>

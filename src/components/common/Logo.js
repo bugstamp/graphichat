@@ -6,7 +6,7 @@ import ChatBubbleIcon from '@material-ui/icons/ChatBubbleRounded';
 import blue from '@material-ui/core/colors/blue';
 import indigo from '@material-ui/core/colors/indigo';
 
-const Wrapper = styled.div`
+const LogoStyled = styled.div`
   position: relative;
   height: ${({ size }) => `${size}px`};
   font-size: ${({ size }) => `${size}px`};
@@ -27,10 +27,10 @@ const Icon = styled(({ top, ...rest }) => <ChatBubbleIcon {...rest} />)`
 `;
 
 const Logo = ({ size }) => (
-  <Wrapper size={size}>
+  <LogoStyled size={size}>
     <Icon fontSize="inherit" top />
     <Icon fontSize="inherit" />
-  </Wrapper>
+  </LogoStyled>
 );
 
 Logo.defaultProps = {

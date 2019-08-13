@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
+import Slide from '@material-ui/core/Slide';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 import SearchDialogContainer from '../../../containers/SearchDialogContainer';
@@ -119,7 +120,12 @@ class SearchDialog extends PureComponent {
   render() {
     const { searchValue, confirmDialog, selectedUser } = this.state;
     const { open, toggle, width } = this.props;
+
     const fullScreen = !isWidthUp('md', width);
+    const TransitionComponent = fullScreen ? Slide : null;
+    const TransitionProps = fullScreen
+      ? { direction: 'up' }
+      : {};
 
     return (
       <SearchDialogContainer
@@ -149,6 +155,9 @@ class SearchDialog extends PureComponent {
                 onClose={toggle}
                 fullScreen={fullScreen}
                 PaperComponent={DialogBody}
+                TransitionComponent={TransitionComponent}
+                TransitionProps={TransitionProps}
+                hideBackdrop={fullScreen}
                 scroll="paper"
               >
                 <SearchDialogTitle disableTypography>

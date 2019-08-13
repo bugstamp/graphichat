@@ -9,7 +9,7 @@ import Logo from '../Logo';
 
 // import { getSpacing } from '../../../styles';
 
-const Wrapper = styled.div`
+const NavigationStyled = styled.div`
   width: 60px;
   height: 100%;
   display: flex;
@@ -21,20 +21,12 @@ const LogoWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 60px;
+  margin-bottom: 3rem;
 `;
 
 class Navigation extends PureComponent {
   state = {
     activeTab: 0,
-  }
-
-  componentWillUnmount() {
-    const { leftNav, toggleLeftNav } = this.props;
-
-    if (leftNav) {
-      toggleLeftNav();
-    }
   }
 
   handleChangeTab = (index) => {
@@ -46,7 +38,7 @@ class Navigation extends PureComponent {
     const { toggleSettingsDialog, signOut } = this.props;
 
     return (
-      <Wrapper>
+      <NavigationStyled>
         <LogoWrapper>
           <Logo />
         </LogoWrapper>
@@ -56,7 +48,7 @@ class Navigation extends PureComponent {
           toggleSettingsDialog={toggleSettingsDialog}
           signOut={signOut}
         />
-      </Wrapper>
+      </NavigationStyled>
     );
   }
 }

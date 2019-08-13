@@ -17,9 +17,13 @@ const ListPanelFooter = styled.div`
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const smDown = breakpoints.down('sm');
     const xsDown = breakpoints.down('xs');
 
     return `
+      ${smDown} {
+        width: 50%;
+      }
       ${xsDown} {
         width: 100%;
       }
@@ -34,11 +38,11 @@ const ContactPanelFooter = ({ toggleSearchDialog }) => {
       <Button
         color="primary"
         variant="contained"
-        size="small"
+        size="medium"
         onClick={toggleSearchDialog}
       >
         <AddIcon />
-        Add Chat
+        Chat
       </Button>
     </ListPanelFooter>
   );

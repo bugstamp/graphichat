@@ -68,9 +68,9 @@ const Submit = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-top: ${getSpacing(1)};
 
   button {
-    margin-top: ${getSpacing(1)};
     text-transform: uppercase;
 
     svg {

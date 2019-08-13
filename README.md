@@ -7,7 +7,7 @@ Server:
  -Apollo Server
  -GraphQL Modules
 DB:
- -MongoDB/Mongoose
+ -MongoDB
 Client:
  -React
  -Apollo Client/React Apollo
@@ -23,3 +23,4 @@ Other features:
  -Social login/registration
  -List with custom scrollbar and lazy loading
  -GraphQL subscriptions/file uploading/deploying
+ -React hooks

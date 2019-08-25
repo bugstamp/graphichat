@@ -6,16 +6,15 @@ import {
 } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Hidden from '@material-ui/core/Hidden';
 
-import SearchBox from '../../../common/SearchBox';
+import ContactsHeader from './ContactsHeader';
 import ContactsList from './ContactsList';
 import ContactsFooter from './ContactsFooter';
 import SearchDialog from '../SearchDialog';
 import Navigation from '../../../common/Navigation/Navigation';
 
-import { getStyledProps, getSpacing } from '../../../../styles';
+import { getStyledProps } from '../../../../styles';
 import { contactProps, chatProps } from '../../../propTypes';
 
 const Wrapper = styled(Paper)`
@@ -24,16 +23,6 @@ const Wrapper = styled(Paper)`
     display: flex;
     flex-flow: column;
     background-color: ${getStyledProps('theme.palette.background.default')};
-  }
-`;
-
-const ContactsHeader = styled.div`
-  display: flex;
-  flex-flow: column;
-  padding: ${getSpacing(2)};
-
-  h6 {
-    margin-bottom: ${getSpacing(1)};
   }
 `;
 
@@ -104,12 +93,12 @@ class Contacts extends Component {
 
     return (
       <Wrapper square elevation={0}>
-        <ContactsHeader>
-          <Typography variant="h6" align="center" color="textPrimary">
-            {title}
-          </Typography>
-          <SearchBox value={searchValue} onChange={this.onChangeSearchValue} />
-        </ContactsHeader>
+        <ContactsHeader
+          title={title}
+          searchValue={searchValue}
+          onChangeSearchValue={this.onChangeSearchValue}
+          toggleSearchDialog={this.toggleSearchDialog}
+        />
         <ContactsList
           loading={loading}
           data={sortedContacts}
@@ -119,11 +108,13 @@ class Contacts extends Component {
           changeRoute={changeRoute}
           getLastChatMessage={this.getLastChatMessage}
         />
-        <ContactsFooter toggleSearchDialog={this.toggleSearchDialog} />
-        <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
+        <Hidden mdDown>
+          <ContactsFooter toggleSearchDialog={this.toggleSearchDialog} />
+        </Hidden>
         <Hidden mdUp>
           <Navigation variant="horizontal" />
         </Hidden>
+        <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
       </Wrapper>
     );
   }

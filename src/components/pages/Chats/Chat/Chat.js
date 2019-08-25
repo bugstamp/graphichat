@@ -60,7 +60,7 @@ class Chat extends Component {
       chat: { id: chatId },
       updateOptimisticIds,
       addMessage,
-      getAddMessageOptimisticResponse,
+      getOptimisticMessage,
     } = this.props;
     const time = new Date();
     const optimisticId = uuid();
@@ -71,7 +71,7 @@ class Chat extends Component {
       time,
       optimisticId,
     };
-    const optimisticResponse = getAddMessageOptimisticResponse({
+    const optimisticResponse = getOptimisticMessage({
       chatId,
       optimisticId,
       myId,
@@ -151,7 +151,7 @@ Chat.propTypes = {
   optimisticIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   updateOptimisticIds: PropTypes.func.isRequired,
   addMessage: PropTypes.func.isRequired,
-  getAddMessageOptimisticResponse: PropTypes.func.isRequired,
+  getOptimisticMessage: PropTypes.func.isRequired,
   fetchMoreMessages: PropTypes.func.isRequired,
   fetchMoreMessagesUpdate: PropTypes.func.isRequired,
 };

@@ -13,44 +13,83 @@ import { getStyledProps } from '../../../styles';
 const TabsStyled = styled.div`
   flex: 1 auto;
   display: flex;
-  flex-flow: column;
   position: relative;
+  ${({ variant }) => {
+    if (variant === 'vertical') {
+      return `
+        flex-flow: column;
 
-  button:first-of-type {
-    margin-top: auto;
-  }
+        button:first-of-type {
+          margin-top: auto;
+        }
+      `;
+    }
+    return `
+      flex-flow: row nowrap;
+
+      button:first-of-type {
+        margin-left: auto;
+      }
+    `;
+  }};
 `;
 
 const TabItem = styled(Tab)`
   && {
     min-width: inherit;
-    height: ${getStyledProps('height')}px;
     border-radius: 50%;
+
+  ${({ variant, itemSize }) => {
+    if (variant === 'vertical') {
+      return `
+        height: ${itemSize}px;
+      `;
+    }
+    return `
+      width: ${itemSize}px;
+    `;
+  }};
   }
 `;
 
 const TabItemIndicator = styled.span`
-  width: 2px;
-  height: ${getStyledProps('itemSize')}px;
   display: block;
   position: absolute;
-  top: ${({ activeTab, itemSize }) => `${activeTab * itemSize}px`};
-  right: 0;
   background-color: ${getStyledProps('theme.palette.primary.main')};
   transition: .25s ease;
+
+  ${({ variant, itemSize, activeTab }) => {
+    const offset = `${activeTab * itemSize}px`;
+
+    if (variant === 'vertical') {
+      return `
+        width: 2px;
+        height: ${itemSize}px;
+        top: ${offset};
+        right: 0;
+      `;
+    }
+    return `
+      width: ${itemSize}px;
+      height: 2px;
+      bottom: 0;
+      left: ${offset};
+    `;
+  }};
 `;
 
 const Tabs = ({
+  variant,
   itemSize,
   activeTab,
-  onChangeTab,
+  setActiveTab,
   toggleSettingsDialog,
   signOut,
 }) => {
   const defineOnClick = (tabName, tabIndex) => {
     switch (tabName) {
       case 'chats': {
-        return () => onChangeTab(tabIndex);
+        return () => setActiveTab(tabIndex);
       }
       case 'settings': {
         return toggleSettingsDialog;
@@ -65,7 +104,7 @@ const Tabs = ({
   };
 
   return (
-    <TabsStyled>
+    <TabsStyled variant={variant}>
       {map(tabs, (
         {
           name,
@@ -88,11 +127,16 @@ const Tabs = ({
             component={component}
             icon={<Icon color={color} htmlColor={htmlColor} />}
             onClick={onClick}
-            height={itemSize}
+            itemSize={itemSize}
+            variant={variant}
           />
         );
       })}
-      <TabItemIndicator itemSize={itemSize} activeTab={activeTab} />
+      <TabItemIndicator
+        variant={variant}
+        itemSize={itemSize}
+        activeTab={activeTab}
+      />
     </TabsStyled>
   );
 };
@@ -101,9 +145,10 @@ Tabs.defaultProps = {
   itemSize: 60,
 };
 Tabs.propTypes = {
+  variant: PropTypes.oneOf(['vertical', 'horizontal']).isRequired,
   itemSize: PropTypes.number,
   activeTab: PropTypes.number.isRequired,
-  onChangeTab: PropTypes.func.isRequired,
+  setActiveTab: PropTypes.func.isRequired,
   toggleSettingsDialog: PropTypes.func.isRequired,
   signOut: PropTypes.func.isRequired,
 };

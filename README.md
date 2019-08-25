@@ -22,5 +22,5 @@ Other features:
  -OAuth with refresh token
  -Social login/registration
  -List with custom scrollbar and lazy loading
- -GraphQL subscriptions/file uploading/deploying
- -React hooks
+ -React Hooks
+ -Docker

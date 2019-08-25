@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { size } from 'polished';
@@ -7,52 +7,77 @@ import Tabs from './Tabs';
 import Logo from '../Logo';
 
 const NavigationStyled = styled.div`
-  width: 60px;
-  height: 100%;
   display: flex;
-  flex-flow: column;
+  background-color: #fff;
+
+  ${({ itemSize, variant }) => {
+    if (variant === 'vertical') {
+      return `
+        width: ${itemSize}px;
+        height: 100%;
+        flex-flow: column;
+      `;
+    }
+    return `
+      width: 100%;
+      height: ${itemSize}px;
+    `;
+  }}
 `;
 
 const LogoWrapper = styled.div`
-  ${size('60px')};
+  ${({ itemSize }) => size(`${itemSize}px`)};
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 3rem;
+
+  ${({ itemSize, variant }) => {
+    if (variant === 'vertical') {
+      return `
+        margin-bottom: ${itemSize}px;
+      `;
+    }
+    return '';
+  }}
 `;
 
-class Navigation extends PureComponent {
-  state = {
-    activeTab: 0,
-  }
+const Navigation = ({
+  itemSize,
+  logoSize,
+  variant,
+  toggleSettingsDialog,
+  signOut,
+}) => {
+  const [activeTab, setActiveTab] = useState(0);
 
-  handleChangeTab = (index) => {
-    this.setState({ activeTab: index });
-  }
+  return (
+    <NavigationStyled variant={variant}>
+      <LogoWrapper variant={variant} itemSize={itemSize}>
+        <Logo size={logoSize} />
+      </LogoWrapper>
+      <Tabs
+        variant={variant}
+        itemSize={itemSize}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        toggleSettingsDialog={toggleSettingsDialog}
+        signOut={signOut}
+      />
+    </NavigationStyled>
+  );
+};
 
-  render() {
-    const { activeTab } = this.state;
-    const { toggleSettingsDialog, signOut } = this.props;
-
-    return (
-      <NavigationStyled>
-        <LogoWrapper>
-          <Logo />
-        </LogoWrapper>
-        <Tabs
-          activeTab={activeTab}
-          onChangeTab={this.handleChangeTab}
-          toggleSettingsDialog={toggleSettingsDialog}
-          signOut={signOut}
-        />
-      </NavigationStyled>
-    );
-  }
-}
-
+Navigation.defaultProps = {
+  itemSize: 60,
+  logoSize: 35,
+  variant: 'vertical',
+};
 Navigation.propTypes = {
+  itemSize: PropTypes.number,
+  logoSize: PropTypes.number,
   toggleSettingsDialog: PropTypes.func.isRequired,
   signOut: PropTypes.func.isRequired,
+  variant: PropTypes.oneOf(['vertical', 'horizontal']),
 };
 
 export default Navigation;

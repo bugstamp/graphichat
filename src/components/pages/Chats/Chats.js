@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ChatsContainer, {
   fetchMoreMessagesUpdate,
-  getAddMessageOptimisticResponse,
+  getOptimisticMessage,
 } from '../../containers/ChatsContainer';
 import Contacts from './Contacts';
 import Chat from './Chat';
@@ -165,7 +165,7 @@ class Chats extends Component {
                           fetchMoreMessages={fetchMoreMessages}
                           fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
                           addMessage={addMessage}
-                          getAddMessageOptimisticResponse={getAddMessageOptimisticResponse}
+                          getOptimisticMessage={getOptimisticMessage}
                           updateOptimisticIds={this.updateOptimisticIds}
                         />
                       </Otherwise>

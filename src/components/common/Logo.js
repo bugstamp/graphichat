@@ -33,12 +33,8 @@ const Logo = ({ size }) => (
   </LogoStyled>
 );
 
-Logo.defaultProps = {
-  size: 35,
-};
-
 Logo.propTypes = {
-  size: PropTypes.number,
+  size: PropTypes.number.isRequired,
 };
 
 export default Logo;

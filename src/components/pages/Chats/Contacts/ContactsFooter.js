@@ -3,53 +3,68 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/AddRounded';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { getSpacing, getStyledProps } from '../../../../styles';
 
-const ListPanelFooter = styled.div`
+const ContactsFooterStyled = styled.div`
   display: flex;
   justify-content: center;
   padding: ${getSpacing(2)};
 
-  button {
-    width: 75%;
-
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
     const smDown = breakpoints.down('sm');
-    const xsDown = breakpoints.down('xs');
+    const mdUp = breakpoints.up('md');
 
     return `
-      ${smDown} {
-        width: 50%;
+      ${mdUp} {
+        button {
+          width: 75%;
+        }
       }
-      ${xsDown} {
-        width: 100%;
+      ${smDown} {
+        justify-content: flex-end;
       }
     `;
   }}
-  }
 `;
 
-const ContactPanelFooter = ({ toggleSearchDialog }) => {
+const ContactsFooter = ({ toggleSearchDialog }) => {
+  const smDown = useMediaQuery(theme => theme.breakpoints.down('sm'));
+  const color = 'primary';
+
   return (
-    <ListPanelFooter>
-      <Button
-        color="primary"
-        variant="contained"
-        size="medium"
-        onClick={toggleSearchDialog}
-      >
-        <AddIcon />
-        Chat
-      </Button>
-    </ListPanelFooter>
+    <ContactsFooterStyled>
+      <Choose>
+        <When condition={smDown}>
+          <Fab
+            color={color}
+            size="medium"
+          >
+            <AddIcon />
+          </Fab>
+        </When>
+        <Otherwise>
+          <Button
+            color={color}
+            variant="contained"
+            size="medium"
+            onClick={toggleSearchDialog}
+          >
+            <AddIcon />
+            Chat
+          </Button>
+        </Otherwise>
+      </Choose>
+    </ContactsFooterStyled>
   );
 };
 
-ContactPanelFooter.propTypes = {
+ContactsFooter.propTypes = {
   toggleSearchDialog: PropTypes.func.isRequired,
 };
 
-export default ContactPanelFooter;
+export default ContactsFooter;

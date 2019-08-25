@@ -36,7 +36,7 @@ export const fetchMoreMessagesUpdate = variables => ({
   },
 });
 
-export const getAddMessageOptimisticResponse = ({
+export const getOptimisticMessage = ({
   chatId,
   myId,
   optimisticId,

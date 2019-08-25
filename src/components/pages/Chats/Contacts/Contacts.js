@@ -7,11 +7,13 @@ import {
 
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
 
 import SearchBox from '../../../common/SearchBox';
 import ContactsList from './ContactsList';
 import ContactsFooter from './ContactsFooter';
 import SearchDialog from '../SearchDialog';
+import Navigation from '../../../common/Navigation/Navigation';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
 import { contactProps, chatProps } from '../../../propTypes';
@@ -119,6 +121,9 @@ class Contacts extends Component {
         />
         <ContactsFooter toggleSearchDialog={this.toggleSearchDialog} />
         <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
+        <Hidden mdUp>
+          <Navigation variant="horizontal" />
+        </Hidden>
       </Wrapper>
     );
   }

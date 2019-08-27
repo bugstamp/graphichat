@@ -1,6 +1,6 @@
 # GraphiChat
 
-Simple chat app for learning/testing GraphQL API with the following stack:
+Simple chat app for learning/testing GraphQL API and other features with the following stack:
 
 Server:
  -Node/Express

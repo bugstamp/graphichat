@@ -32,27 +32,6 @@ export const CHAT_CREATED_SUBSCRIPTION = gql`
   ${myChatFragment}
 `;
 
-export const GET_SELECTED_CHAT = gql`
-  query getSelectedChat {
-    selectedChat @client {
-      contact {
-        ...myContactData
-      }
-      chat {
-        ...myChatData
-      }
-    }
-  }
-  ${myContactFragment}
-  ${myChatFragment}
-`;
-
-export const SELECT_CHAT = gql`
-  mutation SelectChat($chatId: String!) {
-    selectChat(chatId: $chatId) @client
-  }
-`;
-
 export const GET_CHAT_MESSAGES = gql`
   query ChatMessages($chatId: String!, $skip: Int!) {
     chatMessages(chatId: $chatId, skip: $skip) {
@@ -92,8 +71,6 @@ export const MESSAGE_ADDED_SUBSCRIPTION = gql`
 export default {
   CREATE_CHAT,
   CHAT_CREATED_SUBSCRIPTION,
-  GET_SELECTED_CHAT,
-  SELECT_CHAT,
   GET_CHAT_MESSAGES,
   ADD_MESSAGE,
   MESSAGE_ADDED_SUBSCRIPTION,

@@ -34,7 +34,7 @@ const TabsStyled = styled.div`
   }};
 `;
 
-const TabItem = styled(Tab)`
+const TabItem = styled(({ variant, itemSize, ...rest }) => (<Tab {...rest} />))`
   && {
     min-width: inherit;
     border-radius: 50%;

@@ -23,7 +23,6 @@ const Wrapper = styled.div`
 const View = styled.div`
   ${position('absolute', 0, 0, 0, 0)};
   overflow-x: hidden;
-  overflow-y: auto;
   z-index: 15;
 
   ${({ startFrom }) => startFrom === 'bottom' && `
@@ -38,7 +37,8 @@ const View = styled.div`
 
     return `
       ${lgUp} {
-        right: ${!scrollbarPresence ? 0 : '-17px'};
+        right: ${scrollbarPresence ? '-17px' : 0};
+        overflow-y: ${scrollbarPresence ? 'auto' : 'hidden'};
       }
     `;
   }}
@@ -265,7 +265,7 @@ class List extends Component {
   }
 
   disablePointerEvents = () => {
-    const { pointerEvents } = this.props;
+    const { pointerEvents } = this.state;
 
     if (pointerEvents) {
       this.setState({ pointerEvents: false });

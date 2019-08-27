@@ -1,5 +1,5 @@
 import { adopt } from 'react-adopt';
-import { map, concat } from 'lodash';
+import { map, concat, isEqual } from 'lodash';
 
 import { createQuery, createMutation, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
@@ -9,8 +9,6 @@ const {
   GET_ME,
   GET_MY_CHATS,
   GET_CHAT_MESSAGES,
-  SELECT_CHAT,
-  GET_SELECTED_CHAT,
   ADD_MESSAGE,
   MESSAGE_ADDED_SUBSCRIPTION,
 } = gql;
@@ -18,20 +16,25 @@ const {
 export const fetchMoreMessagesUpdate = variables => ({
   query: GET_CHAT_MESSAGES,
   variables,
-  updateQuery: (prev, { fetchMoreResult }) => {
-    const { selectedChat } = prev;
+  updateQuery(prev, { fetchMoreResult }) {
+    const { chatId } = variables;
+    const { myChats } = prev;
     const { chatMessages } = fetchMoreResult;
-    const { chat, ...rest } = selectedChat;
-    const { messages } = chat;
+    const updatedChats = map(myChats, (chat) => {
+      const { id, messages } = chat;
 
-    return {
-      selectedChat: {
-        ...rest,
-        chat: {
+      if (isEqual(id, chatId)) {
+        return {
           ...chat,
           messages: concat(chatMessages, messages),
-        },
-      },
+        };
+      }
+      return chat;
+    });
+
+    return {
+      ...prev,
+      myChats: updatedChats,
     };
   },
 });
@@ -102,18 +105,12 @@ const messageAddedSubscription = createSubscription('messageAddedSubscription', 
     // icqBeepPlay();
   },
 });
-const getSelectedChat = createQuery('getSelectedChat', GET_SELECTED_CHAT, {
-  notifyOnNetworkStatusChange: true,
-});
-const selectChat = createMutation('selectChat', SELECT_CHAT);
 
 const ContactsContainer = adopt({
   getMe,
   getMyChats,
   addMessage,
   messageAddedSubscription,
-  selectChat,
-  getSelectedChat,
 });
 
 export default ContactsContainer;

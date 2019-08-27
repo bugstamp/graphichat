@@ -35,11 +35,7 @@ class Contacts extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { searchValue } = this.state;
-    const { selectedChatId, selectChat, contacts } = this.props;
-
-    if (!isEqual(prevProps.selectedChatId, selectedChatId)) {
-      selectChat({ variables: { chatId: selectedChatId } });
-    }
+    const { contacts } = this.props;
 
     if (
       !isEqual(prevState.searchValue, searchValue)
@@ -112,7 +108,11 @@ class Contacts extends Component {
           <ContactsFooter toggleSearchDialog={this.toggleSearchDialog} />
         </Hidden>
         <Hidden mdUp>
-          <Navigation variant="horizontal" />
+          <Navigation
+            variant="horizontal"
+            toggleSettingsDialog={() => null}
+            signOut={() => null}
+          />
         </Hidden>
         <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
       </Wrapper>
@@ -132,7 +132,6 @@ Contacts.propTypes = {
   selectedChatId: PropTypes.string,
   contacts: PropTypes.arrayOf(PropTypes.shape(contactProps)),
   chats: PropTypes.arrayOf(PropTypes.shape(chatProps)),
-  selectChat: PropTypes.func.isRequired,
   changeRoute: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
 };

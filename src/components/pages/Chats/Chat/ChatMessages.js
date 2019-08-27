@@ -23,6 +23,10 @@ class ChatMessages extends Component {
     return true;
   }
 
+  componentDidMount() {
+    this.list.current.scrollToBottom();
+  }
+
   componentDidUpdate(prevProps) {
     const {
       chatId,

@@ -4,11 +4,12 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
-import { isEmpty, concat, filter } from 'lodash';
+import { isEmpty, concat, filter, find } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
 import ChatsContainer, {
   fetchMoreMessagesUpdate,
@@ -38,6 +39,14 @@ const InfoPanel = styled.div`
   }
 `;
 
+const ChatDrawer = styled(SwipeableDrawer)`
+  && {
+    > * {
+      width: 100%;
+    }
+  }
+`;
+
 class Chats extends Component {
   state = {
     optimisticIds: [],
@@ -47,7 +56,7 @@ class Chats extends Component {
     const { location: { search } } = this.props;
     const { chatId } = queryString.parse(search);
 
-    return chatId;
+    return chatId || null;
   }
 
   changeRoute = (chatId) => {
@@ -79,7 +88,7 @@ class Chats extends Component {
 
   render() {
     const { optimisticIds } = this.state;
-    const { initialLoading } = this.props;
+    const { initialLoading, history } = this.props;
     const selectedChatId = initialLoading ? null : this.checkRoute();
 
     return (
@@ -99,32 +108,41 @@ class Chats extends Component {
           },
           getMyChats: {
             data: { myContacts = [], myChats = [] },
-          },
-          addMessage: {
-            mutation: addMessage,
-            result: {
-              loading: adding,
-            },
-          },
-          selectChat: {
-            mutation: selectChat,
-          },
-          getSelectedChat: {
-            data: { selectedChat = { contact: {}, chat: {} } },
             fetchMore: fetchMoreMessages,
             loading,
           },
+          addMessage: {
+            mutation: addMessage,
+            result: { loading: adding },
+          },
         }) => {
-          const { contact, chat } = selectedChat;
+          const contact = find(myContacts, { chatId: selectedChatId }) || {};
+          const chat = find(myChats, { id: selectedChatId }) || {};
           const contactsListIsEmpty = isEmpty(myContacts);
           const chatIsUndefined = isEmpty(chat);
-          let unselectedText;
 
+          let unselectedText;
           if (!selectedChatId) {
             unselectedText = 'Please select a chat to start messaging';
           } else if (isEmpty(chat)) {
             unselectedText = 'Selected chat is undefined';
           }
+
+          const renderChat = () => (
+            <Chat
+              loading={loading}
+              adding={adding}
+              me={me}
+              userInfo={contact.userInfo}
+              chat={chat}
+              optimisticIds={optimisticIds}
+              fetchMoreMessages={fetchMoreMessages}
+              fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
+              addMessage={addMessage}
+              getOptimisticMessage={getOptimisticMessage}
+              updateOptimisticIds={this.updateOptimisticIds}
+            />
+          );
 
           return (
             <Wrapper>
@@ -137,7 +155,6 @@ class Chats extends Component {
                     contacts={myContacts}
                     chats={myChats}
                     selectedChatId={selectedChatId}
-                    selectChat={selectChat}
                     changeRoute={this.changeRoute}
                   />
                 </Grid>
@@ -155,19 +172,7 @@ class Chats extends Component {
                         </NoContentWrapper>
                       </When>
                       <Otherwise>
-                        <Chat
-                          loading={loading}
-                          adding={adding}
-                          me={me}
-                          userInfo={contact.userInfo}
-                          chat={chat}
-                          optimisticIds={optimisticIds}
-                          fetchMoreMessages={fetchMoreMessages}
-                          fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
-                          addMessage={addMessage}
-                          getOptimisticMessage={getOptimisticMessage}
-                          updateOptimisticIds={this.updateOptimisticIds}
-                        />
+                        {renderChat()}
                       </Otherwise>
                     </Choose>
                   </Grid>
@@ -178,6 +183,26 @@ class Chats extends Component {
                   </Grid>
                 </Hidden>
               </Grid>
+              <Hidden smUp initialWidth="xl">
+                <ChatDrawer
+                  open={!!selectedChatId}
+                  onOpen={() => {}}
+                  onClose={() => {
+                    history.goBack();
+                  }}
+                  ModalProps={{
+                    hideBackdrop: true,
+                  }}
+                  anchor="right"
+                  variant="temporary"
+                  elevation={0}
+                  disableSwipeToOpen
+                >
+                  <If condition={selectedChatId}>
+                    {renderChat()}
+                  </If>
+                </ChatDrawer>
+              </Hidden>
             </Wrapper>
           );
         }}

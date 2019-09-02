@@ -53,9 +53,8 @@ const Avatar = styled.div`
 `;
 
 const ContentWrapper = styled.div`
-  flex-grow: 0;
   display: flex;
-  flex-flow: column;
+  flex-flow: row wrap;
 `;
 
 const HistoryDivider = styled.div`
@@ -80,16 +79,15 @@ const HistoryDivider = styled.div`
 `;
 
 const Content = styled.div`
-  flex: 1 auto;
-  background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
+  ${getStyledProps('theme.typography.body2')};
   padding: ${getSpacing(1)};
   ${({ isMyMessage }) => ({
     [`border-bottom-${isMyMessage ? 'left' : 'right'}-radius`]: 0,
   })};
+  background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
   border-radius: 5px;
   opacity: ${({ isAdding }) => (isAdding ? 0.3 : 1)};
   word-break: break-all;
-  ${getStyledProps('theme.typography.body2')};
 
   &:hover {
     cursor: text;
@@ -104,6 +102,7 @@ const SystemMessage = styled.div`
 `;
 
 const Time = styled.div`
+  flex: 100%;
   display: flex;
   justify-content: flex-start;
 

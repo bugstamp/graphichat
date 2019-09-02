@@ -6,6 +6,7 @@ import List from '../../../common/List';
 import Message from './Message';
 
 import { isSameDay } from '../../../../helpers';
+import { userAvatarProps } from '../../../propTypes';
 
 class ChatMessages extends Component {
   list = createRef();
@@ -74,7 +75,12 @@ class ChatMessages extends Component {
     rowIndex,
     rowData,
   }) => {
-    const { messages, optimisticIds, myId } = this.props;
+    const {
+      messages,
+      optimisticIds,
+      myId,
+      avatars,
+    } = this.props;
     const {
       id,
       senderId,
@@ -88,6 +94,7 @@ class ChatMessages extends Component {
     const isAdding = includes(optimisticIds, id);
     const direction = isMyMessage ? 'start' : 'end';
     const alignItems = isSystem ? 'center' : `flex-${direction}`;
+    const avatar = isMyMessage ? avatars.me : avatars.contact;
     let divider = false;
 
     if (index > 0) {
@@ -108,6 +115,7 @@ class ChatMessages extends Component {
         isFirst={isFirst}
         isMyMessage={isMyMessage}
         isAdding={isAdding}
+        avatar={avatar}
       />
     );
   }
@@ -149,6 +157,10 @@ ChatMessages.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.object),
   getMessages: PropTypes.func.isRequired,
   optimisticIds: PropTypes.arrayOf(PropTypes.string),
+  avatars: PropTypes.shape({
+    me: PropTypes.shape(userAvatarProps).isRequired,
+    contact: PropTypes.shape(userAvatarProps).isRequired,
+  }).isRequired,
 };
 
 export default ChatMessages;

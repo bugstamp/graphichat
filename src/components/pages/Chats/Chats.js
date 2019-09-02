@@ -4,12 +4,13 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
-import { isEmpty, concat, filter, find } from 'lodash';
+import {
+  isEmpty, concat, filter, find,
+} from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
 import ChatsContainer, {
   fetchMoreMessagesUpdate,
@@ -18,6 +19,7 @@ import ChatsContainer, {
 import Contacts from './Contacts';
 import Chat from './Chat';
 import { NoContentWrapper } from '../../common/List';
+import FullWidthSwipeableDrawer from '../../common/FullWidthSwipeableDrawer';
 
 import { getStyledProps, getSpacing } from '../../../styles';
 
@@ -36,14 +38,6 @@ const InfoPanel = styled.div`
     flex-flow: column;
     padding: ${getSpacing(2)};
     background-color: ${getStyledProps('theme.palette.background.default')};
-  }
-`;
-
-const ChatDrawer = styled(SwipeableDrawer)`
-  && {
-    > * {
-      width: 100%;
-    }
   }
 `;
 
@@ -183,25 +177,17 @@ class Chats extends Component {
                   </Grid>
                 </Hidden>
               </Grid>
-              <Hidden smUp initialWidth="xl">
-                <ChatDrawer
+              <Hidden mdUp>
+                <FullWidthSwipeableDrawer
                   open={!!selectedChatId}
-                  onOpen={() => {}}
                   onClose={() => {
                     history.goBack();
                   }}
-                  ModalProps={{
-                    hideBackdrop: true,
-                  }}
-                  anchor="right"
-                  variant="temporary"
-                  elevation={0}
-                  disableSwipeToOpen
                 >
                   <If condition={selectedChatId}>
                     {renderChat()}
                   </If>
-                </ChatDrawer>
+                </FullWidthSwipeableDrawer>
               </Hidden>
             </Wrapper>
           );

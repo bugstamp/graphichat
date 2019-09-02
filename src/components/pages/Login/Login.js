@@ -6,12 +6,14 @@ import { backgrounds } from 'polished';
 
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
 
 import LoginContainer from '../../containers/LoginContainer';
 import LoginForm from './LoginForm';
 import LoginPresentation from './LoginPresentation';
-
+import FullSwipeableDrawerStyled from '../../common/FullWidthSwipeableDrawer';
 import withNotification from '../../common/HOC/withNotification';
+
 import storage from '../../../storage';
 import gql from '../../../gql';
 
@@ -92,13 +94,24 @@ class Login extends Component {
         }) => (
           <Wrapper container>
             <LoginPresentation formDrawer={formDrawer} toggleFormDrawer={this.toggleFormDrawer} />
-            <Drawer open={formDrawer} onClose={this.toggleFormDrawer} anchor="right">
-              <LoginForm
-                signIn={signIn}
-                signInBySocial={signInBySocial}
-                toSignUp={this.toSignUp}
-              />
-            </Drawer>
+            <Hidden xsDown>
+              <Drawer open={formDrawer} onClose={this.toggleFormDrawer} anchor="right">
+                <LoginForm
+                  signIn={signIn}
+                  signInBySocial={signInBySocial}
+                  toSignUp={this.toSignUp}
+                />
+              </Drawer>
+            </Hidden>
+            <Hidden smUp>
+              <FullSwipeableDrawerStyled open={formDrawer} onClose={this.toggleFormDrawer}>
+                <LoginForm
+                  signIn={signIn}
+                  signInBySocial={signInBySocial}
+                  toSignUp={this.toSignUp}
+                />
+              </FullSwipeableDrawerStyled>
+            </Hidden>
           </Wrapper>
         )}
       </LoginContainer>

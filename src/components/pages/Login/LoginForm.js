@@ -34,6 +34,7 @@ const Wrapper = styled(Paper)`
 
     return `
       ${xsDown} {
+        max-width: 100%;
         padding: ${spacing(2)}px;
       }
     `;

@@ -2,14 +2,17 @@ import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { position } from 'polished';
+import { trim } from 'lodash';
 
+import Hidden from '@material-ui/core/Hidden';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
-import MoodIcon from '@material-ui/icons/MoodRounded';
+import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/SendRounded';
 
-import grey from '@material-ui/core/colors/grey';
-import orange from '@material-ui/core/colors/orange';
+// import MoodIcon from '@material-ui/icons/MoodRounded';
+// import grey from '@material-ui/core/colors/grey';
+// import orange from '@material-ui/core/colors/orange';
 
 import ListItemAvatar from '../../../common/List/ListItemAvatar';
 
@@ -36,47 +39,94 @@ const Form = styled.form`
   flex-flow: column;
   align-items: flex-start;
   position: relative;
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const spacing = getStyledProps('theme.spacing')(props);
+    const smDown = breakpoints.down('sm');
+
+    return `
+      ${smDown} {
+        flex-flow: row nowrap;
+        align-items: center;
+        padding-left: ${spacing(2)}px;
+      }
+    `;
+  }}
 `;
 
 const FormInput = styled(Input)`
   && {
     width: 100%;
-    min-height: 80px;
     display: inline-flex;
     align-items: flex-start;
 
     > div {
       width: 95%;
     }
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const spacing = getStyledProps('theme.spacing')(props);
+    const mdUp = breakpoints.up('md');
+    const smDown = breakpoints.down('sm');
+
+    return `
+      ${mdUp} {
+        min-height: 80px;
+      }
+      ${smDown} {
+        padding: ${spacing(1)}px;
+        border: 1px solid ${getStyledProps('theme.palette.grey.400')(props)};
+        border-radius: 20px;
+
+        &:before,
+        &:after {
+          display: none;
+        }
+      }
+    `;
+  }}
   }
 `;
 
-const Emoji = styled.div`
-  ${position('absolute', 0, 0, null, null)}
-  font-size: 28px;
-  color: ${grey[500]};
-  cursor: pointer;
-  z-index: 10;
-
-  &:hover {
-    color: ${orange[300]};
-  }
-`;
+// const Emoji = styled.div`
+//   ${position('absolute', 0, 0, null, null)}
+//   font-size: 28px;
+//   color: ${grey[500]};
+//   cursor: pointer;
+//   z-index: 10;
+//
+//   &:hover {
+//     color: ${orange[300]};
+//   }
+// `;
 
 const Submit = styled.div`
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-top: ${getSpacing(1)};
 
   button {
     text-transform: uppercase;
-
-    svg {
-      margin-left: ${getSpacing(1)};
-    }
   }
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const spacing = getStyledProps('theme.spacing')(props);
+    const mdUp = breakpoints.up('md');
+
+    return `
+      ${mdUp} {
+        width: 100%;
+        margin-top: ${spacing(1)}px;
+
+        svg {
+          margin-left: ${spacing(1)}px;
+        }
+      }
+    `;
+  }}
 `;
 
 class ChatComment extends Component {
@@ -92,9 +142,10 @@ class ChatComment extends Component {
     e.preventDefault();
     const { value } = this.state;
     const { submit } = this.props;
+    const trimmedValue = trim(value);
 
-    if (value) {
-      submit(value);
+    if (trimmedValue) {
+      submit(trimmedValue);
       this.clearValue();
     }
   }
@@ -128,13 +179,12 @@ class ChatComment extends Component {
 
     return (
       <Wrapper>
-        <UserAvatar>
-          <ListItemAvatar {...me} />
-        </UserAvatar>
+        <Hidden smDown>
+          <UserAvatar>
+            <ListItemAvatar {...me} />
+          </UserAvatar>
+        </Hidden>
         <Form onSubmit={this.onSubmit}>
-          <Emoji>
-            <MoodIcon fontSize="inherit" color="inherit" />
-          </Emoji>
           <FormInput
             inputRef={this.inputRef}
             value={value}
@@ -144,20 +194,33 @@ class ChatComment extends Component {
             multiline
           />
           <Submit>
-            <Button
-              ref={this.submitButtonRef}
-              variant="text"
-              color="primary"
-              type="submit"
-            >
-              {'Send'}
-              <SendIcon />
-            </Button>
+            <Hidden smDown>
+              <Button
+                ref={this.submitButtonRef}
+                variant="text"
+                color="primary"
+                type="submit"
+              >
+                Send
+                <SendIcon />
+              </Button>
+            </Hidden>
+            <Hidden mdUp>
+              <IconButton
+                ref={this.submitButtonRef}
+                color="primary"
+                type="submit"
+              >
+                <SendIcon />
+              </IconButton>
+            </Hidden>
           </Submit>
         </Form>
-        <UserAvatar>
-          <ListItemAvatar {...contact} />
-        </UserAvatar>
+        <Hidden smDown>
+          <UserAvatar>
+            <ListItemAvatar {...contact} />
+          </UserAvatar>
+        </Hidden>
       </Wrapper>
     );
   }

@@ -128,6 +128,10 @@ class Chat extends Component {
           optimisticIds={optimisticIds}
           getMessages={() => this.getMessages(true)}
           fetchThreshold={5}
+          avatars={{
+            me: myAvatar,
+            contact: contactAvatar,
+          }}
         />
         <ChatComment
           avatars={{

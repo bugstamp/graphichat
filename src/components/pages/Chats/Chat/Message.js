@@ -4,12 +4,16 @@ import styled from 'styled-components';
 // import {} from 'polished';
 
 import MaterialListItem from '@material-ui/core/ListItem';
+import Hidden from '@material-ui/core/Hidden';
 
 import grey from '@material-ui/core/colors/grey';
 import blue from '@material-ui/core/colors/blue';
 
+import ListItemAvatar from '../../../common/List/ListItemAvatar';
+
 import { getStyledProps, getSpacing } from '../../../../styles';
 import { messageTimeParser, messageHistoryDateParser } from '../../../../helpers';
+import { userAvatarProps } from '../../../propTypes';
 
 const ListItem = styled(MaterialListItem)`
   && {
@@ -23,6 +27,35 @@ const Wrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: ${({ alignItems }) => alignItems};
+`;
+
+const MessageInner = styled.div`
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const mdUp = breakpoints.up('md');
+
+    return `
+      ${mdUp} {
+        max-width: 49%;
+      }
+    `;
+  }}
+`;
+
+const Avatar = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-right: ${getSpacing(1)};
+`;
+
+const ContentWrapper = styled.div`
+  flex-grow: 0;
+  display: flex;
+  flex-flow: column;
 `;
 
 const HistoryDivider = styled.div`
@@ -47,12 +80,12 @@ const HistoryDivider = styled.div`
 `;
 
 const Content = styled.div`
-  max-width: 49%;
+  flex: 1 auto;
+  background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
   padding: ${getSpacing(1)};
   ${({ isMyMessage }) => ({
     [`border-bottom-${isMyMessage ? 'left' : 'right'}-radius`]: 0,
   })};
-  background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
   border-radius: 5px;
   opacity: ${({ isAdding }) => (isAdding ? 0.3 : 1)};
   word-break: break-all;
@@ -75,13 +108,14 @@ const Time = styled.div`
   justify-content: flex-start;
 
   span {
-  ${getStyledProps('theme.typography.caption')};
-  color: ${getStyledProps('theme.palette.text.secondary')};
+    ${getStyledProps('theme.typography.caption')};
+    color: ${getStyledProps('theme.palette.text.secondary')};
   }
 `;
 
 const Message = forwardRef((props, ref) => {
   const {
+    avatar,
     rowIndex,
     alignItems,
     isFirst,
@@ -110,15 +144,24 @@ const Message = forwardRef((props, ref) => {
             </SystemMessage>
           </When>
           <Otherwise>
-            <Content
-              isMyMessage={isMyMessage}
-              isAdding={isAdding}
-            >
-              {content}
-            </Content>
-            <Time>
-              <span>{messageTimeParser(time, 'wide')}</span>
-            </Time>
+            <MessageInner>
+              <Hidden mdUp>
+                <Avatar>
+                  <ListItemAvatar {...avatar} />
+                </Avatar>
+              </Hidden>
+              <ContentWrapper>
+                <Content
+                  isMyMessage={isMyMessage}
+                  isAdding={isAdding}
+                >
+                  {content}
+                </Content>
+                <Time>
+                  <span>{messageTimeParser(time, 'wide')}</span>
+                </Time>
+              </ContentWrapper>
+            </MessageInner>
           </Otherwise>
         </Choose>
       </Wrapper>
@@ -136,6 +179,7 @@ Message.propTypes = {
   divider: PropTypes.bool.isRequired,
   time: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
   content: PropTypes.string.isRequired,
+  avatar: PropTypes.shape(userAvatarProps).isRequired,
 };
 
 export default Message;

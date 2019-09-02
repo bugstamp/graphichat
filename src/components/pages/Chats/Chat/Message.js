@@ -30,7 +30,6 @@ const Wrapper = styled.div`
 `;
 
 const MessageInner = styled.div`
-  width: 100%;
   display: flex;
   flex-flow: row nowrap;
 
@@ -144,11 +143,13 @@ const Message = forwardRef((props, ref) => {
           </When>
           <Otherwise>
             <MessageInner>
-              <Hidden mdUp>
-                <Avatar>
-                  <ListItemAvatar {...avatar} />
-                </Avatar>
-              </Hidden>
+              <If condition={alignItems === 'flex-start'}>
+                <Hidden mdUp>
+                  <Avatar>
+                    <ListItemAvatar {...avatar} />
+                  </Avatar>
+                </Hidden>
+              </If>
               <ContentWrapper>
                 <Content
                   isMyMessage={isMyMessage}
@@ -160,6 +161,13 @@ const Message = forwardRef((props, ref) => {
                   <span>{messageTimeParser(time, 'wide')}</span>
                 </Time>
               </ContentWrapper>
+              <If condition={alignItems !== 'flex-start'}>
+                <Hidden mdUp>
+                  <Avatar>
+                    <ListItemAvatar {...avatar} />
+                  </Avatar>
+                </Hidden>
+              </If>
             </MessageInner>
           </Otherwise>
         </Choose>

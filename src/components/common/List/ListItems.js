@@ -27,12 +27,9 @@ class ListItems extends Component {
 
     if (
       !isEqual(loading, nextProps.loading)
-      ||
-      !isEqual(pointerEvents, nextProps.pointerEvents)
-      ||
-      !isEqual(scrollbar, nextProps.scrollbar)
-      ||
-      !isEqual(scrollbarPresence, nextProps.scrollbarPresence)
+      || !isEqual(pointerEvents, nextProps.pointerEvents)
+      || !isEqual(scrollbar, nextProps.scrollbar)
+      || !isEqual(scrollbarPresence, nextProps.scrollbarPresence)
     ) {
       return false;
     }

@@ -141,6 +141,7 @@ class List extends Component {
 
   componentDidUpdate(prevProps) {
     const { loading, data, lazyLoad } = this.props;
+    console.log('update', this.listView.current.scrollTop, this.listView.current.scrollHeight);
 
     if (
       (!isEqual(prevProps.data, data) && isEmpty(data))
@@ -174,6 +175,7 @@ class List extends Component {
   }
 
   setScrollTop = (scrollTop) => {
+    console.log('scroll', scrollTop, this.listView.current.scrollTop);
     this.listView.current.scrollTop = scrollTop;
   }
 
@@ -182,6 +184,7 @@ class List extends Component {
     const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
 
     if (listHeight > listViewHeight) {
+      console.log('scroll botttom', listViewHeight, this.listView.current.scrollHeight);
       this.setScrollTop(this.listView.current.scrollHeight);
     }
   }

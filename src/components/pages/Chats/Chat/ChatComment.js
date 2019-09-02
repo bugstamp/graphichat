@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { position } from 'polished';
+// import {} from 'polished';
 import { trim } from 'lodash';
 
 import Hidden from '@material-ui/core/Hidden';
@@ -24,7 +24,6 @@ const Wrapper = styled.div`
   flex-flow: row nowrap;
   position: relative;
   border-top: 1px solid ${getStyledProps('theme.palette.grey.300')};
-  padding-top: ${getSpacing(1)};
 `;
 
 const UserAvatar = styled.div`
@@ -119,7 +118,7 @@ const Submit = styled.div`
     return `
       ${mdUp} {
         width: 100%;
-        margin-top: ${spacing(1)}px;
+        margin: ${spacing(1)}px 0;
 
         svg {
           margin-left: ${spacing(1)}px;

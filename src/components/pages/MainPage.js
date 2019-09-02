@@ -93,6 +93,8 @@ class MainPage extends Component {
             <Grid item xs>
               {cloneElement(children, {
                 initialLoading: loading,
+                toggleSettingsDialog: this.toggleSettingsDialog,
+                signOut: this.signOut,
               })}
             </Grid>
           </Grid>

@@ -8,12 +8,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
-import Slide from '@material-ui/core/Slide';
-import Fade from '@material-ui/core/Fade';
-import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 import SearchDialogContainer from '../../../containers/SearchDialogContainer';
 import SearchBox from '../../../common/SearchBox';
+import ResponsiveDialog from '../../../common/ResponsiveDialog';
 import SearchDialogList from './SearchDialogList';
 
 import { getStyledProps } from '../../../../styles';
@@ -120,13 +118,7 @@ class SearchDialog extends PureComponent {
 
   render() {
     const { searchValue, confirmDialog, selectedUser } = this.state;
-    const { open, toggle, width } = this.props;
-
-    const fullScreen = !isWidthUp('md', width);
-    const TransitionComponent = fullScreen ? Slide : Fade;
-    const TransitionProps = fullScreen
-      ? { direction: 'up' }
-      : {};
+    const { open, toggle } = this.props;
 
     return (
       <SearchDialogContainer
@@ -151,15 +143,10 @@ class SearchDialog extends PureComponent {
         }) => {
           return (
             <Fragment>
-              <Dialog
+              <ResponsiveDialog
                 open={open}
-                onClose={toggle}
-                fullScreen={fullScreen}
+                toggle={toggle}
                 PaperComponent={DialogBody}
-                TransitionComponent={TransitionComponent}
-                TransitionProps={TransitionProps}
-                hideBackdrop={fullScreen}
-                scroll="paper"
               >
                 <SearchDialogTitle disableTypography>
                   <Typography variant="h6">
@@ -189,7 +176,7 @@ class SearchDialog extends PureComponent {
                 <DialogActions>
                   <Button onClick={toggle} color="primary">Close</Button>
                 </DialogActions>
-              </Dialog>
+              </ResponsiveDialog>
               <If condition={confirmDialog}>
                 <Dialog open={confirmDialog} onClose={toggle}>
                   <DialogTitle>{`Create chat with ${selectedUser.displayName}?`}</DialogTitle>
@@ -226,7 +213,6 @@ class SearchDialog extends PureComponent {
 SearchDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  width: PropTypes.string.isRequired,
 };
 
-export default withWidth()(SearchDialog);
+export default SearchDialog;

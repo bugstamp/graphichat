@@ -82,7 +82,12 @@ class Chats extends Component {
 
   render() {
     const { optimisticIds } = this.state;
-    const { initialLoading, history } = this.props;
+    const {
+      initialLoading,
+      history,
+      toggleSettingsDialog,
+      signOut,
+    } = this.props;
     const selectedChatId = initialLoading ? null : this.checkRoute();
 
     return (
@@ -122,22 +127,6 @@ class Chats extends Component {
             unselectedText = 'Selected chat is undefined';
           }
 
-          const renderChat = () => (
-            <Chat
-              loading={loading}
-              adding={adding}
-              me={me}
-              userInfo={contact.userInfo}
-              chat={chat}
-              optimisticIds={optimisticIds}
-              fetchMoreMessages={fetchMoreMessages}
-              fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
-              addMessage={addMessage}
-              getOptimisticMessage={getOptimisticMessage}
-              updateOptimisticIds={this.updateOptimisticIds}
-            />
-          );
-
           return (
             <Wrapper>
               <Grid container spacing={0}>
@@ -150,6 +139,8 @@ class Chats extends Component {
                     chats={myChats}
                     selectedChatId={selectedChatId}
                     changeRoute={this.changeRoute}
+                    toggleSettingsDialog={toggleSettingsDialog}
+                    signOut={signOut}
                   />
                 </Grid>
                 <Hidden smDown>
@@ -166,7 +157,19 @@ class Chats extends Component {
                         </NoContentWrapper>
                       </When>
                       <Otherwise>
-                        {renderChat()}
+                        <Chat
+                          loading={loading}
+                          adding={adding}
+                          me={me}
+                          userInfo={contact.userInfo}
+                          chat={chat}
+                          optimisticIds={optimisticIds}
+                          fetchMoreMessages={fetchMoreMessages}
+                          fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
+                          addMessage={addMessage}
+                          getOptimisticMessage={getOptimisticMessage}
+                          updateOptimisticIds={this.updateOptimisticIds}
+                        />
                       </Otherwise>
                     </Choose>
                   </Grid>
@@ -185,7 +188,19 @@ class Chats extends Component {
                   }}
                 >
                   <If condition={selectedChatId}>
-                    {renderChat()}
+                    <Chat
+                      loading={loading}
+                      adding={adding}
+                      me={me}
+                      userInfo={contact.userInfo}
+                      chat={chat}
+                      optimisticIds={optimisticIds}
+                      fetchMoreMessages={fetchMoreMessages}
+                      fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
+                      addMessage={addMessage}
+                      getOptimisticMessage={getOptimisticMessage}
+                      updateOptimisticIds={this.updateOptimisticIds}
+                    />
                   </If>
                 </FullWidthSwipeableDrawer>
               </Hidden>
@@ -201,6 +216,8 @@ Chats.propTypes = {
   location: PropTypes.objectOf(PropTypes.any).isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   initialLoading: PropTypes.bool.isRequired,
+  toggleSettingsDialog: PropTypes.func.isRequired,
+  signOut: PropTypes.func.isRequired,
 };
 
 export default withRouter(Chats);

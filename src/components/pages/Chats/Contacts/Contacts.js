@@ -85,6 +85,8 @@ class Contacts extends Component {
       myId,
       selectedChatId,
       changeRoute,
+      toggleSettingsDialog,
+      signOut,
     } = this.props;
 
     return (
@@ -110,8 +112,8 @@ class Contacts extends Component {
         <Hidden mdUp>
           <Navigation
             variant="horizontal"
-            toggleSettingsDialog={() => null}
-            signOut={() => null}
+            toggleSettingsDialog={toggleSettingsDialog}
+            signOut={signOut}
           />
         </Hidden>
         <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
@@ -134,6 +136,8 @@ Contacts.propTypes = {
   chats: PropTypes.arrayOf(PropTypes.shape(chatProps)),
   changeRoute: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
+  toggleSettingsDialog: PropTypes.func.isRequired,
+  signOut: PropTypes.func.isRequired,
 };
 
 export default Contacts;

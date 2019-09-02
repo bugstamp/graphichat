@@ -7,13 +7,14 @@ import SettingsIcon from '@material-ui/icons/SettingsRounded';
 import SearchIcon from '@material-ui/icons/SearchRounded';
 import green from '@material-ui/core/colors/green';
 
-import { getStyledProps } from '../../../../styles';
+import { getStyledProps, getSpacing } from '../../../../styles';
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: ${getSpacing(1)};
   border-bottom: 1px solid ${getStyledProps('theme.palette.grey.300')};
   z-index: 20;
 `;
@@ -41,7 +42,7 @@ const ChatTopBar = ({
   isOnline,
 }) => (
   <Wrapper>
-    <IconButton>
+    <IconButton size="small">
       <SearchIcon />
     </IconButton>
     <UserName>
@@ -50,7 +51,7 @@ const ChatTopBar = ({
         {statusText}
       </UserStatus>
     </UserName>
-    <IconButton>
+    <IconButton size="small">
       <SettingsIcon />
     </IconButton>
   </Wrapper>

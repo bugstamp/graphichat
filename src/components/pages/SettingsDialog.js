@@ -3,23 +3,25 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
 
-import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
 import MaterialDialogContent from '@material-ui/core/DialogContent';
 import MaterialAvatar from '@material-ui/core/Avatar';
 import CameraIcon from '@material-ui/icons/CameraAlt';
+import Button from '@material-ui/core/Button';
 
+import ResponsiveDialog from '../common/ResponsiveDialog';
 import TopProgressLine from '../common/TopProgressLine';
 
 const DialogContent = styled(MaterialDialogContent)`
   && {
-    min-width: 400px;
+    width: 100%;
+    min-width: 375px;
   }
 `;
 
 const AvatarWrapper = styled.div`
-  width: 200px;
-  height: 200px;
+  width: 35%;
   margin: 0 auto;
   position: relative;
 `;
@@ -63,7 +65,7 @@ class SettingsDialog extends PureComponent {
     } = this.props;
 
     return (
-      <Dialog open={open} onClose={toggle}>
+      <ResponsiveDialog open={open} toggle={toggle}>
         <TopProgressLine loading={avatarUploading} />
         <DialogTitle>Profile Settings</DialogTitle>
         <DialogContent>
@@ -84,7 +86,10 @@ class SettingsDialog extends PureComponent {
             </Avatar>
           </AvatarWrapper>
         </DialogContent>
-      </Dialog>
+        <DialogActions>
+          <Button onClick={toggle} color="primary">Close</Button>
+        </DialogActions>
+      </ResponsiveDialog>
     );
   }
 }

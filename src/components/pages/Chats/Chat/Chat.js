@@ -10,7 +10,6 @@ import ChatTopBar from './ChatTopBar';
 import ChatMessages from './ChatMessages';
 import ChatComment from './ChatComment';
 
-import { getSpacing } from '../../../../styles';
 import { getAvatar, userLastDateParser } from '../../../../helpers';
 import { meProps, userInfoProps, chatProps } from '../../../propTypes';
 
@@ -20,7 +19,6 @@ const Wrapper = styled(Paper)`
     height: 100%;
     display: flex;
     flex-flow: column;
-    padding: ${getSpacing(1)} 0;
     background-color: #fff;
   }
 `;

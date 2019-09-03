@@ -6,8 +6,6 @@ import styled, { keyframes } from 'styled-components';
 import { backgrounds } from 'polished';
 import { fadeIn } from 'react-animations';
 
-import Hidden from '@material-ui/core/Hidden';
-
 import RegContainer from '../../containers/RegContainer';
 import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
@@ -30,7 +28,7 @@ const Wrapper = styled(Grid)`
     ${backgrounds(`url(${bgImage})`, 'no-repeat')}
     background-size: cover;
     background-position: center;
-    overflow: hidden auto;
+    overflow: hidden;
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
@@ -147,9 +145,7 @@ class SignUp extends Component {
           signUpBySocial,
         }) => (
           <Wrapper container>
-            <Hidden smDown implementation="css">
-              <RegPresentation />
-            </Hidden>
+            <RegPresentation />
             <FormWrapper>
               <RegForm
                 steps={this.steps}

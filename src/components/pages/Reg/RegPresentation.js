@@ -18,12 +18,23 @@ const fadeInRightAnimation = keyframes`${fadeInRight}`;
 const fadeInLeftAnimation = keyframes`${fadeInLeft}`;
 const hingeAnimation = keyframes`${hinge}`;
 
-const Presentation = styled.div`
+const RegPresentationStyled = styled.div`
   flex: 1 60%;
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: center;
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const smDown = breakpoints.down('sm');
+
+    return `
+      ${smDown} {
+        display: none;
+      }
+    `;
+  }}
 `;
 
 const SubTitle = styled.div`
@@ -48,7 +59,7 @@ const Enjoy = styled.div`
   color: #fff;
   opacity: 0;
   animation: 2s ${hingeAnimation};
-  animation-delay: 2.5s;
+  animation-delay: 2s;
   animation-fill-mode: forwards;
 
   p {
@@ -56,44 +67,44 @@ const Enjoy = styled.div`
   }
 `;
 
-const RegPresentation = () => {
-  return (
-    <Presentation>
-      <BrandTitle />
-      <SubTitle>
-        {
-          map(['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'], (word, index) => {
-            const num = index + 1;
-            const even = isEven(num) ? 'even' : 'odd';
-            const delay = ((num) / 5) + 1;
+const words = ['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'];
 
-            return (
-              <SubTitleWord
-                key={num}
-                component="p"
-                variant="h4"
-                align="center"
-                even={even}
-                delay={delay}
-              >
-                {word}
-              </SubTitleWord>
-            );
-          })
-        }
-      </SubTitle>
-      <Enjoy>
-        <Typography
-          component="p"
-          variant="h4"
-          align="center"
-          color="inherit"
-        >
-          Enjoy!
-        </Typography>
-      </Enjoy>
-    </Presentation>
-  );
-};
+const RegPresentation = () => (
+  <RegPresentationStyled>
+    <BrandTitle />
+    <SubTitle>
+      {
+        map(words, (word, index) => {
+          const num = index + 1;
+          const even = isEven(num) ? 'even' : 'odd';
+          const delay = (num / words.length) + 1;
+
+          return (
+            <SubTitleWord
+              key={num}
+              component="p"
+              variant="h4"
+              align="center"
+              even={even}
+              delay={delay}
+            >
+              {word}
+            </SubTitleWord>
+          );
+        })
+      }
+    </SubTitle>
+    <Enjoy>
+      <Typography
+        component="p"
+        variant="h4"
+        align="center"
+        color="inherit"
+      >
+        Enjoy!
+      </Typography>
+    </Enjoy>
+  </RegPresentationStyled>
+);
 
 export default RegPresentation;

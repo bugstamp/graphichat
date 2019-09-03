@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
@@ -134,7 +134,7 @@ const Submit = styled.div`
   }}
 `;
 
-class ChatComment extends Component {
+class ChatComment extends PureComponent {
   submitButtonRef = createRef();
 
   inputRef = createRef();

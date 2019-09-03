@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -63,4 +63,4 @@ ChatTopBar.propTypes = {
   isOnline: PropTypes.bool.isRequired,
 };
 
-export default ChatTopBar;
+export default memo(ChatTopBar);

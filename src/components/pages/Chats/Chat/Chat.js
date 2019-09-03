@@ -109,6 +109,10 @@ class Chat extends Component {
     const statusText = isOnline
       ? 'online'
       : userLastDateParser(lastDate);
+    const avatars = {
+      me: myAvatar,
+      contact: contactAvatar,
+    };
 
     return (
       <Wrapper square elevation={0}>
@@ -126,16 +130,10 @@ class Chat extends Component {
           optimisticIds={optimisticIds}
           getMessages={() => this.getMessages(true)}
           fetchThreshold={5}
-          avatars={{
-            me: myAvatar,
-            contact: contactAvatar,
-          }}
+          avatars={avatars}
         />
         <ChatComment
-          avatars={{
-            me: myAvatar,
-            contact: contactAvatar,
-          }}
+          avatars={avatars}
           submit={this.addMessage}
         />
       </Wrapper>

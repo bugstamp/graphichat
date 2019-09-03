@@ -1,8 +1,8 @@
-import React, { PureComponent, createRef } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
-import { trim } from 'lodash';
+import { trim, isEqual } from 'lodash';
 
 import Hidden from '@material-ui/core/Hidden';
 import Input from '@material-ui/core/Input';
@@ -134,7 +134,7 @@ const Submit = styled.div`
   }}
 `;
 
-class ChatComment extends PureComponent {
+class ChatComment extends Component {
   submitButtonRef = createRef();
 
   inputRef = createRef();
@@ -143,9 +143,25 @@ class ChatComment extends PureComponent {
     value: '',
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { value } = this.state;
+    const { avatars } = this.props;
+
+    if (
+      !isEqual(value, nextState.value)
+      ||
+      !isEqual(avatars.me.src, nextProps.avatars.me.src)
+      ||
+      !isEqual(avatars.contact.src, nextProps.avatars.contact.src)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   onChange = () => {
     const { value } = this.inputRef.current;
-    this.setState({ value });
+    this.setState(() => ({ value }));
   }
 
   onSubmit = (e) => {

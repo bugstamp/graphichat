@@ -147,7 +147,7 @@ class SignUp extends Component {
           signUpBySocial,
         }) => (
           <Wrapper container>
-            <Hidden smDown>
+            <Hidden smDown implementation="css">
               <RegPresentation />
             </Hidden>
             <FormWrapper>

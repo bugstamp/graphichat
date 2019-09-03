@@ -106,7 +106,11 @@ const FetchMore = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  visibility: ${({ visible }) => (visible ? 'visibility' : 'hidden')}
+  visibility: ${({ visible }) => (visible ? 'visibility' : 'hidden')};
+
+  > div {
+    display: ${({ visible }) => (visible ? 'block' : 'none')};
+  }
 `;
 
 const Loading = styled.div`
@@ -118,9 +122,10 @@ class List extends Component {
   constructor(props) {
     super(props);
 
-    this.scrollbarThumb = createRef();
+    this.listWrapper = createRef();
     this.listView = createRef();
     this.listScrollable = createRef();
+    this.scrollbarThumb = createRef();
 
     this.state = {
       scrollbar: false,
@@ -139,9 +144,16 @@ class List extends Component {
     return true;
   }
 
+  componentDidMount() {
+    const { scrollToBottomAfterMount } = this.props;
+
+    if (scrollToBottomAfterMount) {
+      this.scrollToBottom();
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const { loading, data, lazyLoad } = this.props;
-    console.log('update', this.listView.current.scrollTop, this.listView.current.scrollHeight);
 
     if (
       (!isEqual(prevProps.data, data) && isEmpty(data))
@@ -175,7 +187,6 @@ class List extends Component {
   }
 
   setScrollTop = (scrollTop) => {
-    console.log('scroll', scrollTop, this.listView.current.scrollTop);
     this.listView.current.scrollTop = scrollTop;
   }
 
@@ -184,14 +195,15 @@ class List extends Component {
     const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
 
     if (listHeight > listViewHeight) {
-      console.log('scroll botttom', listViewHeight, this.listView.current.scrollHeight);
-      this.setScrollTop(this.listView.current.scrollHeight);
+      this.listView.current.lastChild.scrollIntoView(false);
+      // this.setScrollTop(this.listView.current.scrollHeight);
     }
   }
 
-  _calculateScrollbarPosition = (scrollTop) => {
+  _calculateScrollbarPosition = () => {
     const { height: listHeight } = this.listScrollable.current.getBoundingClientRect();
     const { height: listViewHeight } = this.listView.current.getBoundingClientRect();
+    const { scrollTop } = this.listView.current;
     const listScrollHeight = listHeight - listViewHeight;
     const ratioPercent = scrollTop / listScrollHeight;
     const thumbHeight = Math.max(20, (listViewHeight / listHeight) * listViewHeight);
@@ -236,7 +248,7 @@ class List extends Component {
       if (scrollTop < 0) nextScrollTop = 0;
       if (scrollTop > scrollHeight) nextScrollTop = scrollHeight;
 
-      this.listView.current.scrollTop = nextScrollTop;
+      this.setScrollTop(nextScrollTop);
     };
 
     const onMouseUp = () => {
@@ -250,19 +262,19 @@ class List extends Component {
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  _onScroll = (e) => {
-    e.preventDefault();
+  _onScroll = () => {
     const { onScroll } = this.props;
-    const { scrollTop } = this.listView.current;
     let timer;
 
     clearTimeout(timer);
     this.enablePointerEvents();
     timer = this.disablePointerEvents();
 
-    this._calculateScrollbarPosition(scrollTop);
+    this._calculateScrollbarPosition();
 
     if (onScroll && isFunction(onScroll)) {
+      const { scrollTop } = this.listView.current;
+
       onScroll({ scrollTop });
     }
   }
@@ -384,6 +396,7 @@ class List extends Component {
 
     return (
       <Wrapper
+        ref={this.listWrapper}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
         onMouseOver={this.onMouseOver}
@@ -471,6 +484,7 @@ List.defaultProps = {
   spinnerSize: 20,
   onObserverChange: null,
   listProps: {},
+  scrollToBottomAfterMount: false,
 };
 List.propTypes = {
   loading: PropTypes.bool,
@@ -486,6 +500,7 @@ List.propTypes = {
   spinnerSize: PropTypes.number,
   onObserverChange: PropTypes.func,
   listProps: PropTypes.objectOf(PropTypes.any),
+  scrollToBottomAfterMount: PropTypes.bool,
 };
 
 export default List;

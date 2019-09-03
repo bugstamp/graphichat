@@ -127,6 +127,22 @@ class Chats extends Component {
             unselectedText = 'Selected chat is undefined';
           }
 
+          const renderChat = () => (
+            <Chat
+              loading={loading}
+              adding={adding}
+              me={me}
+              userInfo={contact.userInfo}
+              chat={chat}
+              optimisticIds={optimisticIds}
+              fetchMoreMessages={fetchMoreMessages}
+              fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
+              addMessage={addMessage}
+              getOptimisticMessage={getOptimisticMessage}
+              updateOptimisticIds={this.updateOptimisticIds}
+            />
+          );
+
           return (
             <Wrapper>
               <Grid container spacing={0}>
@@ -157,19 +173,7 @@ class Chats extends Component {
                         </NoContentWrapper>
                       </When>
                       <Otherwise>
-                        <Chat
-                          loading={loading}
-                          adding={adding}
-                          me={me}
-                          userInfo={contact.userInfo}
-                          chat={chat}
-                          optimisticIds={optimisticIds}
-                          fetchMoreMessages={fetchMoreMessages}
-                          fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
-                          addMessage={addMessage}
-                          getOptimisticMessage={getOptimisticMessage}
-                          updateOptimisticIds={this.updateOptimisticIds}
-                        />
+                        {renderChat()}
                       </Otherwise>
                     </Choose>
                   </Grid>
@@ -188,19 +192,7 @@ class Chats extends Component {
                   }}
                 >
                   <If condition={selectedChatId}>
-                    <Chat
-                      loading={loading}
-                      adding={adding}
-                      me={me}
-                      userInfo={contact.userInfo}
-                      chat={chat}
-                      optimisticIds={optimisticIds}
-                      fetchMoreMessages={fetchMoreMessages}
-                      fetchMoreMessagesUpdate={fetchMoreMessagesUpdate}
-                      addMessage={addMessage}
-                      getOptimisticMessage={getOptimisticMessage}
-                      updateOptimisticIds={this.updateOptimisticIds}
-                    />
+                    {renderChat()}
                   </If>
                 </FullWidthSwipeableDrawer>
               </Hidden>

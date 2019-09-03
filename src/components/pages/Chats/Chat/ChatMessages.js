@@ -24,10 +24,6 @@ class ChatMessages extends Component {
     return true;
   }
 
-  componentDidMount() {
-    this.list.current.scrollToBottom();
-  }
-
   componentDidUpdate(prevProps) {
     const {
       chatId,
@@ -138,6 +134,7 @@ class ChatMessages extends Component {
         rowRenderer={this.rowRenderer}
         onResize={this.onResize}
         lazyLoad
+        scrollToBottomAfterMount
       />
     );
   }

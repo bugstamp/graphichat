@@ -11,6 +11,7 @@ import { getStyledProps, getSpacing } from '../../../../styles';
 
 const Wrapper = styled.div`
   width: 100%;
+  flex: 0 0;
   display: flex;
   align-items: center;
   justify-content: space-between;

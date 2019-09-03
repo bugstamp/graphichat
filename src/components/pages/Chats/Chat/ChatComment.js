@@ -20,6 +20,7 @@ import { getStyledProps, getSpacing } from '../../../../styles';
 import { userAvatarProps } from '../../../propTypes';
 
 const Wrapper = styled.div`
+  flex: 0 0;
   display: flex;
   flex-flow: row nowrap;
   position: relative;
@@ -178,7 +179,7 @@ class ChatComment extends Component {
 
     return (
       <Wrapper>
-        <Hidden smDown>
+        <Hidden smDown implementation="css">
           <UserAvatar>
             <ListItemAvatar {...me} />
           </UserAvatar>
@@ -193,7 +194,7 @@ class ChatComment extends Component {
             multiline
           />
           <Submit>
-            <Hidden smDown>
+            <Hidden smDown implementation="css">
               <Button
                 ref={this.submitButtonRef}
                 variant="text"
@@ -204,7 +205,7 @@ class ChatComment extends Component {
                 <SendIcon />
               </Button>
             </Hidden>
-            <Hidden mdUp>
+            <Hidden mdUp implementation="css">
               <IconButton
                 ref={this.submitButtonRef}
                 color="primary"
@@ -215,7 +216,7 @@ class ChatComment extends Component {
             </Hidden>
           </Submit>
         </Form>
-        <Hidden smDown>
+        <Hidden smDown implementation="css">
           <UserAvatar>
             <ListItemAvatar {...contact} />
           </UserAvatar>

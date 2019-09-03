@@ -41,7 +41,7 @@ const ContactsHeader = ({
       <Typography variant="h6" align="center" color="textPrimary">
         {title}
       </Typography>
-      <Hidden mdUp>
+      <Hidden mdUp implementation="css">
         <AddButton
           onClick={toggleSearchDialog}
           color="primary"

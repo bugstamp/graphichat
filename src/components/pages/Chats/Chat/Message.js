@@ -144,7 +144,7 @@ const Message = forwardRef((props, ref) => {
           <Otherwise>
             <MessageInner>
               <If condition={alignItems === 'flex-start'}>
-                <Hidden mdUp>
+                <Hidden mdUp implementation="css">
                   <Avatar>
                     <ListItemAvatar {...avatar} />
                   </Avatar>
@@ -162,7 +162,7 @@ const Message = forwardRef((props, ref) => {
                 </Time>
               </ContentWrapper>
               <If condition={alignItems !== 'flex-start'}>
-                <Hidden mdUp>
+                <Hidden mdUp implementation="css">
                   <Avatar>
                     <ListItemAvatar {...avatar} />
                   </Avatar>

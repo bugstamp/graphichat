@@ -106,10 +106,10 @@ class Contacts extends Component {
           changeRoute={changeRoute}
           getLastChatMessage={this.getLastChatMessage}
         />
-        <Hidden smDown>
+        <Hidden smDown implementation="css">
           <ContactsFooter toggleSearchDialog={this.toggleSearchDialog} />
         </Hidden>
-        <Hidden mdUp>
+        <Hidden mdUp implementation="css">
           <Navigation
             variant="horizontal"
             toggleSettingsDialog={toggleSettingsDialog}

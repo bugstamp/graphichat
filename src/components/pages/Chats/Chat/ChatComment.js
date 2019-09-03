@@ -20,7 +20,7 @@ import { getStyledProps, getSpacing } from '../../../../styles';
 import { userAvatarProps } from '../../../propTypes';
 
 const Wrapper = styled.div`
-  flex: 0 0;
+  min-height: 60px;
   display: flex;
   flex-flow: row nowrap;
   position: relative;
@@ -39,17 +39,16 @@ const Form = styled.form`
   flex-flow: column;
   align-items: flex-start;
   position: relative;
+  padding: ${getSpacing(1)};
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const spacing = getStyledProps('theme.spacing')(props);
     const smDown = breakpoints.down('sm');
 
     return `
       ${smDown} {
         flex-flow: row nowrap;
         align-items: center;
-        padding-left: ${spacing(2)}px;
       }
     `;
   }}
@@ -115,13 +114,19 @@ const Submit = styled.div`
     const breakpoints = getStyledProps('theme.breakpoints')(props);
     const spacing = getStyledProps('theme.spacing')(props);
     const mdUp = breakpoints.up('md');
+    const mdDown = breakpoints.down('md');
 
     return `
       ${mdUp} {
         width: 100%;
-        margin: ${spacing(1)}px 0;
+        margin-top: ${spacing(1)}px;
 
         svg {
+          margin-left: ${spacing(1)}px;
+        }
+      }
+      ${mdDown} {
+        button {
           margin-left: ${spacing(1)}px;
         }
       }
@@ -138,6 +143,11 @@ class ChatComment extends Component {
     value: '',
   }
 
+  onChange = () => {
+    const { value } = this.inputRef.current;
+    this.setState({ value });
+  }
+
   onSubmit = (e) => {
     e.preventDefault();
     const { value } = this.state;
@@ -146,24 +156,23 @@ class ChatComment extends Component {
 
     if (trimmedValue) {
       submit(trimmedValue);
-      this.clearValue();
     }
-  }
-
-  onChange = () => {
-    const { value } = this.inputRef.current;
-    this.setState({ value });
+    this.clearValue();
   }
 
   clearValue = () => {
-    this.setState({ value: '' });
-    this.inputRef.current.focus();
+    this.setState(
+      () => ({ value: trim('') }),
+      () => this.inputRef.current.focus(),
+    );
   }
 
-  onKeyDown = ({ key }) => {
+  onKeyDown = (e) => {
+    const { key, ctrlKey } = e;
+
     if (key === 'Escape') {
       this.inputRef.current.blur();
-    } else if (key === 'Enter') {
+    } else if (key === 'Enter' && ctrlKey) {
       this.submitButtonRef.current.click();
     }
   }
@@ -208,6 +217,7 @@ class ChatComment extends Component {
             <Hidden mdUp implementation="css">
               <IconButton
                 ref={this.submitButtonRef}
+                size="small"
                 color="primary"
                 type="submit"
               >

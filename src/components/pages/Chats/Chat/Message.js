@@ -30,6 +30,7 @@ const Wrapper = styled.div`
 `;
 
 const MessageInner = styled.div`
+  max-width: 100%;
   display: flex;
   flex-flow: row nowrap;
 
@@ -51,11 +52,6 @@ const Avatar = styled.div`
   margin-right: ${getSpacing(1)};
 `;
 
-const ContentWrapper = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-`;
-
 const HistoryDivider = styled.div`
   width: 100%;
   height: 20px;
@@ -72,13 +68,16 @@ const HistoryDivider = styled.div`
   }
 
   span {
-  padding: 0 ${getSpacing(2)};
+    padding: 0 ${getSpacing(2)};
     color: ${grey[500]};
   }
 `;
 
+const ContentWrapper = styled.div`
+  overflow: hidden;
+`;
+
 const Content = styled.div`
-  ${getStyledProps('theme.typography.body2')};
   padding: ${getSpacing(1)};
   ${({ isMyMessage }) => ({
     [`border-bottom-${isMyMessage ? 'left' : 'right'}-radius`]: 0,
@@ -86,10 +85,11 @@ const Content = styled.div`
   background-color: ${({ isMyMessage }) => (isMyMessage ? grey[100] : blue[100])};
   border-radius: 5px;
   opacity: ${({ isAdding }) => (isAdding ? 0.3 : 1)};
-  word-break: break-all;
 
-  &:hover {
-    cursor: text;
+  p {
+    ${getStyledProps('theme.typography.body2')};
+    word-wrap: break-word;
+    white-space: pre-wrap;
   }
 `;
 
@@ -155,7 +155,7 @@ const Message = forwardRef((props, ref) => {
                   isMyMessage={isMyMessage}
                   isAdding={isAdding}
                 >
-                  {content}
+                  <p>{content}</p>
                 </Content>
                 <Time>
                   <span>{messageTimeParser(time, 'wide')}</span>

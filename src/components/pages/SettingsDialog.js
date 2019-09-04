@@ -16,7 +16,7 @@ import TopProgressLine from '../common/TopProgressLine';
 const DialogContent = styled(MaterialDialogContent)`
   && {
     width: 100%;
-    min-width: 375px;
+    max-width: 500px;
   }
 `;
 

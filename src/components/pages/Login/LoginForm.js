@@ -4,7 +4,6 @@ import styled from 'styled-components';
 // import {} from 'polished';
 // import {} from 'lodash';
 
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 import Button from '@material-ui/core/Button';
@@ -17,15 +16,15 @@ import TopProgressLine from '../../common/TopProgressLine';
 import { getSpacing, getStyledProps } from '../../../styles';
 import { mutationProps } from '../../propTypes';
 
-const Wrapper = styled(Paper)`
+const Wrapper = styled.div`
   && {
     width: 100%;
-    height: 100%;
     max-width: 375px;
     min-width: 320px;
     position: relative;
     padding: ${getSpacing(5)} ${getSpacing(3)};
     overflow: hidden auto;
+    z-index: 10;
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
@@ -59,7 +58,7 @@ const LoginForm = ({
   signInBySocial,
   toSignUp,
 }) => (
-  <Wrapper elevation={8} square>
+  <Wrapper>
     <TopProgressLine loading={signIn.result.loading} />
     <Header variant="h1" color="primary" align="center" gutterBottom>
       <AccountCircleIcon fontSize="inherit" color="primary" />

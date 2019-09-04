@@ -45,6 +45,7 @@ const Wrapper = styled(Grid)`
 
 const FormWrapper = styled.div`
   flex: 1 40%;
+  max-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

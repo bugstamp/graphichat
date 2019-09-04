@@ -23,8 +23,9 @@ const Wrapper = styled(Paper)`
     max-width: 375px;
     min-width: 320px;
     position: relative;
+    margin: auto 0;
     padding: ${getSpacing(4)} ${getSpacing(3)};
-    overflow: hidden auto;
+    overflow-y: auto;
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);

@@ -32,6 +32,7 @@ module.exports = merge([
             },
           },
           exclude: /\/node_modules/,
+          safari10: true,
         }),
       ],
     },

@@ -30,9 +30,9 @@ module.exports = merge([
             output: {
               comments: false,
             },
+            safari10: true,
           },
           exclude: /\/node_modules/,
-          safari10: true,
         }),
       ],
     },

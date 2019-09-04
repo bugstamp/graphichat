@@ -19,6 +19,8 @@ import { mutationProps } from '../../propTypes';
 const Wrapper = styled.div`
   && {
     width: 100%;
+    height: 100%;
+    max-height: 100%;
     max-width: 375px;
     min-width: 320px;
     position: relative;

@@ -54,9 +54,10 @@ const SubTitle = styled.div`
     background-color: transparent;
     cursor: pointer;
     z-index: 0;
+    -webkit-transform: translate3d(0,0,0);
     animation: 1.5s ${headShakeAnimation};
     animation-delay: 2.5s;
-    animation-iteration-count: ${({ stopShake }) => (stopShake ? 0 : 'infinite')};
+    animation-iteration-count: 'infinite';
     animation-play-state: ${({ stopShake }) => (stopShake ? 'paused' : 'running')};
 
     &:hover {

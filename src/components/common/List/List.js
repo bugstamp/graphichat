@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 
 const View = styled.div`
   ${position('absolute', 0, 0, 0, 0)};
-  overflow-x: hidden;
+  overflow: hidden auto;
   z-index: 15;
 
   ${({ startFrom }) => startFrom === 'bottom' && `

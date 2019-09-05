@@ -47,19 +47,24 @@ const SubTitle = styled.div`
 
   button {
     display: inline-block;
+    position: relative;
     border: none;
     outline: none;
     color: inherit;
     background-color: transparent;
     cursor: pointer;
+    z-index: 0;
     animation: 1.5s ${headShakeAnimation};
     animation-delay: 2.5s;
     animation-iteration-count: ${({ stopShake }) => (stopShake ? 0 : 'infinite')};
     animation-play-state: ${({ stopShake }) => (stopShake ? 'paused' : 'running')};
-    z-index: 0;
 
     &:hover {
       color: ${getStyledProps('theme.palette.primary.main')}
+    }
+
+    p {
+      display: inherit;
     }
   }
 `;

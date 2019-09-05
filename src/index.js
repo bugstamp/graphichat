@@ -4,6 +4,7 @@ import { Router } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import registerSW from './registerSW';
 
+import polyfill from './polyfill';
 import App from './components/App';
 
 import apollo from './apollo';
@@ -19,5 +20,6 @@ const renderApp = (Component) => {
   );
 };
 
+polyfill();
 renderApp(App);
 registerSW();

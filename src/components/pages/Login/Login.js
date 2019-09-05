@@ -41,7 +41,7 @@ class Login extends Component {
     const { sessionExpired } = client.readQuery({ query: CHECK_SESSION_EXPIRATION });
 
     if (sessionExpired) {
-      toggleNotification('SessionExpired was expired');
+      toggleNotification('Session time was expired');
     }
   }
 

@@ -38,7 +38,6 @@ const View = styled.div`
     return `
       ${lgUp} {
         right: ${scrollbarPresence ? '-17px' : 0};
-        overflow-y: ${scrollbarPresence ? 'auto' : 'hidden'};
       }
     `;
   }}

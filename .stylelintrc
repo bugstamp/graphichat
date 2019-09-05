@@ -18,7 +18,7 @@
   ],
   "rules": {
     "property-no-vendor-prefix": [true, {
-      "ignoreProperties": ["background-clip", "text-fill-color", "mask-image"]
+      "ignoreProperties": ["background-clip", "text-fill-color", "mask-image", "transform"]
     }]
   }
 }

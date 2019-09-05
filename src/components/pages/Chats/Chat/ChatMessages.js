@@ -60,6 +60,7 @@ class ChatMessages extends Component {
 
     if (scrollTop < diff) {
       const nextScrollTop = diff + scrollTop;
+      console.log(scrollTop, diff, nextScrollTop);
 
       this.list.current.setScrollTop(nextScrollTop);
     }

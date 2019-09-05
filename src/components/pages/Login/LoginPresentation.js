@@ -57,7 +57,7 @@ const SubTitle = styled.div`
     -webkit-transform: translate3d(0,0,0);
     animation: 1.5s ${headShakeAnimation};
     animation-delay: 2.5s;
-    animation-iteration-count: 'infinite';
+    animation-iteration-count: infinite;
     animation-play-state: ${({ stopShake }) => (stopShake ? 'paused' : 'running')};
 
     &:hover {

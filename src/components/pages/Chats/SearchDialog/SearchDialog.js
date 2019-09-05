@@ -25,32 +25,24 @@ const DialogBody = styled.div`
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
     const borderRadius = getStyledProps('theme.shape.borderRadius')(props);
+    const shadows = getStyledProps('theme.shadows[1]')(props);
     const mdUp = breakpoints.up('md');
 
     return `
       ${mdUp} {
+        min-height: 500px;
         border-radius: ${borderRadius}px;
+        box-shadow: ${shadows};
       }
     `;
   }}
   }
 `;
 
-const DialogContentInner = styled.div`
-  height: 300px;
+const SearchDialogContentInner = styled.div`
+  flex: 1 auto;
   display: flex;
   flex-flow: column;
-
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const smDown = breakpoints.down('sm');
-
-    return `
-      ${smDown} {
-        height: 100%;
-      }
-    `;
-  }}
 `;
 
 const SearchDialogTitle = styled(DialogTitle)`
@@ -71,6 +63,9 @@ const SearchDialogTitle = styled(DialogTitle)`
 
 const SearchDialogContent = styled(DialogContent)`
   && {
+    flex: 1 auto;
+    display: flex;
+
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);
     const spacing = getStyledProps('theme.spacing')(props);
@@ -157,7 +152,7 @@ class SearchDialog extends PureComponent {
                   </Typography>
                 </SearchDialogTitle>
                 <SearchDialogContent dividers>
-                  <DialogContentInner>
+                  <SearchDialogContentInner>
                     <SearchBox
                       value={searchValue}
                       onChange={value => this.onChangeSearchValue(value, refetch)}
@@ -171,7 +166,7 @@ class SearchDialog extends PureComponent {
                       selectedUserId={selectedUser.id}
                       openConfirmDialog={this.openConfirmDialog}
                     />
-                  </DialogContentInner>
+                  </SearchDialogContentInner>
                 </SearchDialogContent>
                 <DialogActions>
                   <Button onClick={toggle} color="primary">Close</Button>

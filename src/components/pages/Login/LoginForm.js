@@ -26,7 +26,6 @@ const Wrapper = styled.div`
     position: relative;
     padding: ${getSpacing(5)} ${getSpacing(3)};
     overflow: hidden auto;
-    z-index: 10;
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);

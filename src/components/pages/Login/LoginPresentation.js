@@ -18,8 +18,6 @@ const Wrapper = styled.div`
   flex-flow: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  z-index: 5;
 `;
 
 const SubTitle = styled.div`
@@ -56,8 +54,9 @@ const SubTitle = styled.div`
     cursor: pointer;
     animation: 1.5s ${headShakeAnimation};
     animation-delay: 2.5s;
-    animation-iteration-count: infinite;
+    animation-iteration-count: ${({ stopShake }) => (stopShake ? 0 : 'infinite')};
     animation-play-state: ${({ stopShake }) => (stopShake ? 'paused' : 'running')};
+    z-index: 0;
 
     &:hover {
       color: ${getStyledProps('theme.palette.primary.main')}

@@ -139,17 +139,10 @@ class ChatComment extends Component {
 
   inputRef = createRef();
 
-  state = {
-    value: '',
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const { value } = this.state;
+  shouldComponentUpdate(nextProps) {
     const { avatars } = this.props;
 
     if (
-      !isEqual(value, nextState.value)
-      ||
       !isEqual(avatars.me.src, nextProps.avatars.me.src)
       ||
       !isEqual(avatars.contact.src, nextProps.avatars.contact.src)
@@ -159,14 +152,9 @@ class ChatComment extends Component {
     return false;
   }
 
-  onChange = () => {
-    const { value } = this.inputRef.current;
-    this.setState(() => ({ value }));
-  }
-
   onSubmit = (e) => {
     e.preventDefault();
-    const { value } = this.state;
+    const { value } = this.inputRef.current;
     const { submit } = this.props;
     const trimmedValue = trim(value);
 
@@ -177,10 +165,8 @@ class ChatComment extends Component {
   }
 
   clearValue = () => {
-    this.setState(
-      () => ({ value: trim('') }),
-      () => this.inputRef.current.focus(),
-    );
+    this.inputRef.current.value = '';
+    this.inputRef.current.focus();
   }
 
   onKeyDown = (e) => {
@@ -194,7 +180,6 @@ class ChatComment extends Component {
   }
 
   render() {
-    const { value } = this.state;
     const {
       avatars: {
         me,
@@ -212,8 +197,6 @@ class ChatComment extends Component {
         <Form onSubmit={this.onSubmit}>
           <FormInput
             inputRef={this.inputRef}
-            value={value}
-            onChange={this.onChange}
             onKeyDown={this.onKeyDown}
             placeholder="Write a message..."
             multiline

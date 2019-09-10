@@ -2,23 +2,23 @@
 
 Simple chat app for learning/testing GraphQL API and other features with the following stack:
 
-### Server:
+#### Server:
 - Node/Express
 - Apollo Server
 - GraphQL Modules
-### DB:
+#### DB:
 - MongoDB
-### Client:
+#### Client:
 - React
 - Apollo Client/React Apollo
 - Webpack
-### UI:
+#### UI:
 - MaterialUI
 - Styled-Components
-### Testing:
+#### Testing:
 - Jest
 - Enzyme
-### Other features:
+#### Other features:
 - OAuth with refresh token
 - Social login/registration
 - List with custom scrollbar and lazy loading

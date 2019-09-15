@@ -55,10 +55,10 @@ const SubTitle = styled.div`
     cursor: pointer;
     z-index: 0;
     -webkit-transform: translate3d(0,0,0);
-    animation: 1.5s ${headShakeAnimation};
+    animation-name: ${({ stopShake }) => (!stopShake && headShakeAnimation)};
+    animation-duration: 1.5s;
     animation-delay: 2.5s;
     animation-iteration-count: infinite;
-    animation-play-state: ${({ stopShake }) => (stopShake ? 'paused' : 'running')};
 
     &:hover {
       color: ${getStyledProps('theme.palette.primary.main')}

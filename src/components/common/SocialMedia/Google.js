@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import GoogleLogin from 'react-google-login';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import red from '@material-ui/core/colors/red';
@@ -37,5 +38,10 @@ const Google = ({ loading, mutation }) => (
     />
   </Social>
 );
+
+Google.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  mutation: PropTypes.func.isRequired,
+};
 
 export default Google;

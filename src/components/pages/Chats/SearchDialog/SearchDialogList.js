@@ -20,7 +20,7 @@ class SearchDialogList extends Component {
     const isAdding = adding && selectedUserId === id;
     const isAdded = !!find(myContacts, ({ userInfo }) => userInfo.id === id);
     const avatar = getAvatar(rowData);
-    const usernameText = `@${username}`;
+    const usernameText = username ? `@${username}` : '';
 
     return (
       <SearchDialogListItem

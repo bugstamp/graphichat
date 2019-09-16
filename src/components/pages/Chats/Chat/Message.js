@@ -1,9 +1,10 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
 
 import MaterialListItem from '@material-ui/core/ListItem';
+import Spinner from '@material-ui/core/CircularProgress';
 import Hidden from '@material-ui/core/Hidden';
 
 import grey from '@material-ui/core/colors/grey';
@@ -50,6 +51,16 @@ const Avatar = styled.div`
   display: flex;
   align-items: flex-start;
   margin-right: ${getSpacing(1)};
+
+  ${(props) => {
+    const { isMyMessage } = props;
+    const spacing = getSpacing(1)(props);
+    const direction = isMyMessage ? 'right' : 'left';
+
+    return `
+      margin-${direction}: ${spacing}px;
+    `;
+  }}
 `;
 
 const HistoryDivider = styled.div`
@@ -78,6 +89,7 @@ const ContentWrapper = styled.div`
 `;
 
 const Content = styled.div`
+  display: inline-block;
   padding: ${getSpacing(1)};
   ${({ isMyMessage }) => ({
     [`border-bottom-${isMyMessage ? 'left' : 'right'}-radius`]: 0,
@@ -108,6 +120,8 @@ const Time = styled.div`
   span {
     ${getStyledProps('theme.typography.caption')};
     color: ${getStyledProps('theme.palette.text.secondary')};
+    margin-right: ${getSpacing(1)};
+
   }
 `;
 
@@ -145,7 +159,7 @@ const Message = forwardRef((props, ref) => {
             <MessageInner>
               <If condition={alignItems === 'flex-start'}>
                 <Hidden mdUp implementation="css">
-                  <Avatar>
+                  <Avatar isMyMessage={isMyMessage}>
                     <ListItemAvatar {...avatar} />
                   </Avatar>
                 </Hidden>
@@ -159,11 +173,16 @@ const Message = forwardRef((props, ref) => {
                 </Content>
                 <Time>
                   <span>{messageTimeParser(time, 'wide')}</span>
+                  <If condition={isAdding}>
+                    <span>
+                      <Spinner size={10} color="primary" />
+                    </span>
+                  </If>
                 </Time>
               </ContentWrapper>
               <If condition={alignItems !== 'flex-start'}>
                 <Hidden mdUp implementation="css">
-                  <Avatar>
+                  <Avatar isMyMessage={isMyMessage}>
                     <ListItemAvatar {...avatar} />
                   </Avatar>
                 </Hidden>
@@ -189,4 +208,4 @@ Message.propTypes = {
   avatar: PropTypes.shape(userAvatarProps).isRequired,
 };
 
-export default Message;
+export default memo(Message);

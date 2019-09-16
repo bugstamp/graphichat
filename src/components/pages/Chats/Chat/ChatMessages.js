@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { includes, isEqual } from 'lodash';
 
@@ -8,21 +8,8 @@ import Message from './Message';
 import { isSameDay } from '../../../../helpers';
 import { userAvatarProps } from '../../../propTypes';
 
-class ChatMessages extends Component {
+class ChatMessages extends PureComponent {
   list = createRef();
-
-  state = {
-    listHeight: 0,
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const { listHeight } = this.state;
-
-    if (!isEqual(listHeight, nextState.listHeight)) {
-      return false;
-    }
-    return true;
-  }
 
   componentDidUpdate(prevProps) {
     const {
@@ -40,28 +27,16 @@ class ChatMessages extends Component {
       &&
       !isEqual(prevProps.messages, messages)
     ) {
-      if (!adding) {
-        this.updateScrollTopAfterFetchMore();
-      } else {
-        this.list.current.scrollToBottom();
+      if (adding) {
+        const scrollTop = this.list.current.getScrollTop();
+        const scrollHeight = this.list.current.getScrollHeight();
+        const viewHeight = this.list.current.getListViewHeight();
+        const diff = scrollHeight - viewHeight;
+
+        if (scrollTop < diff) {
+          this.list.current.scrollToBottom();
+        }
       }
-    }
-  }
-
-  onResize = ({ height }) => {
-    this.setState({ listHeight: height });
-  }
-
-  updateScrollTopAfterFetchMore = () => {
-    const { listHeight } = this.state;
-    const scrollTop = this.list.current.getScrollTop();
-    const height = this.list.current.getListHeight();
-    const diff = height - listHeight;
-
-    if (scrollTop < diff) {
-      const nextScrollTop = diff + scrollTop;
-
-      this.list.current.setScrollTop(nextScrollTop);
     }
   }
 
@@ -75,7 +50,8 @@ class ChatMessages extends Component {
       messages,
       optimisticIds,
       myId,
-      avatars,
+      myAvatar,
+      contactAvatar,
     } = this.props;
     const {
       id,
@@ -90,7 +66,7 @@ class ChatMessages extends Component {
     const isAdding = includes(optimisticIds, id);
     const direction = isMyMessage ? 'start' : 'end';
     const alignItems = isSystem ? 'center' : `flex-${direction}`;
-    const avatar = isMyMessage ? avatars.me : avatars.contact;
+    const avatar = isMyMessage ? myAvatar : contactAvatar;
     let divider = false;
 
     if (index > 0) {
@@ -134,7 +110,6 @@ class ChatMessages extends Component {
         rowRenderer={this.rowRenderer}
         onResize={this.onResize}
         lazyLoad
-        scrollToBottomAfterMount
       />
     );
   }
@@ -154,10 +129,8 @@ ChatMessages.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.object),
   getMessages: PropTypes.func.isRequired,
   optimisticIds: PropTypes.arrayOf(PropTypes.string),
-  avatars: PropTypes.shape({
-    me: PropTypes.shape(userAvatarProps).isRequired,
-    contact: PropTypes.shape(userAvatarProps).isRequired,
-  }).isRequired,
+  myAvatar: PropTypes.shape(userAvatarProps).isRequired,
+  contactAvatar: PropTypes.shape(userAvatarProps).isRequired,
 };
 
 export default ChatMessages;

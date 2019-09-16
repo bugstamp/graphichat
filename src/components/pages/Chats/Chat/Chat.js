@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 
 import ChatTopBar from './ChatTopBar';
 import ChatMessages from './ChatMessages';
-import ChatComment from './ChatComment';
+import ChatMessageInput from './ChatMessageInput';
 
 import { getAvatar, userLastDateParser } from '../../../../helpers';
 import { meProps, userInfoProps, chatProps } from '../../../propTypes';
@@ -24,21 +24,39 @@ const Wrapper = styled(Paper)`
 `;
 
 class Chat extends Component {
-  fetchSize = 30;
+  fetchSize = 20;
+
+  state = {
+    myAvatar: {},
+    contactAvatar: {},
+  }
 
   componentDidMount() {
     this.getMessages();
+    this.updateAvatars();
   }
 
   componentDidUpdate(prevProps) {
     const { chat: { id: chatId } } = this.props;
 
     if (!isEqual(prevProps.chat.id, chatId)) {
-      this.getMessages();
+      this.getMessages(false);
+      this.updateAvatars();
     }
   }
 
-  getMessages = (fetchMore = false) => {
+  updateAvatars = () => {
+    const { me, userInfo } = this.props;
+    const myAvatar = getAvatar(me);
+    const contactAvatar = getAvatar(userInfo);
+
+    this.setState({
+      myAvatar,
+      contactAvatar,
+    });
+  }
+
+  getMessages = (fetchMore = true) => {
     const { chat } = this.props;
     const { id: chatId, messages } = chat;
     const skip = messages.length;
@@ -51,6 +69,15 @@ class Chat extends Component {
       this.fetchMoreMessages({ chatId, skip });
     }
   }
+
+  fetchMoreMessages = (variables) => {
+    const {
+      fetchMoreMessages,
+      fetchMoreMessagesUpdate,
+    } = this.props;
+
+    fetchMoreMessages(fetchMoreMessagesUpdate(variables));
+  };
 
   addMessage = (content) => {
     const {
@@ -81,16 +108,8 @@ class Chat extends Component {
     updateOptimisticIds(optimisticId);
   }
 
-  fetchMoreMessages = (variables) => {
-    const {
-      fetchMoreMessages,
-      fetchMoreMessagesUpdate,
-    } = this.props;
-
-    fetchMoreMessages(fetchMoreMessagesUpdate(variables));
-  };
-
   render() {
+    const { myAvatar, contactAvatar } = this.state;
     const {
       loading,
       adding,
@@ -103,16 +122,10 @@ class Chat extends Component {
     const { id: chatId, messages } = chat;
     const { id: myId } = me;
 
-    const myAvatar = getAvatar(me);
-    const contactAvatar = getAvatar(userInfo);
     const isOnline = status === 'ONLINE';
     const statusText = isOnline
       ? 'online'
       : userLastDateParser(lastDate);
-    const avatars = {
-      me: myAvatar,
-      contact: contactAvatar,
-    };
 
     return (
       <Wrapper square elevation={0}>
@@ -128,12 +141,14 @@ class Chat extends Component {
           myId={myId}
           messages={messages}
           optimisticIds={optimisticIds}
-          getMessages={() => this.getMessages(true)}
-          fetchThreshold={5}
-          avatars={avatars}
+          getMessages={this.getMessages}
+          fetchThreshold={2}
+          myAvatar={myAvatar}
+          contactAvatar={contactAvatar}
         />
-        <ChatComment
-          avatars={avatars}
+        <ChatMessageInput
+          myAvatar={myAvatar}
+          contactAvatar={contactAvatar}
           submit={this.addMessage}
         />
       </Wrapper>

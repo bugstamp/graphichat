@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
@@ -134,27 +134,18 @@ const Submit = styled.div`
   }}
 `;
 
-class ChatComment extends Component {
+class ChatMessageInput extends PureComponent {
   submitButtonRef = createRef();
 
   inputRef = createRef();
 
-  shouldComponentUpdate(nextProps) {
-    const { avatars } = this.props;
-
-    if (
-      !isEqual(avatars.me.src, nextProps.avatars.me.src)
-      ||
-      !isEqual(avatars.contact.src, nextProps.avatars.contact.src)
-    ) {
-      return true;
-    }
-    return false;
-  }
+  state = {
+    value: '',
+  };
 
   onSubmit = (e) => {
     e.preventDefault();
-    const { value } = this.inputRef.current;
+    const { value } = this.state;
     const { submit } = this.props;
     const trimmedValue = trim(value);
 
@@ -165,8 +156,11 @@ class ChatComment extends Component {
   }
 
   clearValue = () => {
-    this.inputRef.current.value = '';
-    this.inputRef.current.focus();
+    this.setState({ value: '' });
+  }
+
+  onChange = ({ target: { value } }) => {
+    this.setState({ value });
   }
 
   onKeyDown = (e) => {
@@ -175,39 +169,41 @@ class ChatComment extends Component {
     if (key === 'Escape') {
       this.inputRef.current.blur();
     } else if (key === 'Enter' && ctrlKey) {
-      this.submitButtonRef.current.click();
+      this.onSubmit(e);
     }
   }
 
   render() {
+    const { value } = this.state;
     const {
-      avatars: {
-        me,
-        contact,
-      },
+      myAvatar,
+      contactAvatar,
     } = this.props;
 
     return (
       <Wrapper>
         <Hidden smDown implementation="css">
           <UserAvatar>
-            <ListItemAvatar {...me} />
+            <ListItemAvatar {...myAvatar} />
           </UserAvatar>
         </Hidden>
         <Form onSubmit={this.onSubmit}>
           <FormInput
             inputRef={this.inputRef}
+            value={value}
+            onChange={this.onChange}
             onKeyDown={this.onKeyDown}
             placeholder="Write a message..."
+            autoFocus
             multiline
           />
           <Submit>
             <Hidden smDown implementation="css">
               <Button
                 ref={this.submitButtonRef}
+                onClick={this.onSubmit}
                 variant="text"
                 color="primary"
-                type="submit"
               >
                 Send
                 <SendIcon />
@@ -216,6 +212,7 @@ class ChatComment extends Component {
             <Hidden mdUp implementation="css">
               <IconButton
                 ref={this.submitButtonRef}
+                onClick={this.onSubmit}
                 size="small"
                 color="primary"
                 type="submit"
@@ -227,7 +224,7 @@ class ChatComment extends Component {
         </Form>
         <Hidden smDown implementation="css">
           <UserAvatar>
-            <ListItemAvatar {...contact} />
+            <ListItemAvatar {...contactAvatar} />
           </UserAvatar>
         </Hidden>
       </Wrapper>
@@ -235,12 +232,10 @@ class ChatComment extends Component {
   }
 }
 
-ChatComment.propTypes = {
-  avatars: PropTypes.shape({
-    me: PropTypes.shape(userAvatarProps).isRequired,
-    contact: PropTypes.shape(userAvatarProps).isRequired,
-  }).isRequired,
+ChatMessageInput.propTypes = {
+  myAvatar: PropTypes.shape(userAvatarProps).isRequired,
+  contactAvatar: PropTypes.shape(userAvatarProps).isRequired,
   submit: PropTypes.func.isRequired,
 };
 
-export default ChatComment;
+export default ChatMessageInput;

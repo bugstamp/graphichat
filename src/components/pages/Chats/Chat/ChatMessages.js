@@ -11,22 +11,14 @@ import { userAvatarProps } from '../../../propTypes';
 class ChatMessages extends PureComponent {
   list = createRef();
 
-  componentDidUpdate(prevProps) {
-    const {
-      chatId,
-      adding,
-      messages,
-    } = this.props;
+  getSnapshotBeforeUpdate(nextProps) {
+    const { chatId, adding, messages } = this.props;
 
-    if (!isEqual(prevProps.chatId, chatId)) {
-      this.list.current.scrollToBottom();
+    if (!isEqual(nextProps.chatId, chatId)) {
+      return true;
     }
 
-    if (
-      isEqual(prevProps.chatId, chatId)
-      &&
-      !isEqual(prevProps.messages, messages)
-    ) {
+    if (!isEqual(nextProps.messages, messages)) {
       if (adding) {
         const scrollTop = this.list.current.getScrollTop();
         const scrollHeight = this.list.current.getScrollHeight();
@@ -34,9 +26,16 @@ class ChatMessages extends PureComponent {
         const diff = scrollHeight - viewHeight;
 
         if (scrollTop < diff) {
-          this.list.current.scrollToBottom();
+          return true;
         }
       }
+    }
+    return false;
+  }
+
+  componentDidUpdate(prevProps, prevState, shouldScrollToBottom) {
+    if (shouldScrollToBottom) {
+      this.list.current.scrollToBottom();
     }
   }
 

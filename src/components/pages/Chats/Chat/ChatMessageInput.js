@@ -2,7 +2,7 @@ import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
-import { trim, isEqual } from 'lodash';
+import { trim } from 'lodash';
 
 import Hidden from '@material-ui/core/Hidden';
 import Input from '@material-ui/core/Input';
@@ -159,6 +159,11 @@ class ChatMessageInput extends PureComponent {
     this.setState({ value: '' });
   }
 
+  onSubmitClick = (e) => {
+    this.onSubmit(e);
+    this.inputRef.current.focus();
+  }
+
   onChange = ({ target: { value } }) => {
     this.setState({ value });
   }
@@ -201,7 +206,7 @@ class ChatMessageInput extends PureComponent {
             <Hidden smDown implementation="css">
               <Button
                 ref={this.submitButtonRef}
-                onClick={this.onSubmit}
+                onClick={this.onSubmitClick}
                 variant="text"
                 color="primary"
               >

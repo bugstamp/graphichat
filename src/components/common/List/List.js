@@ -112,20 +112,25 @@ class List extends Component {
     return true;
   }
 
-  getSnapshotBeforeUpdate(prevProps) {
+  getSnapshotBeforeUpdate(nextProps) {
     const { lazyLoad, data } = this.props;
+    const result = {
+      prevScrollHeight: null,
+    };
 
-    if (!isEqual(prevProps.data, data) && lazyLoad) {
-      const { scrollHeight, scrollTop } = this.listView.current;
-      const scrollPosition = scrollHeight - scrollTop;
+    if (!isEqual(nextProps.data, data) && lazyLoad) {
+      const scrollTop = this.getScrollTop();
 
-      return { scrollPosition };
+      if (scrollTop === 0) {
+        const { scrollHeight } = this.listScrollable.current;
+
+        result.prevScrollHeight = scrollHeight;
+      }
     }
-    return {};
+    return result;
   }
 
-
-  componentDidUpdate(prevProps, prevState, { scrollPosition = null }) {
+  componentDidUpdate(prevProps, prevState, { prevScrollHeight }) {
     const {
       loading,
       data,
@@ -140,25 +145,12 @@ class List extends Component {
       this._setScrollbarPresence(false);
     }
 
-    if (scrollPosition) {
-      this.updateScrollTopAfterFetchMore(scrollPosition);
+    if (prevScrollHeight) {
+      const { scrollHeight } = this.listScrollable.current;
+      const nextScrollTop = scrollHeight - prevScrollHeight;
+
+      this.setScrollTop(nextScrollTop);
     }
-  }
-
-  updateScrollTopAfterFetchMore = (prevScrollPosition) => {
-    const { scrollHeight } = this.listView.current;
-    const scrollTop = scrollHeight - prevScrollPosition;
-
-    this.setScrollTop(scrollTop);
-    // const scrollTop = this.getScrollTop();
-    // const height = this.getListHeight();
-    // const diff = height - prevListHeight;
-    //
-    // if (scrollTop < diff) {
-    //   const nextScrollTop = diff + scrollTop;
-    //
-    //   this.setScrollTop(nextScrollTop);
-    // }
   }
 
   _toggleScrollbarDragging = () => {

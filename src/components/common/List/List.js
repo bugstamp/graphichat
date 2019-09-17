@@ -100,13 +100,9 @@ class List extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { scrollbarDragging, listHeight } = this.state;
+    const { scrollbarDragging } = this.state;
 
-    if (
-      !isEqual(scrollbarDragging, nextState.scrollbarDragging)
-      ||
-      !isEqual(listHeight, nextState.listHeight)
-    ) {
+    if (!isEqual(scrollbarDragging, nextState.scrollbarDragging)) {
       return false;
     }
     return true;

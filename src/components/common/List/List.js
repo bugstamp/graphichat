@@ -117,10 +117,10 @@ class List extends Component {
     if (!isEqual(nextProps.data, data) && lazyLoad) {
       const scrollTop = this.getScrollTop();
 
-      if (scrollTop === 0) {
+      if (scrollTop < 30) {
         const { scrollHeight } = this.listScrollable.current;
 
-        result.prevScrollHeight = scrollHeight;
+        result.prevScrollHeight = scrollHeight + scrollTop;
       }
     }
     return result;
@@ -184,13 +184,6 @@ class List extends Component {
 
   _setScrollbarPresence = (scrollbarPresence) => {
     this.setState({ scrollbarPresence });
-  }
-
-  _saveScrollTopAfterFetchMore = (prevScrollPosition) => {
-    const list = this.listView.current;
-    const scrollTop = list.scrollHeight - prevScrollPosition;
-
-    this.setScrollTop(scrollTop);
   }
 
   _calculateScrollbarPosition = () => {

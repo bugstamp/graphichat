@@ -104,7 +104,7 @@ class ChatMessages extends PureComponent {
         loading={loading}
         data={messages}
         fetchMore={getMessages}
-        fetchMoreThreshold={5}
+        fetchMoreThreshold={4}
         startFrom="bottom"
         rowRenderer={this.rowRenderer}
         onResize={this.onResize}

@@ -47,20 +47,25 @@ const MessageInner = styled.div`
   }}
 `;
 
-const Avatar = styled.div`
-  display: flex;
-  align-items: flex-start;
-  margin-right: ${getSpacing(1)};
-
+const AvatarWrapper = styled(Hidden)`
+  && {
   ${(props) => {
     const { isMyMessage } = props;
     const spacing = getSpacing(1)(props);
     const direction = isMyMessage ? 'right' : 'left';
+    const order = isMyMessage ? 0 : 1;
 
     return `
-      margin-${direction}: ${spacing}px;
+      margin-${direction}: ${spacing};
+      order: ${order};
     `;
   }}
+  }
+`;
+
+const Avatar = styled.div`
+  display: flex;
+  align-items: flex-start;
 `;
 
 const HistoryDivider = styled.div`
@@ -85,6 +90,7 @@ const HistoryDivider = styled.div`
 `;
 
 const ContentWrapper = styled.div`
+  order: ${({ isMyMessage }) => (isMyMessage ? 1 : 0)};
   overflow: hidden;
 `;
 
@@ -157,14 +163,16 @@ const Message = forwardRef((props, ref) => {
           </When>
           <Otherwise>
             <MessageInner>
-              <If condition={alignItems === 'flex-start'}>
-                <Hidden mdUp implementation="css">
-                  <Avatar isMyMessage={isMyMessage}>
-                    <ListItemAvatar {...avatar} />
-                  </Avatar>
-                </Hidden>
-              </If>
-              <ContentWrapper>
+              <AvatarWrapper
+                isMyMessage={isMyMessage}
+                mdUp
+                implementation="css"
+              >
+                <Avatar>
+                  <ListItemAvatar {...avatar} />
+                </Avatar>
+              </AvatarWrapper>
+              <ContentWrapper isMyMessage={isMyMessage}>
                 <Content
                   isMyMessage={isMyMessage}
                   isAdding={isAdding}
@@ -180,13 +188,6 @@ const Message = forwardRef((props, ref) => {
                   </If>
                 </Time>
               </ContentWrapper>
-              <If condition={alignItems !== 'flex-start'}>
-                <Hidden mdUp implementation="css">
-                  <Avatar isMyMessage={isMyMessage}>
-                    <ListItemAvatar {...avatar} />
-                  </Avatar>
-                </Hidden>
-              </If>
             </MessageInner>
           </Otherwise>
         </Choose>

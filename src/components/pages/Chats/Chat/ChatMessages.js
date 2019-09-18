@@ -1,4 +1,4 @@
-import React, { PureComponent, createRef } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { includes, isEqual } from 'lodash';
 
@@ -8,7 +8,7 @@ import Message from './Message';
 import { isSameDay } from '../../../../helpers';
 import { userAvatarProps } from '../../../propTypes';
 
-class ChatMessages extends PureComponent {
+class ChatMessages extends Component {
   list = createRef();
 
   getSnapshotBeforeUpdate(nextProps) {
@@ -18,16 +18,9 @@ class ChatMessages extends PureComponent {
       return true;
     }
 
-    if (!isEqual(nextProps.messages, messages)) {
+    if (!isEqual(nextProps.messages.length, messages.length)) {
       if (adding) {
-        const scrollTop = this.list.current.getScrollTop();
-        const scrollHeight = this.list.current.getScrollHeight();
-        const viewHeight = this.list.current.getListViewHeight();
-        const diff = scrollHeight - viewHeight;
-
-        if (scrollTop < diff) {
-          return true;
-        }
+        return true;
       }
     }
     return false;

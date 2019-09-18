@@ -61,7 +61,7 @@ class Chat extends Component {
     const { id: chatId, messages } = chat;
     const skip = messages.length;
 
-    if (fetchMore) {
+    if (!fetchMore) {
       if (skip < this.fetchSize) {
         this.fetchMoreMessages({ chatId, skip });
       }

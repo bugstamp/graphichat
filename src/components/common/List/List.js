@@ -114,8 +114,10 @@ class List extends Component {
       prevScrollHeight: null,
     };
 
-    if (!isEqual(nextProps.data, data) && lazyLoad) {
+    if (!isEqual(nextProps.data.length, data.length) && lazyLoad) {
       const scrollTop = this.getScrollTop();
+      console.log('scrollTop');
+      console.log(scrollTop);
 
       if (scrollTop < 30) {
         const { scrollHeight } = this.listScrollable.current;
@@ -134,7 +136,7 @@ class List extends Component {
     } = this.props;
 
     if (
-      (!isEqual(prevProps.data, data) && isEmpty(data))
+      (!isEqual(prevProps.data.length, data.length) && isEmpty(data))
       ||
       (!isEqual(prevProps.loading, loading) && loading && !lazyLoad)
     ) {
@@ -142,8 +144,12 @@ class List extends Component {
     }
 
     if (prevScrollHeight) {
+      console.log('prevScrollHeight');
+      console.log(prevScrollHeight);
       const { scrollHeight } = this.listScrollable.current;
       const nextScrollTop = scrollHeight - prevScrollHeight;
+      console.log('nextScrollTop');
+      console.log(nextScrollTop);
 
       this.setScrollTop(nextScrollTop);
     }

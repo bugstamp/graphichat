@@ -39,8 +39,11 @@ const View = styled.div`
     return `
       ${mdDown} {
         width: 100%;
+        height: 100%:
         right: 0;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
       }
     `;
   }}
@@ -117,8 +120,6 @@ class List extends Component {
     if (!isEqual(nextProps.data.length, data.length) && lazyLoad) {
       const scrollTop = this.getScrollTop();
       const { scrollHeight } = this.listScrollable.current;
-      console.log('scrollTop');
-      console.log(scrollTop);
 
       result.prevScrollHeight = scrollHeight - scrollTop;
     }
@@ -141,12 +142,8 @@ class List extends Component {
     }
 
     if (prevScrollHeight) {
-      console.log('prevScrollHeight');
-      console.log(prevScrollHeight);
       const { scrollHeight } = this.listScrollable.current;
       const nextScrollTop = scrollHeight - prevScrollHeight;
-      console.log('nextScrollTop');
-      console.log(nextScrollTop);
 
       this.setScrollTop(nextScrollTop);
     }
@@ -166,7 +163,6 @@ class List extends Component {
 
   setScrollTop = (scrollTop) => {
     this.listView.current.scrollTop = scrollTop;
-    console.log(this.listView.current.scrollTop);
   }
 
   scrollToBottom = () => {

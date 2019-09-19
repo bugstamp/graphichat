@@ -47,7 +47,7 @@ const MessageInner = styled.div`
   }}
 `;
 
-const AvatarWrapper = styled(Hidden)`
+const AvatarWrapper = styled(({ isMyMessage, ...rest }) => (<Hidden {...rest} />))`
   && {
   ${(props) => {
     const { isMyMessage } = props;

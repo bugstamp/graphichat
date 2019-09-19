@@ -11,6 +11,10 @@ import { userAvatarProps } from '../../../propTypes';
 class ChatMessages extends Component {
   list = createRef();
 
+  componentDidMount() {
+    this.list.current.scrollToBottom();
+  }
+
   getSnapshotBeforeUpdate(nextProps) {
     const { chatId, adding, messages } = this.props;
 
@@ -97,7 +101,7 @@ class ChatMessages extends Component {
         loading={loading}
         data={messages}
         fetchMore={getMessages}
-        fetchMoreThreshold={4}
+        fetchMoreThreshold={1}
         startFrom="bottom"
         rowRenderer={this.rowRenderer}
         onResize={this.onResize}

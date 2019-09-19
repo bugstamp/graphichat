@@ -116,14 +116,11 @@ class List extends Component {
 
     if (!isEqual(nextProps.data.length, data.length) && lazyLoad) {
       const scrollTop = this.getScrollTop();
+      const { scrollHeight } = this.listScrollable.current;
       console.log('scrollTop');
       console.log(scrollTop);
 
-      if (scrollTop < 30) {
-        const { scrollHeight } = this.listScrollable.current;
-
-        result.prevScrollHeight = scrollHeight + scrollTop;
-      }
+      result.prevScrollHeight = scrollHeight - scrollTop;
     }
     return result;
   }
@@ -169,6 +166,7 @@ class List extends Component {
 
   setScrollTop = (scrollTop) => {
     this.listView.current.scrollTop = scrollTop;
+    console.log(this.listView.current.scrollTop);
   }
 
   scrollToBottom = () => {
@@ -359,6 +357,7 @@ class List extends Component {
         <InView
           key={id}
           onChange={this._onObserverChange}
+          rootMargin="80px"
           triggerOnce
         >
           {({ ref }) => rowRenderer({ ref, ...rowProps })}
@@ -471,7 +470,7 @@ List.defaultProps = {
   data: [],
   lazyLoad: false,
   fetchMore: null,
-  fetchMoreThreshold: 10,
+  fetchMoreThreshold: 5,
   startFrom: 'top',
   onResize: null,
   onScroll: null,

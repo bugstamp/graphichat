@@ -142,7 +142,6 @@ class Chat extends Component {
           messages={messages}
           optimisticIds={optimisticIds}
           getMessages={this.getMessages}
-          fetchThreshold={2}
           myAvatar={myAvatar}
           contactAvatar={contactAvatar}
         />

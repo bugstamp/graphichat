@@ -347,13 +347,18 @@ class List extends Component {
       rowData,
     };
     const { id } = rowData;
+    const view = this.listView.current || {};
+    const viewHeight = view.offsetHeight || 0;
+    const verticalMargin = viewHeight * 0.25;
+    const rootMargin = `${verticalMargin}px 0px ${verticalMargin}px 0px`;
 
     if (lazyLoad) {
       return (
         <InView
           key={id}
+          root={this.listView.current}
           onChange={this._onObserverChange}
-          rootMargin="80px"
+          rootMargin={rootMargin}
           triggerOnce
         >
           {({ ref }) => rowRenderer({ ref, ...rowProps })}

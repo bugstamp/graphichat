@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = {
+const paths = {
   root: path.resolve(__dirname),
   modules: path.resolve(__dirname, 'node_modules'),
   env: path.resolve(__dirname, '/.env'),
@@ -17,3 +17,5 @@ module.exports = {
   html: path.resolve(__dirname, 'build/client/index.html'),
   publicSw: path.resolve(__dirname, 'build/client/service-worker.js'),
 };
+
+module.exports = paths;

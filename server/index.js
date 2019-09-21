@@ -8,11 +8,11 @@ import { formatError } from 'apollo-errors';
 import cors from 'cors';
 
 import './dotenv';
-import paths from '../paths';
-
 import middlewares from './middlewares';
 import routers from './routers';
 import appModule from './modules/appModule';
+
+const paths = require(`${process.env.PWD}/paths`);
 
 const { tokenVerification } = middlewares;
 const { verification } = routers;

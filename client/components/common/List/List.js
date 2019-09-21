@@ -174,7 +174,7 @@ class List extends Component {
     }
   }
 
-  _setScrollbar = (scrollbar) => {
+  _setScrollbar = (scrollbar = true) => {
     const { scrollbarDragging, scrollbarPresence } = this.state;
 
     if (scrollbarPresence && !scrollbarDragging) {
@@ -249,8 +249,13 @@ class List extends Component {
   }
 
   _onScroll = () => {
+    const { scrollbar } = this.state;
     const { onScroll } = this.props;
     let timer;
+
+    if (!scrollbar) {
+      this._setScrollbar();
+    }
 
     clearTimeout(timer);
     this._enablePointerEvents();
@@ -349,7 +354,7 @@ class List extends Component {
     const { id } = rowData;
     const view = this.listView.current || {};
     const viewHeight = view.offsetHeight || 0;
-    const verticalMargin = viewHeight * 0.25;
+    const verticalMargin = viewHeight * 0.5;
     const rootMargin = `${verticalMargin}px 0px ${verticalMargin}px 0px`;
 
     if (lazyLoad) {
@@ -370,7 +375,7 @@ class List extends Component {
 
   onMouseEnter = (e) => {
     e.preventDefault();
-    this._setScrollbar(true);
+    this._setScrollbar();
   }
 
   onMouseLeave = (e) => {
@@ -383,7 +388,7 @@ class List extends Component {
     const { scrollbar } = this.state;
 
     if (!scrollbar) {
-      this._setScrollbar(true);
+      this._setScrollbar();
     }
   }
 
@@ -406,6 +411,7 @@ class List extends Component {
         onMouseLeave={this.onMouseLeave}
         onMouseOver={this.onMouseOver}
         onFocus={this.onMouseOver}
+        onMouseMove={this.onMouseEnter}
       >
         <ListScrollbar
           ref={this.scrollbarThumb}

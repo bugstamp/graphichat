@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "webpack-dev-server --env development",
     "prod": "webpack --env production",
-    "server": "nodemon --exec babel-node -- ./server/src/index.js",
-    "build-server": "rm -rf ./server/build/* && babel ./server/src --out-dir ./server/build",
+    "server": "nodemon --exec babel-node -- ./server/index.js",
+    "build-server": "rm -rf ./build/server/* && babel ./server --out-dir ./build/server",
     "build": "npm run prod && npm run build-server",
-    "start": "node ./server/build/index.js",
+    "start": "node ./build/server/index.js",
     "test": "jest",
     "heroku-postbuild": "npm run build --prod"
   },

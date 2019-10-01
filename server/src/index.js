@@ -11,8 +11,7 @@ import './dotenv';
 import middlewares from './middlewares';
 import routers from './routers';
 import appModule from './modules/appModule';
-
-const paths = require(`${process.env.PWD}/paths`);
+import paths from '../../paths';
 
 const { tokenVerification } = middlewares;
 const { verification } = routers;
@@ -36,7 +35,7 @@ const startServer = ({ schema, subscriptions }) => {
     exposedHeaders: ['x-token', 'x-refresh-token'],
   };
 
-  app.use(express.static(paths.public));
+  app.use(express.static(paths.client.public));
   app.use(cors(corsOptions));
   app.use(tokenVerification);
   app.use(verification);
@@ -44,10 +43,10 @@ const startServer = ({ schema, subscriptions }) => {
   apolloServer.applyMiddleware({ app, path: apolloPath });
 
   app.get('/service-worker.js', (req, res) => {
-    res.sendFile(paths.publicSw);
+    res.sendFile(paths.client.publicSw);
   });
   app.get('*', (req, res) => {
-    res.sendFile(paths.html);
+    res.sendFile(paths.client.html);
   });
 
   const ws = createServer(app);

@@ -30,5 +30,6 @@ module.exports = (api) => {
   return {
     presets,
     plugins,
+    exclude: ['node_modules', 'build'],
   };
 };

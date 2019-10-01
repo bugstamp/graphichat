@@ -1,8 +1,8 @@
-const paths = require('../paths');
+const paths = require('../../paths');
 
 module.exports = ({ host, port, proxy } = {}) => ({
   devServer: {
-    contentBase: paths.public,
+    contentBase: paths.client.public,
     inline: true,
     host,
     port,

@@ -6,7 +6,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 const VisualizerPlugin = require('webpack-visualizer-plugin');
 const Dotenv = require('dotenv-webpack');
 
-const paths = require('../paths');
+const paths = require('../../paths');
 
 module.exports = merge([
   {
@@ -42,13 +42,13 @@ module.exports = merge([
         path: './.env.prod',
         expand: true,
       }),
-      new CleanWebpackPlugin([`${paths.public}/*`], {
-        root: paths.root,
+      new CleanWebpackPlugin([`${paths.client.public}/*`], {
+        root: paths.client.root,
         exclude: [],
       }),
       new webpack.HashedModuleIdsPlugin(),
       new InjectManifest({
-        swSrc: paths.srcSw,
+        swSrc: paths.client.srcSw,
         swDest: 'service-worker.js',
         globDirectory: 'build/',
         globPatterns: [

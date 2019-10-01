@@ -1,0 +1,44 @@
+{
+  "name": "graphichat_server",
+  "version": "1.0.0",
+  "author": "Kirill Grischenko",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --exec babel-node -- ./src/index.js --config-file=../babel.config.js --ignore=node_modules",
+    "pre-build": "rm -rf ./build/*",
+    "build": "npm run pre-build && babel ./src --out-dir ./build --config-file=../babel.config.js",
+    "start": "node ./build/index.js"
+  },
+  "dependencies": {
+    "@graphql-modules/core": "^0.7.7",
+    "@graphql-modules/di": "^0.7.7",
+    "graphql-scalars": "^1.0.1",
+    "apollo-errors": "^1.9.0",
+    "apollo-server-express": "^2.6.3",
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "dotenv-expand": "^4.2.0",
+    "email-validator": "^2.0.4",
+    "express": "^4.16.4",
+    "express-graphql": "^0.7.1",
+    "graphql": "^14.3.1",
+    "graphql-subscriptions": "^1.1.0",
+    "jsonwebtoken": "^8.4.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2",
+    "mongoose": "^5.4.0",
+    "nodemailer": "^5.0.0",
+    "reflect-metadata": "^0.1.13",
+    "sharp": "^0.22.1",
+    "subscriptions-transport-ws": "^0.9.16"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "nodemon": "^1.18.6"
+  }
+}

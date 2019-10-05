@@ -1,12 +1,12 @@
 {
   "name": "graphichat_server",
   "version": "1.0.0",
-  "author": "Kirill Grischenko",
   "license": "MIT",
+  "author": "Kirill Grischenko",
   "scripts": {
+    "build": "npm run pre-build && babel ./src --out-dir ./build --config-file=../babel.config.js",
     "dev": "nodemon --exec babel-node -- ./src/index.js --config-file=../babel.config.js --ignore=node_modules",
     "pre-build": "rm -rf ./build/*",
-    "build": "npm run pre-build && babel ./src --out-dir ./build --config-file=../babel.config.js",
     "start": "node ./build/index.js"
   },
   "dependencies": {

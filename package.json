@@ -5,6 +5,7 @@
   "author": "Kirill Grischenko",
   "license": "MIT",
   "scripts": {
+    "sort-packages": "npx sort-package-json client/package.json server/package.json",
     "build-client": "cd client && npm run build",
     "build-server": "cd server && npm run build",
     "build-all": "npm run build-client && npm run build-server",
@@ -12,6 +13,10 @@
     "test": "jest",
     "heroku-postbuild": "npm run build-all --prod"
   },
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "devDependencies": {
     "eslint": "^5.8.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -21,5 +26,7 @@
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-styled-components": "^0.0.0"
   },
-  "workspaces": ["client", "server"]
+  "dependencies": {
+    "sort-package-json": "^1.22.1"
+  }
 }

@@ -1,0 +1,17 @@
+# version: '3.7'
+#
+# services:
+#   api:
+#     container_name: graphichat-api
+#     build: ./
+#     command: npm run server
+#     working_dir: /usr/src/graphichat
+#     ports:
+#       - '3000:3000'
+#     volumes:
+#       - ./:/usr/src/graphichat
+#   db:
+#     container_name: graphichat-db
+#     image: mongo
+#     ports:
+#       - '27017:27017'

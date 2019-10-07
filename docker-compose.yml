@@ -1,17 +1,37 @@
-# version: '3.7'
-#
-# services:
-#   api:
-#     container_name: graphichat-api
-#     build: ./
-#     command: npm run server
-#     working_dir: /usr/src/graphichat
-#     ports:
-#       - '3000:3000'
-#     volumes:
-#       - ./:/usr/src/graphichat
-#   db:
-#     container_name: graphichat-db
-#     image: mongo
-#     ports:
-#       - '27017:27017'
+version: '3.7'
+
+services:
+  server:
+    container_name: graphichat_server
+    build: ./
+    command: npm run dev
+    working_dir: /graphichat/server
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./server:/graphichat/server
+    depends_on:
+      - mongo
+    networks:
+      - appnetwork
+  client:
+    container_name: graphichat_client
+    build: ./
+    command: npm run build
+    working_dir: /graphichat/client
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./client:/graphichat/client
+    networks:
+      - appnetwork
+  mongo:
+    container_name: graphichat_mongo
+    image: mongo
+    ports:
+      - '27017:27017'
+    networks:
+      - appnetwork
+networks:
+  appnetwork:
+    driver: bridge

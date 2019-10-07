@@ -1,6 +1,6 @@
 # GraphiChat
 
-Simple chat app for learning/testing GraphQL API and other features with the following stack:
+Simple chat app for learning/testing GraphQL API and some other features with the following stack:
 
 #### Server:
 - Node/Express
@@ -18,5 +18,9 @@ Simple chat app for learning/testing GraphQL API and other features with the fol
 #### Testing:
 - Jest
 - Enzyme
+#### Other features:
+- Social auth
+- List with custom scrollbar implementation and lazy loading
+- Docker "containerization"
 
 [Open site](https://graphichat.herokuapp.com/)

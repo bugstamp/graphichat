@@ -6,7 +6,7 @@ const devServer = require('./devServer');
 
 module.exports = merge([
   devServer({
-    host: 'localhost',
+    host: '0.0.0.0',
     port: '8000',
     proxy: {
       '/api/**': 'http://localhost:3000',

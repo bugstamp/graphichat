@@ -167,7 +167,9 @@ class SignUp extends Component {
 }
 
 SignUp.propTypes = {
-  location: PropTypes.objectOf(PropTypes.any).isRequired,
+  location: PropTypes.shape({
+    search: PropTypes.string,
+  }).isRequired,
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   toggleNotification: PropTypes.func.isRequired,
 };

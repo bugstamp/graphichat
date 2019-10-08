@@ -40,6 +40,9 @@
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "eslint": "^5.8.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-config-airbnb": "^17.1.0",
     "nodemon": "^1.18.6"
   }
 }

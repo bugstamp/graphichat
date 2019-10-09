@@ -33,7 +33,7 @@ module.exports = merge([
             {
               loader: 'babel-loader',
               options: {
-                rootMode: 'upward',
+                rootMode: 'upward-optional',
               },
             },
             'stylelint-custom-processor-loader',

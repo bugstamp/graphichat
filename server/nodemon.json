@@ -1,11 +1,10 @@
 {
   "watch": [
-    "server/",
-    "public/",
+    "src/",
     ".env"
   ],
   "ignore": [
-    "server/build/*"
+    "build/*"
   ],
   "ext": "js,json,gql,graphql",
   "env": {

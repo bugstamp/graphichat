@@ -6,6 +6,8 @@ services:
     build: ./
     command: npm run dev
     working_dir: /graphichat/server
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/graphichat
     ports:
       - '3000:3000'
     volumes:
@@ -17,8 +19,10 @@ services:
   client:
     container_name: graphichat_client
     build: ./
-    command: npm run build
+    command: npm run dev
     working_dir: /graphichat/client
+    environment:
+      - DEV_HOST=0.0.0.0
     ports:
       - '8000:8000'
     volumes:

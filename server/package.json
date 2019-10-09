@@ -4,8 +4,8 @@
   "license": "MIT",
   "author": "Kirill Grischenko",
   "scripts": {
-    "build": "npm run pre-build && babel ./src --out-dir ./build --config-file=../babel.config.js",
-    "dev": "nodemon --exec babel-node -- ./src/index.js --config-file=../babel.config.js --ignore=node_modules",
+    "build": "npm run pre-build && babel ./src --out-dir ./build --root-mode=upward-optional",
+    "dev": "nodemon --exec babel-node -- ./src/index.js --root-mode=upward-optional --ignore=node_modules",
     "pre-build": "rm -rf ./build/*",
     "start": "node ./build/index.js"
   },

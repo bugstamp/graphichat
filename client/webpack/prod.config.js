@@ -39,7 +39,7 @@ module.exports = merge([
 
     plugins: [
       new Dotenv({
-        path: './.env.client.prod',
+        path: './.env.prod',
         expand: true,
       }),
       new CleanWebpackPlugin([`${paths.client.public}/*`], {

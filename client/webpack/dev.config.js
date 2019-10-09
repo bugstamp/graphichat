@@ -6,16 +6,16 @@ const devServer = require('./devServer');
 
 module.exports = merge([
   devServer({
-    host: '0.0.0.0',
-    port: '8000',
+    host: process.env.DEV_HOST || 'localhost',
+    port: process.env.DEV_PORT || '8000',
     proxy: {
-      '/api/**': 'http://localhost:3000',
+      '/api/**': process.env.API || 'http://localhost:3000',
     },
   }),
   {
     plugins: [
       new Dotenv({
-        path: '../.env',
+        path: process.env.DOTENV_PATH || '../.env',
         expand: true,
       }),
       new webpack.HotModuleReplacementPlugin(),

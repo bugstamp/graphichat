@@ -8,10 +8,6 @@ ObjectId.prototype.valueOf = function () {
   return this.toString();
 };
 
-const uri = process.env.NODE_ENV === 'production'
-  ? process.env.MONGOLAB_URI
-  : process.env.MONGO_URI;
-
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -21,7 +17,7 @@ const options = {
 
 export const connectToDb = async () => {
   try {
-    await mongoose.connect(uri, options);
+    await mongoose.connect(process.env.MONGO_URI, options);
   } catch (e) {
     throw e;
   }

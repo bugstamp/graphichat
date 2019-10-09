@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import path from 'path';
 import express from 'express';
 import { createServer } from 'http';
 import { ApolloServer } from 'apollo-server-express';
@@ -11,11 +12,11 @@ import './dotenv';
 import middlewares from './middlewares';
 import routers from './routers';
 import appModule from './modules/appModule';
-import paths from '../../paths';
 
 const { tokenVerification } = middlewares;
 const { verification } = routers;
 
+const publicPath = process.env.PUBLIC_PATH;
 const port = process.env.PORT;
 const apolloPath = process.env.APOLLO_PATH;
 const apolloUrl = process.env.APOLLO_URL;
@@ -35,7 +36,7 @@ const startServer = ({ schema, subscriptions }) => {
     exposedHeaders: ['x-token', 'x-refresh-token'],
   };
 
-  app.use(express.static(paths.client.public));
+  app.use(express.static(publicPath));
   app.use(cors(corsOptions));
   app.use(tokenVerification);
   app.use(verification);
@@ -43,10 +44,10 @@ const startServer = ({ schema, subscriptions }) => {
   apolloServer.applyMiddleware({ app, path: apolloPath });
 
   app.get('/service-worker.js', (req, res) => {
-    res.sendFile(paths.client.publicSw);
+    res.sendFile(publicPath);
   });
   app.get('*', (req, res) => {
-    res.sendFile(paths.client.html);
+    res.sendFile(path.resolve(publicPath, 'service-worker.js'));
   });
 
   const ws = createServer(app);

@@ -1,6 +1,7 @@
 {
   "watch": [
     "src/",
+    "node_modules/",
     ".env"
   ],
   "ignore": [

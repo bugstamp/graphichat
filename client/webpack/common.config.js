@@ -2,7 +2,7 @@ const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const paths = require('../../paths');
+const paths = require('./paths');
 
 module.exports = merge([
   {
@@ -10,14 +10,14 @@ module.exports = merge([
       app: [
         'core-js',
         'regenerator-runtime/runtime',
-        paths.client.index,
+        paths.index,
       ],
     },
 
     output: {
       filename: '[name].[hash].js',
       chunkFilename: '[name].[hash].js',
-      path: paths.client.public,
+      path: paths.public,
       publicPath: '/',
     },
 
@@ -26,8 +26,8 @@ module.exports = merge([
         {
           test: /\.js(x)?$/,
           exclude: [
-            paths.client.modules,
-            paths.client.public,
+            paths.modules,
+            paths.public,
           ],
           use: [
             {
@@ -59,33 +59,33 @@ module.exports = merge([
         },
         {
           test: /\.(png|jpeg|jpg|gif)$/,
-          include: paths.client.assets,
+          include: paths.assets,
           use: {
             loader: 'file-loader',
             options: {
-              context: paths.client.images,
+              context: paths.images,
               name: 'assets/images/[path][name].[ext]',
             },
           },
         },
         {
           test: /\.(svg|eot|ttf|otf|woff|woff2)$/,
-          include: paths.client.assets,
+          include: paths.assets,
           use: {
             loader: 'file-loader',
             options: {
-              context: paths.client.fonts,
+              context: paths.fonts,
               name: 'assets/fonts/[path][name].[ext]',
             },
           },
         },
         {
           test: /\.(svg|eot|ttf|otf|woff|woff2)$/,
-          include: paths.client.modules,
+          include: paths.modules,
           use: {
             loader: 'file-loader',
             options: {
-              context: paths.client.modules,
+              context: paths.modules,
               name: 'assets/fonts/[name].[ext]',
             },
           },
@@ -95,8 +95,8 @@ module.exports = merge([
 
     plugins: [
       new HtmlWebpackPlugin({
-        template: paths.client.template,
-        favicon: paths.client.favicon,
+        template: paths.template,
+        favicon: paths.favicon,
         inject: 'body',
       }),
       new MiniCssExtractPlugin({

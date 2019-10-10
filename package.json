@@ -6,12 +6,12 @@
   "license": "MIT",
   "scripts": {
     "sort-packages": "npx sort-package-json client/package.json server/package.json",
-    "build-client": "cd client && npm run build",
-    "build-server": "cd server && npm run build",
-    "build-all": "npm run build-client && npm run build-server",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "build:all": "npm run build:client && npm run build:server",
     "start": "cd server && npm run start",
     "test": "jest",
-    "heroku-postbuild": "npm run build-all --prod"
+    "heroku-postbuild": "npm run build:all --prod"
   },
   "workspaces": [
     "client",

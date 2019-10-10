@@ -20,7 +20,7 @@ Simple chat app for learning/testing GraphQL API and some other features with th
 - Enzyme
 #### Other features:
 - Social auth
-- List with custom scrollbar implementation and lazy loading
-- Docker "containerization"
+- List with lazy loading and custom scrollbar implementation
+- Docker
 
 [Open site](https://graphichat.herokuapp.com/)

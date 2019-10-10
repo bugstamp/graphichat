@@ -47,7 +47,7 @@ const startServer = ({ schema, subscriptions }) => {
     res.sendFile(path.resolve(publicPath, 'service-worker.js'));
   });
   app.get('*', (req, res) => {
-    res.sendFile(publicPath);
+    res.sendFile(path.resolve(publicPath, 'index.html'));
   });
 
   const ws = createServer(app);

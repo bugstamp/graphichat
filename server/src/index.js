@@ -44,10 +44,10 @@ const startServer = ({ schema, subscriptions }) => {
   apolloServer.applyMiddleware({ app, path: apolloPath });
 
   app.get('/service-worker.js', (req, res) => {
-    res.sendFile(publicPath);
+    res.sendFile(path.resolve(publicPath, 'service-worker.js'));
   });
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(publicPath, 'service-worker.js'));
+    res.sendFile(publicPath);
   });
 
   const ws = createServer(app);

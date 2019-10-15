@@ -1,6 +1,7 @@
 .git
+.gitignore
+Dockerfile
+docker-compose.yml
+.dockerignore
 node_modules
-**/node_modules
-build
-yarn.lock
 *.log

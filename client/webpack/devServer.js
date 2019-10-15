@@ -11,5 +11,9 @@ module.exports = ({ host, port, proxy } = {}) => ({
     historyApiFallback: true,
     open: false,
     proxy,
+    watchOptions: {
+      aggregateTimeout: 500,
+      poll: process.env.WEBPACK_DEV_SERVER_POOL || false,
+    },
   },
 });

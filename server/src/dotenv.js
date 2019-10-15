@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
-const dotenvConfig = dotenv.config({ path: '../.env' });
+const path = process.env.DOTENV_PATH || '../.env';
+
+const dotenvConfig = dotenv.config({ path });
 dotenvExpand(dotenvConfig);

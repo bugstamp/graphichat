@@ -2,35 +2,48 @@ version: '3.7'
 
 services:
   server:
-    container_name: graphichat_server
-    build: ./
-    command: npm run dev
-    working_dir: /graphichat/server
+    container_name: graphichat-server
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    working_dir: /graphichat-server
+    command: yarn run dev
+    env_file:
+      - ./.env
     environment:
-      - MONGO_URI=mongodb://mongo:27017/graphichat
+      - MONGO_URI=mongodb://mongodb:27017/graphichat
     ports:
       - '3000:3000'
     volumes:
-      - ./server:/graphichat/server
+      - ./server/:/graphichat-server/
+      # ignore node_modules in the container
+      - /graphichat-server/node_modules
     depends_on:
-      - mongo
+      - mongodb
     networks:
       - appnetwork
   client:
-    container_name: graphichat_client
-    build: ./
-    command: npm run dev
-    working_dir: /graphichat/client
+    container_name: graphichat-client
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    command: yarn run dev
+    working_dir: /graphichat-client
     environment:
+      - WEBPACK_DEV_SERVER_POOL=1000
+      - DOTENV_PATH=./.env
       - DEV_HOST=0.0.0.0
     ports:
       - '8000:8000'
     volumes:
-      - ./client:/graphichat/client
+      - ./client/:/graphichat-client/
+      - ./.env/:/graphichat-client/.env
+      # ignore node_modules in the container
+      - /graphichat-client/node_modules
     networks:
       - appnetwork
-  mongo:
-    container_name: graphichat_mongo
+  mongodb:
+    container_name: graphichat-mongodb
     image: mongo
     ports:
       - '27017:27017'

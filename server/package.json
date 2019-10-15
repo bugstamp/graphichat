@@ -5,8 +5,8 @@
   "author": "Kirill Grischenko",
   "scripts": {
     "pre-build": "rm -rf ./build/*",
-    "build": "npm run pre-build && babel ./src --out-dir ./build --root-mode=upward-optional",
-    "dev": "nodemon --exec babel-node -- ./src/index.js --root-mode=upward-optional --ignore=node_modules",
+    "build": "npm run pre-build && babel ./src --out-dir ./build",
+    "dev": "nodemon -L --exec babel-node -- ./src/index.js",
     "start": "node ./build/index.js"
   },
   "dependencies": {
@@ -40,9 +40,16 @@
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-syntax-export-default-from": "^7.2.0",
+    "babel-plugin-lodash": "^3.3.4",
     "eslint": "^5.8.0",
-    "eslint-plugin-import": "^2.14.0",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
     "nodemon": "^1.18.6"
   }
 }

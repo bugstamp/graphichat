@@ -1,4 +1,6 @@
 .git
 node_modules
-yarn.lock
+**/node_modules
 build
+yarn.lock
+*.log

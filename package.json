@@ -5,18 +5,16 @@
   "author": "Kirill Grischenko",
   "license": "MIT",
   "scripts": {
+    "install-all-dependencies": "yarn run install && cd client && yarn run install && cd ../server && yarn run install",
+    "remove-all-dependencies": "rm -rf node_modules && cd client && rm -rf node_modules && cd ../server && rm -rf node_modules",
     "sort-packages": "npx sort-package-json client/package.json server/package.json",
-    "build:client": "cd client && npm run build",
-    "build:server": "cd server && npm run build",
-    "build:all": "npm run build:client && npm run build:server",
-    "start": "cd server && npm run start",
+    "build:client": "cd client && yarn run build",
+    "build:server": "cd server && yarn run build",
+    "build:all": "yarn run build:client && yarn run build:server",
+    "start": "cd server && yarn run start",
     "test": "jest",
-    "heroku-postbuild": "npm run build:all --prod"
+    "heroku-postbuild": "yarn run build:all --prod"
   },
-  "workspaces": [
-    "client",
-    "server"
-  ],
   "dependencies": {
     "sort-package-json": "^1.22.1"
   }

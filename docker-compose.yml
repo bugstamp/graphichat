@@ -6,41 +6,36 @@ services:
     build:
       context: .
       dockerfile: ./server/Dockerfile
-    working_dir: /graphichat-server/server
-    command: /graphichat-server/docker-server-entrypoint.sh
-    env_file:
-      - ./.env
+    working_dir: /graphichat/server
+    command: /graphichat/server-entrypoint.sh
     environment:
       - MONGO_URI=mongodb://mongodb:27017/graphichat
     ports:
       - '3000:3000'
     volumes:
-      - ./.env:/graphichat-server/.env
-      - ./server:/graphichat-server/server
+      - ./.env:/graphichat/.env
+      - ./server:/graphichat/server
     depends_on:
       - mongodb
     networks:
       - appnetwork
-  # client:
-  #   container_name: graphichat-client
-  #   build:
-  #     context: .
-  #     dockerfile: ./client/Dockerfile
-  #   command: yarn run dev
-  #   working_dir: /graphichat-client
-  #   environment:
-  #     - WEBPACK_DEV_SERVER_POOL=1000
-  #     - DOTENV_PATH=./.env
-  #     - DEV_HOST=0.0.0.0
-  #   ports:
-  #     - '8000:8000'
-  #   volumes:
-  #     - ./client/:/graphichat-client/
-  #     - ./.env/:/graphichat-client/.env
-  #     # ignore node_modules in the container
-  #     - /graphichat-client/node_modules
-  #   networks:
-  #     - appnetwork
+  client:
+    container_name: graphichat-client
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    command: /graphichat/client-entrypoint.sh
+    working_dir: /graphichat/client
+    environment:
+      - WEBPACK_DEV_SERVER_POOL=1000
+      - DEV_HOST=0.0.0.0
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./.env:/graphichat/.env
+      - ./client/:/graphichat/client
+    networks:
+      - appnetwork
   mongodb:
     container_name: graphichat-mongodb
     image: mongo

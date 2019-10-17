@@ -4,9 +4,9 @@
   "license": "MIT",
   "author": "Kirill Grischenko",
   "scripts": {
-    "remove-modules": "rm -rf ./node_modules",
-    "pre-build": "rm -rf ./build/*",
-    "build": "npm run pre-build && babel ./src --out-dir ./build",
+    "remove:modules": "rm -rf ./node_modules",
+    "pre:build": "rm -rf ./build/*",
+    "build": "npm run pre:build && babel ./src --out-dir ./build",
     "dev": "nodemon -L --exec babel-node -- ./src/index.js",
     "start": "node ./build/index.js"
   },
@@ -15,6 +15,7 @@
     "@graphql-modules/di": "^0.7.7",
     "apollo-errors": "^1.9.0",
     "apollo-server-express": "^2.6.3",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
     "core-js": "3.1.4",
     "cors": "^2.8.5",
@@ -32,7 +33,7 @@
     "mongoose": "^5.4.0",
     "nodemailer": "^5.0.0",
     "reflect-metadata": "^0.1.13",
-    "sharp": "^0.22.1",
+    "sharp": "^0.23.1",
     "subscriptions-transport-ws": "^0.9.16"
   },
   "devDependencies": {
@@ -44,12 +45,11 @@
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
     "@babel/plugin-syntax-export-default-from": "^7.2.0",
     "@babel/preset-env": "^7.4.5",
+    "babel-eslint": "^10.0.3",
     "babel-plugin-lodash": "^3.3.4",
     "eslint": "^5.8.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "2.18.2",
     "nodemon": "^1.18.6"
   }
 }

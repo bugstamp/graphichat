@@ -1,24 +1,23 @@
 FROM node:10.14.2
 
-RUN apt-get update -y
-RUN apt-get install -y bash
-RUN apt-get install -y dos2unix
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install -y bash dos2unix build-essential python rsync
 
-ARG APP_DIR=graphichat-server
+ARG APP_DIR=graphichat
 
 RUN mkdir -p ${APP_DIR}
 WORKDIR ${APP_DIR}
 
 COPY ./.browserslistrc ./
-COPY ./scripts/docker-server-entrypoint.sh ./
+COPY ./scripts/server-entrypoint.sh ./
 
-RUN dos2unix ./docker-server-entrypoint.sh
+RUN dos2unix ./server-entrypoint.sh
 
 RUN mkdir -p /${APP_DIR}/cache_modules
 WORKDIR /${APP_DIR}/cache_modules
 
 COPY ./server/package.json ./
-COPY ./server/yarn.lock ./
 
 RUN yarn install
 

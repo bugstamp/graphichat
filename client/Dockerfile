@@ -1,8 +1,6 @@
 FROM node:10.14.2
 
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install -y bash dos2unix rsync
+RUN apt-get update && apt-get install -y bash dos2unix rsync
 
 ARG APP_DIR=graphichat
 
@@ -24,4 +22,4 @@ RUN yarn install
 RUN mkdir -p /${APP_DIR}/client
 WORKDIR /${APP_DIR}/client
 
-COPY ./client/ ./
+COPY ./client/. ./

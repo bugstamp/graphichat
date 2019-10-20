@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import createReactContext from 'create-react-context';
+import React, { Component, createContext } from 'react';
 
-export const AppContext = createReactContext({});
+export const AppContext = createContext({});
 
 class AppProvider extends Component {
   state = {}

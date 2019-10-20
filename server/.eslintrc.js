@@ -8,4 +8,7 @@
     "airbnb-base/legacy",
   ],
   "parser": "babel-eslint",
+  "rules": {
+    "linebreak-style": ["error", "windows"],
+  },
 };

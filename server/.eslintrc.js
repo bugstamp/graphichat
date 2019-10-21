@@ -10,5 +10,8 @@
   "parser": "babel-eslint",
   "rules": {
     "linebreak-style": ["error", "windows"],
+    "comma-dangle": ["error", {
+      "objects": "always-multiline",
+    }],
   },
 };

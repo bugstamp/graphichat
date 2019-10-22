@@ -5,8 +5,8 @@
   "author": "Kirill Grischenko",
   "scripts": {
     "remove:modules": "rm -rf ./node_modules",
-    "pre:build": "rm -rf ./build/*",
-    "build": "npm run pre:build && babel ./src --out-dir ./build",
+    "build:pre": "rm -rf ./build/*",
+    "build": "npm run build:pre && babel ./src --out-dir ./build",
     "dev": "nodemon -L --exec babel-node -- ./src/index.js",
     "start": "node ./build/index.js"
   },

@@ -13,14 +13,12 @@ module.exports = merge([
         paths.index,
       ],
     },
-
     output: {
       filename: '[name].[hash].js',
       chunkFilename: '[name].[hash].js',
       path: paths.public,
       publicPath: '/',
     },
-
     module: {
       rules: [
         {
@@ -39,7 +37,7 @@ module.exports = merge([
         },
         {
           test: /\.(graphql|gql)$/,
-          exclude: /node_modules/,
+          exclude: [paths.modules],
           loader: 'graphql-tag/loader',
         },
         {
@@ -90,7 +88,6 @@ module.exports = merge([
         },
       ],
     },
-
     plugins: [
       new HtmlWebpackPlugin({
         template: paths.template,
@@ -101,7 +98,6 @@ module.exports = merge([
         filename: 'styles.css',
       }),
     ],
-
     resolve: {
       alias: {
         'react-dom': '@hot-loader/react-dom',

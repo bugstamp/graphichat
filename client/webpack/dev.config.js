@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const merge = require('webpack-merge');
 const Dotenv = require('dotenv-webpack');
 
@@ -18,9 +17,7 @@ module.exports = merge([
         path: process.env.DOTENV_PATH || '../.env',
         expand: true,
       }),
-      new webpack.HotModuleReplacementPlugin(),
     ],
-
     devtool: 'cheap-module-eval-source-map',
   },
 ]);

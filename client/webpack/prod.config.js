@@ -11,6 +11,7 @@ const paths = require('./paths');
 module.exports = merge([
   {
     optimization: {
+      namedChunks: true,
       runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {
@@ -32,11 +33,10 @@ module.exports = merge([
             },
             safari10: true,
           },
-          exclude: /\/node_modules/,
+          exclude: [paths.modules],
         }),
       ],
     },
-
     plugins: [
       new Dotenv({
         path: './.env.prod',
@@ -57,7 +57,6 @@ module.exports = merge([
       }),
       new VisualizerPlugin(),
     ],
-
     devtool: 'source-map',
   },
 ]);

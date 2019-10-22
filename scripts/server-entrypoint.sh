@@ -1,4 +1,4 @@
 #!/bin/bash
 
-rsync -ar /graphichat/cache_modules/node_modules/. /graphichat/server/node_modules/
+rsync -a --progress /graphichat/cache_modules/. /graphichat/server/
 exec yarn run dev

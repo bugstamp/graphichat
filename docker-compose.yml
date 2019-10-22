@@ -14,7 +14,7 @@ services:
       - '3000:3000'
     volumes:
       - ./.env:/graphichat/.env
-      - ./server:/graphichat/server:cached
+      - ./server:/graphichat/server
     depends_on:
       - mongodb
     networks:
@@ -33,7 +33,7 @@ services:
       - '8000:8000'
     volumes:
       - ./.env:/graphichat/.env
-      - ./client:/graphichat/client:cached
+      - ./client:/graphichat/client
     networks:
       - appnetwork
   mongodb:

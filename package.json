@@ -9,7 +9,6 @@
     "yarn": "1.17.3"
   },
   "scripts": {
-    "deploy": "cd scripts && ./git-deploy-master.sh",
     "sort-packages": "npx sort-package-json client/package.json server/package.json",
     "install:dependencies": "yarn install && cd client && yarn install && cd ../server && yarn install",
     "remove:dependencies": "rm -rf node_modules && cd client && rm -rf node_modules && cd ../server && rm -rf node_modules",
@@ -17,7 +16,8 @@
     "build:server": "cd server && yarn run build",
     "build:all": "yarn run build:client && yarn run build:server",
     "start": "cd server && yarn run start",
-    "heroku-postbuild": "yarn run install:dependencies && yarn run build:all"
+    "heroku-postbuild": "yarn run install:dependencies && yarn run build:all",
+    "deploy": "cd scripts && ./git-deploy-master.sh"
   },
   "dependencies": {
     "sort-package-json": "^1.22.1"

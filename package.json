@@ -9,6 +9,7 @@
     "yarn": "1.17.3"
   },
   "scripts": {
+    "deploy": "cd scripts && ./git-deploy-master.sh",
     "sort-packages": "npx sort-package-json client/package.json server/package.json",
     "install:dependencies": "yarn install && cd client && yarn install && cd ../server && yarn install",
     "remove:dependencies": "rm -rf node_modules && cd client && rm -rf node_modules && cd ../server && rm -rf node_modules",

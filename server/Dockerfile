@@ -7,6 +7,7 @@ ARG APP_DIR=graphichat
 RUN mkdir -p ${APP_DIR}
 WORKDIR ${APP_DIR}
 
+COPY ./.env ./
 COPY ./.browserslistrc ./
 COPY ./scripts/server-entrypoint.sh ./
 

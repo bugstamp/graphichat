@@ -13,7 +13,6 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./.env:/graphichat/.env
       - ./server:/graphichat/server
     depends_on:
       - mongodb
@@ -32,7 +31,6 @@ services:
     ports:
       - '8000:8000'
     volumes:
-      - ./.env:/graphichat/.env
       - ./client:/graphichat/client
     networks:
       - appnetwork

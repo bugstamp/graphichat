@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "author": "Kirill Grischenko",
   "license": "MIT",
+  "engines": {
+    "node": "10.14.2",
+    "yarn": "1.17.3"
+  },
   "scripts": {
     "sort-packages": "npx sort-package-json client/package.json server/package.json",
     "install:dependencies": "yarn run install && cd client && yarn run install && cd ../server && yarn run install",

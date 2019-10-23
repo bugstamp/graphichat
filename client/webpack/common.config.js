@@ -23,15 +23,9 @@ module.exports = merge([
       rules: [
         {
           test: /\.js(x)?$/,
-          exclude: [
-            paths.modules,
-            paths.public,
-          ],
+          exclude: [paths.modules, paths.public],
           use: [
-            {
-              loader: 'babel-loader',
-              options: {},
-            },
+            'babel-loader',
             'stylelint-custom-processor-loader',
           ],
         },

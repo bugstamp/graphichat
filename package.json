@@ -10,13 +10,13 @@
   },
   "scripts": {
     "sort-packages": "npx sort-package-json client/package.json server/package.json",
-    "install:dependencies": "yarn install && cd client && yarn install && cd ../server && yarn install && cd ../",
+    "install:dependencies": "yarn install && cd client && yarn install && cd ../server && yarn install",
     "remove:dependencies": "rm -rf node_modules && cd client && rm -rf node_modules && cd ../server && rm -rf node_modules",
     "build:client": "cd client && yarn run build",
     "build:server": "cd server && yarn run build",
     "build:all": "yarn run build:client && yarn run build:server",
     "start": "cd server && yarn run start",
-    "heroku-postbuild": "yarn run install:dependencies && yarn run build:all --prod"
+    "heroku-postbuild": "yarn run install:dependencies && yarn run build:all"
   },
   "dependencies": {
     "sort-package-json": "^1.22.1"

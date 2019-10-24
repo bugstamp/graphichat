@@ -16,12 +16,13 @@ import TopProgressLine from '../common/TopProgressLine';
 const DialogContent = styled(MaterialDialogContent)`
   && {
     width: 100%;
-    max-width: 500px;
   }
 `;
 
 const AvatarWrapper = styled.div`
-  width: 35%;
+  width: 50%;
+  max-width: 250px;
+  height: auto;
   margin: 0 auto;
   position: relative;
 `;
@@ -65,7 +66,12 @@ class SettingsDialog extends PureComponent {
     } = this.props;
 
     return (
-      <ResponsiveDialog open={open} toggle={toggle}>
+      <ResponsiveDialog
+        open={open}
+        toggle={toggle}
+        maxWidth="sm"
+        fullWidth
+      >
         <TopProgressLine loading={avatarUploading} />
         <DialogTitle>Profile Settings</DialogTitle>
         <DialogContent dividers>
@@ -82,7 +88,9 @@ class SettingsDialog extends PureComponent {
               alt={avatar.text}
               onClick={this.onAvatarClick}
             >
-              <CameraIcon fontSize="large" />
+              <If condition={!avatar.src}>
+                <CameraIcon fontSize="large" />
+              </If>
             </Avatar>
           </AvatarWrapper>
         </DialogContent>

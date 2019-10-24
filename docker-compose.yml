@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: ./server/Dockerfile
     working_dir: /graphichat/server
-    command: /graphichat/server-entrypoint.sh
+    command: /graphichat/docker-entrypoint.sh server
     environment:
       - MONGO_URI=mongodb://mongodb:27017/graphichat
     ports:
@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: ./client/Dockerfile
-    command: /graphichat/client-entrypoint.sh
+    command: /graphichat/docker-entrypoint.sh client
     working_dir: /graphichat/client
     environment:
       - WEBPACK_DEV_SERVER_POOL=1000

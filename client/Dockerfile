@@ -9,9 +9,9 @@ WORKDIR ${APP_DIR}
 
 COPY ./.env ./
 COPY ./.browserslistrc ./
-COPY ./scripts/client-entrypoint.sh ./
+COPY ./scripts/docker-entrypoint.sh ./
 
-RUN dos2unix ./client-entrypoint.sh
+RUN dos2unix ./docker-entrypoint.sh
 
 RUN mkdir -p /${APP_DIR}/cache_modules
 WORKDIR /${APP_DIR}/cache_modules

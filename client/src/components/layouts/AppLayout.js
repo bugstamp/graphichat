@@ -31,6 +31,12 @@ class AppLayout extends Component {
               sessionExpired = false,
             },
           },
+          updateUser: {
+            mutation: updateUser,
+            result: {
+              loading: updating,
+            },
+          },
         }) => {
           return (
             <MainPage
@@ -39,6 +45,8 @@ class AppLayout extends Component {
               signOut={signOut}
               avatarUploading={avatarUploading}
               uploadAvatar={uploadAvatar}
+              updating={updating}
+              updateUser={updateUser}
               sessionExpired={sessionExpired}
             >
               {children}

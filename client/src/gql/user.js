@@ -74,8 +74,17 @@ const USER_ACTIVITY_SUBSCRIPTION = gql`
   }
 `;
 
+const UPDATE_USER = gql`
+  mutation UpdateUser($form: UserUpdateForm) {
+    updateUser(form: $form) {
+      ...myData
+    }
+  }
+  ${myFragment}
+`;
+
 const UPLOAD_AVATAR = gql`
-  mutation uploadAvatar($file: Upload!) {
+  mutation UploadAvatar($file: Upload!) {
     uploadAvatar(file: $file) {
       sm
       md
@@ -98,6 +107,7 @@ export default {
   GET_MY_CONTACTS,
   GET_MY_CHATS,
   SEARCH_USERS,
+  UPDATE_USER,
   UPLOAD_AVATAR,
   USER_ACTIVITY_SUBSCRIPTION,
   USER_UPDATE_SUBSCRIPTION,

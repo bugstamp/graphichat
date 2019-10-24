@@ -92,6 +92,23 @@ class UserProvider {
     }
   }
 
+  updateUser = async (form) => {
+    try {
+      const { field, value } = form;
+      const { id } = this.authProvider.user;
+      const user = await this.db.User.findByIdAndUpdate(
+        { _id: id },
+        { [field]: value },
+        { new: true },
+      );
+      await this.pubsub.publish(USER_UPDATED, { userUpdated: user });
+
+      return user;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   uploadAvatar = async (file) => {
     try {
       const { id } = this.authProvider.user;

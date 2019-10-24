@@ -1,7 +1,7 @@
 import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-// import {} from 'polished';
+import { map } from 'lodash';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,9 +9,12 @@ import MaterialDialogContent from '@material-ui/core/DialogContent';
 import MaterialAvatar from '@material-ui/core/Avatar';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 import ResponsiveDialog from '../common/ResponsiveDialog';
 import TopProgressLine from '../common/TopProgressLine';
+
+import { getSpacing } from '../../styles';
 
 const DialogContent = styled(MaterialDialogContent)`
   && {
@@ -21,9 +24,10 @@ const DialogContent = styled(MaterialDialogContent)`
 
 const AvatarWrapper = styled.div`
   width: 50%;
-  max-width: 250px;
+  max-width: 200px;
   height: auto;
   margin: 0 auto;
+  padding-bottom: ${getSpacing(2)};
   position: relative;
 `;
 
@@ -35,10 +39,30 @@ const Avatar = styled(MaterialAvatar)`
   }
 `;
 
-class SettingsDialog extends PureComponent {
-  avatarInput = createRef();
+const ProfileWrapper = styled.div`
+  width: 100%;
+  padding: ${getSpacing(1)};
+`;
 
-  onChangeAvatar = async ({
+class SettingsDialog extends PureComponent {
+  avatarInput = createRef()
+
+  fields = [
+    {
+      id: 'username',
+      label: 'Username',
+    },
+    {
+      id: 'firstName',
+      label: 'First Name',
+    },
+    {
+      id: 'lastName',
+      label: 'Last Name',
+    },
+  ]
+
+  onChangeAvatar = ({
     target: {
       files: [file],
       validity: { valid },
@@ -57,12 +81,34 @@ class SettingsDialog extends PureComponent {
     }
   }
 
+  onChangeField = (e) => {
+    const { updateUser, me } = this.props;
+    const { target: { name, value } } = e;
+    const form = { field: name, value };
+
+    if (value) {
+      updateUser({ variables: { form } });
+    } else {
+      e.target.value = me[name];
+    }
+  }
+
+  onKeyPressed = (e) => {
+    const { key, target } = e;
+
+    if (key === 'Enter') {
+      target.blur();
+    }
+  }
+
   render() {
     const {
       open,
       toggle,
       avatar,
       avatarUploading,
+      updating,
+      me,
     } = this.props;
 
     return (
@@ -71,8 +117,9 @@ class SettingsDialog extends PureComponent {
         toggle={toggle}
         maxWidth="sm"
         fullWidth
+        disableEscapeKeyDown
       >
-        <TopProgressLine loading={avatarUploading} />
+        <TopProgressLine loading={avatarUploading || updating} />
         <DialogTitle>Profile Settings</DialogTitle>
         <DialogContent dividers>
           <AvatarWrapper>
@@ -93,6 +140,24 @@ class SettingsDialog extends PureComponent {
               </If>
             </Avatar>
           </AvatarWrapper>
+          <ProfileWrapper>
+            {
+              map(this.fields, ({ id, label }) => (
+                <TextField
+                  key={id}
+                  name={id}
+                  value={me[id]}
+                  label={label}
+                  variant="outlined"
+                  margin="dense"
+                  onBlur={this.onChangeField}
+                  onKeyDown={this.onKeyPressed}
+                  fullWidth
+                  required
+                />
+              ))
+            }
+          </ProfileWrapper>
         </DialogContent>
         <DialogActions>
           <Button onClick={toggle} color="primary">Close</Button>

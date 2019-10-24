@@ -9,7 +9,7 @@ import {
   UNCOMPLETED,
   COMPLETED,
   ONLINE,
-  OFFLINE,
+  OFFLINE
 } from './enums';
 
 const tokensConfig = {

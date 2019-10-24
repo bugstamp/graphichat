@@ -75,6 +75,8 @@ class MainPage extends Component {
       me,
       avatarUploading,
       uploadAvatar,
+      updating,
+      updateUser,
     } = this.props;
     const avatar = getAvatar(me, 'md');
 
@@ -100,11 +102,14 @@ class MainPage extends Component {
           </Grid>
         </MainPageWrapper>
         <SettingsDialog
+          me={me}
           open={settingsDialog}
           toggle={this.toggleSettingsDialog}
           avatar={avatar}
           avatarUploading={avatarUploading}
           uploadAvatar={uploadAvatar}
+          updating={updating}
+          updateUser={updateUser}
         />
       </AppWrapper>
     );

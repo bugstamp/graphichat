@@ -22,6 +22,7 @@ const {
   USER_ACTIVITY_SUBSCRIPTION,
   USER_UPDATE_SUBSCRIPTION,
   UPLOAD_AVATAR,
+  UPDATE_USER,
 } = gql;
 
 export const chatCreatedUpdate = (client, { contact, chat }) => {
@@ -100,6 +101,14 @@ const userUpdateSubscription = createSubscription('userUpdateSubscription', USER
     client.writeQuery({ myContacts: updatedContacts });
   },
 });
+const updateUser = createMutation('updateUser', UPDATE_USER, {
+  update(client, { data: { updateUser: user } }) {
+    client.writeQuery({
+      query: GET_ME,
+      data: { me: { ...user } },
+    });
+  },
+});
 
 const AppLayoutContainer = adopt({
   chatCreatedSubscription,
@@ -109,6 +118,7 @@ const AppLayoutContainer = adopt({
   signOut,
   uploadAvatar,
   userUpdateSubscription,
+  updateUser,
 });
 
 export default AppLayoutContainer;

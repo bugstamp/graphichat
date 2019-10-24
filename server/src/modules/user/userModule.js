@@ -84,6 +84,11 @@ const UserModule = new GraphQLModule({
       regStatus: String!
     }
 
+    input UserUpdateForm {
+      field: String!
+      value: String!
+    }
+
     type UserActivityUpdate {
       userId: ID!
       status: Status!
@@ -100,6 +105,7 @@ const UserModule = new GraphQLModule({
 
     type Mutation {
       createUser(form: UserCreateForm): User!
+      updateUser(form: UserUpdateForm): User!
       deleteUser(id: ID!): User!
       removeUserContacts(userId: ID!): User!
       uploadAvatar(file: Upload!): UserAvatar!

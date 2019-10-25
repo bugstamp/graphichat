@@ -6,7 +6,7 @@
   "license": "MIT",
   "engines": {
     "node": "10.14.2",
-    "yarn": "1.17.3"
+    "yarn": ">= 1.17.*"
   },
   "scripts": {
     "sort-packages": "npx sort-package-json client/package.json server/package.json",

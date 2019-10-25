@@ -17,7 +17,7 @@
     "build:all": "yarn run build:client && yarn run build:server",
     "start": "cd server && yarn run start",
     "heroku-postbuild": "yarn run install:dependencies && yarn run build:all",
-    "deploy": "cd scripts && ./git-deploy-master.sh"
+    "deploy": "./scripts/git-deploy-master.sh"
   },
   "dependencies": {
     "sort-package-json": "^1.22.1"

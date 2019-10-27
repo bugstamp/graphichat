@@ -77,6 +77,7 @@ class MainPage extends Component {
       uploadAvatar,
       updating,
       updateUser,
+      userUpdatingError,
     } = this.props;
     const avatar = getAvatar(me, 'md');
 
@@ -110,6 +111,7 @@ class MainPage extends Component {
           uploadAvatar={uploadAvatar}
           updating={updating}
           updateUser={updateUser}
+          error={userUpdatingError}
         />
       </AppWrapper>
     );
@@ -118,6 +120,7 @@ class MainPage extends Component {
 
 MainPage.defaultProps = {
   me: {},
+  userUpdatingError: null,
 };
 MainPage.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
@@ -127,6 +130,9 @@ MainPage.propTypes = {
   avatarUploading: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
   uploadAvatar: PropTypes.func.isRequired,
+  updating: PropTypes.bool.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  userUpdatingError: PropTypes.instanceOf(Error),
 };
 
 export default MainPage;

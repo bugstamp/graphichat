@@ -1,7 +1,8 @@
 import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { map } from 'lodash';
+import { map, set, omit } from 'lodash';
+import { position } from 'polished';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -15,6 +16,7 @@ import ResponsiveDialog from '../common/ResponsiveDialog';
 import TopProgressLine from '../common/TopProgressLine';
 
 import { getSpacing } from '../../styles';
+import { meProps } from '../propTypes';
 
 const DialogContent = styled(MaterialDialogContent)`
   && {
@@ -35,7 +37,29 @@ const Avatar = styled(MaterialAvatar)`
   && {
     width: 100%;
     height: 100%;
+    position: relative;
+    color: ${({ src }) => (src && '#fff')};
     cursor: pointer;
+
+    ${({ src }) => src && `
+      > svg {
+        opacity: 0;
+      }
+
+      &:hover {
+        > svg {
+          opacity: .6;
+        }
+      }
+    `}
+  }
+`;
+
+const Camera = styled(CameraIcon)`
+  && {
+    ${position('absolute', '50%', null, null, '50%')};
+    transform: translate(-50%, -50%);
+    transition: all .3s ease;
   }
 `;
 
@@ -46,6 +70,12 @@ const ProfileWrapper = styled.div`
 
 class SettingsDialog extends PureComponent {
   avatarInput = createRef()
+
+  state = {
+    errors: {},
+    values: {},
+    called: {},
+  }
 
   fields = [
     {
@@ -61,6 +91,43 @@ class SettingsDialog extends PureComponent {
       label: 'Last Name',
     },
   ]
+
+  getSnapshotBeforeUpdate(prevProps) {
+    const { error } = this.props;
+    const snapshot = {
+      error: null,
+    };
+
+    if (!prevProps.error && error) {
+      const { graphQLErrors } = error;
+      const { message, data: { invalidField = null } } = graphQLErrors[0];
+
+      if (invalidField) {
+        snapshot.error = { [invalidField]: message };
+      }
+    }
+    return snapshot;
+  }
+
+  componentDidUpdate(prevProps, prevState, { error }) {
+    if (error) {
+      this.addError(error);
+    }
+  }
+
+  onChange = ({ target }) => {
+    const { name, value } = target;
+
+    this.setState(({ called, values }) => {
+      if (!called[name]) {
+        set(called, name, true);
+      }
+      return ({
+        called,
+        values: { ...values, [name]: value },
+      });
+    });
+  }
 
   onChangeAvatar = ({
     target: {
@@ -81,15 +148,23 @@ class SettingsDialog extends PureComponent {
     }
   }
 
-  onChangeField = (e) => {
+  onSubmit = ({ target }) => {
+    const { errors } = this.state;
     const { updateUser, me } = this.props;
-    const { target: { name, value } } = e;
-    const form = { field: name, value };
+    const { name: field, value } = target;
+    const form = { field, value };
+    const existedValue = me[field];
 
-    if (value) {
+    if (value !== existedValue && value) {
       updateUser({ variables: { form } });
-    } else {
-      e.target.value = me[name];
+
+      if (errors[field]) {
+        this.setState(() => ({
+          errors: omit(errors, field),
+        }));
+      }
+    } else if (!value) {
+      this.onChange({ target: { name: field, value: existedValue } });
     }
   }
 
@@ -101,7 +176,14 @@ class SettingsDialog extends PureComponent {
     }
   }
 
+  addError = (error) => {
+    this.setState(({ errors }) => ({
+      errors: { ...errors, ...error },
+    }));
+  }
+
   render() {
+    const { called, values, errors } = this.state;
     const {
       open,
       toggle,
@@ -135,27 +217,34 @@ class SettingsDialog extends PureComponent {
               alt={avatar.text}
               onClick={this.onAvatarClick}
             >
-              <If condition={!avatar.src}>
-                <CameraIcon fontSize="large" />
-              </If>
+              <Camera fontSize="large" />
             </Avatar>
           </AvatarWrapper>
           <ProfileWrapper>
             {
-              map(this.fields, ({ id, label }) => (
-                <TextField
-                  key={id}
-                  name={id}
-                  value={me[id]}
-                  label={label}
-                  variant="outlined"
-                  margin="dense"
-                  onBlur={this.onChangeField}
-                  onKeyDown={this.onKeyPressed}
-                  fullWidth
-                  required
-                />
-              ))
+              map(this.fields, ({ id, label }) => {
+                const value = called[id] ? values[id] : me[id];
+                const error = !!errors[id];
+                const message = errors[id];
+
+                return (
+                  <TextField
+                    key={id}
+                    name={id}
+                    value={value}
+                    label={label}
+                    error={error}
+                    helperText={message}
+                    variant="outlined"
+                    margin="dense"
+                    onChange={this.onChange}
+                    onBlur={this.onSubmit}
+                    onKeyDown={this.onKeyPressed}
+                    fullWidth
+                    required
+                  />
+                );
+              })
             }
           </ProfileWrapper>
         </DialogContent>
@@ -167,6 +256,10 @@ class SettingsDialog extends PureComponent {
   }
 }
 
+SettingsDialog.defaultProps = {
+  me: {},
+  error: null,
+};
 SettingsDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
@@ -174,8 +267,12 @@ SettingsDialog.propTypes = {
     src: PropTypes.string,
     text: PropTypes.string,
   }).isRequired,
+  me: PropTypes.shape(meProps),
   avatarUploading: PropTypes.bool.isRequired,
   uploadAvatar: PropTypes.func.isRequired,
+  updating: PropTypes.bool.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  error: PropTypes.instanceOf(Error),
 };
 
 export default SettingsDialog;

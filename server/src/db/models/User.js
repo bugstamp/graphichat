@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { pick, find } from 'lodash';
 
 import mongoose from '../mongoose';
-import { AuthenticationError } from '../../utils/apolloErrors';
+import { AuthenticationError, BadInputError } from '../../utils/apolloErrors';
 import {
   EMAIL_UNCONFIRMED,
   UNCOMPLETED,
@@ -290,6 +290,21 @@ userSchema.statics = {
       const contact = find(contacts, { userId });
 
       return contact;
+    } catch (e) {
+      throw e;
+    }
+  },
+  async verifyUsername(username) {
+    try {
+      const isExist = await this.findOne({ username });
+
+      if (isExist) {
+        throw new BadInputError({
+          message: 'The provided username is already used',
+          data: { invalidField: 'username' },
+        });
+      }
+      return !isExist;
     } catch (e) {
       throw e;
     }

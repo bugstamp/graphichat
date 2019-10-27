@@ -96,6 +96,11 @@ class UserProvider {
     try {
       const { field, value } = form;
       const { id } = this.authProvider.user;
+
+      if (field === 'username') {
+        await this.db.User.verifyUsername(value);
+      }
+
       const user = await this.db.User.findByIdAndUpdate(
         { _id: id },
         { [field]: value },

@@ -1,6 +1,6 @@
 #!/bin/bash
 
 git checkout master
-git pull -a
+git pull
 git merge dev
 git push origin master

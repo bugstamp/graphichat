@@ -35,6 +35,7 @@ class AppLayout extends Component {
             mutation: updateUser,
             result: {
               loading: updating,
+              error: userUpdatingError,
             },
           },
         }) => {
@@ -47,6 +48,7 @@ class AppLayout extends Component {
               uploadAvatar={uploadAvatar}
               updating={updating}
               updateUser={updateUser}
+              userUpdatingError={userUpdatingError}
               sessionExpired={sessionExpired}
             >
               {children}

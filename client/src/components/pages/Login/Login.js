@@ -60,10 +60,14 @@ class Login extends Component {
     if (e.graphQLErrors) {
       const { toggleNotification } = this.props;
       const { graphQLErrors } = e;
-      const { message, data: { invalidField } } = graphQLErrors[0];
+      const { message, data = null } = graphQLErrors[0];
 
-      if (!invalidField) {
-        toggleNotification(message);
+      if (data) {
+        const { invalidField = null } = data;
+
+        if (!invalidField) {
+          toggleNotification(message);
+        }
       }
     }
   }

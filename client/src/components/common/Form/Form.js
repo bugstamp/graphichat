@@ -28,10 +28,14 @@ class Form extends Component {
     if (!prevProps.result.error && result.error) {
       if (result.error.graphQLErrors) {
         const { graphQLErrors } = result.error;
-        const { message, data: { invalidField } } = graphQLErrors[0];
+        const { message, data = null } = graphQLErrors[0];
 
-        if (invalidField) {
-          setFieldError(invalidField, message);
+        if (data) {
+          const { invalidField } = data;
+
+          if (invalidField) {
+            setFieldError(invalidField, message);
+          }
         }
       }
     }

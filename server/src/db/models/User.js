@@ -158,7 +158,7 @@ userSchema.methods = {
 
       return result;
     } catch (e) {
-      throw e;
+      return false;
     }
   },
   async genToken(type) {

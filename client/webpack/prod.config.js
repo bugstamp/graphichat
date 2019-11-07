@@ -12,6 +12,7 @@ module.exports = merge([
   {
     optimization: {
       namedChunks: true,
+      chunkIds: 'named',
       runtimeChunk: 'single',
       splitChunks: {
         cacheGroups: {

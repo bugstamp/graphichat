@@ -10,15 +10,15 @@ import PageLoader from '../components/common/PageLoader';
 
 import AppRoute from './AppRoute';
 
-const LoginLayout = importedComponent(() => import('../components/layouts/LoginLayout'), {
+const LoginLayout = importedComponent(() => import(/* webpackChunkName: "login" */'../components/layouts/LoginLayout'), {
   LoadingComponent: PageLoader,
 });
 
-const AppLayout = importedComponent(() => import('../components/layouts/AppLayout'), {
+const AppLayout = importedComponent(() => import(/* webpackChunkName: "chat" */'../components/layouts/AppLayout'), {
   LoadingComponent: PageLoader,
 });
 
-const NotFoundLayout = importedComponent(() => import('../components/layouts/NotFoundLayout'), {
+const NotFoundLayout = importedComponent(() => import(/* webpackChunkName: "unknown" */'../components/layouts/NotFoundLayout'), {
   LoadingComponent: PageLoader,
 });
 

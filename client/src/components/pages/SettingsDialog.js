@@ -25,18 +25,15 @@ const DialogContent = styled(MaterialDialogContent)`
 `;
 
 const AvatarWrapper = styled.div`
-  width: 50%;
-  max-width: 200px;
-  height: auto;
-  margin: 0 auto;
   padding-bottom: ${getSpacing(2)};
   position: relative;
 `;
 
 const Avatar = styled(MaterialAvatar)`
   && {
-    width: 100%;
-    height: 100%;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
     position: relative;
     color: ${({ src }) => (src && '#fff')};
     cursor: pointer;

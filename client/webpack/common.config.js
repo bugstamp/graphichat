@@ -87,6 +87,7 @@ module.exports = merge([
         template: paths.template,
         favicon: paths.favicon,
         inject: 'body',
+        chunksSortMode: 'none',
       }),
       new MiniCssExtractPlugin({
         filename: 'styles.css',

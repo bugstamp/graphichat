@@ -22,6 +22,7 @@ module.exports = (api) => {
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     '@babel/plugin-proposal-export-default-from',
     '@babel/plugin-syntax-dynamic-import',
+    'react-imported-component/babel',
   ];
 
   if (isDevelopment) {

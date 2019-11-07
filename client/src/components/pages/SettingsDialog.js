@@ -87,6 +87,10 @@ class SettingsDialog extends PureComponent {
       id: 'lastName',
       label: 'Last Name',
     },
+    {
+      id: 'password',
+      label: 'Password',
+    },
   ]
 
   getSnapshotBeforeUpdate(prevProps) {

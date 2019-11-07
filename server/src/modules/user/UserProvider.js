@@ -106,6 +106,7 @@ class UserProvider {
         { [field]: value },
         { new: true },
       );
+      console.log(user.password);
       await this.pubsub.publish(USER_UPDATED, { userUpdated: user });
 
       return user;

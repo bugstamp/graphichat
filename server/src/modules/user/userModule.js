@@ -52,6 +52,7 @@ const UserModule = new GraphQLModule({
       id: ID!
       username: String
       email: EmailAddress!
+      password: String 
       phone: PhoneNumber
       displayName: String!
       firstName: String!

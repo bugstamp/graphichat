@@ -19,7 +19,6 @@ export const myFragment = gql`
     firstName
     lastName
     status
-    password
   }
 `;
 

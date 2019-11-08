@@ -87,10 +87,6 @@ class SettingsDialog extends PureComponent {
       id: 'lastName',
       label: 'Last Name',
     },
-    {
-      id: 'password',
-      label: 'Password',
-    },
   ]
 
   getSnapshotBeforeUpdate(prevProps) {
@@ -101,10 +97,14 @@ class SettingsDialog extends PureComponent {
 
     if (!prevProps.error && error) {
       const { graphQLErrors } = error;
-      const { message, data: { invalidField = null } } = graphQLErrors[0];
+      const { message, data = null } = graphQLErrors[0];
 
-      if (invalidField) {
-        snapshot.error = { [invalidField]: message };
+      if (data) {
+        const { invalidField = null } = data;
+
+        if (invalidField) {
+          snapshot.error = { [invalidField]: message };
+        }
       }
     }
     return snapshot;

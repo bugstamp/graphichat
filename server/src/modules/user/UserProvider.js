@@ -101,12 +101,7 @@ class UserProvider {
         await this.db.User.verifyUsername(value);
       }
 
-      const user = await this.db.User.findByIdAndUpdate(
-        { _id: id },
-        { [field]: value },
-        { new: true },
-      );
-      console.log(user.password);
+      const user = await this.db.User.findByIdAndUpdate(id, { [field]: value }, { new: true });
       await this.pubsub.publish(USER_UPDATED, { userUpdated: user });
 
       return user;

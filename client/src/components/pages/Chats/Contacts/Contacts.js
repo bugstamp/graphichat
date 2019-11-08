@@ -116,7 +116,9 @@ class Contacts extends Component {
             signOut={signOut}
           />
         </Hidden>
-        <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
+        <If condition={searchDialog}>
+          <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
+        </If>
       </Wrapper>
     );
   }

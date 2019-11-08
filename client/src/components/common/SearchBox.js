@@ -39,10 +39,14 @@ const SearchBox = ({ value, onChange, autoFocus }) => (
     </IconWrapper>
     <Input
       type="text"
+      name="search"
       value={value}
       onChange={({ target }) => onChange(target.value)}
       placeholder="Search..."
       autoFocus={autoFocus}
+      inputProps={{
+        'aria-label': 'Search Chat',
+      }}
     />
   </Wrapper>
 );

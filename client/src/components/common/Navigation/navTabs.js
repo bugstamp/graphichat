@@ -10,6 +10,10 @@ const tabs = [
     name: 'chats',
     Icon: PersonIcon,
     to: 'chats',
+    attrs: {
+      'aria-label': 'Link to Chats Page',
+    },
+    // ariaFlowTo: 'chats',
   },
   // {
   //   name: 'group',
@@ -19,11 +23,17 @@ const tabs = [
   {
     name: 'settings',
     Icon: SettingsIcon,
+    attrs: {
+      'aria-label': 'Open Settings Dialog',
+    },
   },
   {
     name: 'logout',
     Icon: LogoutIcon,
     htmlColor: logoutIconColor,
+    attrs: {
+      'aria-label': 'Logout',
+    },
   },
 ];
 

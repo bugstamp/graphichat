@@ -34,7 +34,12 @@ const TabsStyled = styled.div`
   }};
 `;
 
-const TabItem = styled(({ variant, itemSize, ...rest }) => (<Tab {...rest} />))`
+const TabItem = styled(({
+  variant,
+  itemSize,
+  attrs,
+  ...rest
+}) => (<Tab {...rest} />)).attrs(({ attrs = {} }) => (attrs))`
   && {
     min-width: inherit;
     border-radius: 50%;
@@ -104,13 +109,14 @@ const Tabs = ({
   };
 
   return (
-    <TabsStyled variant={variant}>
+    <TabsStyled variant={variant} role="tablist">
       {map(tabs, (
         {
           name,
           Icon,
           to,
           htmlColor,
+          attrs,
         },
         index,
       ) => {
@@ -129,6 +135,7 @@ const Tabs = ({
             onClick={onClick}
             itemSize={itemSize}
             variant={variant}
+            attrs={attrs}
           />
         );
       })}

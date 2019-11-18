@@ -96,6 +96,7 @@ module.exports = merge([
     resolve: {
       alias: {
         'react-dom': '@hot-loader/react-dom',
+        config: paths.config,
       },
       extensions: ['.js', '.jsx', '.json', '*'],
     },

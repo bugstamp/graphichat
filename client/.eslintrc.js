@@ -19,6 +19,7 @@
     "jsx-control-statements"
   ],
   "rules": {
+    "import/no-unresolved": [2, { ignore: ['\config'] }],
     "linebreak-style": ["error", "windows"],
     "react/jsx-no-undef": 0,
     "react/jsx-filename-extension": 0,

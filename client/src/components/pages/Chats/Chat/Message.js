@@ -13,7 +13,7 @@ import blue from '@material-ui/core/colors/blue';
 import ListItemAvatar from '../../../common/List/ListItemAvatar';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
-import { messageTimeParser, messageHistoryDateParser } from '../../../../helpers';
+import { messageDateParsers } from '../../../../helpers';
 import { userAvatarProps } from '../../../propTypes';
 
 const ListItem = styled(MaterialListItem)`
@@ -151,7 +151,7 @@ const Message = forwardRef((props, ref) => {
         <If condition={isFirst || divider}>
           <HistoryDivider>
             <p />
-            <span>{messageHistoryDateParser(time)}</span>
+            <span>{messageDateParsers.messageHistoryDate(time)}</span>
             <p />
           </HistoryDivider>
         </If>
@@ -180,7 +180,7 @@ const Message = forwardRef((props, ref) => {
                   <p>{content}</p>
                 </Content>
                 <Time>
-                  <span>{messageTimeParser(time, 'wide')}</span>
+                  <span>{messageDateParsers.messageTime(time, 'wide')}</span>
                   <If condition={isAdding}>
                     <span>
                       <Spinner size={10} color="primary" />

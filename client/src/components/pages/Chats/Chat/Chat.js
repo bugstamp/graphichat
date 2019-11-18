@@ -10,7 +10,7 @@ import ChatTopBar from './ChatTopBar';
 import ChatMessages from './ChatMessages';
 import ChatMessageInput from './ChatMessageInput';
 
-import { getAvatar, userLastDateParser } from '../../../../helpers';
+import { getAvatar } from '../../../../helpers';
 import { meProps, userInfoProps, chatProps } from '../../../propTypes';
 
 const Wrapper = styled(Paper)`
@@ -121,18 +121,14 @@ class Chat extends Component {
     const { displayName, status, lastDate } = userInfo;
     const { id: chatId, messages } = chat;
     const { id: myId } = me;
-
     const isOnline = status === 'ONLINE';
-    const statusText = isOnline
-      ? 'online'
-      : userLastDateParser(lastDate);
 
     return (
       <Wrapper square elevation={0}>
         <ChatTopBar
           name={displayName}
           isOnline={isOnline}
-          statusText={statusText}
+          lastDate={lastDate}
         />
         <ChatMessages
           chatId={chatId}

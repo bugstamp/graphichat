@@ -7,6 +7,7 @@ import SettingsIcon from '@material-ui/icons/SettingsRounded';
 import SearchIcon from '@material-ui/icons/SearchRounded';
 import green from '@material-ui/core/colors/green';
 
+import { messageDateParsers } from '../../../../helpers';
 import { getStyledProps, getSpacing } from '../../../../styles';
 
 const Wrapper = styled.div`
@@ -38,29 +39,38 @@ const UserStatus = styled.span`
 
 const ChatTopBar = ({
   name,
-  statusText,
   isOnline,
-}) => (
-  <Wrapper>
-    <IconButton size="small">
-      <SearchIcon />
-    </IconButton>
-    <UserName>
-      <p>{name}</p>
-      <UserStatus online={isOnline}>
-        {statusText}
-      </UserStatus>
-    </UserName>
-    <IconButton size="small">
-      <SettingsIcon />
-    </IconButton>
-  </Wrapper>
-);
+  lastDate,
+}) => {
+  const statusText = (isOnline && lastDate)
+    ? 'online'
+    : messageDateParsers.userLastDate(lastDate);
 
+  return (
+    <Wrapper>
+      <IconButton size="small">
+        <SearchIcon />
+      </IconButton>
+      <UserName>
+        <p>{name}</p>
+        <UserStatus online={isOnline}>
+          {statusText}
+        </UserStatus>
+      </UserName>
+      <IconButton size="small">
+        <SettingsIcon />
+      </IconButton>
+    </Wrapper>
+  );
+};
+
+ChatTopBar.defaultProps = {
+  lastDate: '',
+};
 ChatTopBar.propTypes = {
   name: PropTypes.string.isRequired,
-  statusText: PropTypes.string.isRequired,
   isOnline: PropTypes.bool.isRequired,
+  lastDate: PropTypes.string,
 };
 
 export default memo(ChatTopBar);

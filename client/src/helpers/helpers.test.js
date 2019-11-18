@@ -7,6 +7,9 @@ import {
 import {
   isEven,
 } from './number';
+import {
+  getAvatar,
+} from './user';
 
 const testDate = new Date(2019, 1, 1, 0, 0, 0, 0);
 const testNextDate = new Date(2019, 1, 2, 0, 0, 0, 0);
@@ -73,4 +76,8 @@ describe('test number helpers', () => {
     expect(isEven(1)).toEqual(false);
     expect(isEven(2)).toEqual(true);
   });
+});
+
+describe('test user', () => {
+  
 });

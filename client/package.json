@@ -5,7 +5,8 @@
   "author": "Kirill Grischenko",
   "scripts": {
     "build": "webpack --env production",
-    "dev": "webpack-dev-server --env development"
+    "dev": "webpack-dev-server --env development",
+    "test": "jest --watchAll"
   },
   "dependencies": {
     "@babel/cli": "^7.4.4",

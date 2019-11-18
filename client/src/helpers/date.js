@@ -1,5 +1,6 @@
-import config from 'config';
 import moment from 'moment';
+
+import config from '../config';
 
 const { messageDateFormats } = config;
 
@@ -19,6 +20,10 @@ const messageDateParsers = {
 };
 
 const isSameDay = (date, referenceDate) => {
+  if (!date || !referenceDate) {
+    return undefined;
+  }
+
   const a = moment(date);
   const b = moment(referenceDate);
   const diff = a.isSame(b, 'days');

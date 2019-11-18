@@ -4,10 +4,10 @@ import reset from 'styled-reset';
 import { size } from 'polished';
 import { get } from 'lodash';
 
-export const getStyledProps = (path, unit = '') => (props) => {
-  const value = get(props, path);
+export const getStyledProps = (path, unit = '') => (props = {}) => {
+  const value = get(props, path, null);
 
-  if (unit) {
+  if (unit && value) {
     return `${value}${unit}`;
   }
   return value;

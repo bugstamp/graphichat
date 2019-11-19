@@ -78,13 +78,13 @@ class SignUp extends Component {
     'Tell us about yourself',
   ];
 
-  async componentDidMount() {
+  componentDidMount() {
     const { location: { search }, history } = this.props;
     const { token } = queryString.parse(search);
 
     if (token) {
       try {
-        const { regStatus } = await checkToken(token, true);
+        const { regStatus } = checkToken(token, true);
 
         if (regStatus) {
           this.setActiveStep(1);

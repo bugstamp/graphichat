@@ -10,13 +10,13 @@ const tokenSecrets = {
   refresh: process.env.REFRESH_TOKEN_SECRET,
 };
 
-export const checkToken = async (token, set = false, secretType = 'token') => {
+export const checkToken = (token, set = false, secretType = 'token') => {
   try {
     if (!token) {
       throw new Error('Token wasn\'t found');
     }
     const secret = tokenSecrets[secretType];
-    const { data: { regStatus } } = await jwt.verify(token, secret);
+    const { data: { regStatus } } = jwt.verify(token, secret);
 
     if (set) {
       storage.token.set(token);
@@ -34,12 +34,12 @@ class PrivateRoute extends Component {
     status: '',
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const token = storage.token.get();
 
     if (token) {
       try {
-        const { regStatus } = await checkToken(token, false);
+        const { regStatus } = checkToken(token, false);
 
         this.setState({
           render: true,

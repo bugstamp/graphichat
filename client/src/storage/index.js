@@ -1,19 +1,19 @@
-export const createTokenMethods = name => ({
-  name,
-  set(token) {
-    localStorage.setItem(this.name, token);
-    return true;
-  },
-  get() {
-    return localStorage.getItem(this.name) || '';
-  },
-  remove() {
-    localStorage.removeItem(this.name);
-    return true;
-  },
-});
-
 export function Storage(tokenName, refreshTokenName) {
+  const createTokenMethods = name => ({
+    name,
+    set(token) {
+      localStorage.setItem(this.name, token);
+      return true;
+    },
+    get() {
+      return localStorage.getItem(this.name) || '';
+    },
+    remove() {
+      localStorage.removeItem(this.name);
+      return true;
+    },
+  });
+
   this.token = createTokenMethods(tokenName);
   this.refreshToken = createTokenMethods(refreshTokenName);
   this.setTokens = (token, refreshToken) => {

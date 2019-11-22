@@ -1,3 +1,8 @@
+import config from 'config';
+import jwt from 'jsonwebtoken';
+
+const { tokenSecrets } = config;
+
 export function Storage(tokenName, refreshTokenName) {
   const createTokenMethods = name => ({
     name,
@@ -36,6 +41,23 @@ export function Storage(tokenName, refreshTokenName) {
   };
 }
 
-const storage = new Storage('chatkilla_tkn', 'chatkilla_rfrsh_tkn');
+const storage = new Storage(config.tokenName, config.refreshTokenName);
+
+export const checkToken = (token, set = false, secretType = 'token') => {
+  try {
+    if (!token) {
+      throw new Error('Token wasn\'t found');
+    }
+    const secret = tokenSecrets[secretType];
+    const { data: { regStatus } } = jwt.verify(token, secret);
+
+    if (set) {
+      storage.token.set(token);
+    }
+    return { regStatus };
+  } catch (e) {
+    return { regStatus: '' };
+  }
+};
 
 export default storage;

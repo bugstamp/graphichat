@@ -1,6 +1,5 @@
+import config from 'config';
 import moment from 'moment';
-
-import config from '../config';
 
 const { messageDateFormats } = config;
 

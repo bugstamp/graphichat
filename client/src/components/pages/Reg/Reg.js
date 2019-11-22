@@ -11,8 +11,7 @@ import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
 
 import withNotification from '../../common/HOC/withNotification';
-import { checkToken } from '../../../router/PrivateRoute';
-import storage from '../../../storage';
+import storage, { checkToken } from '../../../storage';
 
 import { getStyledProps } from '../../../styles';
 import bgImage from '../../../assets/images/reg-bg__1920_65.jpg';

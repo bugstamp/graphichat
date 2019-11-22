@@ -1,4 +1,4 @@
-export default {
+const config = {
   messageDateFormats: {
     messageTime: {
       wide: 'HH:mm:ss',
@@ -23,4 +23,12 @@ export default {
       sameElse: 'dddd, MMMM D, YYYY',
     },
   },
+  tokenName: 'chatkilla_tkn',
+  refreshTokenName: 'chatkilla_rfrsh_tkn',
+  tokenSecrets: {
+    token: process.env.TOKEN_SECRET,
+    refresh: process.env.REFRESH_TOKEN_SECRET,
+  },
 };
+
+export default Object.freeze(config);

@@ -1,31 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import jwt from 'jsonwebtoken';
 
-import storage from '../storage';
-
-const tokenSecrets = {
-  token: process.env.TOKEN_SECRET,
-  refresh: process.env.REFRESH_TOKEN_SECRET,
-};
-
-export const checkToken = (token, set = false, secretType = 'token') => {
-  try {
-    if (!token) {
-      throw new Error('Token wasn\'t found');
-    }
-    const secret = tokenSecrets[secretType];
-    const { data: { regStatus } } = jwt.verify(token, secret);
-
-    if (set) {
-      storage.token.set(token);
-    }
-    return { regStatus };
-  } catch (e) {
-    return { regStatus: '' };
-  }
-};
+import storage, { checkToken } from '../storage';
 
 class PrivateRoute extends Component {
   state = {

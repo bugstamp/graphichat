@@ -25,52 +25,52 @@ const mockUserAvatar = {
 describe('test date helpers', () => {
   describe('test message date parsers', () => {
     describe('test history date parser', () => {
-      test('if parser is exist', () => {
+      it('if parser is exist', () => {
         expect(messageDateParsers).toHaveProperty('historyDate');
         expect(messageDateParsers.historyDate).toBeInstanceOf(Function);
       });
 
-      test('if parser work', () => {
+      it('if parser work', () => {
         expect(messageDateParsers.historyDate(testDate)).toEqual('Friday, February 1, 2019');
       });
     });
 
     describe('test message history date parser', () => {
-      test('if parser is exist', () => {
+      it('if parser is exist', () => {
         expect(messageDateParsers).toHaveProperty('messageHistoryDate');
         expect(messageDateParsers.messageHistoryDate).toBeInstanceOf(Function);
       });
 
-      test('if parser work', () => {
+      it('if parser work', () => {
         expect(messageDateParsers.messageHistoryDate(testDate)).toEqual('Friday, February 1, 2019');
       });
     });
 
     describe('test message time parser', () => {
-      test('if parser is exist', () => {
+      it('if parser is exist', () => {
         expect(messageDateParsers).toHaveProperty('messageTime');
         expect(messageDateParsers.messageTime).toBeInstanceOf(Function);
       });
 
-      test('if parser work', () => {
+      it('if parser work', () => {
         expect(messageDateParsers.messageTime(testDate, 'short')).toEqual('01/02/19');
         expect(messageDateParsers.messageTime(testDate, 'wide')).toEqual('00:00:00');
       });
     });
 
     describe('test user last date parser', () => {
-      test('if parser is exist', () => {
+      it('if parser is exist', () => {
         expect(messageDateParsers).toHaveProperty('userLastDate');
         expect(messageDateParsers.userLastDate).toBeInstanceOf(Function);
       });
 
-      test('if parser work', () => {
+      it('if parser work', () => {
         expect(messageDateParsers.userLastDate(testDate)).toEqual('01/02/2019');
       });
     });
   });
 
-  test('test isSameDay', () => {
+  it('test isSameDay', () => {
     expect(isSameDay(testDate)).toBeUndefined();
     expect(isSameDay()).toBeUndefined();
     expect(isSameDay(testDate, testNextDate)).toEqual(false);
@@ -79,7 +79,7 @@ describe('test date helpers', () => {
 });
 
 describe('test number helpers', () => {
-  test('test isEven', () => {
+  it('test isEven', () => {
     expect(isEven()).toEqual(false);
     expect(isEven(1)).toEqual(false);
     expect(isEven(2)).toEqual(true);
@@ -87,7 +87,7 @@ describe('test number helpers', () => {
 });
 
 describe('test user helpers', () => {
-  test('test getAvatar', () => {
+  it('test getAvatar', () => {
     expect(getAvatar()).toMatchObject({
       src: '',
       text: '',

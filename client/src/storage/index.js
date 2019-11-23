@@ -43,12 +43,12 @@ export function Storage(tokenName, refreshTokenName) {
 
 const storage = new Storage(config.tokenName, config.refreshTokenName);
 
-export const checkToken = (token, set = false, secretType = 'token') => {
+export const checkToken = (token, set = false) => {
   try {
     if (!token) {
       throw new Error('Token wasn\'t found');
     }
-    const secret = tokenSecrets[secretType];
+    const secret = tokenSecrets.token;
     const { data: { regStatus } } = jwt.verify(token, secret);
 
     if (set) {

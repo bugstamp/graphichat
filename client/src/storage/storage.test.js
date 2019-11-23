@@ -40,14 +40,23 @@ describe('test checkToken', () => {
       regStatus: 'COMPLETED',
     },
   };
+  const token = jwt.sign(mockToken, tokenSecrets.token);
+
+  afterAll(() => {
+    storage.removeTokens();
+  });
 
   it('if token doesn\'t exist', () => {
     expect(checkToken()).toMatchObject({ regStatus: '' });
   });
 
   it('verify token', () => {
-    const token = jwt.sign(mockToken, tokenSecrets.token);
-
     expect(checkToken(token)).toMatchObject({ regStatus: 'COMPLETED' });
+    expect(storage.token.get()).toEqual('');
+  });
+
+  it('verify and set token', () => {
+    expect(checkToken(token, true)).toMatchObject({ regStatus: 'COMPLETED' });
+    expect(storage.token.get()).toEqual(token);
   });
 });

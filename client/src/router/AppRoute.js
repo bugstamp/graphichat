@@ -12,32 +12,29 @@ const AppRoute = ({
   to,
   ...rest
 }) => {
-  const render = props => (
+  const renderLayout = props => (
     <Layout>
       <Component {...props} />
     </Layout>
   );
 
-  return (
-    <Route
-      {...rest}
-      render={props => (
-        <Choose>
-          <When condition={redirect}>
-            <Component to={to} />
-          </When>
-          <When condition={privateRoute}>
-            <PrivateRoute>
-              {render(props)}
-            </PrivateRoute>
-          </When>
-          <Otherwise>
-            {render(props)}
-          </Otherwise>
-        </Choose>
-      )}
-    />
+  const render = props => (
+    <Choose>
+      <When condition={redirect}>
+        <Component to={to} />
+      </When>
+      <When condition={privateRoute}>
+        <PrivateRoute>
+          {renderLayout(props)}
+        </PrivateRoute>
+      </When>
+      <Otherwise>
+        {renderLayout(props)}
+      </Otherwise>
+    </Choose>
   );
+
+  return (<Route {...rest} render={render} />);
 };
 
 AppRoute.defaultProps = {

@@ -2,6 +2,7 @@
 
 exports[`test router test AppRoute snapshot render 1`] = `
 <Route
+  path="/"
   render={[Function]}
 />
 `;

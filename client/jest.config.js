@@ -78,6 +78,7 @@ module.exports = {
   // A map from regular expressions to module names that allow to stub out resources with a single module
   moduleNameMapper: {
     '^config$': '<rootDir>/src/config.js',
+    '\\.(png|jpg|gif|ttf|eot|svg)$': '<rootDir>/fileMock.js'
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -169,7 +170,7 @@ module.exports = {
   // transform: null,
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  transformIgnorePatterns: ['<rootDir>/node_modules/', 'testModules.js'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/', 'testModules.js', 'fileMock.js', 'globalMocks.js'],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

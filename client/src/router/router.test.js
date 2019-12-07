@@ -1,21 +1,28 @@
+import config from 'config';
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Redirect } from 'react-router-dom';
 import { shallow, mount } from 'enzyme';
+import jwt from 'jsonwebtoken';
 
 import AppRoute from './AppRoute';
 import PrivateRoute from './PrivateRoute';
+import Routes from './index';
 
-const testComponent = () => (
+import storage from '../storage';
+
+const { tokenSecrets } = config;
+
+const TestComponent = () => (
   <div className="component" />
 );
 
 // eslint-disable-next-line
-const testLayout = ({ children }) => (
+const TestLayout = ({ children }) => (
   <div>{children}</div>
 );
 
 const AppRouteComponent = props => (
-  <AppRoute path="/" layout={testLayout} component={testComponent} {...props} />
+  <AppRoute path="/" layout={TestLayout} component={TestComponent} {...props} />
 );
 
 const mountRouter = (routes, initialEntries = ['/']) => mount((
@@ -25,44 +32,91 @@ const mountRouter = (routes, initialEntries = ['/']) => mount((
 ));
 
 describe('test router', () => {
-  describe('test AppRoute', () => {
+  describe('test AppRoute Component', () => {
     test('snapshot render', () => {
-      const component = shallow(<AppRoute path="/" layout={testLayout} component={testComponent} />);
+      const wrapper = shallow(<AppRoute path="/" layout={TestLayout} component={TestComponent} />);
 
-      expect(component).toMatchSnapshot();
+      expect(wrapper).toMatchSnapshot();
     });
-
     test('Route render is defined', () => {
-      const routerWrapper = mountRouter(<AppRouteComponent />);
+      const wrapper = mountRouter(<AppRouteComponent />);
 
-      expect(routerWrapper.find(Route).exists()).toEqual(true);
-      expect(routerWrapper.find(Route).prop('render')).toBeDefined();
+      expect(wrapper.find(Route)).toHaveLength(1);
+      expect(wrapper.find(Route).prop('render')).toBeDefined();
     });
-
     test('pass props to Route', () => {
-      const routerWrapper = mountRouter(<AppRouteComponent testProps="testProps" />);
+      const wrapper = mountRouter(<AppRouteComponent testProps="testProps" />);
 
-      expect(routerWrapper.find(Route).prop('testProps')).toEqual('testProps');
+      expect(wrapper.find(Route).prop('testProps')).toEqual('testProps');
     });
-
     test('redirect render', () => {
-      const routerWrapper = mountRouter(<AppRouteComponent redirect />);
+      const wrapper = mountRouter(<AppRouteComponent redirect />);
 
-      expect(routerWrapper.find(testComponent).exists()).toEqual(true);
-      expect(routerWrapper.find(testLayout).exists()).toEqual(false);
+      expect(wrapper.find(TestComponent)).toHaveLength(1);
+      expect(wrapper.find(TestLayout)).toHaveLength(0);
     });
-
     test('layout render', () => {
-      const routerWrapper = mountRouter(<AppRouteComponent />);
+      const wrapper = mountRouter(<AppRouteComponent />);
 
-      expect(routerWrapper.find(testComponent).exists()).toEqual(true);
-      expect(routerWrapper.find(testLayout).exists()).toEqual(true);
+      expect(wrapper.find(TestComponent)).toHaveLength(1);
+      expect(wrapper.find(TestLayout)).toHaveLength(1);
     });
-
     test('privateRoute render', () => {
-      const routerWrapper = mountRouter(<AppRouteComponent privateRoute />);
+      const wrapper = mountRouter(<AppRouteComponent privateRoute />);
 
-      expect(routerWrapper.find(PrivateRoute).exists()).toEqual(true);
+      expect(wrapper.find(PrivateRoute)).toHaveLength(1);
+    });
+  });
+
+  describe('test PrivateRoute Component', () => {
+    test('snapshot render', () => {
+      const wrapper = shallow(<PrivateRoute><TestComponent /></PrivateRoute>);
+
+      expect(wrapper).toMatchSnapshot();
+    });
+    test('redirect to login', () => {
+      const wrapper = mountRouter(<PrivateRoute><TestComponent /></PrivateRoute>);
+
+      expect(wrapper.find(Redirect)).toHaveLength(1);
+      expect(wrapper.find(Redirect).prop('to')).toEqual('login');
+    });
+    test('auth render', () => {
+      const mockToken = {
+        data: {
+          regStatus: 'COMPLETED',
+        },
+      };
+      const token = jwt.sign(mockToken, tokenSecrets.token);
+      storage.token.set(token);
+
+      const wrapper = mountRouter(<PrivateRoute><TestComponent /></PrivateRoute>);
+
+      expect(wrapper.find(TestComponent)).toHaveLength(1);
+      storage.token.remove();
+    });
+    test('redirect to reg', () => {
+      const mockToken = {
+        data: {
+          regStatus: 'UNCOMPLETED',
+        },
+      };
+      const token = jwt.sign(mockToken, tokenSecrets.token);
+      const to = `reg?token=${token}`;
+      storage.token.set(token);
+
+      const wrapper = mountRouter(<PrivateRoute><TestComponent /></PrivateRoute>);
+
+      expect(wrapper.find(Redirect)).toHaveLength(1);
+      expect(wrapper.find(Redirect).prop('to')).toEqual(to);
+      storage.token.remove();
+    });
+  });
+
+  describe('test routes', () => {
+    test('snapshot render', () => {
+      const wrapper = shallow(<Routes />);
+
+      expect(wrapper).toMatchSnapshot();
     });
   });
 });

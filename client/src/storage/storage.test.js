@@ -1,9 +1,15 @@
+import config from 'config';
 import jwt from 'jsonwebtoken';
 
-import config from '../config';
 import storage, { checkToken } from './index';
 
 const { tokenSecrets } = config;
+
+const mockToken = {
+  data: {
+    regStatus: 'COMPLETED',
+  },
+};
 
 describe('test storage', () => {
   it('test set/get methods', () => {
@@ -35,11 +41,6 @@ describe('test storage', () => {
 });
 
 describe('test checkToken', () => {
-  const mockToken = {
-    data: {
-      regStatus: 'COMPLETED',
-    },
-  };
   const token = jwt.sign(mockToken, tokenSecrets.token);
 
   afterAll(() => {

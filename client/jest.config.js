@@ -78,7 +78,7 @@ module.exports = {
   // A map from regular expressions to module names that allow to stub out resources with a single module
   moduleNameMapper: {
     '^config$': '<rootDir>/src/config.js',
-    '\\.(png|jpg|gif|ttf|eot|svg)$': '<rootDir>/fileMock.js'
+    '\\.(png|jpg|gif|ttf|eot|svg)$': '<rootDir>/__mocks__/fileMock.js'
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -123,7 +123,7 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ['<rootDir>/testModules.js'],
+  setupFiles: ['<rootDir>/__mocks__/testModules.js'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: ['jest-enzyme'],
@@ -170,7 +170,7 @@ module.exports = {
   // transform: null,
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  transformIgnorePatterns: ['<rootDir>/node_modules/', 'testModules.js', 'fileMock.js', 'globalMocks.js'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/', 'testModules.js', 'fileMock.js'],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

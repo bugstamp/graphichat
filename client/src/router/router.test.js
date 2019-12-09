@@ -1,16 +1,20 @@
 import config from 'config';
 import React from 'react';
-import { MemoryRouter, Route, Redirect } from 'react-router-dom';
+import { Router, Route, Redirect } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
+import { MockedProvider } from '@apollo/react-testing';
 import { shallow, mount } from 'enzyme';
 import jwt from 'jsonwebtoken';
 
 import AppRoute from './AppRoute';
 import PrivateRoute from './PrivateRoute';
 import Routes from './index';
+// import App from '../components/App';
 
 import storage from '../storage';
 
 const { tokenSecrets } = config;
+const history = createMemoryHistory();
 
 const TestComponent = () => (
   <div className="component" />
@@ -25,13 +29,19 @@ const AppRouteComponent = props => (
   <AppRoute path="/" layout={TestLayout} component={TestComponent} {...props} />
 );
 
-const mountRouter = (routes, initialEntries = ['/']) => mount((
-  <MemoryRouter initialEntries={initialEntries}>
-    {routes}
-  </MemoryRouter>
+const mountRouter = routes => mount((
+  <MockedProvider mocks={[]}>
+    <Router history={history}>
+      {routes}
+    </Router>
+  </MockedProvider>
 ));
 
 describe('test router', () => {
+  beforeEach(() => {
+    history.push('/');
+  });
+
   describe('test AppRoute Component', () => {
     test('snapshot render', () => {
       const wrapper = shallow(<AppRoute path="/" layout={TestLayout} component={TestComponent} />);
@@ -118,5 +128,11 @@ describe('test router', () => {
 
       expect(wrapper).toMatchSnapshot();
     });
+    // test('mount app', () => {
+    //   history.push('/chats');
+    //   const wrapper = mountRouter(<App />);
+    //
+    //   expect(history.location.pathname).toBe('/login');
+    // });
   });
 });

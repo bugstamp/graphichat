@@ -9,9 +9,12 @@ import jwt from 'jsonwebtoken';
 import AppRoute from './AppRoute';
 import PrivateRoute from './PrivateRoute';
 import Routes from './index';
-// import App from '../components/App';
+import App from '../components/App';
+import NotFound from '../components/common/NotFound';
 
+import cache from '../apollo/cache';
 import storage from '../storage';
+import { CHAT_CREATED_SUBSCRIPTION } from '../gql';
 
 const { tokenSecrets } = config;
 const history = createMemoryHistory();
@@ -29,8 +32,8 @@ const AppRouteComponent = props => (
   <AppRoute path="/" layout={TestLayout} component={TestComponent} {...props} />
 );
 
-const mountRouter = routes => mount((
-  <MockedProvider mocks={[]}>
+const mountRouter = (routes, mocks = []) => mount((
+  <MockedProvider mocks={mocks} cache={cache}>
     <Router history={history}>
       {routes}
     </Router>
@@ -128,11 +131,47 @@ describe('test router', () => {
 
       expect(wrapper).toMatchSnapshot();
     });
-    // test('mount app', () => {
-    //   history.push('/chats');
-    //   const wrapper = mountRouter(<App />);
-    //
-    //   expect(history.location.pathname).toBe('/login');
-    // });
+    test('redirect to login', () => {
+      history.push('/chats');
+      mountRouter(<App />);
+
+      expect(history.location.pathname).toBe('/login');
+    });
+    test('redirect to notfound', () => {
+      history.push('/sdgsg1213');
+      const wrapper = mountRouter(<App />);
+
+      expect(wrapper.find(NotFound)).toHaveLength(1);
+    });
+    test('auth and redirect to chats', () => {
+      const mocks = [
+        {
+          request: {
+            query: CHAT_CREATED_SUBSCRIPTION,
+            variables: {},
+          },
+          result: {
+            data: {
+              chatCreated: {
+                contact: { id: 1, chatId: 1 },
+                chat: { id: 1, messages: [] },
+              },
+            },
+          },
+        },
+      ];
+      const mockToken = {
+        data: {
+          regStatus: 'COMPLETED',
+        },
+      };
+      const token = jwt.sign(mockToken, tokenSecrets.token);
+      storage.token.set(token);
+      history.push('/');
+      mountRouter(<App />, mocks);
+
+      expect(history.location.pathname).toBe('/chats');
+      storage.token.remove();
+    });
   });
 });

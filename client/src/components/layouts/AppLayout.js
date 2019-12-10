@@ -14,7 +14,7 @@ class AppLayout extends Component {
       <AppLayoutContainer>
         {({
           getInitialData: {
-            data: { me },
+            data: { me = {} },
             loading,
           },
           signOut: {
@@ -27,9 +27,7 @@ class AppLayout extends Component {
             },
           },
           checkSessionExpiration: {
-            data: {
-              sessionExpired = false,
-            },
+            data: { sessionExpired = false },
           },
           updateUser: {
             mutation: updateUser,

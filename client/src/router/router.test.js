@@ -14,7 +14,6 @@ import NotFound from '../components/common/NotFound';
 
 import cache from '../apollo/cache';
 import storage from '../storage';
-import { CHAT_CREATED_SUBSCRIPTION } from '../gql';
 
 const { tokenSecrets } = config;
 const history = createMemoryHistory();
@@ -142,36 +141,6 @@ describe('test router', () => {
       const wrapper = mountRouter(<App />);
 
       expect(wrapper.find(NotFound)).toHaveLength(1);
-    });
-    test('auth and redirect to chats', () => {
-      const mocks = [
-        {
-          request: {
-            query: CHAT_CREATED_SUBSCRIPTION,
-            variables: {},
-          },
-          result: {
-            data: {
-              chatCreated: {
-                contact: { id: 1, chatId: 1 },
-                chat: { id: 1, messages: [] },
-              },
-            },
-          },
-        },
-      ];
-      const mockToken = {
-        data: {
-          regStatus: 'COMPLETED',
-        },
-      };
-      const token = jwt.sign(mockToken, tokenSecrets.token);
-      storage.token.set(token);
-      history.push('/');
-      mountRouter(<App />, mocks);
-
-      expect(history.location.pathname).toBe('/chats');
-      storage.token.remove();
     });
   });
 });

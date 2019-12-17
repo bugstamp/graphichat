@@ -14,6 +14,7 @@ import NotFound from '../components/common/NotFound';
 
 import cache from '../apollo/cache';
 import storage from '../storage';
+import { theme } from '../styles';
 
 const { tokenSecrets } = config;
 const history = createMemoryHistory();
@@ -132,13 +133,13 @@ describe('test router', () => {
     });
     test('redirect to login', () => {
       history.push('/chats');
-      mountRouter(<App />);
+      mountRouter(<App theme={theme} />);
 
       expect(history.location.pathname).toBe('/login');
     });
     test('redirect to notfound', () => {
       history.push('/sdgsg1213');
-      const wrapper = mountRouter(<App />);
+      const wrapper = mountRouter(<App theme={theme} />);
 
       expect(wrapper.find(NotFound)).toHaveLength(1);
     });

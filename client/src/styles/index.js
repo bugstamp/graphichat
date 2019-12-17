@@ -47,8 +47,8 @@ export const GlobalStyle = createGlobalStyle`
       display: flex;
     }
 
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
+  ${() => {
+    const breakpoints = getStyledProps('theme.breakpoints')({ theme });
     const smDown = breakpoints.down('sm');
 
     return `

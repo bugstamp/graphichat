@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import styled from 'styled-components';
 import { size } from 'polished';
 import {
-  isEmpty, concat, filter, find,
+  get, isEmpty, concat, filter, find,
 } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
@@ -103,10 +103,10 @@ class Chats extends Component {
       >
         {({
           getMe: {
-            data: { me = {} },
+            data: myData,
           },
           getMyChats: {
-            data: { myContacts = [], myChats = [] },
+            data: myChatsData,
             fetchMore: fetchMoreMessages,
             loading,
           },
@@ -115,6 +115,8 @@ class Chats extends Component {
             result: { loading: adding },
           },
         }) => {
+          const me = get(myData, 'me', {});
+          const { myContacts, myChats } = myChatsData || { myContacts: [], myChats: [] };
           const contact = find(myContacts, { chatId: selectedChatId }) || {};
           const chat = find(myChats, { id: selectedChatId }) || {};
           const contactsListIsEmpty = isEmpty(myContacts);

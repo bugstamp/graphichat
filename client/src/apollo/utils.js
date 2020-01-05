@@ -2,6 +2,31 @@ import React from 'react';
 import { Query, Mutation, Subscription } from 'react-apollo';
 import { get } from 'lodash';
 
+export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps) => {
+  if (!name) {
+    throw new Error('name is required');
+  }
+  if (!gqlQuery) {
+    throw new Error('gql query is required');
+  }
+  const queryContainerPropsKey = `${name}Props`;
+  const queryContainerProps = get(containerProps, queryContainerPropsKey, {});
+  const { render } = containerProps;
+
+  return (
+    <Query
+      query={gqlQuery}
+      {...queryProps}
+      {...queryContainerProps}
+    >
+      {props => render({
+        ...props,
+        name,
+      })}
+    </Query>
+  );
+};
+
 export const createMutation = (name, gqlMutation, mutationProps = {}) => (containerProps) => {
   if (!name) {
     throw new Error('name is required');
@@ -25,31 +50,6 @@ export const createMutation = (name, gqlMutation, mutationProps = {}) => (contai
         name,
       })}
     </Mutation>
-  );
-};
-
-export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps) => {
-  if (!name) {
-    throw new Error('name is required');
-  }
-  if (!gqlQuery) {
-    throw new Error('gql query is required');
-  }
-  const queryContainerPropsKey = `${name}Props`;
-  const queryContainerProps = get(containerProps, queryContainerPropsKey, {});
-  const { render } = containerProps;
-
-  return (
-    <Query
-      query={gqlQuery}
-      {...queryProps}
-      {...queryContainerProps}
-    >
-      {props => render({
-        ...props,
-        name,
-      })}
-    </Query>
   );
 };
 

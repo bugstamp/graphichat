@@ -1,12 +1,41 @@
 import React from 'react';
 import { Query, Mutation, Subscription } from 'react-apollo';
-import { get, has } from 'lodash';
+import { get } from 'lodash';
+
+export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps) => {
+  if (!name) {
+    throw new Error('name is required');
+  }
+  if (!gqlQuery) {
+    throw new Error('gql query is required');
+  }
+  const queryContainerPropsKey = `${name}Props`;
+  const queryContainerProps = get(containerProps, queryContainerPropsKey, {});
+  const { render } = containerProps;
+
+  return (
+    <Query
+      query={gqlQuery}
+      {...queryProps}
+      {...queryContainerProps}
+    >
+      {props => render({
+        ...props,
+        name,
+      })}
+    </Query>
+  );
+};
 
 export const createMutation = (name, gqlMutation, mutationProps = {}) => (containerProps) => {
+  if (!name) {
+    throw new Error('name is required');
+  }
+  if (!gqlMutation) {
+    throw new Error('gql mutation is required');
+  }
   const mutationContainerPropsKey = `${name}Props`;
-  const mutationContainerProps = has(containerProps, mutationContainerPropsKey)
-    ? get(containerProps, mutationContainerPropsKey)
-    : {};
+  const mutationContainerProps = get(containerProps, mutationContainerPropsKey, {});
   const { render } = containerProps;
 
   return (
@@ -24,32 +53,16 @@ export const createMutation = (name, gqlMutation, mutationProps = {}) => (contai
   );
 };
 
-export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps) => {
-  const queryContainerPropsKey = `${name}Props`;
-  const queryContainerProps = has(containerProps, queryContainerPropsKey)
-    ? get(containerProps, queryContainerPropsKey)
-    : {};
-  const { render } = containerProps;
-
-  return (
-    <Query
-      query={gqlQuery}
-      {...queryProps}
-      {...queryContainerProps}
-    >
-      {props => render({
-        ...props,
-        name,
-      })}
-    </Query>
-  );
-};
-
+// eslint-disable-next-line
 export const createSubscription = (name, gqlSubscription, subscriptionProps = {}) => (containerProps) => {
+  if (!name) {
+    throw new Error('name is required');
+  }
+  if (!gqlSubscription) {
+    throw new Error('gql subscription is required');
+  }
   const subscriptionContainerPropsKey = `${name}Props`;
-  const subscriptionContainerProps = has(containerProps, subscriptionContainerPropsKey)
-    ? get(containerProps, subscriptionContainerPropsKey)
-    : {};
+  const subscriptionContainerProps = get(containerProps, subscriptionContainerPropsKey, {});
   const { render } = containerProps;
 
   return (

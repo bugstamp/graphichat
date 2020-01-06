@@ -166,7 +166,7 @@ describe('test apollo utils', () => {
       expect(wrapper.find(Mutation)).toBeTruthy();
       expect(wrapper.find('.test')).toBeTruthy();
     });
-    test('showing loading state and invoking mutation and passing container props', async () => {
+    test('showing loading state / invoking mutation / passing container props', async () => {
       let completed = false;
       const wrapper = mountMockedProvider((
         <TestContainer

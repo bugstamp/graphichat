@@ -4,10 +4,10 @@ import reset from 'styled-reset';
 import { size } from 'polished';
 import { get } from 'lodash';
 
-export const getStyledProps = (path, unit = '') => (props) => {
-  const value = get(props, path);
+export const getStyledProps = (path, unit = '') => (props = {}) => {
+  const value = get(props, path, null);
 
-  if (unit) {
+  if (unit && value) {
     return `${value}${unit}`;
   }
   return value;
@@ -47,8 +47,8 @@ export const GlobalStyle = createGlobalStyle`
       display: flex;
     }
 
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
+  ${() => {
+    const breakpoints = getStyledProps('theme.breakpoints')({ theme });
     const smDown = breakpoints.down('sm');
 
     return `

@@ -2,6 +2,7 @@ const path = require('path');
 
 const paths = {
   root: path.resolve(__dirname, '../'),
+  config: path.resolve(__dirname, '../src/config.js'),
   modules: path.resolve(__dirname, '../node_modules'),
   envProd: path.resolve(__dirname, '../.env.prod'),
   source: path.resolve(__dirname, '../src'),

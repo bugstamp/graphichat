@@ -10,7 +10,7 @@ class AppProvider extends Component {
 
     return (
       <AppContext.Provider
-        value={{}}
+        value={this.state}
       >
         {children}
       </AppContext.Provider>

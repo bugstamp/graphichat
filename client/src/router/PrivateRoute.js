@@ -1,31 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import jwt from 'jsonwebtoken';
 
-import storage from '../storage';
-
-const tokenSecrets = {
-  token: process.env.TOKEN_SECRET,
-  refresh: process.env.REFRESH_TOKEN_SECRET,
-};
-
-export const checkToken = async (token, set = false, secretType = 'token') => {
-  try {
-    if (!token) {
-      throw new Error('Token wasn\'t found');
-    }
-    const secret = tokenSecrets[secretType];
-    const { data: { regStatus } } = await jwt.verify(token, secret);
-
-    if (set) {
-      storage.token.set(token);
-    }
-    return { regStatus };
-  } catch (e) {
-    return { regStatus: '' };
-  }
-};
+import storage, { checkToken } from '../storage';
 
 class PrivateRoute extends Component {
   state = {
@@ -34,12 +11,12 @@ class PrivateRoute extends Component {
     status: '',
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const token = storage.token.get();
 
     if (token) {
       try {
-        const { regStatus } = await checkToken(token, false);
+        const { regStatus } = checkToken(token, false);
 
         this.setState({
           render: true,

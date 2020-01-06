@@ -5,7 +5,7 @@ import List from '../../../common/List';
 import Contact from './Contact';
 import NoContacts from './NoContacts';
 
-import { getAvatar, messageTimeParser } from '../../../../helpers';
+import { getAvatar, messageDateParsers } from '../../../../helpers';
 
 class ContactsList extends Component {
   rowRenderer = ({ rowIndex, rowData }) => {
@@ -20,7 +20,7 @@ class ContactsList extends Component {
     const avatar = getAvatar(userInfo);
     const message = getLastChatMessage(chatId);
     const { senderId, content, time } = message;
-    const parsedTime = messageTimeParser(time);
+    const parsedTime = messageDateParsers.messageTime(time);
 
     const isSelected = selectedChatId === chatId;
     const online = status === 'ONLINE';

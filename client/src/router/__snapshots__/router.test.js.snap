@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test router test AppRoute Component snapshot render 1`] = `
+<Route
+  path="/"
+  render={[Function]}
+/>
+`;
+
+exports[`test router test PrivateRoute Component snapshot render 1`] = `
+<Redirect
+  to="login"
+/>
+`;
+
+exports[`test router test routes snapshot render 1`] = `
+<Switch>
+  <AppRoute
+    component={[Function]}
+    layout={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "done": Promise {},
+        "preload": [Function],
+        "render": [Function],
+      }
+    }
+    path="/login"
+    privateRoute={false}
+    redirect={false}
+    to=""
+  />
+  <AppRoute
+    component={[Function]}
+    layout={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "done": Promise {},
+        "preload": [Function],
+        "render": [Function],
+      }
+    }
+    path="/reg"
+    privateRoute={false}
+    redirect={false}
+    to=""
+  />
+  <AppRoute
+    component={[Function]}
+    exact={true}
+    layout={null}
+    path="/"
+    privateRoute={false}
+    redirect={true}
+    to="/chats"
+  />
+  <AppRoute
+    component={[Function]}
+    layout={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "done": Promise {},
+        "preload": [Function],
+        "render": [Function],
+      }
+    }
+    path="/chats"
+    privateRoute={true}
+    redirect={false}
+    to=""
+  />
+  <AppRoute
+    component={[Function]}
+    layout={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "done": Promise {},
+        "preload": [Function],
+        "render": [Function],
+      }
+    }
+    path="*"
+    privateRoute={false}
+    redirect={false}
+    to=""
+  />
+</Switch>
+`;

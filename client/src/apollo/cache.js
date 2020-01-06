@@ -4,7 +4,7 @@ const cache = new InMemoryCache({
   freezeResults: true,
 });
 
-const initialState = {
+export const initialState = {
   sessionExpired: false,
   me: {
     __typename: 'User',

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test ImagePreloader.js snapshot testing 1`] = `
+<div
+  className="image-preloader"
+  style={
+    Object {
+      "display": "none",
+    }
+  }
+>
+  <img
+    alt=""
+    src="test-file-mock"
+  />
+  <img
+    alt=""
+    src="test-file-mock"
+  />
+</div>
+`;

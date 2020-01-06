@@ -53,6 +53,7 @@ export const createMutation = (name, gqlMutation, mutationProps = {}) => (contai
   );
 };
 
+// eslint-disable-next-line
 export const createSubscription = (name, gqlSubscription, subscriptionProps = {}) => (containerProps) => {
   if (!name) {
     throw new Error('name is required');

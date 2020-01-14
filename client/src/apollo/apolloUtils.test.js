@@ -3,84 +3,29 @@ import wait from 'waait';
 import { adopt } from 'react-adopt';
 import { Query, Mutation, Subscription } from 'react-apollo';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { MockedProvider } from '@apollo/react-testing';
 import { act } from 'react-dom/test-utils';
-import { mount } from 'enzyme';
 
 import { createQuery, createMutation, createSubscription } from './utils';
 import { initialState } from './cache';
-import gql from '../gql';
+
+import {
+  getInitialDataMock,
+  updateUserMock,
+  userUpdateSubscriptionMock,
+} from '../__mocks__/mockedQueries';
+import { mountMockedProvider } from '../__mocks__/mockedProvider';
+import queries from '../queries';
 
 const {
-  GET_INITIAL_DATA,
-  UPDATE_USER,
-  USER_UPDATE_SUBSCRIPTION,
-} = gql;
-const getInitialData = createQuery('getInitialData', GET_INITIAL_DATA);
-const updateUser = createMutation('updateUser', UPDATE_USER);
-const userUpdateSubscription = createSubscription('userUpdate', USER_UPDATE_SUBSCRIPTION);
-
-const mockMe = {
-  id: 1,
-  avatar: {
-    sm: 'smAvatar',
-    md: 'mdAvatar',
-    __typename: 'UserAvatar',
+  user: {
+    getInitialData,
+    updateUser,
+    userUpdateSubscription,
   },
-  username: 'me',
-  displayName: 'Me Test',
-  firstName: 'Me',
-  lastName: 'Test',
-  status: 'COMPLETED',
-  lastDate: Date.now(),
-  __typename: 'User',
-};
-const getInitialDataMock = {
-  request: {
-    query: GET_INITIAL_DATA,
-    variables: {},
-  },
-  result: {
-    data: {
-      me: mockMe,
-      myContacts: [],
-      myChats: [],
-    },
-  },
-};
-const updateUserMock = {
-  request: {
-    query: UPDATE_USER,
-    variables: {
-      field: 'username',
-      value: 'user',
-    },
-  },
-  result: {
-    data: {
-      updateUser: mockMe,
-    },
-  },
-};
-const userUpdateSubscriptionMock = {
-  request: {
-    query: USER_UPDATE_SUBSCRIPTION,
-    variables: {},
-  },
-  result: {
-    data: {
-      userUpdated: mockMe,
-    },
-  },
-};
+} = queries;
 
 describe('test apollo utils', () => {
   let mockedCache = {};
-  const mountMockedProvider = (children, cache, mocks = []) => mount((
-    <MockedProvider mocks={mocks} cache={cache}>
-      {children}
-    </MockedProvider>
-  ));
 
   beforeEach(() => {
     mockedCache = new InMemoryCache({ freezeResults: true });
@@ -249,7 +194,7 @@ describe('test apollo utils', () => {
 
       const wrapper = mountMockedProvider((
         <TestContainer
-          userUpdateProps={{
+          userUpdateSubscriptionProps={{
             onSubscriptionData() {
               completed = true;
             },

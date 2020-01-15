@@ -2,14 +2,9 @@ import { find, map } from 'lodash';
 
 import gql from '../gql';
 import { myContactActivityFragment } from '../gql/fragments';
-import { createMutation, createQuery, createSubscription } from '../apollo/utils';
-
-import history from '../router/history';
-import storage from '../storage';
-import originalClient from '../apollo';
+import { createQuery, createMutation, createSubscription } from '../apollo/utils';
 
 const {
-  CHECK_SESSION_EXPIRATION,
   GET_ME,
   GET_INITIAL_DATA,
   GET_MY_CONTACTS,
@@ -17,10 +12,7 @@ const {
   UPLOAD_AVATAR,
   USER_UPDATE_SUBSCRIPTION,
   USER_ACTIVITY_SUBSCRIPTION,
-  SIGN_OUT,
 } = gql;
-
-const checkSessionExpiration = createQuery('checkSessionExpiration', CHECK_SESSION_EXPIRATION);
 
 const getInitialData = createQuery('getInitialData', GET_INITIAL_DATA);
 
@@ -89,20 +81,10 @@ const userActivitySubscription = createSubscription('userActivitySubscription', 
   },
 });
 
-const signOut = createMutation('signOut', SIGN_OUT, {
-  onCompleted() {
-    storage.removeTokens();
-    originalClient.resetStore();
-    history.push('/');
-  },
-});
-
 export {
-  checkSessionExpiration,
   getInitialData,
   uploadAvatar,
   updateUser,
   userUpdateSubscription,
   userActivitySubscription,
-  signOut,
 };

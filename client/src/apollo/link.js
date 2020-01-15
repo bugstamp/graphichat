@@ -65,8 +65,8 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
 
 const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
   if (networkError.statusCode === 401) {
-    storage.removeTokens();
     client.writeData({ data: { sessionExpired: true } });
+    storage.removeTokens();
   }
   if (!isEmpty(networkError)) {
     console.log(networkError);

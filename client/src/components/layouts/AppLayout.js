@@ -13,17 +13,11 @@ const AppLayout = ({ children }) => (
         data: initialData,
         loading,
       },
-      signOut: {
-        mutation: signOut,
-      },
       uploadAvatar: {
         mutation: uploadAvatar,
         result: {
           loading: avatarUploading,
         },
-      },
-      checkSessionExpiration: {
-        data: sessionData,
       },
       updateUser: {
         mutation: updateUser,
@@ -31,6 +25,12 @@ const AppLayout = ({ children }) => (
           loading: updating,
           error: userUpdatingError,
         },
+      },
+      checkSessionExpiration: {
+        data: sessionData,
+      },
+      signOut: {
+        mutation: signOut,
       },
     }) => {
       const me = get(initialData, 'me', {});
@@ -63,3 +63,4 @@ AppLayout.propTypes = {
 };
 
 export default hot(module)(AppLayout);
+export { AppLayout };

@@ -3,14 +3,16 @@ import { adopt } from 'react-adopt';
 import queries from '../../queries';
 
 const {
-  user: {
+  auth: {
     checkSessionExpiration,
+    signOut,
+  },
+  user: {
     getInitialData,
     uploadAvatar,
     updateUser,
     userUpdateSubscription,
     userActivitySubscription,
-    signOut,
   },
   chat: {
     chatCreatedSubscription,
@@ -19,13 +21,13 @@ const {
 
 const AppLayoutContainer = adopt({
   chatCreatedSubscription,
-  userActivitySubscription,
   getInitialData,
+  uploadAvatar,
+  updateUser,
+  userActivitySubscription,
+  userUpdateSubscription,
   checkSessionExpiration,
   signOut,
-  uploadAvatar,
-  userUpdateSubscription,
-  updateUser,
 });
 
 export default AppLayoutContainer;

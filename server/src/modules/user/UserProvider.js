@@ -92,9 +92,8 @@ class UserProvider {
     }
   }
 
-  updateUser = async (form) => {
+  updateUser = async (field, value) => {
     try {
-      const { field, value } = form;
       const { id } = this.authProvider.user;
 
       if (field === 'username') {

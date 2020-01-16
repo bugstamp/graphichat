@@ -1,63 +1,24 @@
-import React, { PureComponent, createRef } from 'react';
+import React, {
+  PureComponent,
+  createRef,
+} from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { map, set, omit } from 'lodash';
-import { position } from 'polished';
+import { map, omit } from 'lodash';
 
-import MaterialAvatar from '@material-ui/core/Avatar';
-import CameraIcon from '@material-ui/icons/CameraAlt';
 import TextField from '@material-ui/core/TextField';
 
+import {
+  SettingWrapper,
+  AvatarWrapper,
+  Avatar,
+  Camera,
+  FormWrapper,
+} from './styled';
+
 import { getAvatar } from '../../../helpers';
-import { getSpacing } from '../../../styles';
 import { meProps } from '../../propTypes';
 
-const ProfileSettingsWrapper = styled.div`
-  display: flex;
-`;
-
-const AvatarWrapper = styled.div`
-  padding-bottom: ${getSpacing(2)};
-  position: relative;
-`;
-
-const Avatar = styled(MaterialAvatar)`
-  && {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto;
-    position: relative;
-    color: ${({ src }) => (src && '#fff')};
-    cursor: pointer;
-
-    ${({ src }) => src && `
-      > svg {
-        opacity: 0;
-      }
-
-      &:hover {
-        > svg {
-          opacity: .6;
-        }
-      }
-    `}
-  }
-`;
-
-const Camera = styled(CameraIcon)`
-  && {
-    ${position('absolute', '50%', null, null, '50%')};
-    transform: translate(-50%, -50%);
-    transition: all .3s ease;
-  }
-`;
-
-const ProfileWrapper = styled.div`
-  width: 100%;
-  padding: ${getSpacing(1)};
-`;
-
-class ProfileSettings extends PureComponent {
+class Settings extends PureComponent {
   avatarInput = createRef()
 
   state = {
@@ -69,7 +30,7 @@ class ProfileSettings extends PureComponent {
   fields = [
     {
       id: 'username',
-      label: 'Username',
+      label: 'User Name',
     },
     {
       id: 'firstName',
@@ -89,9 +50,10 @@ class ProfileSettings extends PureComponent {
 
     if (!prevProps.error && error) {
       const { graphQLErrors } = error;
-      const { message, data = null } = graphQLErrors[0];
+      const { data = null } = graphQLErrors[0];
 
       if (data) {
+        const { message } = graphQLErrors[0];
         const { invalidField = null } = data;
 
         if (invalidField) {
@@ -112,22 +74,25 @@ class ProfileSettings extends PureComponent {
     const { name, value } = target;
 
     this.setState(({ called, values }) => {
-      if (!called[name]) {
-        set(called, name, true);
-      }
-      return ({
-        called,
-        values: { ...values, [name]: value },
-      });
+      const updatedCalled = !called[name]
+        ? { ...called, [name]: true }
+        : called;
+      const updatedValues = { ...values, [name]: value };
+
+      return {
+        called: updatedCalled,
+        values: updatedValues,
+      };
     });
   }
 
-  onChangeAvatar = ({
-    target: {
-      files: [file],
-      validity: { valid },
-    },
-  }) => {
+  onChangeAvatar = (e) => {
+    const {
+      target: {
+        files: [file],
+        validity: { valid },
+      },
+    } = e;
     const { uploadAvatar } = this.props;
 
     if (valid) {
@@ -145,11 +110,10 @@ class ProfileSettings extends PureComponent {
     const { errors } = this.state;
     const { updateUser, me } = this.props;
     const { name: field, value } = target;
-    const form = { field, value };
     const existedValue = me[field];
 
     if (value !== existedValue && value) {
-      updateUser({ variables: { form } });
+      updateUser({ variables: { field, value } });
 
       if (errors[field]) {
         this.setState(() => ({
@@ -178,10 +142,10 @@ class ProfileSettings extends PureComponent {
   render() {
     const { called, values, errors } = this.state;
     const { me } = this.props;
-    const avatar = getAvatar(me);
+    const avatar = getAvatar(me, 'md');
 
     return (
-      <ProfileSettingsWrapper>
+      <SettingWrapper>
         <AvatarWrapper>
           <input
             ref={this.avatarInput}
@@ -198,7 +162,7 @@ class ProfileSettings extends PureComponent {
             <Camera fontSize="large" />
           </Avatar>
         </AvatarWrapper>
-        <ProfileWrapper>
+        <FormWrapper>
           {
             map(this.fields, ({ id, label }) => {
               const value = called[id] ? values[id] : me[id];
@@ -224,21 +188,21 @@ class ProfileSettings extends PureComponent {
               );
             })
           }
-        </ProfileWrapper>
-      </ProfileSettingsWrapper>
+        </FormWrapper>
+      </SettingWrapper>
     );
   }
 }
 
-ProfileSettings.defaultProps = {
+Settings.defaultProps = {
   me: {},
   error: null,
 };
-ProfileSettings.propTypes = {
+Settings.propTypes = {
   me: PropTypes.shape(meProps),
   uploadAvatar: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,
   error: PropTypes.instanceOf(Error),
 };
 
-export default ProfileSettings;
+export default Settings;

@@ -75,8 +75,8 @@ const USER_ACTIVITY_SUBSCRIPTION = gql`
 `;
 
 const UPDATE_USER = gql`
-  mutation UpdateUser($form: UserUpdateForm) {
-    updateUser(form: $form) {
+  mutation UpdateUser($field: String!, $value: String!) {
+    updateUser(field: $field, value: $value) {
       ...myData
     }
   }

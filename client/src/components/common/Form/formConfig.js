@@ -69,6 +69,35 @@ export const formFields = {
     required: false,
     initialValue: '',
   }],
+  user: [{
+    name: 'username',
+    label: 'User Name',
+    type: 'text',
+    autoComplete: 'on',
+    required: true,
+    initialValue: '',
+  }, {
+    name: 'email',
+    label: 'Email Address',
+    type: 'email',
+    autoComplete: 'on',
+    required: true,
+    initialValue: '',
+  }, {
+    name: 'firstName',
+    label: 'First Name',
+    type: 'text',
+    autoComplete: 'on',
+    required: true,
+    initialValue: '',
+  }, {
+    name: 'lastName',
+    label: 'Last name',
+    type: 'text',
+    autoComplete: 'on',
+    required: true,
+    initialValue: '',
+  }],
 };
 
 export const formValidationSchemas = {

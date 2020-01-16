@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 
-import Navigation from '../common/Navigation/Navigation';
+import Navigation from '../../common/Navigation/Navigation';
 import SettingsDialog from './SettingsDialog';
-import { AppContainer, MainPageWrapper } from './styled';
+import { AppContainer, AppGrid } from './styled';
 
-const MainPage = (props) => {
+const Main = (props) => {
   const {
     children,
     loading,
@@ -43,7 +43,7 @@ const MainPage = (props) => {
 
   return (
     <AppContainer container spacing={0} justify="center">
-      <MainPageWrapper>
+      <AppGrid>
         <Grid container spacing={0}>
           <Hidden smDown>
             <Grid item>
@@ -57,17 +57,17 @@ const MainPage = (props) => {
             {childrenClone}
           </Grid>
         </Grid>
-      </MainPageWrapper>
+      </AppGrid>
       <SettingsDialog open={settingsDialog} toggle={handleToggleSettingDialog} />
     </AppContainer>
   );
 };
 
-MainPage.defaultProps = {
+Main.defaultProps = {
   children: null,
   userId: null,
 };
-MainPage.propTypes = {
+Main.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]),
   userId: PropTypes.string,
   loading: PropTypes.bool.isRequired,
@@ -75,4 +75,4 @@ MainPage.propTypes = {
   signOut: PropTypes.func.isRequired,
 };
 
-export default MainPage;
+export default Main;

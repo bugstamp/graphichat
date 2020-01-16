@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader';
 import { get } from 'lodash';
 
 import AppLayoutContainer from '../containers/AppLayoutContainer';
-import MainPage from '../pages/MainPage';
+import Main from '../pages/Main/Main';
 
 const AppLayout = ({ children }) => (
   <AppLayoutContainer>
@@ -24,14 +24,14 @@ const AppLayout = ({ children }) => (
       const sessionExpired = get(sessionData, 'sessionExpired', false);
 
       return (
-        <MainPage
+        <Main
           loading={loading}
           userId={userId}
           signOut={signOut}
           sessionExpired={sessionExpired}
         >
           {children}
-        </MainPage>
+        </Main>
       );
     }}
   </AppLayoutContainer>

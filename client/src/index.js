@@ -4,9 +4,9 @@ import { Router } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import registerSW from './registerSW';
 
-import polyfill from './polyfill';
-import ImagePreloader from './components/ImagePreloader';
 import App from './components/App';
+import ImagePreloader from './components/ImagePreloader';
+import polyfill from './polyfill';
 
 import apollo from './apollo';
 import history from './router/history';

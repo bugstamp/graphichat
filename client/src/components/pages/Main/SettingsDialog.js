@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 
-import ResponsiveDialog from '../common/ResponsiveDialog/ResponsiveDialog';
-import ProfileSettings from './Main/ProfileSettings';
+import ResponsiveDialog from '../../common/ResponsiveDialog/ResponsiveDialog';
+import Settings from './Settings';
 
-import SettingsDialogContainer from '../containers/SettingsDialogContainer';
+import SettingsDialogContainer from '../../containers/SettingsDialogContainer';
 
 const SettingsDialog = ({ open, toggle }) => {
   return (
@@ -28,15 +28,16 @@ const SettingsDialog = ({ open, toggle }) => {
         },
       }) => {
         const { me } = data;
+        const loading = avatarUploading || updating;
 
         return (
           <ResponsiveDialog
             open={open}
             toggle={toggle}
-            loading={avatarUploading || updating}
-            title="Profile Settings"
+            loading={loading}
+            title="Settings"
           >
-            <ProfileSettings
+            <Settings
               me={me}
               error={error}
               updateUser={updateUser}

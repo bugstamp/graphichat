@@ -80,6 +80,13 @@ class MainPage extends Component {
       userUpdatingError,
     } = this.props;
     const avatar = getAvatar(me, 'md');
+    const childrenClone = children
+      ? cloneElement(children, {
+        initialLoading: loading,
+        toggleSettingsDialog: this.toggleSettingsDialog,
+        signOut: this.signOut,
+      })
+      : null;
 
     return (
       <AppWrapper container spacing={0} justify="center">
@@ -94,11 +101,7 @@ class MainPage extends Component {
               </Grid>
             </Hidden>
             <Grid item xs>
-              {cloneElement(children, {
-                initialLoading: loading,
-                toggleSettingsDialog: this.toggleSettingsDialog,
-                signOut: this.signOut,
-              })}
+              {childrenClone}
             </Grid>
           </Grid>
         </MainPageWrapper>
@@ -119,11 +122,12 @@ class MainPage extends Component {
 }
 
 MainPage.defaultProps = {
+  children: null,
   me: {},
   userUpdatingError: null,
 };
 MainPage.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]),
   loading: PropTypes.bool.isRequired,
   me: PropTypes.shape(meProps),
   sessionExpired: PropTypes.bool.isRequired,

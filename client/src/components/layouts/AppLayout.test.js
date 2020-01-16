@@ -1,8 +1,5 @@
 import React from 'react';
-import wait from 'waait';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import { shallow } from 'enzyme';
-import { act } from 'react-dom/test-utils';
 
 import {
   getInitialDataMock,
@@ -14,7 +11,6 @@ import {
   checkSessionExpirationMock,
 } from '../../__mocks__/mockedQueries';
 import { mountMockedProvider } from '../../__mocks__/mockedProvider';
-import { initialState } from '../../apollo/cache';
 
 import { AppLayout } from './AppLayout';
 import MainPage from '../pages/MainPage';
@@ -28,10 +24,9 @@ const mocks = [
   checkSessionExpirationMock,
   chatCreatedSubscriptionMock,
 ];
-const cache = new InMemoryCache({ freezeResults: true });
-cache.writeData({ data: initialState });
 
-const TestChild = () => (<div>Test</div>);
+const text = 'Test Child';
+const TestChild = () => (<div>{text}</div>);
 
 describe('test AppLayout', () => {
   test('snapshot render', () => {
@@ -39,15 +34,20 @@ describe('test AppLayout', () => {
 
     expect(wrapper).toMatchSnapshot();
   });
-  test('mount and pass children', () => {
+  test('mount render | check default type of children prop', () => {
     const wrapper = mountMockedProvider((
-      <AppLayout>
-        <TestChild />
-      </AppLayout>
-    ), cache, mocks);
+      <AppLayout />
+    ), mocks);
 
     expect(wrapper.find(MainPage)).toBeTruthy();
+    expect(wrapper.find(AppLayout).prop('children')).toBe(null);
+  });
+  test('pass child', () => {
+    const wrapper = mountMockedProvider((
+      <AppLayout><TestChild /></AppLayout>
+    ), mocks);
+
     expect(wrapper.find(TestChild)).toBeTruthy();
-    expect(wrapper.find(TestChild).text()).toBe('Test');
+    expect(wrapper.find(TestChild).text()).toBe(text);
   });
 });

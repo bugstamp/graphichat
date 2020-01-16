@@ -107,6 +107,7 @@
     "jest": "^24.8.0",
     "jest-environment-enzyme": "^7.0.2",
     "jest-enzyme": "^7.0.2",
+    "jest-prop-type-error": "^1.1.0",
     "jest-styled-components": "^6.3.3",
     "webpack-dev-server": "^3.1.10"
   }

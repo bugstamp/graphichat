@@ -8,6 +8,7 @@ import MaterialAvatar from '@material-ui/core/Avatar';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 import TextField from '@material-ui/core/TextField';
 
+import { getAvatar } from '../../../helpers';
 import { getSpacing } from '../../../styles';
 import { meProps } from '../../propTypes';
 
@@ -176,7 +177,8 @@ class ProfileSettings extends PureComponent {
 
   render() {
     const { called, values, errors } = this.state;
-    const { avatar, me } = this.props;
+    const { me } = this.props;
+    const avatar = getAvatar(me);
 
     return (
       <ProfileSettingsWrapper>
@@ -233,10 +235,6 @@ ProfileSettings.defaultProps = {
   error: null,
 };
 ProfileSettings.propTypes = {
-  avatar: PropTypes.shape({
-    src: PropTypes.string,
-    text: PropTypes.string,
-  }).isRequired,
   me: PropTypes.shape(meProps),
   uploadAvatar: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired,

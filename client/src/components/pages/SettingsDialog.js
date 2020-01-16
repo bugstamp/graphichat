@@ -6,8 +6,6 @@ import ProfileSettings from './Main/ProfileSettings';
 
 import SettingsDialogContainer from '../containers/SettingsDialogContainer';
 
-import { getAvatar } from '../../helpers';
-
 const SettingsDialog = ({ open, toggle }) => {
   return (
     <SettingsDialogContainer>
@@ -30,7 +28,6 @@ const SettingsDialog = ({ open, toggle }) => {
         },
       }) => {
         const { me } = data;
-        const avatar = getAvatar(me);
 
         return (
           <ResponsiveDialog
@@ -44,7 +41,6 @@ const SettingsDialog = ({ open, toggle }) => {
               error={error}
               updateUser={updateUser}
               uploadAvatar={uploadAvatar}
-              avatar={avatar}
             />
           </ResponsiveDialog>
         );

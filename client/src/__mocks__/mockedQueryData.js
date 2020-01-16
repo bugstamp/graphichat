@@ -1,7 +1,13 @@
 export const avatar = {
+  sm: '',
+  md: '',
+  __typename: 'UserAvatar',
+};
+
+export const uploadAvatar = {
+  ...avatar,
   sm: 'smAvatar',
   md: 'mdAvatar',
-  __typename: 'UserAvatar',
 };
 
 export const me = {

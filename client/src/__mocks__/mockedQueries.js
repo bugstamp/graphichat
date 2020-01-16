@@ -1,8 +1,7 @@
 import gql from '../gql';
 import {
-  avatar,
+  uploadAvatar,
   me,
-  user,
   userActivityUpdate,
   contact,
   chat,
@@ -63,12 +62,16 @@ export const uploadAvatarMock = {
   request: {
     query: UPLOAD_AVATAR,
     variables: {
-      file: {},
+      file: {
+        filename: '',
+        mimetype: '',
+        encoding: '',
+      },
     },
   },
   result: {
     data: {
-      uploadAvatar: avatar,
+      uploadAvatar,
     },
   },
 };

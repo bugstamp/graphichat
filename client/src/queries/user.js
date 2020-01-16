@@ -16,6 +16,8 @@ const {
 
 const getInitialData = createQuery('getInitialData', GET_INITIAL_DATA);
 
+const getMe = createQuery('getMe', GET_ME);
+
 const uploadAvatar = createMutation('uploadAvatar', UPLOAD_AVATAR, {
   update(client, { data: { uploadAvatar: avatar } }) {
     const { me } = client.readQuery({ query: GET_ME });
@@ -83,6 +85,7 @@ const userActivitySubscription = createSubscription('userActivitySubscription', 
 
 export {
   getInitialData,
+  getMe,
   uploadAvatar,
   updateUser,
   userUpdateSubscription,

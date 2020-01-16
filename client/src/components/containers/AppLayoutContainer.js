@@ -9,8 +9,6 @@ const {
   },
   user: {
     getInitialData,
-    uploadAvatar,
-    updateUser,
     userUpdateSubscription,
     userActivitySubscription,
   },
@@ -20,14 +18,12 @@ const {
 } = queries;
 
 const AppLayoutContainer = adopt({
-  chatCreatedSubscription,
-  getInitialData,
-  uploadAvatar,
-  updateUser,
-  userActivitySubscription,
-  userUpdateSubscription,
   checkSessionExpiration,
+  getInitialData,
   signOut,
+  userUpdateSubscription,
+  userActivitySubscription,
+  chatCreatedSubscription,
 });
 
 export default AppLayoutContainer;

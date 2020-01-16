@@ -13,19 +13,6 @@ const AppLayout = ({ children }) => (
         data: initialData,
         loading,
       },
-      uploadAvatar: {
-        mutation: uploadAvatar,
-        result: {
-          loading: avatarUploading,
-        },
-      },
-      updateUser: {
-        mutation: updateUser,
-        result: {
-          loading: updating,
-          error: userUpdatingError,
-        },
-      },
       checkSessionExpiration: {
         data: sessionData,
       },
@@ -33,19 +20,14 @@ const AppLayout = ({ children }) => (
         mutation: signOut,
       },
     }) => {
-      const me = get(initialData, 'me', {});
+      const userId = get(initialData, 'me.id', null);
       const sessionExpired = get(sessionData, 'sessionExpired', false);
 
       return (
         <MainPage
           loading={loading}
-          me={me}
+          userId={userId}
           signOut={signOut}
-          avatarUploading={avatarUploading}
-          uploadAvatar={uploadAvatar}
-          updating={updating}
-          updateUser={updateUser}
-          userUpdatingError={userUpdatingError}
           sessionExpired={sessionExpired}
         >
           {children}

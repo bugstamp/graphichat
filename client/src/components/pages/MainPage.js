@@ -12,19 +12,11 @@ import Navigation from '../common/Navigation/Navigation';
 import SettingsDialog from './SettingsDialog';
 import { AppContainer, MainPageWrapper } from './styled';
 
-import { getAvatar } from '../../helpers';
-import { meProps } from '../propTypes';
-
 const MainPage = (props) => {
   const {
     children,
     loading,
-    me,
-    avatarUploading,
-    uploadAvatar,
-    updating,
-    updateUser,
-    userUpdatingError,
+    userId,
     signOut,
     sessionExpired,
   } = props;
@@ -33,16 +25,13 @@ const MainPage = (props) => {
     toggleSettingsDialog(!settingsDialog);
   };
   const handleSignOut = () => {
-    const { id } = me;
-
-    signOut({ variables: { userId: id } });
+    signOut({ variables: { userId } });
   };
   useEffect(() => {
     if (sessionExpired) {
       handleSignOut();
     }
   }, [sessionExpired]);
-  const avatar = getAvatar(me, 'md');
   const childrenCloneProps = {
     initialLoading: loading,
     toggleSettingsDialog: handleToggleSettingDialog,
@@ -69,37 +58,21 @@ const MainPage = (props) => {
           </Grid>
         </Grid>
       </MainPageWrapper>
-      <SettingsDialog
-        me={me}
-        open={settingsDialog}
-        toggle={handleToggleSettingDialog}
-        avatar={avatar}
-        avatarUploading={avatarUploading}
-        uploadAvatar={uploadAvatar}
-        updating={updating}
-        updateUser={updateUser}
-        error={userUpdatingError}
-      />
+      <SettingsDialog open={settingsDialog} toggle={handleToggleSettingDialog} />
     </AppContainer>
   );
 };
 
 MainPage.defaultProps = {
   children: null,
-  me: {},
-  userUpdatingError: null,
+  userId: null,
 };
 MainPage.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]),
+  userId: PropTypes.string,
   loading: PropTypes.bool.isRequired,
-  me: PropTypes.shape(meProps),
   sessionExpired: PropTypes.bool.isRequired,
-  avatarUploading: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
-  uploadAvatar: PropTypes.func.isRequired,
-  updating: PropTypes.bool.isRequired,
-  updateUser: PropTypes.func.isRequired,
-  userUpdatingError: PropTypes.instanceOf(Error),
 };
 
 export default MainPage;

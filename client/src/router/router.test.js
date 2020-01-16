@@ -1,6 +1,6 @@
 import config from 'config';
 import React from 'react';
-import { Router, Route, Redirect } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { shallow } from 'enzyme';
 import jwt from 'jsonwebtoken';
@@ -11,10 +11,8 @@ import Routes from './index';
 import App from '../components/App';
 import NotFound from '../components/common/NotFound';
 
-import cache from '../apollo/cache';
 import storage from '../storage';
 import { theme } from '../styles';
-
 import { mountMockedProvider } from '../__mocks__/mockedProvider';
 
 const { tokenSecrets } = config;
@@ -29,20 +27,11 @@ const TestLayout = ({ children }) => (
   <div>{children}</div>
 );
 
-// eslint-disable-next-line
-const TestRouter = ({ children }) => (
-  <Router history={history}>
-    {children}
-  </Router>
-);
-
 const TestAppRoute = props => (
   <AppRoute path="/" layout={TestLayout} component={TestComponent} {...props} />
 );
 
-const mountRouter = (routes, mocks = []) => mountMockedProvider((
-  <TestRouter>{routes}</TestRouter>
-), cache, mocks);
+const mountRouter = (routes, mocks) => mountMockedProvider(routes, mocks, { history });
 
 describe('test router', () => {
   beforeEach(() => {
@@ -118,13 +107,13 @@ describe('test router', () => {
         },
       };
       const token = jwt.sign(mockToken, tokenSecrets.token);
-      const to = `reg?token=${token}`;
+      const path = `reg?token=${token}`;
       storage.token.set(token);
 
       const wrapper = mountRouter(<PrivateRoute><TestComponent /></PrivateRoute>);
 
       expect(wrapper.find(Redirect)).toHaveLength(1);
-      expect(wrapper.find(Redirect).prop('to')).toEqual(to);
+      expect(wrapper.find(Redirect).prop('to')).toEqual(path);
       storage.token.remove();
     });
   });

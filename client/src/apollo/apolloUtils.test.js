@@ -2,11 +2,9 @@ import React from 'react';
 import wait from 'waait';
 import { adopt } from 'react-adopt';
 import { Query, Mutation, Subscription } from 'react-apollo';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import { act } from 'react-dom/test-utils';
 
 import { createQuery, createMutation, createSubscription } from './utils';
-import { initialState } from './cache';
 
 import {
   getInitialDataMock,
@@ -25,13 +23,6 @@ const {
 } = queries;
 
 describe('test apollo utils', () => {
-  let mockedCache = {};
-
-  beforeEach(() => {
-    mockedCache = new InMemoryCache({ freezeResults: true });
-    mockedCache.writeData({ data: initialState });
-  });
-
   describe('createQuery', () => {
     const TestContainer = adopt({ getInitialData });
 
@@ -49,7 +40,7 @@ describe('test apollo utils', () => {
         <TestContainer>
           {() => (<div className="test" />)}
         </TestContainer>
-      ), mockedCache, [getInitialDataMock]);
+      ), [getInitialDataMock]);
 
       expect(wrapper.find(Query)).toBeTruthy();
       expect(wrapper.find('.test')).toBeTruthy();
@@ -75,7 +66,7 @@ describe('test apollo utils', () => {
             return (<div className="test">{loading ? 'Loading' : displayName}</div>);
           }}
         </TestContainer>
-      ), mockedCache, [getInitialDataMock]);
+      ), [getInitialDataMock]);
       expect(wrapper.find('.test').text()).toBe('Loading');
 
       await act(async () => {
@@ -106,7 +97,7 @@ describe('test apollo utils', () => {
         <TestContainer>
           {() => (<div className="test" />)}
         </TestContainer>
-      ), mockedCache, [updateUserMock]);
+      ), [updateUserMock]);
 
       expect(wrapper.find(Mutation)).toBeTruthy();
       expect(wrapper.find('.test')).toBeTruthy();
@@ -149,7 +140,7 @@ describe('test apollo utils', () => {
             );
           }}
         </TestContainer>
-      ), mockedCache, [updateUserMock]);
+      ), [updateUserMock]);
       expect(wrapper.find('p').text()).toBe('');
 
       await act(async () => {
@@ -184,7 +175,7 @@ describe('test apollo utils', () => {
         <TestContainer>
           {() => (<div className="test" />)}
         </TestContainer>
-      ), mockedCache, [userUpdateSubscriptionMock]);
+      ), [userUpdateSubscriptionMock]);
 
       expect(wrapper.find(Subscription)).toBeTruthy();
       expect(wrapper.find('.test')).toBeTruthy();
@@ -226,7 +217,7 @@ describe('test apollo utils', () => {
             );
           }}
         </TestContainer>
-      ), mockedCache, [updateUserMock, userUpdateSubscriptionMock]);
+      ), [updateUserMock, userUpdateSubscriptionMock]);
       expect(wrapper.find('p').text()).toBe('');
 
       await act(async () => {

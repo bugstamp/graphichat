@@ -15,7 +15,7 @@ import {
 import { mountMockedProvider } from '../../__mocks__/mockedProvider';
 
 import { AppLayout } from './AppLayout';
-import MainPage from '../pages/MainPage';
+import Main from '../pages/Main/Main';
 
 const mocks = [
   getInitialDataMock,
@@ -41,7 +41,7 @@ describe('test AppLayout', () => {
       <AppLayout />
     ), mocks);
 
-    expect(wrapper.find(MainPage)).toBeTruthy();
+    expect(wrapper.find(Main)).toBeTruthy();
     expect(wrapper.find(AppLayout).prop('children')).toBe(null);
   });
   test('pass child', () => {

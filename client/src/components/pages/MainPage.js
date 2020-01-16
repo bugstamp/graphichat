@@ -1,125 +1,88 @@
-import React, { Component, cloneElement } from 'react';
+import React, {
+  cloneElement,
+  useState,
+  useEffect,
+} from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { isEqual } from 'lodash';
 
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 
-import SettingsDialog from './SettingsDialog';
 import Navigation from '../common/Navigation/Navigation';
+import SettingsDialog from './SettingsDialog';
+import { AppContainer, MainPageWrapper } from './styled';
 
-import { getStyledProps } from '../../styles';
 import { getAvatar } from '../../helpers';
 import { meProps } from '../propTypes';
 
-const AppWrapper = styled(Grid)`
-  && {
-    background-color: ${getStyledProps('theme.palette.primary.light')};
-  }
-`;
-
-const MainPageWrapper = styled(Paper)`
-  && {
-    flex: 1 auto;
-    display: flex;
-    overflow: hidden;
-
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const lgUp = breakpoints.up('lg');
-    const mdDown = breakpoints.down('md');
-
-    return `
-      ${lgUp} {
-        margin: 20px 40px;
-      }
-      ${mdDown} {
-        border-radius: 0;
-      }
-    `;
-  }};
-  }
-`;
-
-class MainPage extends Component {
-  state = {
-    settingsDialog: false,
-  }
-
-  componentDidUpdate = (prevProps) => {
-    const { sessionExpired } = this.props;
-
-    if (!isEqual(prevProps.sessionExpired, sessionExpired) && sessionExpired) {
-      this.signOut();
-    }
-  }
-
-  toggleSettingsDialog = () => {
-    this.setState(({ settingsDialog }) => ({ settingsDialog: !settingsDialog }));
-  }
-
-  signOut = () => {
-    const { me, signOut } = this.props;
+const MainPage = (props) => {
+  const {
+    children,
+    loading,
+    me,
+    avatarUploading,
+    uploadAvatar,
+    updating,
+    updateUser,
+    userUpdatingError,
+    signOut,
+    sessionExpired,
+  } = props;
+  const [settingsDialog, toggleSettingsDialog] = useState(false);
+  const handleToggleSettingDialog = () => {
+    toggleSettingsDialog(!settingsDialog);
+  };
+  const handleSignOut = () => {
     const { id } = me;
 
     signOut({ variables: { userId: id } });
-  }
+  };
+  useEffect(() => {
+    if (sessionExpired) {
+      handleSignOut();
+    }
+  }, [sessionExpired]);
+  const avatar = getAvatar(me, 'md');
+  const childrenCloneProps = {
+    initialLoading: loading,
+    toggleSettingsDialog: handleToggleSettingDialog,
+    signOut: handleSignOut,
+  };
+  const childrenClone = children
+    ? cloneElement(children, childrenCloneProps)
+    : null;
 
-  render() {
-    const { settingsDialog } = this.state;
-    const {
-      children,
-      loading,
-      me,
-      avatarUploading,
-      uploadAvatar,
-      updating,
-      updateUser,
-      userUpdatingError,
-    } = this.props;
-    const avatar = getAvatar(me, 'md');
-    const childrenClone = children
-      ? cloneElement(children, {
-        initialLoading: loading,
-        toggleSettingsDialog: this.toggleSettingsDialog,
-        signOut: this.signOut,
-      })
-      : null;
-
-    return (
-      <AppWrapper container spacing={0} justify="center">
-        <MainPageWrapper>
-          <Grid container spacing={0}>
-            <Hidden smDown>
-              <Grid item>
-                <Navigation
-                  toggleSettingsDialog={this.toggleSettingsDialog}
-                  signOut={this.signOut}
-                />
-              </Grid>
-            </Hidden>
-            <Grid item xs>
-              {childrenClone}
+  return (
+    <AppContainer container spacing={0} justify="center">
+      <MainPageWrapper>
+        <Grid container spacing={0}>
+          <Hidden smDown>
+            <Grid item>
+              <Navigation
+                toggleSettingsDialog={handleToggleSettingDialog}
+                signOut={handleSignOut}
+              />
             </Grid>
+          </Hidden>
+          <Grid item xs>
+            {childrenClone}
           </Grid>
-        </MainPageWrapper>
-        <SettingsDialog
-          me={me}
-          open={settingsDialog}
-          toggle={this.toggleSettingsDialog}
-          avatar={avatar}
-          avatarUploading={avatarUploading}
-          uploadAvatar={uploadAvatar}
-          updating={updating}
-          updateUser={updateUser}
-          error={userUpdatingError}
-        />
-      </AppWrapper>
-    );
-  }
-}
+        </Grid>
+      </MainPageWrapper>
+      <SettingsDialog
+        me={me}
+        open={settingsDialog}
+        toggle={handleToggleSettingDialog}
+        avatar={avatar}
+        avatarUploading={avatarUploading}
+        uploadAvatar={uploadAvatar}
+        updating={updating}
+        updateUser={updateUser}
+        error={userUpdatingError}
+      />
+    </AppContainer>
+  );
+};
 
 MainPage.defaultProps = {
   children: null,

@@ -1,8 +1,8 @@
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import wait from 'waait';
 import { adopt } from 'react-adopt';
 import { Query, Mutation, Subscription } from 'react-apollo';
-import { act } from 'react-dom/test-utils';
 
 import { createQuery, createMutation, createSubscription } from './utils';
 

@@ -7,7 +7,7 @@
   },
   "extends": [
     "airbnb",
-    "plugin:jsx-control-statements/recommended"
+    "plugin:jsx-control-statements/recommended",
   ],
   "parser": "babel-eslint",
   "parserOptions": {
@@ -26,6 +26,8 @@
     "react/jsx-filename-extension": 0,
     "react/prefer-stateless-function": 0,
     "react/sort-comp": 0,
-    "no-underscore-dangle": ["error", { allowAfterThis: true }]
+    "no-underscore-dangle": ["error", { allowAfterThis: true }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 };

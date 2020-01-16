@@ -37,7 +37,7 @@ const AppGrid = styled(Paper)`
   }
 `;
 
-const SettingWrapper = styled.div`
+const SettingsWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -99,7 +99,7 @@ const FormWrapper = styled.div`
 export {
   AppContainer,
   AppGrid,
-  SettingWrapper,
+  SettingsWrapper,
   AvatarWrapper,
   Avatar,
   Camera,

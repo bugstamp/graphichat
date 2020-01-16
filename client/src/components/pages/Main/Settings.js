@@ -8,7 +8,7 @@ import { map, omit } from 'lodash';
 import TextField from '@material-ui/core/TextField';
 
 import {
-  SettingWrapper,
+  SettingsWrapper,
   AvatarWrapper,
   Avatar,
   Camera,
@@ -145,7 +145,7 @@ class Settings extends PureComponent {
     const avatar = getAvatar(me, 'md');
 
     return (
-      <SettingWrapper>
+      <SettingsWrapper>
         <AvatarWrapper>
           <input
             ref={this.avatarInput}
@@ -189,7 +189,7 @@ class Settings extends PureComponent {
             })
           }
         </FormWrapper>
-      </SettingWrapper>
+      </SettingsWrapper>
     );
   }
 }

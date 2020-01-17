@@ -59,7 +59,10 @@ const Main = (props) => {
           </Grid>
         </Grid>
       </AppContainer>
-      <SettingsDialog open={settingsDialog} toggle={handleToggleSettingsDialog} />
+      <SettingsDialog
+        open={settingsDialog}
+        toggle={handleToggleSettingsDialog}
+      />
     </AppGrid>
   );
 };

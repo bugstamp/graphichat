@@ -17,6 +17,7 @@
   },
   "plugins": [
     "react",
+    "react-hooks",
     "jsx-control-statements"
   ],
   "rules": {

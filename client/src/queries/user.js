@@ -62,24 +62,27 @@ const userActivitySubscription = createSubscription('userActivitySubscription', 
   onSubscriptionData({ client, subscriptionData: { data: { userActivityUpdated } } }) {
     const { userId, status, lastDate } = userActivityUpdated;
     const { myContacts } = client.readQuery({ query: GET_MY_CONTACTS });
-    const { id: contactId } = find(myContacts, ({ userInfo: { id: userId } }));
+    const contact = find(myContacts, ({ userInfo: { id: userId } }));
 
-    const fragment = myContactActivityFragment;
-    const id = `MyContact:${contactId}`;
-    const { userInfo, ...rest } = client.readFragment({ fragment, id });
+    if (contact) {
+      const { id: contactId } = contact;
+      const fragment = myContactActivityFragment;
+      const id = `MyContact:${contactId}`;
+      const { userInfo, ...rest } = client.readFragment({ fragment, id });
 
-    client.writeFragment({
-      fragment,
-      id,
-      data: {
-        userInfo: {
-          ...userInfo,
-          status,
-          lastDate,
+      client.writeFragment({
+        fragment,
+        id,
+        data: {
+          userInfo: {
+            ...userInfo,
+            status,
+            lastDate,
+          },
+          ...rest,
         },
-        ...rest,
-      },
-    });
+      });
+    }
   },
 });
 

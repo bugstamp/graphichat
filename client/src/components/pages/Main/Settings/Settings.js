@@ -15,8 +15,8 @@ import {
   FormWrapper,
 } from './styled';
 
-import { getAvatar } from '../../../helpers';
-import { meProps } from '../../propTypes';
+import { getAvatar } from '../../../../helpers';
+import { meProps } from '../../../propTypes';
 
 class Settings extends PureComponent {
   avatarInput = createRef()

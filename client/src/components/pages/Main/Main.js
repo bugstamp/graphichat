@@ -1,6 +1,7 @@
 import React, {
   cloneElement,
   useState,
+  useCallback,
   useEffect,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -10,7 +11,7 @@ import Hidden from '@material-ui/core/Hidden';
 
 import Navigation from '../../common/Navigation/Navigation';
 import SettingsDialog from './SettingsDialog';
-import { AppContainer, AppGrid } from './styled';
+import { AppGrid, AppContainer } from './styled';
 
 const Main = (props) => {
   const {
@@ -21,20 +22,20 @@ const Main = (props) => {
     sessionExpired,
   } = props;
   const [settingsDialog, toggleSettingsDialog] = useState(false);
-  const handleToggleSettingDialog = () => {
+  const handleToggleSettingsDialog = () => {
     toggleSettingsDialog(!settingsDialog);
   };
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(() => {
     signOut({ variables: { userId } });
-  };
+  }, [userId, signOut]);
   useEffect(() => {
     if (sessionExpired) {
       handleSignOut();
     }
-  }, [sessionExpired]);
+  }, [sessionExpired, handleSignOut]);
   const childrenCloneProps = {
     initialLoading: loading,
-    toggleSettingsDialog: handleToggleSettingDialog,
+    toggleSettingsDialog: handleToggleSettingsDialog,
     signOut: handleSignOut,
   };
   const childrenClone = children
@@ -42,13 +43,13 @@ const Main = (props) => {
     : null;
 
   return (
-    <AppContainer container spacing={0} justify="center">
-      <AppGrid>
+    <AppGrid container spacing={0} justify="center">
+      <AppContainer>
         <Grid container spacing={0}>
           <Hidden smDown>
             <Grid item>
               <Navigation
-                toggleSettingsDialog={handleToggleSettingDialog}
+                toggleSettingsDialog={handleToggleSettingsDialog}
                 signOut={handleSignOut}
               />
             </Grid>
@@ -57,9 +58,9 @@ const Main = (props) => {
             {childrenClone}
           </Grid>
         </Grid>
-      </AppGrid>
-      <SettingsDialog open={settingsDialog} toggle={handleToggleSettingDialog} />
-    </AppContainer>
+      </AppContainer>
+      <SettingsDialog open={settingsDialog} toggle={handleToggleSettingsDialog} />
+    </AppGrid>
   );
 };
 
@@ -69,8 +70,8 @@ Main.defaultProps = {
 };
 Main.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]),
-  userId: PropTypes.string,
   loading: PropTypes.bool.isRequired,
+  userId: PropTypes.string,
   sessionExpired: PropTypes.bool.isRequired,
   signOut: PropTypes.func.isRequired,
 };

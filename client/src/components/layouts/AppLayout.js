@@ -27,8 +27,8 @@ const AppLayout = ({ children }) => (
         <Main
           loading={loading}
           userId={userId}
-          signOut={signOut}
           sessionExpired={sessionExpired}
+          signOut={signOut}
         >
           {children}
         </Main>

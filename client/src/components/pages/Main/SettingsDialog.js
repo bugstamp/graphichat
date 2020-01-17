@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 
 import ResponsiveDialog from '../../common/ResponsiveDialog/ResponsiveDialog';
-import Settings from './Settings';
+import Settings from './Settings/Settings';
 
 import SettingsDialogContainer from '../../containers/SettingsDialogContainer';
 

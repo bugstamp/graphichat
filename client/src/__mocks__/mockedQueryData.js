@@ -11,7 +11,7 @@ export const uploadAvatar = {
 };
 
 export const me = {
-  id: 1,
+  id: '1',
   avatar,
   username: 'me',
   displayName: 'Me Test',
@@ -23,7 +23,7 @@ export const me = {
 };
 
 export const user = {
-  id: 2,
+  id: '2',
   avatar,
   username: 'user',
   displayName: 'User Test',
@@ -35,28 +35,32 @@ export const user = {
 };
 
 export const userActivityUpdate = {
-  userId: 2,
+  userId: '2',
   status: 'ONLINE',
   lastDate: Date.now(),
+  __typename: 'UserActivityUpdate',
 };
 
 export const contact = {
-  id: 11,
+  id: '11',
   chatId: 1,
   userInfo: user,
+  __typename: 'MyContact',
 };
 
 export const message = {
-  id: 1,
-  senderId: 1,
+  id: '1',
+  senderId: '1',
   type: 'text',
   content: 'yo!',
   time: Date.now(),
   edited: false,
   seen: false,
+  __typename: 'ChatMessage',
 };
 
 export const chat = {
-  id: 1,
+  id: '1',
   messages: [message],
+  __typename: 'Chat',
 };

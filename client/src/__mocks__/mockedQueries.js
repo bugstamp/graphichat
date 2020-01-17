@@ -24,11 +24,7 @@ export const checkSessionExpirationMock = {
     variables: {},
   },
   result: {
-    data: {
-      me,
-      myContacts: [],
-      myChats: [],
-    },
+    data: false,
   },
 };
 export const getInitialDataMock = {
@@ -107,6 +103,7 @@ export const chatCreatedSubscriptionMock = {
       chatCreated: {
         contact,
         chat,
+        __typename: 'ContactUpdate',
       },
     },
   },

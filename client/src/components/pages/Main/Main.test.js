@@ -54,43 +54,46 @@ describe('test Main', () => {
       wrapper.update();
     });
   });
-  test('settingsDialog hook', async () => {
+  test('toggle settingsDialog', async () => {
     const wrapper = mountMockedProvider(<Main {...defaultProps}><TestChild /></Main>);
-    expect(wrapper.find(SettingsDialog).prop('open')).toBeFalsy();
+    expect(wrapper.find(SettingsDialog).prop('open')).toBe(false);
 
     await act(async () => {
       await wait();
       wrapper.find(TestChild).find('.btn1').simulate('click');
       wrapper.update();
-      expect(wrapper.find(SettingsDialog).prop('open')).toBeTruthy();
+      expect(wrapper.find(SettingsDialog).prop('open')).toBe(true);
     });
   });
-  // test('signOut call', async () => {
-  //   const wrapper = mountMockedProvider((
-  //     <Main {...defaultProps}>
-  //       <TestChild />
-  //     </Main>
-  //   ));
-  //   expect(wrapper.find(Main).prop('userId')).toBe(me.id);
-  //
-  //   await act(async () => {
-  //     wrapper.find(TestChild).find('.btn2').simulate('click');
-  //     expect(mockSignOut).toBeCalledWith({ variables: { userId: me.id } });
-  //   });
-  // });
-  test('signOut call after session has expired', async () => {
+  test('signOut call', async () => {
     const wrapper = mountMockedProvider((
       <Main {...defaultProps}>
         <TestChild />
       </Main>
     ));
-    expect(wrapper.find(Main).prop('sessionExpired')).toBeFalsy();
+    expect(wrapper.find(Main).prop('userId')).toBe(me.id);
+
+    await act(async () => {
+      wrapper.find(TestChild).find('.btn2').simulate('click');
+      expect(mockSignOut).toBeCalledWith({ variables: { userId: me.id } });
+    });
+  });
+  test('signOut call after session has expired', async () => {
+    let wrapper = mountMockedProvider((
+      <Main {...defaultProps}>
+        <TestChild />
+      </Main>
+    ));
+    expect(wrapper.find(Main).prop('sessionExpired')).toBe(false);
 
     await act(async () => {
       await wait();
-      wrapper.setProps({ sessionExpired: true });
-      expect(wrapper.prop('sessionExpired')).toBeTruthy();
-      wrapper.update();
+      wrapper = mountMockedProvider((
+        <Main {...defaultProps} sessionExpired>
+          <TestChild />
+        </Main>
+      ));
+      expect(wrapper.find(Main).prop('sessionExpired')).toBe(true);
       expect(mockSignOut).toBeCalledWith({ variables: { userId: me.id } });
     });
   });

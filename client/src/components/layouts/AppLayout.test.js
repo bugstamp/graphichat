@@ -63,12 +63,12 @@ describe('test AppLayout', () => {
     const wrapper = mountMockedProvider((
       <AppLayout />
     ), mocks);
-    expect(wrapper.find(Main).prop('loading')).toBeTruthy();
+    expect(wrapper.find(Main).prop('loading')).toBe(true);
 
     await act(async () => {
       await wait();
       wrapper.update();
-      expect(wrapper.find(Main).prop('loading')).toBeFalsy();
+      expect(wrapper.find(Main).prop('loading')).toBe(false);
       expect(wrapper.find(Main).prop('userId')).toBe(me.id);
     });
   });

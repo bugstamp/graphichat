@@ -3,12 +3,14 @@ import {
   uploadAvatar,
   me,
   userActivityUpdate,
+  updateUserResult,
   contact,
   chat,
 } from './mockedQueryData';
 
 const {
   CHECK_SESSION_EXPIRATION,
+  GET_ME,
   GET_INITIAL_DATA,
   UPDATE_USER,
   UPLOAD_AVATAR,
@@ -40,6 +42,17 @@ export const getInitialDataMock = {
     },
   },
 };
+export const getMeMock = {
+  request: {
+    query: GET_ME,
+    variables: {},
+  },
+  result: {
+    data: {
+      me,
+    },
+  },
+};
 export const updateUserMock = {
   request: {
     query: UPDATE_USER,
@@ -50,7 +63,7 @@ export const updateUserMock = {
   },
   result: {
     data: {
-      updateUser: me,
+      updateUser: updateUserResult,
     },
   },
 };

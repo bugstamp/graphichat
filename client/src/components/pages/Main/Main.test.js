@@ -32,7 +32,7 @@ describe('test Main', () => {
     expect(wrapper).toMatchSnapshot();
   });
   test('mount render | check default type of children prop', async () => {
-    const wrapper = mountMockedProvider((<Main {...defaultProps} />));
+    const wrapper = mountMockedProvider(<Main {...defaultProps} />);
 
     expect(wrapper.find(Main)).toBeTruthy();
     expect(wrapper.find(AppGrid)).toBeTruthy();

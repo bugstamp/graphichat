@@ -4,6 +4,12 @@ export const avatar = {
   __typename: 'UserAvatar',
 };
 
+export const updateUserResult = {
+  field: 'username',
+  value: 'user',
+  __typename: 'UserUpdateForm',
+};
+
 export const uploadAvatar = {
   ...avatar,
   sm: 'smAvatar',
@@ -18,7 +24,6 @@ export const me = {
   firstName: 'Me',
   lastName: 'Test',
   status: 'ONLINE',
-  lastDate: Date.now(),
   __typename: 'User',
 };
 
@@ -30,14 +35,14 @@ export const user = {
   firstName: 'User',
   lastName: 'Test',
   status: 'OFFLINE',
-  lastDate: Date.now(),
+  lastDate: new Date(1990, 0, 0, 0, 0, 0, 0, 0),
   __typename: 'User',
 };
 
 export const userActivityUpdate = {
   userId: '2',
   status: 'ONLINE',
-  lastDate: Date.now(),
+  lastDate: new Date(1990, 0, 0, 0, 0, 0, 0, 0),
   __typename: 'UserActivityUpdate',
 };
 
@@ -53,7 +58,7 @@ export const message = {
   senderId: '1',
   type: 'text',
   content: 'yo!',
-  time: Date.now(),
+  time: '',
   edited: false,
   seen: false,
   __typename: 'ChatMessage',

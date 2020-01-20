@@ -18,7 +18,7 @@ import { mountMockedProvider } from '../../__mocks__/mockedProvider';
 import { AppLayout } from './AppLayout';
 import Main from '../pages/Main/Main';
 
-const mocks = [
+const defaultMocks = [
   getInitialDataMock,
   userUpdateSubscriptionMock,
   userActivitySubscriptionMock,
@@ -38,7 +38,7 @@ describe('test AppLayout', () => {
   test('mount render | check default type of children prop', async () => {
     const wrapper = mountMockedProvider((
       <AppLayout />
-    ), mocks);
+    ), defaultMocks);
 
     expect(wrapper.find(Main)).toBeTruthy();
     expect(wrapper.find(AppLayout).prop('children')).toBe(null);
@@ -50,7 +50,7 @@ describe('test AppLayout', () => {
   test('pass child', async () => {
     const wrapper = mountMockedProvider((
       <AppLayout><TestChild /></AppLayout>
-    ), mocks);
+    ), defaultMocks);
 
     expect(wrapper.find(TestChild)).toBeTruthy();
     expect(wrapper.find(TestChild).text()).toBe(text);
@@ -62,7 +62,7 @@ describe('test AppLayout', () => {
   test('getInitialData query', async () => {
     const wrapper = mountMockedProvider((
       <AppLayout />
-    ), mocks);
+    ), defaultMocks);
     expect(wrapper.find(Main).prop('loading')).toBe(true);
 
     await act(async () => {

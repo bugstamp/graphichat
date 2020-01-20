@@ -1,10 +1,14 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { position } from 'polished';
+import { fadeOut } from 'react-animations';
 
 import MaterialAvatar from '@material-ui/core/Avatar';
 import CameraIcon from '@material-ui/icons/CameraAlt';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
+
+const fadeOutAnimation = keyframes`${fadeOut}`;
 
 const SettingsWrapper = styled.div`
   width: 100%;
@@ -22,6 +26,15 @@ const SettingsWrapper = styled.div`
       }
     `;
   }}
+`;
+
+const InputCheckIconWrapper = styled(InputAdornment)`
+  && {
+    animation: ${fadeOutAnimation};
+    animation-duration: .5s;
+    animation-delay: 5s;
+    animation-fill-mode: forwards;
+  }
 `;
 
 const AvatarWrapper = styled.div`
@@ -71,4 +84,5 @@ export {
   Avatar,
   Camera,
   FormWrapper,
+  InputCheckIconWrapper,
 };

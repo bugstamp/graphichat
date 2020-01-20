@@ -77,10 +77,10 @@ const USER_ACTIVITY_SUBSCRIPTION = gql`
 const UPDATE_USER = gql`
   mutation UpdateUser($field: String!, $value: String!) {
     updateUser(field: $field, value: $value) {
-      ...myData
+      field
+      value
     }
   }
-  ${myFragment}
 `;
 
 const UPLOAD_AVATAR = gql`

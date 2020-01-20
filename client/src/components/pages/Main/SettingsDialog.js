@@ -22,12 +22,14 @@ const SettingsDialog = ({ open, toggle }) => {
         updateUser: {
           mutation: updateUser,
           result: {
+            data: updateUserData = {},
             loading: updating,
             error,
           },
         },
       }) => {
         const { me } = data;
+        const { updateUser: updateUserResult = {} } = updateUserData;
         const loading = avatarUploading || updating;
 
         return (
@@ -41,6 +43,7 @@ const SettingsDialog = ({ open, toggle }) => {
               me={me}
               error={error}
               updateUser={updateUser}
+              updateUserResult={updateUserResult}
               uploadAvatar={uploadAvatar}
             />
           </ResponsiveDialog>

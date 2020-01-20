@@ -103,7 +103,10 @@ class UserProvider {
       const user = await this.db.User.findByIdAndUpdate(id, { [field]: value }, { new: true });
       await this.pubsub.publish(USER_UPDATED, { userUpdated: user });
 
-      return user;
+      return {
+        field,
+        value,
+      };
     } catch (e) {
       throw e;
     }

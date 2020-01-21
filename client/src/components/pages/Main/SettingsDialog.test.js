@@ -2,7 +2,6 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import wait from 'waait';
 import { shallow } from 'enzyme';
-import { GraphQLError } from 'graphql';
 
 import {
   getMeMock,

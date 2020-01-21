@@ -24,10 +24,10 @@ class Settings extends PureComponent {
   avatarInput = createRef()
 
   state = {
-    success: '',
     errors: {},
     values: {},
     called: {},
+    success: '',
   }
 
   fields = [

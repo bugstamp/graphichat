@@ -30,6 +30,7 @@ const uploadAvatar = createMutation('uploadAvatar', UPLOAD_AVATAR, {
 });
 
 const updateUser = createMutation('updateUser', UPDATE_USER, {
+  onError: () => {},
   update(client, { data: { updateUser: { field, value } } }) {
     const { me } = client.readQuery({ query: GET_ME });
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import wait from 'waait';
 import { shallow } from 'enzyme';
+import { GraphQLError } from 'graphql';
 
 import {
   getMeMock,
@@ -13,6 +14,7 @@ import {
   updateUserResult,
 } from '../../../__mocks__/mockedQueryData';
 import { mountMockedProvider } from '../../../__mocks__/mockedProvider';
+import { BadInputError } from '../../../__mocks__/mockedErrors';
 
 import ResponsiveDialog from '../../common/ResponsiveDialog/ResponsiveDialog';
 import SettingsDialog from './SettingsDialog';
@@ -51,8 +53,8 @@ describe('test SettingsDialog', () => {
     await act(async () => {
       await wait();
       wrapper.update();
+      expect(wrapper.find(Settings).prop('me')).toEqual(me);
     });
-    expect(wrapper.find(Settings).prop('me')).toEqual(me);
   });
   test('updateUser mutation', async () => {
     const wrapper = mountMockedProvider(<SettingsDialog {...defaultProps} open />, defaultMocks);
@@ -62,11 +64,66 @@ describe('test SettingsDialog', () => {
       await wait();
       wrapper.find('input[name="username"]').simulate('blur', { target: { name: 'username', value: 'user' } });
       expect(wrapper.find(ResponsiveDialog).prop('loading')).toEqual(true);
+    });
+    await act(async () => {
       await wait();
       wrapper.update();
+      expect(wrapper.find(ResponsiveDialog).prop('loading')).toEqual(false);
+      expect(wrapper.find(Settings).prop('updateUserResult')).toEqual(updateUserResult);
     });
-    expect(wrapper.find(ResponsiveDialog).prop('loading')).toEqual(false);
-    expect(wrapper.find(Settings).prop('updateUserResult')).toEqual(updateUserResult);
+  });
+  test('updateUser mutation error', async () => {
+    const error = new BadInputError({
+      message: 'invalidField',
+      data: {
+        invalidField: 'username',
+      },
+    });
+    const wrapper = mountMockedProvider(
+      <SettingsDialog {...defaultProps} open />,
+      [getMeMock, uploadAvatarMock, {
+        ...updateUserMock,
+        result: {
+          errors: [error],
+        },
+      }],
+    );
+
+    await act(async () => {
+      await wait();
+      wrapper.find('input[name="username"]').simulate('blur', { target: { name: 'username', value: 'user' } });
+    });
+    await act(async () => {
+      await wait();
+      wrapper.update();
+      expect(wrapper.find(Settings).prop('error')).toBeDefined();
+      expect(wrapper.find(Settings).instance().state).toHaveProperty('errors.username');
+    });
+  });
+  test('uploadAvatar mutation', async () => {
+    const file = {
+      filename: '',
+      mimetype: '',
+      encoding: '',
+    };
+    const wrapper = mountMockedProvider(<SettingsDialog {...defaultProps} open />, defaultMocks);
+    expect(wrapper.find(ResponsiveDialog).prop('loading')).toBe(false);
+
+    await act(async () => {
+      await wait();
+      wrapper.find('input[type="file"]').simulate('change', {
+        target: {
+          files: [file],
+          validity: { valid: true },
+        },
+      });
+      expect(wrapper.find(ResponsiveDialog).prop('loading')).toEqual(true);
+    });
+    await act(async () => {
+      await wait();
+      wrapper.update();
+      expect(wrapper.find(ResponsiveDialog).prop('loading')).toEqual(false);
+    });
   });
   test('pass open prop | call toggle func | open settings dialog', async () => {
     let wrapper = mountMockedProvider((
@@ -78,10 +135,11 @@ describe('test SettingsDialog', () => {
 
     await act(async () => {
       await wait();
+      wrapper.update();
       mockToggleFn();
       wrapper = mountMockedProvider(<SettingsDialog {...defaultProps} open={open} />, defaultMocks);
+      expect(wrapper.find(ResponsiveDialog).prop('open')).toBe(true);
+      expect(wrapper.find(Settings)).toHaveLength(1);
     });
-    expect(wrapper.find(ResponsiveDialog).prop('open')).toBe(true);
-    expect(wrapper.find(Settings)).toHaveLength(1);
   });
 });

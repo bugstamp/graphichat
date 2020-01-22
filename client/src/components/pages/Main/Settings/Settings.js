@@ -82,6 +82,12 @@ class Settings extends PureComponent {
 
   setSuccess = success => this.setState({ success });
 
+  addError = (error) => {
+    this.setState(({ errors }) => ({
+      errors: { ...errors, ...error },
+    }));
+  }
+
   onChange = ({ target }) => {
     const { name, value } = target;
 
@@ -143,12 +149,6 @@ class Settings extends PureComponent {
     if (key === 'Enter') {
       target.blur();
     }
-  }
-
-  addError = (error) => {
-    this.setState(({ errors }) => ({
-      errors: { ...errors, ...error },
-    }));
   }
 
   render() {

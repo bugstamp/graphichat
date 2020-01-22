@@ -10,7 +10,7 @@ import {
   updateUserResult,
 } from '../../../../__mocks__/mockedQueryData';
 import { mountMockedProvider } from '../../../../__mocks__/mockedProvider';
-import { BadInputError } from '../../../../__mocks__/mockedErrors';
+import { BadInputError, GraphQLErrors } from '../../../../__mocks__/mockedErrors';
 
 import Settings from './Settings';
 
@@ -39,14 +39,35 @@ describe('test Settings', () => {
     expect(wrapper.find('input[name="username"]').prop('value')).toEqual(username);
   });
   test('pass updateUserResult', () => {
-    let wrapper = mountMockedProvider(<Settings {...defaultProps} me={me} />);
+    const wrapper = mountMockedProvider(<Settings {...defaultProps} me={me} />);
+
     act(() => {
-      wrapper = mountMockedProvider((
-        <Settings {...defaultProps} me={me} updateUserResult={updateUserResult} />
-      ));
+      wrapper.setProps({
+        children: (<Settings {...defaultProps} me={me} updateUserResult={updateUserResult} />),
+      });
     });
     const { field } = updateUserResult;
 
     expect(wrapper.find(Settings).state('success')).toEqual(field);
+  });
+  test('pass error', () => {
+    const error = new BadInputError({
+      message: 'invalidField',
+      data: {
+        invalidField: 'username',
+      },
+    });
+    const errors = new GraphQLErrors([error]);
+    const wrapper = mountMockedProvider(<Settings {...defaultProps} me={me} />);
+
+    act(() => {
+      wrapper.setProps({
+        children: (<Settings {...defaultProps} me={me} error={errors} />),
+      });
+      wrapper.update();
+    });
+    const { field } = updateUserResult;
+
+    expect(wrapper.find(Settings).state('errors')).toHaveProperty(field, 'invalidField');
   });
 });

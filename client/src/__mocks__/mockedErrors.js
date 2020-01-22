@@ -15,3 +15,11 @@ export const ForbiddenError = createError('ForbiddenError', {
 export const ServerError = createError('ServerError', {
   message: 'Server Error',
 });
+
+export class GraphQLErrors extends Error {
+  constructor(graphQLErrors) {
+    super();
+    this.graphQLErrors = graphQLErrors;
+    this.name = 'GraphQLErrors';
+  }
+}

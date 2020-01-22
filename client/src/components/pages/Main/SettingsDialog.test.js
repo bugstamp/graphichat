@@ -125,7 +125,7 @@ describe('test SettingsDialog', () => {
     });
   });
   test('pass open prop | call toggle func | open settings dialog', async () => {
-    let wrapper = mountMockedProvider((
+    const wrapper = mountMockedProvider((
       <SettingsDialog {...defaultProps} open={open} />
     ), defaultMocks);
     expect(wrapper.find(ResponsiveDialog).prop('open')).toBe(false);
@@ -136,7 +136,10 @@ describe('test SettingsDialog', () => {
       await wait();
       wrapper.update();
       mockToggleFn();
-      wrapper = mountMockedProvider(<SettingsDialog {...defaultProps} open={open} />, defaultMocks);
+      wrapper.setProps({
+        children: (<SettingsDialog {...defaultProps} open={open} />),
+      });
+      wrapper.update();
       expect(wrapper.find(ResponsiveDialog).prop('open')).toBe(true);
       expect(wrapper.find(Settings)).toHaveLength(1);
     });

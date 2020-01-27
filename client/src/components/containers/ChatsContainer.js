@@ -26,7 +26,7 @@ export const fetchMoreMessagesUpdate = variables => ({
       if (isEqual(id, chatId)) {
         return {
           ...chat,
-          messages: concat(chatMessages, messages),
+          messages: [...chatMessages, ...messages],
         };
       }
       return chat;
@@ -92,7 +92,7 @@ const addMessageUpdate = (client, { chatId, message }) => {
 
 const getMe = createQuery('getMe', GET_ME);
 const getMyChats = createQuery('getMyChats', GET_MY_CHATS, {
-  notifyOnNetworkStatusChange: true,
+  notifyOnNetworkStatusChange: false,
 });
 const addMessage = createMutation('addMessage', ADD_MESSAGE, {
   update(client, { data }) {

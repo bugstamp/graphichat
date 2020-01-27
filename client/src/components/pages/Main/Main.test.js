@@ -10,7 +10,7 @@ import { AppGrid } from './styled';
 import { me } from '../../../__mocks__/mockedQueryData';
 import { mountMockedProvider } from '../../../__mocks__/mockedProvider';
 
-// eslint-disable-next-line
+// eslint-disable-next-line react/prop-types
 const TestChild = ({ toggleSettingsDialog, signOut }) => (
   <div>
     <button type="button" className="btn1" onClick={toggleSettingsDialog} />
@@ -34,24 +34,21 @@ describe('test Main', () => {
   test('mount render | check default type of children prop', async () => {
     const wrapper = mountMockedProvider(<Main {...defaultProps} />);
 
-    expect(wrapper.find(Main)).toBeTruthy();
-    expect(wrapper.find(AppGrid)).toBeTruthy();
-    expect(wrapper.find(Main).prop('children')).toBe(null);
-
     await act(async () => {
-      wrapper.update();
+      expect(wrapper.find(Main)).toBeTruthy();
+      expect(wrapper.find(AppGrid)).toBeTruthy();
+      expect(wrapper.find(Main).prop('children')).toBe(null);
     });
   });
   test('pass child | pass props to child clone', async () => {
     const wrapper = mountMockedProvider(<Main {...defaultProps}><TestChild /></Main>);
 
-    expect(wrapper.find(TestChild)).toBeTruthy();
-    expect(wrapper.find(TestChild).prop('initialLoading')).toBe(false);
-    expect(wrapper.find(TestChild).prop('toggleSettingsDialog')).toBeInstanceOf(Function);
-    expect(wrapper.find(TestChild).prop('signOut')).toBeInstanceOf(Function);
-
     await act(async () => {
       wrapper.update();
+      expect(wrapper.find(TestChild)).toBeTruthy();
+      expect(wrapper.find(TestChild).prop('initialLoading')).toBe(false);
+      expect(wrapper.find(TestChild).prop('toggleSettingsDialog')).toBeInstanceOf(Function);
+      expect(wrapper.find(TestChild).prop('signOut')).toBeInstanceOf(Function);
     });
   });
   test('toggle settingsDialog', async () => {

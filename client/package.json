@@ -93,6 +93,7 @@
     "yup": "^0.26.7"
   },
   "devDependencies": {
+    "apollo-errors": "^1.9.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.8.0",
     "enzyme": "^3.10.0",

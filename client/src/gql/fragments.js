@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const authPayloadFragment = gql`
   fragment tokens on AuthPayload {

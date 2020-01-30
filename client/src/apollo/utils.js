@@ -1,5 +1,5 @@
 import React from 'react';
-import { Query, Mutation, Subscription } from 'react-apollo';
+import { Query, Mutation, Subscription } from '@apollo/react-components';
 import { get } from 'lodash';
 
 export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps) => {

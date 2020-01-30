@@ -77,7 +77,7 @@ const LoginForm = ({
       variant="outlined"
       fullWidth
     >
-      {'Sign Up'}
+      Sign Up
     </SignUpButton>
     <SocialMedia
       mutation={signInBySocial.mutation}

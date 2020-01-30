@@ -1,8 +1,6 @@
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache } from '@apollo/client';
 
-const cache = new InMemoryCache({
-  freezeResults: true,
-});
+const cache = new InMemoryCache();
 
 export const initialState = {
   sessionExpired: false,

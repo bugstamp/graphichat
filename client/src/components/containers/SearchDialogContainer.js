@@ -2,7 +2,11 @@ import { adopt } from 'react-adopt';
 
 import { createMutation, createQuery } from '../../apollo/utils';
 import gql from '../../gql';
-import { chatCreatedUpdate } from './AppLayoutContainer';
+import queries from '../../queries';
+
+const {
+  chat: { chatCreatedUpdate },
+} = queries;
 
 const {
   SEARCH_USERS,

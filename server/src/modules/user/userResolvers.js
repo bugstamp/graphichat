@@ -21,7 +21,7 @@ export default {
   },
   Mutation: {
     createUser: (_, { form }, { injector }) => injector.get(UserProvider).createUser(form),
-    updateUser: (_, { form }, { injector }) => injector.get(UserProvider).updateUser(form),
+    updateUser: (_, { field, value }, { injector }) => injector.get(UserProvider).updateUser(field, value),
     deleteUser: (_, { id }, { injector }) => injector.get(UserProvider).deleteUser(id),
     removeUserContacts: (_, { userId }, { injector }) => injector.get(UserProvider).removeUserContacts(userId),
     uploadAvatar: async (_, { file }, { injector }) => injector.get(UserProvider).uploadAvatar(file),

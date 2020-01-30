@@ -78,16 +78,25 @@ const SignUp = ({
   signUpCompletion,
   signUpBySocial,
 }) => {
+  const loading = signUp.result.loading || signUpCompletion.result.loading;
+  const asyncValidationFields = [{
+    name: 'username',
+    validation: signUpAsyncValidationUsername,
+  }, {
+    name: 'email',
+    validation: signUpAsyncValidationEmail,
+  }];
+
   return (
     <Wrapper elevation={8}>
-      <TopProgressLine loading={signUp.result.loading || signUpCompletion.result.loading} />
+      <TopProgressLine loading={loading} />
       <Header variant="h1" color="primary" align="center" gutterBottom>
         <RegFormStepper activeStep={activeStep} steps={steps} />
       </Header>
       <Choose>
         <When condition={completed}>
           <Info>
-            {'Your account had been successfuly completed.Check your email and confirm registration.'}
+            Your account had been successfuly completed.Check your email and confirm registration.
           </Info>
         </When>
         <When condition={activeStep === 0}>
@@ -96,13 +105,7 @@ const SignUp = ({
             mutation={signUp.mutation}
             result={signUp.result}
             submitButtonText="Confirm"
-            asyncValidationFields={[{
-              name: 'username',
-              validation: signUpAsyncValidationUsername,
-            }, {
-              name: 'email',
-              validation: signUpAsyncValidationEmail,
-            }]}
+            asyncValidationFields={asyncValidationFields}
           />
           <SocialMedia
             mutation={signUpBySocial.mutation}

@@ -180,11 +180,9 @@ Form.propTypes = {
 
 export default withFormik({
   mapPropsToValues: ({ initialValues }) => initialValues,
-
   handleSubmit: (form, { props: { mutation } }) => {
     mutation({ variables: { form } });
   },
-
   validateOnChange: false,
   validateOnBlur: false,
 })(Form);

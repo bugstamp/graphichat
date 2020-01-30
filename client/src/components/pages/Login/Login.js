@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withApollo } from 'react-apollo';
+import { withApollo } from '@apollo/react-hoc';
 import styled from 'styled-components';
 import { backgrounds } from 'polished';
 
@@ -18,7 +18,6 @@ import storage from '../../../storage';
 import gql from '../../../gql';
 
 import bgImage from '../../../assets/images/login-bg__1920_65.jpg';
-// import {} from '../../../styles';
 
 const { CHECK_SESSION_EXPIRATION } = gql;
 

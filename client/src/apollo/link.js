@@ -1,13 +1,13 @@
-import { createUploadLink } from 'apollo-upload-client';
-import { ApolloLink, from, split } from 'apollo-link';
-import { onError } from 'apollo-link-error';
-import { getMainDefinition } from 'apollo-utilities';
-import { WebSocketLink } from 'apollo-link-ws';
+import { ApolloLink, from, split } from '@apollo/client';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { onError } from '@apollo/link-error';
+import { WebSocketLink } from '@apollo/link-ws';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { createUploadLink } from 'apollo-upload-client';
 import { isEmpty } from 'lodash';
 
 import storage from '../storage';
-import client from './index';
+import client from './';
 
 const httpLink = createUploadLink({
   uri: process.env.APOLLO_URL,

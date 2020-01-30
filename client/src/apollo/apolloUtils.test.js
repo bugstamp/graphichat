@@ -2,7 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import wait from 'waait';
 import { adopt } from 'react-adopt';
-import { Query, Mutation, Subscription } from 'react-apollo';
+import { Query, Mutation, Subscription } from '@apollo/react-components';
 
 import { createQuery, createMutation, createSubscription } from './utils';
 
@@ -135,7 +135,7 @@ describe('test apollo utils', () => {
                     },
                   })}
                 />
-                <p>{updatedUser.displayName || text}</p>
+                <p>{updatedUser.value || text}</p>
               </div>
             );
           }}
@@ -152,7 +152,7 @@ describe('test apollo utils', () => {
 
         await wait();
         wrapper.update();
-        expect(wrapper.find('p').text()).toBe('Me Test');
+        expect(wrapper.find('p').text()).toBe('user');
         expect(completed).toBeTruthy();
       });
     });
@@ -195,37 +195,23 @@ describe('test apollo utils', () => {
             userUpdateSubscription: {
               data = { userUpdated: {} },
             },
-            updateUser: {
-              mutation,
-            },
           }) => {
             const { userUpdated = {} } = data;
 
             return (
               <div className="test">
-                <button
-                  type="button"
-                  onClick={() => mutation({
-                    variables: {
-                      field: 'username',
-                      value: 'user',
-                    },
-                  })}
-                />
                 <p>{userUpdated.displayName || ''}</p>
               </div>
             );
           }}
         </TestContainer>
-      ), [updateUserMock, userUpdateSubscriptionMock]);
+      ), [userUpdateSubscriptionMock]);
       expect(wrapper.find('p').text()).toBe('');
 
       await act(async () => {
-        wrapper.find('button').simulate('click');
-
         await wait();
         wrapper.update();
-        expect(wrapper.find('p').text()).toBe('Me Test');
+        expect(wrapper.find('p').text()).toBe('User Test');
         expect(completed).toBeTruthy();
       });
     });

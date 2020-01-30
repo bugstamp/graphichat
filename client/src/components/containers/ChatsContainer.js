@@ -1,5 +1,5 @@
 import { adopt } from 'react-adopt';
-import { map, concat, isEqual } from 'lodash';
+import { map, isEqual } from 'lodash';
 
 import { createQuery, createMutation, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
@@ -92,7 +92,7 @@ const addMessageUpdate = (client, { chatId, message }) => {
 
 const getMe = createQuery('getMe', GET_ME);
 const getMyChats = createQuery('getMyChats', GET_MY_CHATS, {
-  notifyOnNetworkStatusChange: false,
+  notifyOnNetworkStatusChange: true,
 });
 const addMessage = createMutation('addMessage', ADD_MESSAGE, {
   update(client, { data }) {

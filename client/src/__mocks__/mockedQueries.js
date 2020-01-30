@@ -2,6 +2,7 @@ import gql from '../gql';
 import {
   uploadAvatar,
   me,
+  user,
   userActivityUpdate,
   updateUserResult,
   contact,
@@ -91,7 +92,7 @@ export const userUpdateSubscriptionMock = {
   },
   result: {
     data: {
-      userUpdated: me,
+      userUpdated: user,
     },
   },
 };

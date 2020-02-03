@@ -1,68 +1,48 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
-import { withRouter } from 'react-router';
 import { get } from 'lodash';
 
 import AppLayoutContainer from '../containers/AppLayoutContainer';
-import MainPage from '../pages/MainPage';
+import Main from '../pages/Main/Main';
 
-class AppLayout extends Component {
-  render() {
-    const { children } = this.props;
+const AppLayout = ({ children }) => (
+  <AppLayoutContainer>
+    {({
+      getInitialData: {
+        data: initialData,
+        loading,
+      },
+      checkSessionExpiration: {
+        data: sessionData,
+      },
+      signOut: {
+        mutation: signOut,
+      },
+    }) => {
+      const userId = get(initialData, 'me.id', null);
+      const sessionExpired = get(sessionData, 'sessionExpired', false);
 
-    return (
-      <AppLayoutContainer>
-        {({
-          getInitialData: {
-            data: initialData,
-            loading,
-          },
-          signOut: {
-            mutation: signOut,
-          },
-          uploadAvatar: {
-            mutation: uploadAvatar,
-            result: {
-              loading: avatarUploading,
-            },
-          },
-          checkSessionExpiration: {
-            data: { sessionExpired = false },
-          },
-          updateUser: {
-            mutation: updateUser,
-            result: {
-              loading: updating,
-              error: userUpdatingError,
-            },
-          },
-        }) => {
-          const me = get(initialData, 'me', {});
+      return (
+        <Main
+          loading={loading}
+          userId={userId}
+          sessionExpired={sessionExpired}
+          signOut={signOut}
+        >
+          {children}
+        </Main>
+      );
+    }}
+  </AppLayoutContainer>
+);
 
-          return (
-            <MainPage
-              loading={loading}
-              me={me}
-              signOut={signOut}
-              avatarUploading={avatarUploading}
-              uploadAvatar={uploadAvatar}
-              updating={updating}
-              updateUser={updateUser}
-              userUpdatingError={userUpdatingError}
-              sessionExpired={sessionExpired}
-            >
-              {children}
-            </MainPage>
-          );
-        }}
-      </AppLayoutContainer>
-    );
-  }
-}
-
+AppLayout.defaultProps = {
+  children: null,
+};
 AppLayout.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]),
 };
 
-export default hot(module)(withRouter(AppLayout));
+export default hot(module)(AppLayout);
+export { AppLayout };

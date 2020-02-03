@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test AppLayout snapshot render 1`] = `
+<Adopt(Unknown)(Unknown)(Unknown)(Unknown)(Unknown)(Unknown)>
+  <Component />
+</Adopt(Unknown)(Unknown)(Unknown)(Unknown)(Unknown)(Unknown)>
+`;

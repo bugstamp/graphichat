@@ -1,5 +1,5 @@
 import { adopt } from 'react-adopt';
-import { map, concat, isEqual } from 'lodash';
+import { map, isEqual } from 'lodash';
 
 import { createQuery, createMutation, createSubscription } from '../../apollo/utils';
 import gql from '../../gql';
@@ -26,7 +26,7 @@ export const fetchMoreMessagesUpdate = variables => ({
       if (isEqual(id, chatId)) {
         return {
           ...chat,
-          messages: concat(chatMessages, messages),
+          messages: [...chatMessages, ...messages],
         };
       }
       return chat;

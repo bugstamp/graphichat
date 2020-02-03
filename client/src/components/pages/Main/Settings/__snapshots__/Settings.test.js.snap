@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test Settings snapshot render 1`] = `
+<styled__SettingsWrapper>
+  <styled__AvatarWrapper>
+    <input
+      accept="image/png, image/jpg, image/jpeg"
+      onChange={[Function]}
+      style={
+        Object {
+          "display": "none",
+        }
+      }
+      type="file"
+    />
+    <styled__Avatar
+      alt=""
+      onClick={[Function]}
+      src=""
+    >
+      <styled__Camera
+        fontSize="large"
+      />
+    </styled__Avatar>
+  </styled__AvatarWrapper>
+  <styled__FormWrapper>
+    <WithStyles(ForwardRef(TextField))
+      InputProps={
+        Object {
+          "endAdornment": false,
+        }
+      }
+      error={false}
+      fullWidth={true}
+      key="username"
+      label="User Name"
+      margin="dense"
+      name="username"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onKeyDown={[Function]}
+      required={true}
+      variant="outlined"
+    />
+    <WithStyles(ForwardRef(TextField))
+      InputProps={
+        Object {
+          "endAdornment": false,
+        }
+      }
+      error={false}
+      fullWidth={true}
+      key="firstName"
+      label="First Name"
+      margin="dense"
+      name="firstName"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onKeyDown={[Function]}
+      required={true}
+      variant="outlined"
+    />
+    <WithStyles(ForwardRef(TextField))
+      InputProps={
+        Object {
+          "endAdornment": false,
+        }
+      }
+      error={false}
+      fullWidth={true}
+      key="lastName"
+      label="Last Name"
+      margin="dense"
+      name="lastName"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onKeyDown={[Function]}
+      required={true}
+      variant="outlined"
+    />
+  </styled__FormWrapper>
+</styled__SettingsWrapper>
+`;

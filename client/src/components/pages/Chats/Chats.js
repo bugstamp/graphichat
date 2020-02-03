@@ -116,8 +116,8 @@ class Chats extends Component {
           },
         }) => {
           const me = get(myData, 'me', {});
-          const { myContacts, myChats } = myChatsData || { myContacts: [], myChats: [] };
-          const contact = find(myContacts, { chatId: selectedChatId }) || {};
+          const { myContacts, myChats } = myChatsData;
+          const contact = find(myContacts, { chatId: selectedChatId }) || { userInfo: {} };
           const chat = find(myChats, { id: selectedChatId }) || {};
           const contactsListIsEmpty = isEmpty(myContacts);
           const chatIsUndefined = isEmpty(chat);

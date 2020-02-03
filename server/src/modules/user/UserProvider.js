@@ -92,9 +92,8 @@ class UserProvider {
     }
   }
 
-  updateUser = async (form) => {
+  updateUser = async (field, value) => {
     try {
-      const { field, value } = form;
       const { id } = this.authProvider.user;
 
       if (field === 'username') {
@@ -104,7 +103,10 @@ class UserProvider {
       const user = await this.db.User.findByIdAndUpdate(id, { [field]: value }, { new: true });
       await this.pubsub.publish(USER_UPDATED, { userUpdated: user });
 
-      return user;
+      return {
+        field,
+        value,
+      };
     } catch (e) {
       throw e;
     }

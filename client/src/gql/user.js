@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 import {
   myContactFragment,
@@ -75,12 +75,12 @@ const USER_ACTIVITY_SUBSCRIPTION = gql`
 `;
 
 const UPDATE_USER = gql`
-  mutation UpdateUser($form: UserUpdateForm) {
-    updateUser(form: $form) {
-      ...myData
+  mutation UpdateUser($field: String!, $value: String!) {
+    updateUser(field: $field, value: $value) {
+      field
+      value
     }
   }
-  ${myFragment}
 `;
 
 const UPLOAD_AVATAR = gql`

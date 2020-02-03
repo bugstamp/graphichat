@@ -117,7 +117,7 @@ class Chats extends Component {
         }) => {
           const me = get(myData, 'me', {});
           const { myContacts, myChats } = myChatsData;
-          const contact = find(myContacts, { chatId: selectedChatId }) || { userInfo: {} };
+          const contact = find(myContacts, { chatId: selectedChatId }) || {};
           const chat = find(myChats, { id: selectedChatId }) || {};
           const contactsListIsEmpty = isEmpty(myContacts);
           const chatIsUndefined = isEmpty(chat);
@@ -193,7 +193,7 @@ class Chats extends Component {
                     history.goBack();
                   }}
                 >
-                  <If condition={selectedChatId}>
+                  <If condition={selectedChatId && contact.userInfo}>
                     {renderChat()}
                   </If>
                 </FullWidthSwipeableDrawer>

@@ -193,7 +193,7 @@ class Chats extends Component {
                     history.goBack();
                   }}
                 >
-                  <If condition={selectedChatId}>
+                  <If condition={selectedChatId && !chatIsUndefined}>
                     {renderChat()}
                   </If>
                 </FullWidthSwipeableDrawer>

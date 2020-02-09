@@ -38,8 +38,8 @@ const startServer = ({ schema, subscriptions }) => {
 
   app.use(express.static(publicPath));
   app.use(cors(corsOptions));
-  app.use(tokenVerification);
   app.use(verification);
+  app.use(tokenVerification);
 
   apolloServer.applyMiddleware({ app, path: apolloPath });
 

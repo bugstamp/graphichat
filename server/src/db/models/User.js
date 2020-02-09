@@ -274,7 +274,8 @@ userSchema.statics = {
       const { data: { id } } = await this.verifyToken(regToken, 'register');
 
       const user = await this.findByIdAndUpdate(id, { regStatus: UNCOMPLETED });
-      const tokens = await user.genTokens(user);
+      console.log(id, user);
+      const tokens = await user.genTokens();
 
       return tokens;
     } catch (e) {

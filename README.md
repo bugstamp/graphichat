@@ -24,4 +24,5 @@ Simple chat app for learning/testing GraphQL API and some other features with th
 - Docker
 
 [View Demo](https://drive.google.com/open?id=19Sw2f1vi4W_qwe_vle-Ldbes99980ucg)
+
 [Go to the site](https://graphichat.herokuapp.com/)

@@ -25,7 +25,7 @@ const tokensConfig = {
   },
   register: {
     secret: process.env.REGISTER_TOKEN_SECRET,
-    expiresIn: '1d',
+    expiresIn: '12h',
     model: ['id'],
   },
 };

@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.get('/api/verification/:regToken', async (reg, res) => {
   const { regToken } = reg.params;
-  console.log(regToken);
 
   try {
     const { token } = await db.User.verifyEmail(regToken);

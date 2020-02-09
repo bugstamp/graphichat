@@ -99,7 +99,7 @@ class AuthProvider {
       }
       const { password: hash, regStatus } = user;
       const validPassword = await user.comparePassword(password, hash);
-      const validRegistration = regStatus !== EMAIL_UNCONFIRMED;
+      const validRegistration = regStatus === COMPLETED;
 
       if (!validPassword) {
         throw new BadInputError({

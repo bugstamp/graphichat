@@ -16,7 +16,6 @@ router.get('/api/verification/:regToken', async (reg, res) => {
 
     res.redirect(redirectUrl);
   } catch (err) {
-    console.log(err);
     res.status(404).send('Verification token was expired');
   }
 });

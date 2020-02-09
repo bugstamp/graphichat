@@ -15,7 +15,7 @@ import {
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
-    expiresIn: 60,
+    expiresIn: '1m',
     model: ['id', 'regStatus'],
   },
   refresh: {
@@ -25,7 +25,7 @@ const tokensConfig = {
   },
   register: {
     secret: process.env.REGISTER_TOKEN_SECRET,
-    expiresIn: '1d',
+    expiresIn: '12h',
     model: ['id'],
   },
 };
@@ -236,6 +236,9 @@ userSchema.statics = {
   async verifyToken(token, type) {
     try {
       const { secret } = tokensConfig[type];
+      console.log(token);
+      console.log(type);
+      console.log(secret);
       const result = await jwt.verify(token, secret);
 
       return result;
@@ -269,9 +272,9 @@ userSchema.statics = {
   async verifyEmail(regToken) {
     try {
       const { data: { id } } = await this.verifyToken(regToken, 'register');
-
-      const user = await this.findByIdAndUpdate(id, { regStatus: UNCOMPLETED });
-      const tokens = await user.genTokens(user);
+      const user = await this.findByIdAndUpdate(id, { regStatus: UNCOMPLETED }, { new: true });
+      console.log(user);
+      const tokens = await user.genTokens();
 
       return tokens;
     } catch (e) {

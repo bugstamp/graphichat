@@ -9,7 +9,6 @@ router.get('/api/verification/:regToken', async (reg, res) => {
 
   try {
     const { token } = await db.User.verifyEmail(regToken);
-
     const redirectPath = `reg?token=${token}`;
     const redirectUrl = process.env.NODE_ENV !== 'production'
       ? `${process.env.DEV_URL}/${redirectPath}`

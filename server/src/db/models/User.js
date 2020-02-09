@@ -236,6 +236,9 @@ userSchema.statics = {
   async verifyToken(token, type) {
     try {
       const { secret } = tokensConfig[type];
+      console.log(token);
+      console.log(type);
+      console.log(secret);
       const result = await jwt.verify(token, secret);
 
       return result;

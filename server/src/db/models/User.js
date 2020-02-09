@@ -25,7 +25,7 @@ const tokensConfig = {
   },
   register: {
     secret: process.env.REGISTER_TOKEN_SECRET,
-    expiresIn: '12h',
+    expiresIn: '1d',
     model: ['id'],
   },
 };
@@ -236,9 +236,6 @@ userSchema.statics = {
   async verifyToken(token, type) {
     try {
       const { secret } = tokensConfig[type];
-      console.log(token);
-      console.log(type);
-      console.log(secret);
       const result = await jwt.verify(token, secret);
 
       return result;
@@ -273,7 +270,6 @@ userSchema.statics = {
     try {
       const { data: { id } } = await this.verifyToken(regToken, 'register');
       const user = await this.findByIdAndUpdate(id, { regStatus: UNCOMPLETED }, { new: true });
-      console.log(user);
       const tokens = await user.genTokens();
 
       return tokens;

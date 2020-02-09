@@ -21,7 +21,6 @@ const FullWidthSwipeableDrawer = ({
   variant,
   elevation,
   disableSwipeToOpen,
-  ModalProps,
 }) => (
   <FullWidthSwipeableDrawerStyled
     open={open}
@@ -31,7 +30,7 @@ const FullWidthSwipeableDrawer = ({
     variant={variant}
     elevation={elevation}
     disableSwipeToOpen={disableSwipeToOpen}
-    ModalProps={ModalProps}
+    disableDiscovery
   >
     {children}
   </FullWidthSwipeableDrawerStyled>
@@ -44,9 +43,6 @@ FullWidthSwipeableDrawer.defaultProps = {
   variant: 'temporary',
   elevation: 0,
   disableSwipeToOpen: true,
-  ModalProps: {
-    hideBackdrop: true,
-  },
 };
 FullWidthSwipeableDrawer.propTypes = {
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node, PropTypes.element]),
@@ -57,7 +53,6 @@ FullWidthSwipeableDrawer.propTypes = {
   variant: PropTypes.string,
   elevation: PropTypes.number,
   disableSwipeToOpen: PropTypes.bool,
-  ModalProps: PropTypes.objectOf(PropTypes.any),
 };
 
 export default FullWidthSwipeableDrawer;

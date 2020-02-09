@@ -15,7 +15,7 @@ import {
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
-    expiresIn: 60,
+    expiresIn: '1m',
     model: ['id', 'regStatus'],
   },
   refresh: {

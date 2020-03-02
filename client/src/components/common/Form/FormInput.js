@@ -1,26 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
-import styled from 'styled-components';
-import { position } from 'polished';
 
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 
-const InputWrapper = styled(FormControl)`
-  && {
-    position: relative;
-    padding-bottom: 1.5em;
-  }
-`;
-
-const InputError = styled(FormHelperText)`
-  && {
-    ${position('absolute', null, 0, '0.5em', 0)}
-  }
-`;
+import { FormInputWrapper, FormInputError } from './styled';
 
 const FormInput = ({
   name,
@@ -37,10 +22,26 @@ const FormInput = ({
   onBlur,
   ...rest
 }) => {
+  function handleValidate(value) {
+    validate(value, name);
+  }
+
+  function handleOnBlur(e) {
+    validateField(name);
+
+    if (onBlur) onBlur(e);
+  }
+
+  function onKeyDown({ key, target }) {
+    if (key === 'Escape') {
+      target.blur();
+    }
+  }
+
   return (
-    <Field name={name} validate={value => validate(value, name)}>
+    <Field name={name} validate={handleValidate}>
       {({ field }) => (
-        <InputWrapper fullWidth>
+        <FormInputWrapper fullWidth>
           <InputLabel shrink={type === 'date' || undefined} htmlFor={name}>{label}</InputLabel>
           <Input
             {...field}
@@ -51,22 +52,12 @@ const FormInput = ({
             autoComplete={autoComplete}
             error={isError}
             onChange={onChange}
-            onBlur={(event) => {
-              validateField(name);
-
-              if (onBlur) onBlur(event);
-            }}
-            inputProps={{
-              onKeyDown: ({ key, target }) => {
-                if (key === 'Escape') {
-                  target.blur();
-                }
-              },
-            }}
+            onBlur={handleOnBlur}
+            inputProps={{ onKeyDown }}
             {...rest}
           />
-          <InputError error={isError}>{error}</InputError>
-        </InputWrapper>
+          <FormInputError error={isError}>{error}</FormInputError>
+        </FormInputWrapper>
       )}
     </Field>
   );

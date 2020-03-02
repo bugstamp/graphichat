@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -8,42 +8,36 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOffRounded';
 
 import FormInput from './FormInput';
 
-class FormInputPassword extends PureComponent {
-  state = {
-    showPassword: false,
+const FormInputPassword = (props) => {
+  const { type, ...rest } = props;
+  const [showPassword, togglePassword] = useState(false);
+  const validInputType = showPassword ? 'text' : type;
+
+  function handlePasswordToggling() {
+    togglePassword(!showPassword);
   }
 
-  toggleShowPassword = () => {
-    this.setState(({ showPassword }) => ({ showPassword: !showPassword }));
-  }
-
-  render() {
-    const { showPassword } = this.state;
-    const { type, ...rest } = this.props;
-    const validType = showPassword ? 'text' : type;
-
-    return (
-      <FormInput
-        {...rest}
-        type={validType}
-        endAdornment={(
-          <InputAdornment position="end">
-            <IconButton onClick={this.toggleShowPassword}>
-              <Choose>
-                <When condition={showPassword}>
-                  <VisibilityIcon />
-                </When>
-                <Otherwise>
-                  <VisibilityOffIcon />
-                </Otherwise>
-              </Choose>
-            </IconButton>
-          </InputAdornment>
-        )}
-      />
-    );
-  }
-}
+  return (
+    <FormInput
+      {...rest}
+      type={validInputType}
+      endAdornment={(
+        <InputAdornment position="end">
+          <IconButton onClick={handlePasswordToggling}>
+            <Choose>
+              <When condition={showPassword}>
+                <VisibilityIcon />
+              </When>
+              <Otherwise>
+                <VisibilityOffIcon />
+              </Otherwise>
+            </Choose>
+          </IconButton>
+        </InputAdornment>
+      )}
+    />
+  );
+};
 
 FormInputPassword.propTypes = {
   type: PropTypes.string.isRequired,

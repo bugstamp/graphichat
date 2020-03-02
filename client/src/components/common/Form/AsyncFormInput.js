@@ -6,11 +6,8 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import CheckIcon from '@material-ui/icons/CheckRounded';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
 import FormInput from './FormInput';
+import AsyncFormInputAdornment from './AsyncFormInputAdornment';
 
 import { mutationResultProps } from '../../propTypes';
 
@@ -19,40 +16,25 @@ const AsyncFormInput = (props) => {
     result: { loading, data, error },
     ...rest
   } = props;
-  const [asyncValid, setAsyncValid] = useState(false);
+  const [valid, setValid] = useState(false);
 
-  const handleSetAsyncValid = useCallback((asyncValidState) => {
-    setAsyncValid(asyncValidState);
+  const handleSetValid = useCallback((asyncValidState) => {
+    setValid(asyncValidState);
   }, []);
 
   useEffect(() => {
     if (data) {
-      handleSetAsyncValid(true);
+      handleSetValid(true);
     }
     if (error) {
-      handleSetAsyncValid(false);
+      handleSetValid(false);
     }
-  }, [data, error, handleSetAsyncValid]);
+  }, [data, error, handleSetValid]);
 
   return (
     <FormInput
       {...rest}
-      endAdornment={
-        (loading || asyncValid)
-        && (
-          <InputAdornment position="end">
-            <Choose>
-              <When condition={loading}>
-                <CircularProgress size={18} />
-              </When>
-              <When condition={!loading && asyncValid}>
-                <CheckIcon color="action" />
-              </When>
-              <Otherwise>{null}</Otherwise>
-            </Choose>
-          </InputAdornment>
-        )
-      }
+      endAdornment={(<AsyncFormInputAdornment loading={loading} isSuccess={valid} />)}
     />
   );
 };

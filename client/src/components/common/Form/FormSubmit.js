@@ -1,15 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
-import Button from '@material-ui/core/Button';
-
-const SubmitButton = styled(Button)`
-  && {
-    position: relative;
-    margin-top: 1em;
-  }
-`;
+import { SubmitButton } from './styled';
 
 const FormSubmit = ({ loading, text }) => (
   <SubmitButton

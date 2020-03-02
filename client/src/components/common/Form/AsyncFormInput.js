@@ -1,4 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, {
+  memo,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -9,56 +14,51 @@ import FormInput from './FormInput';
 
 import { mutationResultProps } from '../../propTypes';
 
-class AsyncFormInput extends PureComponent {
-  state = {
-    asyncValid: false,
-  }
+const AsyncFormInput = (props) => {
+  const {
+    result: { loading, data, error },
+    ...rest
+  } = props;
+  const [asyncValid, setAsyncValid] = useState(false);
 
-  componentDidUpdate(prevProps) {
-    const { result: { data, error } } = this.props;
+  const handleSetAsyncValid = useCallback((asyncValidState) => {
+    setAsyncValid(asyncValidState);
+  }, []);
 
-    if (!prevProps.result.data && data) {
-      this.setAsyncValid(true);
+  useEffect(() => {
+    if (data) {
+      handleSetAsyncValid(true);
     }
-    if (!prevProps.result.error && error) {
-      this.setAsyncValid(false);
+    if (error) {
+      handleSetAsyncValid(false);
     }
-  }
+  }, [data, error, handleSetAsyncValid]);
 
-  setAsyncValid = (valid) => {
-    this.setState({ asyncValid: valid });
-  }
-
-  render() {
-    const { asyncValid } = this.state;
-    const { result: { loading }, ...rest } = this.props;
-
-    return (
-      <FormInput
-        {...rest}
-        endAdornment={
-          (loading || asyncValid)
-          && (
-            <InputAdornment position="end">
-              <Choose>
-                <When condition={loading}>
-                  <CircularProgress size={18} />
-                </When>
-                <When condition={!loading && asyncValid}>
-                  <CheckIcon color="action" />
-                </When>
-                <Otherwise>{null}</Otherwise>
-              </Choose>
-            </InputAdornment>
-          )
-        }
-      />
-    );
-  }
-}
+  return (
+    <FormInput
+      {...rest}
+      endAdornment={
+        (loading || asyncValid)
+        && (
+          <InputAdornment position="end">
+            <Choose>
+              <When condition={loading}>
+                <CircularProgress size={18} />
+              </When>
+              <When condition={!loading && asyncValid}>
+                <CheckIcon color="action" />
+              </When>
+              <Otherwise>{null}</Otherwise>
+            </Choose>
+          </InputAdornment>
+        )
+      }
+    />
+  );
+};
 
 AsyncFormInput.propTypes = {
   result: PropTypes.shape(mutationResultProps).isRequired,
 };
 
-export default AsyncFormInput;
+export default memo(AsyncFormInput);

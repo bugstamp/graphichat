@@ -1,55 +1,37 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import { fadeInUp } from 'react-animations';
 
 import Typography from '@material-ui/core/Typography';
-import blue from '@material-ui/core/colors/blue';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Logo from '../../common/Logo';
+import { BrandTitleWrapper } from './styled';
 
-import { getSpacing } from '../../../styles';
-
-const fadeInUpAnimation = keyframes`${fadeInUp}`;
-
-const Title = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  margin-bottom: ${getSpacing(2)};
-  animation: 1s ${fadeInUpAnimation};
-  animation-delay: .5s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-
-  p {
-    margin-left: ${getSpacing(1)};
-    font-weight: bold;
-    background: linear-gradient(to right, ${blue[100]} 0%, ${blue[500]} 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+const getLogoParams = (downMd, downSm) => {
+  if (downSm) {
+    return [35, 'h3'];
   }
-`;
+  if (downMd) {
+    return [35, 'h2'];
+  }
+  return [60, 'h1'];
+};
 
 const BrandTitle = () => {
   const downMd = useMediaQuery(theme => theme.breakpoints.down('md'));
   const downSm = useMediaQuery(theme => theme.breakpoints.down('sm'));
-
-  let logoSize = 60;
-  let typographyVariant = 'h1';
-  if (downMd) {
-    logoSize = 35;
-    typographyVariant = 'h2';
-  }
-  if (downSm) {
-    typographyVariant = 'h3';
-  }
+  const [logoSize, typographyVariant] = getLogoParams(downMd, downSm);
 
   return (
-    <Title>
+    <BrandTitleWrapper>
       <Logo size={logoSize} />
-      <Typography component="p" variant={typographyVariant} align="center">GraphiChat</Typography>
-    </Title>
+      <Typography
+        component="p"
+        variant={typographyVariant}
+        align="center"
+      >
+        GraphiChat
+      </Typography>
+    </BrandTitleWrapper>
   );
 };
 

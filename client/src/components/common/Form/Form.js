@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import * as yup from 'yup';
 import { map, find } from 'lodash';
-import styled from 'styled-components';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
@@ -11,38 +10,46 @@ import FormInputRadio from './FormInputRadio';
 import AsyncFormInput from './AsyncFormInput';
 import FormSubmit from './FormSubmit';
 
+import { FormWrapper } from './styled';
 import {
   formFieldsProps,
   mutationResultProps,
   formAsyncValidationFieldsProps,
 } from '../../propTypes';
 
-const FormStyled = styled.form`
-  width: 100%;
-`;
+const Form = (props) => {
+  const {
+    fields,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFieldError,
+    validateField,
+    validationSchema,
+    result,
+    submitButtonText,
+    asyncValidationFields,
+  } = props;
+  const { loading, error = {} } = result;
 
-class Form extends Component {
-  componentDidUpdate(prevProps) {
-    const { result, setFieldError } = this.props;
+  useEffect(() => {
+    if (error.graphQLErrors) {
+      const { graphQLErrors } = error;
+      const { message, data = null } = graphQLErrors[0];
 
-    if (!prevProps.result.error && result.error) {
-      if (result.error.graphQLErrors) {
-        const { graphQLErrors } = result.error;
-        const { message, data = null } = graphQLErrors[0];
+      if (data) {
+        const { invalidField } = data;
 
-        if (data) {
-          const { invalidField } = data;
-
-          if (invalidField) {
-            setFieldError(invalidField, message);
-          }
+        if (invalidField) {
+          setFieldError(invalidField, message);
         }
       }
     }
-  }
+  }, [error, setFieldError]);
 
-  validate = async (value, field) => {
-    const { validationSchema, asyncValidationFields } = this.props;
+  async function validate(value, field) {
     const asyncValidationField = find(asyncValidationFields, { name: field });
 
     try {
@@ -62,100 +69,84 @@ class Form extends Component {
     }
   }
 
-  render() {
-    const {
-      fields,
-      errors,
-      touched,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-      result,
-      submitButtonText,
-      validateField,
-      asyncValidationFields,
-    } = this.props;
-    const { loading } = result;
+  return (
+    <FormWrapper onSubmit={handleSubmit} autoComplete="on">
+      {
+        map(fields, (field) => {
+          const {
+            name,
+            type,
+            initialValue,
+            ...values
+          } = field;
+          const errorMessage = errors[name];
+          const isError = errorMessage && touched[name];
+          const asyncValidationField = find(asyncValidationFields, { name });
 
-    return (
-      <FormStyled onSubmit={handleSubmit} autoComplete="on">
-        {
-          map(fields, (field) => {
-            const {
-              name,
-              type,
-              initialValue,
-              ...values
-            } = field;
-            const error = errors[name];
-            const isError = error && touched[name];
-            const asyncValidationField = find(asyncValidationFields, { name });
-
-            return (
-              <Choose>
-                <When condition={asyncValidationField}>
-                  <AsyncFormInput
-                    {...values}
-                    key={name}
-                    name={name}
-                    type={type}
-                    error={error}
-                    isError={isError}
-                    result={asyncValidationField.validation.result}
-                    validate={this.validate}
-                    validateField={validateField}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </When>
-                <When condition={type === 'password'}>
-                  <FormInputPassword
-                    {...values}
-                    key={name}
-                    name={name}
-                    type={type}
-                    isError={isError}
-                    error={error}
-                    validateField={validateField}
-                    validate={this.validate}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </When>
-                <When condition={type === 'radio'}>
-                  <FormInputRadio
-                    {...values}
-                    key={name}
-                    name={name}
-                    type={type}
-                    validateField={validateField}
-                    validate={this.validate}
-                    onChange={handleChange}
-                  />
-                </When>
-                <Otherwise>
-                  <FormInput
-                    {...values}
-                    key={name}
-                    name={name}
-                    type={type}
-                    error={error}
-                    isError={isError}
-                    validateField={validateField}
-                    validate={this.validate}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Otherwise>
-              </Choose>
-            );
-          })
-        }
-        <FormSubmit loading={loading} text={submitButtonText} />
-      </FormStyled>
-    );
-  }
-}
+          return (
+            <Choose>
+              <When condition={asyncValidationField}>
+                <AsyncFormInput
+                  {...values}
+                  key={name}
+                  name={name}
+                  type={type}
+                  error={errorMessage}
+                  isError={isError}
+                  result={asyncValidationField.validation.result}
+                  validate={validate}
+                  validateField={validateField}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </When>
+              <When condition={type === 'password'}>
+                <FormInputPassword
+                  {...values}
+                  key={name}
+                  name={name}
+                  type={type}
+                  isError={isError}
+                  error={errorMessage}
+                  validateField={validateField}
+                  validate={validate}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </When>
+              <When condition={type === 'radio'}>
+                <FormInputRadio
+                  {...values}
+                  key={name}
+                  name={name}
+                  type={type}
+                  validateField={validateField}
+                  validate={validate}
+                  onChange={handleChange}
+                />
+              </When>
+              <Otherwise>
+                <FormInput
+                  {...values}
+                  key={name}
+                  name={name}
+                  type={type}
+                  error={errorMessage}
+                  isError={isError}
+                  validateField={validateField}
+                  validate={validate}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </Otherwise>
+            </Choose>
+          );
+        })
+      }
+      <FormSubmit loading={loading} text={submitButtonText} />
+    </FormWrapper>
+  );
+};
 
 Form.defaultProps = {
   errors: {},

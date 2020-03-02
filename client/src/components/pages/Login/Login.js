@@ -1,10 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withApollo } from '@apollo/react-hoc';
-import styled from 'styled-components';
-import { backgrounds } from 'polished';
-
-import Grid from '@material-ui/core/Grid';
+import { useQuery } from '@apollo/client';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 
@@ -14,50 +10,36 @@ import LoginPresentation from './LoginPresentation';
 import FullSwipeableDrawerStyled from '../../common/FullWidthSwipeableDrawer';
 import withNotification from '../../common/HOC/withNotification';
 
+import { LoginWrapper } from './styled';
+
 import storage from '../../../storage';
 import gql from '../../../gql';
 
-import bgImage from '../../../assets/images/login-bg__1920_65.jpg';
-
 const { CHECK_SESSION_EXPIRATION } = gql;
 
-const Wrapper = styled(Grid)`
-  flex: 1 auto;
-  display: flex;
-  position: relative;
-  ${backgrounds(`url(${bgImage})`, 'no-repeat')};
-  background-size: cover;
-  background-position: center;
-`;
+const Login = (props) => {
+  const { history, toggleNotification } = props;
+  const [form, toggleForm] = useState(false);
+  const result = useQuery(CHECK_SESSION_EXPIRATION);
+  const { data: { sessionExpired = false } } = result;
 
-class Login extends Component {
-  state = {
-    formDrawer: false,
-  }
-
-  componentDidMount() {
-    const { client, toggleNotification } = this.props;
-    const { sessionExpired } = client.readQuery({ query: CHECK_SESSION_EXPIRATION });
-
+  useEffect(() => {
     if (sessionExpired) {
       toggleNotification('Session time was expired');
     }
+  }, [sessionExpired, toggleNotification]);
+
+  function handleToggleForm() {
+    toggleForm(!form);
   }
 
-  toggleFormDrawer = () => {
-    this.setState(({ formDrawer }) => ({ formDrawer: !formDrawer }));
-  }
-
-  handleSuccess = ({ token, refreshToken }) => {
-    const { history } = this.props;
-
+  function handleSuccess({ token, refreshToken }) {
     storage.setTokens(token, refreshToken);
     history.push('/');
   }
 
-  handleError = (e) => {
+  function handleError(e) {
     if (e.graphQLErrors) {
-      const { toggleNotification } = this.props;
       const { graphQLErrors } = e;
       const { message, data = null } = graphQLErrors[0];
 
@@ -71,63 +53,54 @@ class Login extends Component {
     }
   }
 
-  toSignUp = () => {
-    const { history } = this.props;
-
+  function redirectToSignUp() {
     history.push('/reg');
   }
 
-  render() {
-    const { formDrawer } = this.state;
-
-    return (
-      <LoginContainer
-        signInProps={{
-          onCompleted: ({ signIn }) => this.handleSuccess(signIn),
-          onError: this.handleError,
-        }}
-        signInBySocialProps={{
-          onCompleted: ({ signInBySocial }) => this.handleSuccess(signInBySocial),
-          onError: this.handleError,
-        }}
-      >
-        {({
-          signIn,
-          signInBySocial,
-        }) => (
-          <Wrapper container>
-            <LoginPresentation formDrawer={formDrawer} toggleFormDrawer={this.toggleFormDrawer} />
-            <Hidden xsDown>
-              <Drawer open={formDrawer} onClose={this.toggleFormDrawer} anchor="right">
-                <LoginForm
-                  signIn={signIn}
-                  signInBySocial={signInBySocial}
-                  toSignUp={this.toSignUp}
-                />
-              </Drawer>
-            </Hidden>
-            <Hidden smUp>
-              <FullSwipeableDrawerStyled open={formDrawer} onClose={this.toggleFormDrawer}>
-                <LoginForm
-                  signIn={signIn}
-                  signInBySocial={signInBySocial}
-                  toSignUp={this.toSignUp}
-                />
-              </FullSwipeableDrawerStyled>
-            </Hidden>
-          </Wrapper>
-        )}
-      </LoginContainer>
-    );
-  }
-}
+  return (
+    <LoginContainer
+      signInProps={{
+        onCompleted: ({ signIn }) => handleSuccess(signIn),
+        onError: handleError,
+      }}
+      signInBySocialProps={{
+        onCompleted: ({ signInBySocial }) => handleSuccess(signInBySocial),
+        onError: handleError,
+      }}
+    >
+      {({
+        signIn,
+        signInBySocial,
+      }) => (
+        <LoginWrapper container>
+          <LoginPresentation stopAnimation={form} toggleForm={handleToggleForm} />
+          <Hidden xsDown>
+            <Drawer open={form} onClose={handleToggleForm} anchor="right">
+              <LoginForm
+                signIn={signIn}
+                signInBySocial={signInBySocial}
+                redirectToSignUp={redirectToSignUp}
+              />
+            </Drawer>
+          </Hidden>
+          <Hidden smUp>
+            <FullSwipeableDrawerStyled open={form} onClose={handleToggleForm}>
+              <LoginForm
+                signIn={signIn}
+                signInBySocial={signInBySocial}
+                redirectToSignUp={redirectToSignUp}
+              />
+            </FullSwipeableDrawerStyled>
+          </Hidden>
+        </LoginWrapper>
+      )}
+    </LoginContainer>
+  );
+};
 
 Login.propTypes = {
   history: PropTypes.objectOf(PropTypes.any).isRequired,
   toggleNotification: PropTypes.func.isRequired,
-  client: PropTypes.shape({
-    readQuery: PropTypes.func.isRequired,
-  }).isRequired,
 };
 
-export default withApollo(withNotification(Login));
+export default withNotification(Login);

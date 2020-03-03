@@ -14,7 +14,7 @@ import storage, { checkToken } from '../../../storage';
 
 import { RegWrapper, RegFormWrapper } from './styled';
 
-const SignUp = (props) => {
+const Reg = (props) => {
   const {
     location: { search },
     history,
@@ -113,7 +113,7 @@ const SignUp = (props) => {
   );
 };
 
-SignUp.propTypes = {
+Reg.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string,
   }).isRequired,
@@ -121,4 +121,4 @@ SignUp.propTypes = {
   toggleNotification: PropTypes.func.isRequired,
 };
 
-export default withNotification(SignUp);
+export default withNotification(Reg);

@@ -20,8 +20,7 @@ const { CHECK_SESSION_EXPIRATION } = gql;
 const Login = (props) => {
   const { history, toggleNotification } = props;
   const [form, toggleForm] = useState(false);
-  const result = useQuery(CHECK_SESSION_EXPIRATION);
-  const { data: { sessionExpired = false } } = result;
+  const { data: { sessionExpired = false } } = useQuery(CHECK_SESSION_EXPIRATION);
 
   useEffect(() => {
     if (sessionExpired) {

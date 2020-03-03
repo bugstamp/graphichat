@@ -6,7 +6,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Logo from '../../common/Logo';
 import { BrandTitleWrapper } from './styled';
 
-const getLogoParams = (downMd, downSm) => {
+const getTitleParams = (downMd, downSm) => {
   if (downSm) {
     return [35, 'h3'];
   }
@@ -19,7 +19,7 @@ const getLogoParams = (downMd, downSm) => {
 const BrandTitle = () => {
   const downMd = useMediaQuery(theme => theme.breakpoints.down('md'));
   const downSm = useMediaQuery(theme => theme.breakpoints.down('sm'));
-  const [logoSize, typographyVariant] = getLogoParams(downMd, downSm);
+  const [logoSize, typographyVariant] = getTitleParams(downMd, downSm);
 
   return (
     <BrandTitleWrapper>

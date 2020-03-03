@@ -1,21 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { map } from 'lodash';
-import styled from 'styled-components';
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
 
-import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
-import InfoIcon from '@material-ui/icons/InfoRounded';
-import CheckCircleIcon from '@material-ui/icons/CheckCircleRounded';
+import StepLabelIcon from './StepLabelIcon';
 
-const StepLabelStyled = styled(StepLabel)`
-  p {
-    width: 100%;
-  }
-`;
+import { StepLabelStyled as StepLabel } from './styled';
 
 const RegFormStepper = ({ activeStep, steps }) => (
   <Stepper alternativeLabel activeStep={activeStep}>
@@ -34,24 +26,12 @@ const RegFormStepper = ({ activeStep, steps }) => (
             active={isActive}
             completed={isCompleted}
           >
-            <StepLabelStyled
-              icon={(
-                <Choose>
-                  <When condition={isCompleted}>
-                    <CheckCircleIcon color={iconColor} />
-                  </When>
-                  <When condition={step === 1}>
-                    <AccountCircleIcon color={iconColor} />
-                  </When>
-                  <Otherwise>
-                    <InfoIcon color={iconColor} />
-                  </Otherwise>
-                </Choose>
-              )}
+            <StepLabel
+              icon={(<StepLabelIcon isCompleted={isCompleted} step={step} iconColor={iconColor} />)}
             >
               <span>{`Step ${step}.`}</span>
               <p>{label}</p>
-            </StepLabelStyled>
+            </StepLabel>
           </Step>
         );
       })

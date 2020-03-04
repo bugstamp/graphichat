@@ -9,22 +9,24 @@ import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import TopProgressLine from '../../common/TopProgressLine';
 
 import { LoginFormWrapper, Header, SignUpButton } from './styled';
-import { mutationProps } from '../../propTypes';
+import { mutationResultProps } from '../../propTypes';
 
 const LoginForm = ({
   signIn,
+  signInResult,
   signInBySocial,
+  signInBySocialResult,
   redirectToSignUp,
 }) => (
   <LoginFormWrapper>
-    <TopProgressLine loading={signIn.result.loading} />
+    <TopProgressLine loading={signInResult.loading} />
     <Header variant="h1" color="primary" align="center" gutterBottom>
       <AccountCircleIcon fontSize="inherit" color="primary" />
     </Header>
     <Form
       {...formConfig('signIn')}
-      mutation={signIn.mutation}
-      result={signIn.result}
+      mutation={signIn}
+      result={signInResult}
       submitButtonText="Sign In"
     />
     <SignUpButton
@@ -37,15 +39,17 @@ const LoginForm = ({
       Sign Up
     </SignUpButton>
     <SocialMedia
-      mutation={signInBySocial.mutation}
-      result={signInBySocial.result}
+      mutation={signInBySocial}
+      result={signInBySocialResult}
     />
   </LoginFormWrapper>
 );
 
 LoginForm.propTypes = {
-  signIn: PropTypes.shape(mutationProps).isRequired,
-  signInBySocial: PropTypes.shape(mutationProps).isRequired,
+  signIn: PropTypes.func.isRequired,
+  signInResult: PropTypes.shape(mutationResultProps).isRequired,
+  signInBySocial: PropTypes.func.isRequired,
+  signInBySocialResult: PropTypes.shape(mutationResultProps).isRequired,
   redirectToSignUp: PropTypes.func.isRequired,
 };
 

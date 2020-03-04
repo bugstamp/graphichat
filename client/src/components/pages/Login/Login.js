@@ -1,105 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useQuery } from '@apollo/client';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 
-import LoginContainer from '../../containers/LoginContainer';
 import LoginForm from './LoginForm';
 import LoginPresentation from './LoginPresentation';
 import FullSwipeableDrawerStyled from '../../common/FullWidthSwipeableDrawer';
-import withNotification from '../../common/HOC/withNotification';
+
+import history from '../../../router/history';
 
 import { LoginWrapper } from './styled';
-
-import storage from '../../../storage';
-import gql from '../../../gql';
-
-const { CHECK_SESSION_EXPIRATION } = gql;
+import { mutationResultProps } from '../../propTypes';
 
 const Login = (props) => {
-  const { history, toggleNotification } = props;
+  const {
+    signIn,
+    signInResult,
+    signInBySocial,
+    signInBySocialResult,
+  } = props;
   const [form, toggleForm] = useState(false);
-  const { data: { sessionExpired = false } } = useQuery(CHECK_SESSION_EXPIRATION);
-
-  useEffect(() => {
-    if (sessionExpired) {
-      toggleNotification('Session time was expired');
-    }
-  }, [sessionExpired, toggleNotification]);
 
   function handleToggleForm() {
     toggleForm(!form);
-  }
-
-  function handleSuccess({ token, refreshToken }) {
-    storage.setTokens(token, refreshToken);
-    history.push('/');
-  }
-
-  function handleError(e) {
-    if (e.graphQLErrors) {
-      const { graphQLErrors } = e;
-      const { message, data = null } = graphQLErrors[0];
-
-      if (data) {
-        const { invalidField = null } = data;
-
-        if (!invalidField) {
-          toggleNotification(message);
-        }
-      }
-    }
   }
 
   function redirectToSignUp() {
     history.push('/reg');
   }
 
+  const drawerProps = {
+    open: form,
+    onClose: handleToggleForm,
+    anchor: 'right',
+  };
+
+  const LoginFormRenderer = (
+    <LoginForm
+      signIn={signIn}
+      signInResult={signInResult}
+      signInBySocial={signInBySocial}
+      signInBySocialResult={signInBySocialResult}
+      redirectToSignUp={redirectToSignUp}
+    />
+  );
+
   return (
-    <LoginContainer
-      signInProps={{
-        onCompleted: ({ signIn }) => handleSuccess(signIn),
-        onError: handleError,
-      }}
-      signInBySocialProps={{
-        onCompleted: ({ signInBySocial }) => handleSuccess(signInBySocial),
-        onError: handleError,
-      }}
-    >
-      {({
-        signIn,
-        signInBySocial,
-      }) => (
-        <LoginWrapper container>
-          <LoginPresentation stopAnimation={form} toggleForm={handleToggleForm} />
-          <Hidden xsDown>
-            <Drawer open={form} onClose={handleToggleForm} anchor="right">
-              <LoginForm
-                signIn={signIn}
-                signInBySocial={signInBySocial}
-                redirectToSignUp={redirectToSignUp}
-              />
-            </Drawer>
-          </Hidden>
-          <Hidden smUp>
-            <FullSwipeableDrawerStyled open={form} onClose={handleToggleForm}>
-              <LoginForm
-                signIn={signIn}
-                signInBySocial={signInBySocial}
-                redirectToSignUp={redirectToSignUp}
-              />
-            </FullSwipeableDrawerStyled>
-          </Hidden>
-        </LoginWrapper>
-      )}
-    </LoginContainer>
+    <LoginWrapper container>
+      <LoginPresentation stopAnimation={form} toggleForm={handleToggleForm} />
+      <Hidden xsDown>
+        <Drawer {...drawerProps}>
+          {LoginFormRenderer}
+        </Drawer>
+      </Hidden>
+      <Hidden smUp>
+        <FullSwipeableDrawerStyled {...drawerProps}>
+          {LoginFormRenderer}
+        </FullSwipeableDrawerStyled>
+      </Hidden>
+    </LoginWrapper>
   );
 };
 
 Login.propTypes = {
-  history: PropTypes.objectOf(PropTypes.any).isRequired,
-  toggleNotification: PropTypes.func.isRequired,
+  signIn: PropTypes.func.isRequired,
+  signInResult: PropTypes.shape(mutationResultProps).isRequired,
+  signInBySocial: PropTypes.func.isRequired,
+  signInBySocialResult: PropTypes.shape(mutationResultProps).isRequired,
 };
 
-export default withNotification(Login);
+export default Login;

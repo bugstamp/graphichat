@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 import importedComponent from 'react-imported-component';
 
-import Login from '../components/pages/Login/Login';
+import Login from '../components/containers/LoginContainer';
 import Reg from '../components/pages/Reg/Reg';
 import Chats from '../components/pages/Chats/Chats';
 import NotFound from '../components/common/NotFound';

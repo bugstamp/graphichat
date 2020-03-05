@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useMutation } from '@apollo/client';
+import queryString from 'query-string';
 
 import Reg from '../pages/Reg/Reg';
 import withNotification from '../common/HOC/withNotification';
 
 import history from '../../router/history';
-import storage from '../../storage';
+import storage, { checkToken } from '../../storage';
 import gql from '../../gql';
 
 const {
@@ -18,7 +20,27 @@ const {
 
 const RegContainer = (props) => {
   const { toggleNotification } = props;
+  const { search } = useLocation();
   const [isCompleted, setRegStatus] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    const { token } = queryString.parse(search);
+
+    if (token) {
+      try {
+        const { regStatus } = checkToken(token, true);
+
+        if (regStatus) {
+          setActiveStep(1);
+        } else {
+          history.push('/reg');
+        }
+      } catch (e) {
+        throw e;
+      }
+    }
+  }, [search]);
 
   function handleSuccess({ token, refreshToken }) {
     if (token && refreshToken) {
@@ -60,6 +82,7 @@ const RegContainer = (props) => {
   return (
     <Reg
       {...props}
+      activeStep={activeStep}
       isCompleted={isCompleted}
       signUpAsyncValidationUsername={signUpAsyncValidationUsername}
       signUpAsyncValidationUsernameResult={signUpAsyncValidationUsernameResult}

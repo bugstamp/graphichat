@@ -1,23 +1,15 @@
-import React, {
-  useState,
-  useEffect,
-} from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 
 import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
-
-import withNotification from '../../common/HOC/withNotification';
-import history from '../../../router/history';
-import { checkToken } from '../../../storage';
 
 import { RegWrapper, RegFormWrapper } from './styled';
 import { mutationResultProps } from '../../propTypes';
 
 const Reg = (props) => {
   const {
+    activeStep,
     isCompleted,
     signUpAsyncValidationUsername,
     signUpAsyncValidationUsernameResult,
@@ -30,26 +22,6 @@ const Reg = (props) => {
     signUpBySocial,
     signUpBySocialResult,
   } = props;
-  const { search } = useLocation();
-  const [activeStep, setActiveStep] = useState(0);
-
-  useEffect(() => {
-    const { token } = queryString.parse(search);
-
-    if (token) {
-      try {
-        const { regStatus } = checkToken(token, true);
-
-        if (regStatus) {
-          setActiveStep(1);
-        } else {
-          history.push('/reg');
-        }
-      } catch (e) {
-        throw e;
-      }
-    }
-  }, [search]);
 
   return (
     <RegWrapper container>
@@ -75,6 +47,7 @@ const Reg = (props) => {
 };
 
 Reg.propTypes = {
+  activeStep: PropTypes.number.isRequired,
   isCompleted: PropTypes.bool.isRequired,
   signUpAsyncValidationUsername: PropTypes.func.isRequired,
   signUpAsyncValidationUsernameResult: PropTypes.shape(mutationResultProps).isRequired,
@@ -88,4 +61,4 @@ Reg.propTypes = {
   signUpBySocialResult: PropTypes.shape(mutationResultProps).isRequired,
 };
 
-export default withNotification(Reg);
+export default Reg;

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
+import { trim } from 'lodash';
 
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -20,13 +21,30 @@ const FormInput = ({
   validateField,
   onChange,
   onBlur,
+  setFieldValue,
   ...rest
 }) => {
+  const shrink = type === 'date' || undefined;
+  const isPassword = name === 'password';
+
   function handleValidate(value) {
-    validate(value, name);
+    if (!isPassword) {
+      const trimmedValue = trim(value);
+
+      validate(name, trimmedValue);
+    } else {
+      validate(name, value);
+    }
   }
 
   function handleOnBlur(e) {
+    const { target } = e;
+    const { value } = target;
+    const trimmedValue = trim(value);
+
+    if (!isPassword) {
+      setFieldValue(name, trimmedValue);
+    }
     validateField(name);
 
     if (onBlur) onBlur(e);
@@ -42,17 +60,17 @@ const FormInput = ({
     <Field name={name} validate={handleValidate}>
       {({ field }) => (
         <FormInputWrapper fullWidth>
-          <InputLabel shrink={type === 'date' || undefined} htmlFor={name}>{label}</InputLabel>
+          <InputLabel shrink={shrink} htmlFor={name}>{label}</InputLabel>
           <Input
             {...field}
             id={name}
             type={type}
-            placeholder={placeholder}
-            required={required}
-            autoComplete={autoComplete}
             error={isError}
             onChange={onChange}
             onBlur={handleOnBlur}
+            required={required}
+            placeholder={placeholder}
+            autoComplete={autoComplete}
             inputProps={{ onKeyDown }}
             {...rest}
           />
@@ -82,6 +100,7 @@ FormInput.propTypes = {
   validateField: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
 };
 
-export default FormInput;
+export default memo(FormInput);

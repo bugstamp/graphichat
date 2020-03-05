@@ -2,57 +2,40 @@ import React, {
   useState,
   useEffect,
 } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 
-import RegContainer from '../../containers/RegContainer';
+// import RegContainer from '../../containers/RegContainer';
 import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
 
 import withNotification from '../../common/HOC/withNotification';
-import storage, { checkToken } from '../../../storage';
+import history from '../../../router/history';
+import { checkToken } from '../../../storage';
 
 import { RegWrapper, RegFormWrapper } from './styled';
+import { mutationResultProps } from '../../propTypes';
 
 const Reg = (props) => {
   const {
-    location: { search },
-    history,
-    toggleNotification,
+    isCompleted,
+    signUpAsyncValidationUsername,
+    signUpAsyncValidationUsernameResult,
+    signUpAsyncValidationEmail,
+    signUpAsyncValidationEmailResult,
+    signUp,
+    signUpResult,
+    signUpCompletion,
+    signUpCompletionResult,
+    signUpBySocial,
+    signUpBySocialResult,
   } = props;
+  const { search } = useLocation();
   const [activeStep, setActiveStep] = useState(0);
-  const [completed, setStatus] = useState(false);
-  const steps = [
-    'Create your account',
-    'Tell us about yourself',
-  ];
-
-  const historyPush = path => history.push(path);
 
   function handleSetActiveStep(step) {
     setActiveStep(step);
-  }
-
-  function handleSetStatus(status) {
-    setStatus(status);
-  }
-
-  function handleSuccess({ token, refreshToken }) {
-    if (token && refreshToken) {
-      storage.setTokens(token, refreshToken);
-      historyPush('/');
-    } else {
-      handleSetStatus(true);
-    }
-  }
-
-  function handleError(e) {
-    if (e.graphQLErrors) {
-      const { graphQLErrors } = e;
-      const { message } = graphQLErrors[0];
-
-      toggleNotification(message);
-    }
   }
 
   useEffect(() => {
@@ -65,7 +48,7 @@ const Reg = (props) => {
         if (regStatus) {
           handleSetActiveStep(1);
         } else {
-          historyPush('/reg');
+          history.push('/reg');
         }
       } catch (e) {
         throw e;
@@ -74,51 +57,40 @@ const Reg = (props) => {
   });
 
   return (
-    <RegContainer
-      signUpProps={{
-        onCompleted: ({ signUp }) => handleSuccess(signUp),
-      }}
-      signUpCompletionProps={{
-        onCompleted: ({ signUpCompletion }) => handleSuccess(signUpCompletion),
-      }}
-      signUpBySocialProps={{
-        onCompleted: ({ signUpBySocial }) => handleSuccess(signUpBySocial),
-        onError: handleError,
-      }}
-    >
-      {({
-        signUpAsyncValidationUsername,
-        signUpAsyncValidationEmail,
-        signUp,
-        signUpCompletion,
-        signUpBySocial,
-      }) => (
-        <RegWrapper container>
-          <RegPresentation />
-          <RegFormWrapper>
-            <RegForm
-              steps={steps}
-              activeStep={activeStep}
-              completed={completed}
-              signUpAsyncValidationUsername={signUpAsyncValidationUsername}
-              signUpAsyncValidationEmail={signUpAsyncValidationEmail}
-              signUp={signUp}
-              signUpCompletion={signUpCompletion}
-              signUpBySocial={signUpBySocial}
-            />
-          </RegFormWrapper>
-        </RegWrapper>
-      )}
-    </RegContainer>
+    <RegWrapper container>
+      <RegPresentation />
+      <RegFormWrapper>
+        <RegForm
+          activeStep={activeStep}
+          isCompleted={isCompleted}
+          signUpAsyncValidationUsername={signUpAsyncValidationUsername}
+          signUpAsyncValidationUsernameResult={signUpAsyncValidationUsernameResult}
+          signUpAsyncValidationEmail={signUpAsyncValidationEmail}
+          signUpAsyncValidationEmailResult={signUpAsyncValidationEmailResult}
+          signUp={signUp}
+          signUpResult={signUpResult}
+          signUpCompletion={signUpCompletion}
+          signUpCompletionResult={signUpCompletionResult}
+          signUpBySocial={signUpBySocial}
+          signUpBySocialResult={signUpBySocialResult}
+        />
+      </RegFormWrapper>
+    </RegWrapper>
   );
 };
 
 Reg.propTypes = {
-  location: PropTypes.shape({
-    search: PropTypes.string,
-  }).isRequired,
-  history: PropTypes.objectOf(PropTypes.any).isRequired,
-  toggleNotification: PropTypes.func.isRequired,
+  isCompleted: PropTypes.bool.isRequired,
+  signUpAsyncValidationUsername: PropTypes.func.isRequired,
+  signUpAsyncValidationUsernameResult: PropTypes.shape(mutationResultProps).isRequired,
+  signUpAsyncValidationEmail: PropTypes.func.isRequired,
+  signUpAsyncValidationEmailResult: PropTypes.shape(mutationResultProps).isRequired,
+  signUp: PropTypes.func.isRequired,
+  signUpResult: PropTypes.shape(mutationResultProps).isRequired,
+  signUpCompletion: PropTypes.func.isRequired,
+  signUpCompletionResult: PropTypes.shape(mutationResultProps).isRequired,
+  signUpBySocial: PropTypes.func.isRequired,
+  signUpBySocialResult: PropTypes.shape(mutationResultProps).isRequired,
 };
 
 export default withNotification(Reg);

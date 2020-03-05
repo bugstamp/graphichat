@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import * as yup from 'yup';
-import { map, find } from 'lodash';
+import { map } from 'lodash';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
@@ -14,7 +14,7 @@ import { FormWrapper } from './styled';
 import {
   formFieldsProps,
   mutationResultProps,
-  formAsyncValidationFieldsProps,
+  formAsyncFieldsProps,
 } from '../../propTypes';
 
 const Form = (props) => {
@@ -25,12 +25,13 @@ const Form = (props) => {
     handleChange,
     handleBlur,
     handleSubmit,
+    setFieldValue,
     setFieldError,
     validateField,
     validationSchema,
     result,
     submitButtonText,
-    asyncValidationFields,
+    asyncFields,
   } = props;
   const { loading, error = {} } = result;
 
@@ -49,25 +50,29 @@ const Form = (props) => {
     }
   }, [error, setFieldError]);
 
-  async function validate(value, field) {
-    const asyncValidationField = find(asyncValidationFields, { name: field });
-
+  const validate = useCallback(async (field, value) => {
     try {
       await yup.reach(validationSchema, field).validate(value);
 
-      if (asyncValidationField) {
-        const { validation } = asyncValidationField;
+      if (asyncFields[field]) {
+        const { mutation } = asyncFields[field];
 
-        await validation.mutation({ variables: { value, field } });
+        await mutation({ variables: { value, field } });
       }
-    } catch ({ message, graphQLErrors }) {
+    } catch (e) {
+      const { graphQLErrors } = e;
+
       if (graphQLErrors) {
         const { message: graphQlMessage } = graphQLErrors[0];
 
-        throw graphQlMessage;
+        setFieldError(field, graphQlMessage);
+      } else {
+        const { message } = e;
+
+        setFieldError(field, message);
       }
     }
-  }
+  }, [validationSchema, asyncFields, setFieldError]);
 
   return (
     <FormWrapper onSubmit={handleSubmit} autoComplete="on">
@@ -77,57 +82,59 @@ const Form = (props) => {
             name,
             type,
             initialValue,
-            ...values
+            ...fieldValues
           } = field;
           const errorMessage = errors[name];
           const isError = errorMessage && touched[name];
-          const asyncValidationField = find(asyncValidationFields, { name });
 
           return (
             <Choose>
-              <When condition={asyncValidationField}>
+              <When condition={asyncFields[name]}>
                 <AsyncFormInput
-                  {...values}
+                  {...fieldValues}
                   key={name}
                   name={name}
                   type={type}
                   error={errorMessage}
                   isError={isError}
-                  result={asyncValidationField.validation.result}
+                  result={asyncFields[name].result}
                   validate={validate}
                   validateField={validateField}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  setFieldValue={setFieldValue}
                 />
               </When>
               <When condition={type === 'password'}>
                 <FormInputPassword
-                  {...values}
+                  {...fieldValues}
                   key={name}
                   name={name}
                   type={type}
-                  isError={isError}
                   error={errorMessage}
-                  validateField={validateField}
+                  isError={isError}
                   validate={validate}
+                  validateField={validateField}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  setFieldValue={setFieldValue}
                 />
               </When>
               <When condition={type === 'radio'}>
                 <FormInputRadio
-                  {...values}
+                  {...fieldValues}
                   key={name}
                   name={name}
                   type={type}
-                  validateField={validateField}
                   validate={validate}
+                  validateField={validateField}
                   onChange={handleChange}
+                  setFieldValue={setFieldValue}
                 />
               </When>
               <Otherwise>
                 <FormInput
-                  {...values}
+                  {...fieldValues}
                   key={name}
                   name={name}
                   type={type}
@@ -137,6 +144,7 @@ const Form = (props) => {
                   validate={validate}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  setFieldValue={setFieldValue}
                 />
               </Otherwise>
             </Choose>
@@ -152,7 +160,7 @@ Form.defaultProps = {
   errors: {},
   touched: {},
   submitButtonText: 'Submit',
-  asyncValidationFields: [],
+  asyncFields: {},
 };
 Form.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.shape(formFieldsProps)).isRequired,
@@ -161,12 +169,13 @@ Form.propTypes = {
   handleChange: PropTypes.func.isRequired,
   handleBlur: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
   setFieldError: PropTypes.func.isRequired,
   result: PropTypes.shape(mutationResultProps).isRequired,
   submitButtonText: PropTypes.string,
   validateField: PropTypes.func.isRequired,
   validationSchema: PropTypes.objectOf(PropTypes.any).isRequired,
-  asyncValidationFields: PropTypes.arrayOf(PropTypes.shape(formAsyncValidationFieldsProps)),
+  asyncFields: PropTypes.objectOf(PropTypes.shape(formAsyncFieldsProps)),
 };
 
 export default withFormik({

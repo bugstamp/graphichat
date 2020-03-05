@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -43,4 +43,4 @@ FormInputPassword.propTypes = {
   type: PropTypes.string.isRequired,
 };
 
-export default FormInputPassword;
+export default memo(FormInputPassword);

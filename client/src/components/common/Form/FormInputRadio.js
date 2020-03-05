@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
 import { map } from 'lodash';
@@ -57,4 +57,4 @@ FormInputRadio.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default FormInputRadio;
+export default memo(FormInputRadio);

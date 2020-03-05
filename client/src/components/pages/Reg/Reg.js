@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 
-// import RegContainer from '../../containers/RegContainer';
 import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
 
@@ -34,10 +33,6 @@ const Reg = (props) => {
   const { search } = useLocation();
   const [activeStep, setActiveStep] = useState(0);
 
-  function handleSetActiveStep(step) {
-    setActiveStep(step);
-  }
-
   useEffect(() => {
     const { token } = queryString.parse(search);
 
@@ -46,7 +41,7 @@ const Reg = (props) => {
         const { regStatus } = checkToken(token, true);
 
         if (regStatus) {
-          handleSetActiveStep(1);
+          setActiveStep(1);
         } else {
           history.push('/reg');
         }
@@ -54,7 +49,7 @@ const Reg = (props) => {
         throw e;
       }
     }
-  });
+  }, [search]);
 
   return (
     <RegWrapper container>

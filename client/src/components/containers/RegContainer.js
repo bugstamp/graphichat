@@ -20,16 +20,12 @@ const RegContainer = (props) => {
   const { toggleNotification } = props;
   const [isCompleted, setRegStatus] = useState(false);
 
-  function handleSetRegStatus(status) {
-    setRegStatus(status);
-  }
-
   function handleSuccess({ token, refreshToken }) {
     if (token && refreshToken) {
       storage.setTokens(token, refreshToken);
       history.push('/');
     } else {
-      handleSetRegStatus(true);
+      setRegStatus(true);
     }
   }
 

@@ -42,7 +42,7 @@
     "dotenv-expand": "^4.2.0",
     "dotenv-webpack": "^1.7.0",
     "file-loader": "^2.0.0",
-    "formik": "^1.4.2",
+    "formik": "^2.1.4",
     "graphql": "^14.3.1",
     "history": "^4.9.0",
     "html-loader": "^0.5.5",

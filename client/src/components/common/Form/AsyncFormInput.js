@@ -2,7 +2,6 @@ import React, {
   memo,
   useState,
   useEffect,
-  useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -18,18 +17,14 @@ const AsyncFormInput = (props) => {
   } = props;
   const [valid, setValid] = useState(false);
 
-  const handleSetValid = useCallback((asyncValidState) => {
-    setValid(asyncValidState);
-  }, []);
-
   useEffect(() => {
     if (data) {
-      handleSetValid(true);
+      setValid(true);
     }
     if (error) {
-      handleSetValid(false);
+      setValid(false);
     }
-  }, [data, error, handleSetValid]);
+  }, [data, error]);
 
   return (
     <FormInput

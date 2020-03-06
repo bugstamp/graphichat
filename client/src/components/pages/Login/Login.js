@@ -23,17 +23,19 @@ const {
 
 const Login = (props) => {
   const { toggleNotification } = props;
-  const { data: { sessionExpired = false } } = useQuery(CHECK_SESSION_EXPIRATION);
   const [form, toggleForm] = useState(false);
-  const handleToggleForm = useCallback(() => {
-    toggleForm(!form);
-  }, [form]);
+  const { data: { sessionExpired = false } } = useQuery(CHECK_SESSION_EXPIRATION);
+  console.log(toggleForm);
 
   useEffect(() => {
     if (sessionExpired) {
       toggleNotification('Session time was expired');
     }
   }, [sessionExpired, toggleNotification]);
+
+  const handleToggleForm = useCallback(() => {
+    toggleForm(!form);
+  }, [form]);
 
   function redirectToSignUp() {
     history.push('/reg');

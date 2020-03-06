@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login snapshot render 1`] = `
+<Fragment>
+  <Login
+    toggleNotification={[Function]}
+  />
+  <Notification
+    message=""
+    open={false}
+    toggle={[Function]}
+    type="error"
+  />
+</Fragment>
+`;

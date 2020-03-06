@@ -1,27 +1,86 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useMutation } from '@apollo/client';
+import queryString from 'query-string';
 
 import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
+import withNotification from '../../common/HOC/withNotification';
+
+import history from '../../../router/history';
+import storage, { checkToken } from '../../../storage';
+import gql from '../../../gql';
 
 import { RegWrapper, RegFormWrapper } from './styled';
-import { mutationResultProps } from '../../propTypes';
+
+const {
+  SIGN_UP_ASYNC_VALIDATION,
+  SIGN_UP,
+  SIGN_UP_COMPLETION,
+  SIGN_UP_BY_SOCIAL,
+} = gql;
 
 const Reg = (props) => {
-  const {
-    activeStep,
-    isCompleted,
+  const { toggleNotification } = props;
+  const { search } = useLocation();
+  const [isCompleted, setRegStatus] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    const { token } = queryString.parse(search);
+
+    if (token) {
+      try {
+        const { regStatus } = checkToken(token, true);
+
+        if (regStatus) {
+          setActiveStep(1);
+        } else {
+          history.push('/reg');
+        }
+      } catch (e) {
+        throw e;
+      }
+    }
+  }, [search]);
+
+  function handleSuccess({ token, refreshToken }) {
+    if (token && refreshToken) {
+      storage.setTokens(token, refreshToken);
+      history.push('/');
+    } else {
+      setRegStatus(true);
+    }
+  }
+
+  function handleError(e) {
+    if (e.graphQLErrors) {
+      const { graphQLErrors } = e;
+      const { message } = graphQLErrors[0];
+
+      toggleNotification(message);
+    }
+  }
+
+  const [
     signUpAsyncValidationUsername,
     signUpAsyncValidationUsernameResult,
+  ] = useMutation(SIGN_UP_ASYNC_VALIDATION);
+  const [
     signUpAsyncValidationEmail,
     signUpAsyncValidationEmailResult,
-    signUp,
-    signUpResult,
-    signUpCompletion,
-    signUpCompletionResult,
-    signUpBySocial,
-    signUpBySocialResult,
-  } = props;
+  ] = useMutation(SIGN_UP_ASYNC_VALIDATION);
+  const [signUp, signUpResult] = useMutation(SIGN_UP, {
+    onCompleted: data => handleSuccess(data.signUp),
+  });
+  const [signUpCompletion, signUpCompletionResult] = useMutation(SIGN_UP_COMPLETION, {
+    onCompleted: data => handleSuccess(data.signUpCompletion),
+  });
+  const [signUpBySocial, signUpBySocialResult] = useMutation(SIGN_UP_BY_SOCIAL, {
+    onCompleted: data => handleSuccess(data.signUpBySocial),
+    onError: handleError,
+  });
 
   return (
     <RegWrapper container>
@@ -47,18 +106,7 @@ const Reg = (props) => {
 };
 
 Reg.propTypes = {
-  activeStep: PropTypes.number.isRequired,
-  isCompleted: PropTypes.bool.isRequired,
-  signUpAsyncValidationUsername: PropTypes.func.isRequired,
-  signUpAsyncValidationUsernameResult: PropTypes.shape(mutationResultProps).isRequired,
-  signUpAsyncValidationEmail: PropTypes.func.isRequired,
-  signUpAsyncValidationEmailResult: PropTypes.shape(mutationResultProps).isRequired,
-  signUp: PropTypes.func.isRequired,
-  signUpResult: PropTypes.shape(mutationResultProps).isRequired,
-  signUpCompletion: PropTypes.func.isRequired,
-  signUpCompletionResult: PropTypes.shape(mutationResultProps).isRequired,
-  signUpBySocial: PropTypes.func.isRequired,
-  signUpBySocialResult: PropTypes.shape(mutationResultProps).isRequired,
+  toggleNotification: PropTypes.func.isRequired,
 };
 
-export default Reg;
+export default withNotification(Reg);

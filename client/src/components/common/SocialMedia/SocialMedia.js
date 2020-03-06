@@ -1,30 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import Facebook from './Facebook';
 import Google from './Google';
 
+import { SocialMediaWrapper, SocialMediaNote } from './styled';
 import { mutationResultProps } from '../../propTypes';
 
-const SocialMediaWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2em;
-`;
+const SocialMedia = (props) => {
+  const {
+    note,
+    mutation,
+    result: { loading },
+  } = props;
 
-const SocialMediaNote = styled.p`
-  display: inline-flex;
-  margin-right: 1em;
-`;
-
-const SocialMedia = ({
-  mutation,
-  result: { loading },
-  note,
-}) => {
   return (
     <SocialMediaWrapper>
       <SocialMediaNote>

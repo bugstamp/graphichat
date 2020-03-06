@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { map } from 'lodash';
 
@@ -56,4 +56,4 @@ RegFormStepper.propTypes = {
   activeStep: PropTypes.number.isRequired,
 };
 
-export default RegFormStepper;
+export default memo(RegFormStepper);

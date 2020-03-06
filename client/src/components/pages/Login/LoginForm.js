@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 
 import Form from '../../common/Form/Form';
-import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import TopProgressLine from '../../common/TopProgressLine';
 
@@ -24,7 +23,7 @@ const LoginForm = ({
       <AccountCircleIcon fontSize="inherit" color="primary" />
     </Header>
     <Form
-      {...formConfig('signIn')}
+      formId="signIn"
       mutation={signIn}
       result={signInResult}
       submitButtonText="Sign In"

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useMutation } from '@apollo/client';
 
@@ -18,6 +18,15 @@ const {
 const LoginContainer = (props) => {
   const { toggleNotification } = props;
   const { data: { sessionExpired = false } } = useQuery(CHECK_SESSION_EXPIRATION);
+  const [form, toggleForm] = useState(false);
+
+  function redirectToSignUp() {
+    history.push('/reg');
+  }
+
+  const handleToggleForm = useCallback(() => {
+    toggleForm(!form);
+  }, [form]);
 
   useEffect(() => {
     if (sessionExpired) {
@@ -57,6 +66,9 @@ const LoginContainer = (props) => {
   return (
     <Login
       {...props}
+      form={form}
+      toggleForm={handleToggleForm}
+      redirectToSignUp={redirectToSignUp}
       signIn={signIn}
       signInResult={signInResult}
       signInBySocial={signInBySocial}

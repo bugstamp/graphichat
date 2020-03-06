@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { position } from 'polished';
@@ -35,4 +35,4 @@ TopProgressLine.propTypes = {
   bordered: PropTypes.bool,
 };
 
-export default TopProgressLine;
+export default memo(TopProgressLine);

@@ -1,37 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 
 import LoginForm from './LoginForm';
 import LoginPresentation from './LoginPresentation';
-import FullSwipeableDrawerStyled from '../../common/FullWidthSwipeableDrawer';
 
-import history from '../../../router/history';
+import FullSwipeableDrawerStyled from '../../common/FullWidthSwipeableDrawer';
 
 import { LoginWrapper } from './styled';
 import { mutationResultProps } from '../../propTypes';
 
 const Login = (props) => {
   const {
+    form,
+    toggleForm,
+    redirectToSignUp,
     signIn,
     signInResult,
     signInBySocial,
     signInBySocialResult,
   } = props;
-  const [form, toggleForm] = useState(false);
-
-  function handleToggleForm() {
-    toggleForm(!form);
-  }
-
-  function redirectToSignUp() {
-    history.push('/reg');
-  }
 
   const drawerProps = {
     open: form,
-    onClose: handleToggleForm,
+    onClose: toggleForm,
     anchor: 'right',
   };
 
@@ -47,7 +40,7 @@ const Login = (props) => {
 
   return (
     <LoginWrapper container>
-      <LoginPresentation stopAnimation={form} toggleForm={handleToggleForm} />
+      <LoginPresentation stopAnimation={form} toggleForm={toggleForm} />
       <Hidden xsDown>
         <Drawer {...drawerProps}>
           {LoginFormRenderer}
@@ -63,6 +56,9 @@ const Login = (props) => {
 };
 
 Login.propTypes = {
+  form: PropTypes.bool.isRequired,
+  toggleForm: PropTypes.func.isRequired,
+  redirectToSignUp: PropTypes.func.isRequired,
   signIn: PropTypes.func.isRequired,
   signInResult: PropTypes.shape(mutationResultProps).isRequired,
   signInBySocial: PropTypes.func.isRequired,

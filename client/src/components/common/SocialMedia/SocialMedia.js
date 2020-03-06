@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 
 import Facebook from './Facebook';
@@ -34,4 +34,4 @@ SocialMedia.propTypes = {
   note: PropTypes.string,
 };
 
-export default SocialMedia;
+export default memo(SocialMedia);

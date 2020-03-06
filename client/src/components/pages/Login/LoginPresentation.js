@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
@@ -25,4 +25,4 @@ LoginPresentation.propTypes = {
   toggleForm: PropTypes.func.isRequired,
 };
 
-export default LoginPresentation;
+export default memo(LoginPresentation);

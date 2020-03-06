@@ -1,7 +1,7 @@
 import React, {
-  memo,
   useState,
   useEffect,
+  useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -26,10 +26,15 @@ const AsyncFormInput = (props) => {
     }
   }, [data, error]);
 
+  const memoizedInputAdornment = useMemo(
+    () => (<AsyncFormInputAdornment loading={loading} isSuccess={valid} />),
+    [loading, valid],
+  );
+
   return (
     <FormInput
       {...rest}
-      endAdornment={(<AsyncFormInputAdornment loading={loading} isSuccess={valid} />)}
+      endAdornment={memoizedInputAdornment}
     />
   );
 };
@@ -38,4 +43,4 @@ AsyncFormInput.propTypes = {
   result: PropTypes.shape(mutationResultProps).isRequired,
 };
 
-export default memo(AsyncFormInput);
+export default AsyncFormInput;

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Form from '../../common/Form/Form';
-import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import RegFormStepper from './RegFormStepper';
 import TopProgressLine from '../../common/TopProgressLine';
@@ -57,11 +56,11 @@ const RegForm = (props) => {
         </When>
         <When condition={activeStep === 0}>
           <Form
-            {...formConfig('signUpStepOne')}
+            formId="signUpStepOne"
+            asyncFields={asyncFields}
             mutation={signUp}
             result={signUpResult}
             submitButtonText="Confirm"
-            asyncFields={asyncFields}
           />
           <SocialMedia
             mutation={signUpBySocial}
@@ -70,7 +69,7 @@ const RegForm = (props) => {
         </When>
         <When condition={activeStep === 1}>
           <Form
-            {...formConfig('signUpStepTwo')}
+            formId="signUpStepTwo"
             mutation={signUpCompletion}
             result={signUpCompletionResult}
             submitButtonText="Confirm"

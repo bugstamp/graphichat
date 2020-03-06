@@ -10,16 +10,20 @@ import FormInputRadio from './FormInputRadio';
 import AsyncFormInput from './AsyncFormInput';
 import FormSubmit from './FormSubmit';
 
+import formConfig from './formConfig';
+
 import { FormWrapper } from './styled';
 import {
-  formFieldsProps,
   mutationResultProps,
   formAsyncFieldsProps,
 } from '../../propTypes';
 
 const Form = (props) => {
   const {
-    fields,
+    formId,
+    asyncFields,
+    result,
+    submitButtonText,
     errors,
     touched,
     handleChange,
@@ -28,11 +32,8 @@ const Form = (props) => {
     setFieldValue,
     setFieldError,
     validateField,
-    validationSchema,
-    result,
-    submitButtonText,
-    asyncFields,
   } = props;
+  const { fields } = formConfig(formId);
   const { loading, error = {} } = result;
 
   useEffect(() => {
@@ -52,6 +53,7 @@ const Form = (props) => {
 
   const validate = useCallback(async (field, value) => {
     try {
+      const { validationSchema } = formConfig(formId);
       await yup.reach(validationSchema, field).validate(value);
 
       if (asyncFields[field]) {
@@ -72,7 +74,7 @@ const Form = (props) => {
         setFieldError(field, message);
       }
     }
-  }, [validationSchema, asyncFields, setFieldError]);
+  }, [formId]); //eslint-disable-line
 
   return (
     <FormWrapper onSubmit={handleSubmit} autoComplete="on">
@@ -129,6 +131,7 @@ const Form = (props) => {
                   validate={validate}
                   validateField={validateField}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   setFieldValue={setFieldValue}
                 />
               </When>
@@ -157,13 +160,16 @@ const Form = (props) => {
 };
 
 Form.defaultProps = {
+  asyncFields: {},
+  submitButtonText: 'Submit',
   errors: {},
   touched: {},
-  submitButtonText: 'Submit',
-  asyncFields: {},
 };
 Form.propTypes = {
-  fields: PropTypes.arrayOf(PropTypes.shape(formFieldsProps)).isRequired,
+  formId: PropTypes.string.isRequired,
+  asyncFields: PropTypes.objectOf(PropTypes.shape(formAsyncFieldsProps)),
+  result: PropTypes.shape(mutationResultProps).isRequired,
+  submitButtonText: PropTypes.string,
   errors: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
   touched: PropTypes.objectOf(PropTypes.bool),
   handleChange: PropTypes.func.isRequired,
@@ -171,17 +177,22 @@ Form.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   setFieldValue: PropTypes.func.isRequired,
   setFieldError: PropTypes.func.isRequired,
-  result: PropTypes.shape(mutationResultProps).isRequired,
-  submitButtonText: PropTypes.string,
   validateField: PropTypes.func.isRequired,
-  validationSchema: PropTypes.objectOf(PropTypes.any).isRequired,
-  asyncFields: PropTypes.objectOf(PropTypes.shape(formAsyncFieldsProps)),
 };
 
 export default withFormik({
-  mapPropsToValues: ({ initialValues }) => initialValues,
+  mapPropsToValues: ({ formId }) => {
+    const { initialValues } = formConfig(formId);
+
+    return initialValues;
+  },
   handleSubmit: (form, { props: { mutation } }) => {
     mutation({ variables: { form } });
+  },
+  validationSchema: ({ formId }) => {
+    const { validationSchema } = formConfig(formId);
+
+    return validationSchema;
   },
   validateOnChange: false,
   validateOnBlur: false,

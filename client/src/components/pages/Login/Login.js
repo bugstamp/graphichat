@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
+import { useQuery, useMutation } from '@apollo/client';
+
 import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import LoginForm from './LoginForm';
 import LoginPresentation from './LoginPresentation';
@@ -25,7 +26,11 @@ const Login = (props) => {
   const { toggleNotification } = props;
   const [form, toggleForm] = useState(false);
   const { data: { sessionExpired = false } } = useQuery(CHECK_SESSION_EXPIRATION);
-  console.log(toggleForm);
+  const smUp = useMediaQuery(theme => theme.breakpoints.up('sm'));
+  const DrawerComponent = smUp
+    ? Drawer
+    : FullSwipeableDrawerStyled;
+  console.log(form);
 
   useEffect(() => {
     if (sessionExpired) {
@@ -70,35 +75,22 @@ const Login = (props) => {
     onError: handleError,
   });
 
-  const drawerProps = {
-    open: form,
-    onClose: toggleForm,
-    anchor: 'right',
-  };
-
-  const LoginFormRenderer = (
-    <LoginForm
-      signIn={signIn}
-      signInResult={signInResult}
-      signInBySocial={signInBySocial}
-      signInBySocialResult={signInBySocialResult}
-      redirectToSignUp={redirectToSignUp}
-    />
-  );
-
   return (
     <LoginWrapper container>
       <LoginPresentation stopAnimation={form} toggleForm={handleToggleForm} />
-      <Hidden xsDown>
-        <Drawer {...drawerProps}>
-          {LoginFormRenderer}
-        </Drawer>
-      </Hidden>
-      <Hidden smUp>
-        <FullSwipeableDrawerStyled {...drawerProps}>
-          {LoginFormRenderer}
-        </FullSwipeableDrawerStyled>
-      </Hidden>
+      <DrawerComponent
+        open={form}
+        onClose={handleToggleForm}
+        anchor="right"
+      >
+        <LoginForm
+          signIn={signIn}
+          signInResult={signInResult}
+          signInBySocial={signInBySocial}
+          signInBySocialResult={signInBySocialResult}
+          redirectToSignUp={redirectToSignUp}
+        />
+      </DrawerComponent>
     </LoginWrapper>
   );
 };

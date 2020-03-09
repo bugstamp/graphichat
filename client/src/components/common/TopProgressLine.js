@@ -26,13 +26,14 @@ const TopProgressLine = ({ height, loading, bordered }) => (
 );
 
 TopProgressLine.defaultProps = {
+  loading: false,
   bordered: false,
   height: '3px',
 };
 TopProgressLine.propTypes = {
-  height: PropTypes.string,
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
   bordered: PropTypes.bool,
+  height: PropTypes.string,
 };
 
 export default memo(TopProgressLine);

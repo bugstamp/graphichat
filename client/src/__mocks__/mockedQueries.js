@@ -7,9 +7,15 @@ import {
   updateUserResult,
   contact,
   chat,
+  signInForm,
+  socialProfile,
+  socialUserProfile,
+  tokens,
 } from './mockedQueryData';
 
 const {
+  SIGN_IN,
+  SIGN_IN_BY_SOCIAL,
   CHECK_SESSION_EXPIRATION,
   GET_ME,
   GET_INITIAL_DATA,
@@ -21,13 +27,38 @@ const {
   SIGN_OUT,
 } = gql;
 
+export const signInMock = {
+  request: {
+    query: SIGN_IN,
+    variables: {
+      form: signInForm,
+    },
+  },
+  result: {
+    data: tokens,
+  },
+};
+export const signInBySocialMock = {
+  request: {
+    query: SIGN_IN_BY_SOCIAL,
+    variables: {
+      social: socialProfile,
+      profile: socialUserProfile,
+    },
+  },
+  result: {
+    data: tokens,
+  },
+};
 export const checkSessionExpirationMock = {
   request: {
     query: CHECK_SESSION_EXPIRATION,
     variables: {},
   },
   result: {
-    data: false,
+    data: {
+      sessionExpired: false,
+    },
   },
 };
 export const getInitialDataMock = {

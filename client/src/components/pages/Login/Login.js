@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useMutation } from '@apollo/client';
 
@@ -24,21 +24,20 @@ const {
 
 const Login = (props) => {
   const { toggleNotification } = props;
-  const [form, toggleForm] = useState(false);
-  const { data: { sessionExpired = false } } = useQuery(CHECK_SESSION_EXPIRATION);
+  const [form, toggleForm] = React.useState(false);
+  const { data: { sessionExpired } } = useQuery(CHECK_SESSION_EXPIRATION);
   const smUp = useMediaQuery(theme => theme.breakpoints.up('sm'));
   const DrawerComponent = smUp
     ? Drawer
     : FullSwipeableDrawerStyled;
-  console.log(form);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (sessionExpired) {
       toggleNotification('Session time was expired');
     }
   }, [sessionExpired, toggleNotification]);
 
-  const handleToggleForm = useCallback(() => {
+  const handleToggleForm = React.useCallback(() => {
     toggleForm(!form);
   }, [form]);
 
@@ -98,5 +97,7 @@ const Login = (props) => {
 Login.propTypes = {
   toggleNotification: PropTypes.func.isRequired,
 };
+
+export { Login };
 
 export default withNotification(Login);

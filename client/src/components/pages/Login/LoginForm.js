@@ -16,33 +16,37 @@ const LoginForm = ({
   signInBySocial,
   signInBySocialResult,
   redirectToSignUp,
-}) => (
-  <LoginFormWrapper>
-    <TopProgressLine loading={signInResult.loading} />
-    <Header variant="h1" color="primary" align="center" gutterBottom>
-      <AccountCircleIcon fontSize="inherit" color="primary" />
-    </Header>
-    <Form
-      formId="signIn"
-      mutation={signIn}
-      result={signInResult}
-      submitButtonText="Sign In"
-    />
-    <SignUpButton
-      onClick={redirectToSignUp}
-      color="primary"
-      size="large"
-      variant="outlined"
-      fullWidth
-    >
-      Sign Up
-    </SignUpButton>
-    <SocialMedia
-      mutation={signInBySocial}
-      result={signInBySocialResult}
-    />
-  </LoginFormWrapper>
-);
+}) => {
+  const { loading } = signInResult;
+
+  return (
+    <LoginFormWrapper>
+      <TopProgressLine loading={loading} />
+      <Header variant="h1" color="primary" align="center" gutterBottom>
+        <AccountCircleIcon fontSize="inherit" color="primary" />
+      </Header>
+      <Form
+        formId="signIn"
+        mutation={signIn}
+        result={signInResult}
+        submitButtonText="Sign In"
+      />
+      <SignUpButton
+        onClick={redirectToSignUp}
+        color="primary"
+        size="large"
+        variant="outlined"
+        fullWidth
+      >
+        Sign Up
+      </SignUpButton>
+      <SocialMedia
+        mutation={signInBySocial}
+        result={signInBySocialResult}
+      />
+    </LoginFormWrapper>
+  );
+};
 
 LoginForm.propTypes = {
   signIn: PropTypes.func.isRequired,

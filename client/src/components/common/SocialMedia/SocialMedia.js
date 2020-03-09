@@ -11,7 +11,7 @@ const SocialMedia = (props) => {
   const {
     note,
     mutation,
-    result: { loading },
+    result: { loading = false },
   } = props;
 
   return (

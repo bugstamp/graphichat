@@ -25,12 +25,17 @@ const TestProvider = ({ children, mocks, cache, history }) => (
 
 export const mountMockedProvider = (children, mocks = [], {
   history = createMemoryHistory(),
+  state = null,
 } = {}) => {
   const cache = new InMemoryCache({});
-  cache.writeData({ data: initialState });
+  cache.writeData({ data: state || initialState });
 
   return mount((
-    <TestProvider mocks={mocks} cache={cache} history={history}>
+    <TestProvider
+      mocks={mocks}
+      cache={cache}
+      history={history}
+    >
       {children}
     </TestProvider>
   ));

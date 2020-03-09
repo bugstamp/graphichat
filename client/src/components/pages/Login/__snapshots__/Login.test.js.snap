@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Login snapshot render 1`] = `
+exports[`Login match to snapshot 1`] = `
 <Fragment>
   <Login
     toggleNotification={[Function]}

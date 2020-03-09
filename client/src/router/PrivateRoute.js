@@ -8,7 +8,6 @@ class PrivateRoute extends Component {
   state = {
     render: false,
     auth: false,
-    status: '',
   }
 
   componentDidMount() {
@@ -16,12 +15,11 @@ class PrivateRoute extends Component {
 
     if (token) {
       try {
-        const { regStatus } = checkToken(token, false);
+        checkToken(token);
 
         this.setState({
           render: true,
           auth: true,
-          status: regStatus,
         });
       } catch (e) {
         throw e;
@@ -34,7 +32,7 @@ class PrivateRoute extends Component {
   }
 
   render() {
-    const { render, auth, status } = this.state;
+    const { render, auth } = this.state;
     const { children } = this.props;
 
     return (
@@ -43,9 +41,6 @@ class PrivateRoute extends Component {
           <Choose>
             <When condition={!auth}>
               <Redirect to="login" />
-            </When>
-            <When condition={auth && status === 'UNCOMPLETED'}>
-              <Redirect to={`reg?token=${storage.token.get()}`} />
             </When>
             <Otherwise>
               {children}

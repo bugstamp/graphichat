@@ -32,15 +32,11 @@ const Reg = (props) => {
 
     if (token) {
       try {
-        const { regStatus } = checkToken(token, true);
+        checkToken(token, 'register');
 
-        if (regStatus) {
-          setActiveStep(1);
-        } else {
-          history.push('/reg');
-        }
+        setActiveStep(1);
       } catch (e) {
-        throw e;
+        history.push('/reg');
       }
     }
   }, [search]);

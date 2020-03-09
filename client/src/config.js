@@ -28,6 +28,7 @@ const config = {
   tokenSecrets: {
     token: process.env.TOKEN_SECRET,
     refresh: process.env.REFRESH_TOKEN_SECRET,
+    register: process.env.REGISTER_TOKEN_SECRET,
   },
 };
 

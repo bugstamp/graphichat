@@ -32,7 +32,7 @@ const Reg = (props) => {
 
     if (token) {
       try {
-        checkToken(token, 'register');
+        checkToken(token, true);
 
         setActiveStep(1);
       } catch (e) {

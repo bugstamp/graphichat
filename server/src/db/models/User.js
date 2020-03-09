@@ -9,7 +9,7 @@ import {
   UNCOMPLETED,
   COMPLETED,
   ONLINE,
-  OFFLINE
+  OFFLINE,
 } from './enums';
 
 const tokensConfig = {
@@ -24,7 +24,7 @@ const tokensConfig = {
     model: ['id', 'regStatus'],
   },
   register: {
-    secret: process.env.REGISTER_TOKEN_SECRET,
+    secret: process.env.TOKEN_SECRET,
     expiresIn: '1d',
     model: ['id'],
   },

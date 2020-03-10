@@ -19,7 +19,7 @@ import {
 import useHookMock from '../../../__mocks__/useHookMock';
 import mockedUseMediaQuery from '../../../__mocks__/@material-ui/core/useMediaQuery';
 
-const mocks = [
+const defaultMocks = [
   checkSessionExpirationMock,
   signInMock,
   signInBySocialMock,
@@ -35,9 +35,10 @@ describe('Login', () => {
   const setStateMock = jest.fn();
   const callbackMock = jest.fn();
 
-  const mountWrapper = () => mountMockedProvider(
+  const mountWrapper = (mocks = defaultMocks, options = {}) => mountMockedProvider(
     <Login toggleNotification={toggleNotificationMock} />,
     mocks,
+    options,
   );
 
   afterEach(() => {
@@ -74,11 +75,12 @@ describe('Login', () => {
     });
   });
   test('toggleNotification should be called when initial sessionExpired state is true', async () => {
-    mountMockedProvider(<Login toggleNotification={toggleNotificationMock} />, mocks, {
+    const options = {
       state: {
         sessionExpired: true,
       },
-    });
+    };
+    mountWrapper(null, options);
 
     await act(async () => {
       expect(toggleNotificationMock).toBeCalledWith('Session time was expired');

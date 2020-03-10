@@ -41,7 +41,6 @@ describe('Login', () => {
   //
   //   expect(wrapper).toMatchSnapshot();
   // });
-
   test('initial mount without errors', async () => {
     const wrapper = mountMockedProvider(
       <Login toggleNotification={mockToggleNotification} />,
@@ -53,7 +52,6 @@ describe('Login', () => {
       expect(wrapper.find(LoginForm)).toHaveLength(0);
     });
   });
-
   test('LoginForm is rendered when form is open', async () => {
     mockUseState(true, mockSetState);
     const wrapper = mountMockedProvider(
@@ -65,7 +63,6 @@ describe('Login', () => {
       expect(wrapper.find(LoginForm)).toHaveLength(1);
     });
   });
-
   test('show notification when session was expired', async () => {
     mountMockedProvider(<Login toggleNotification={mockToggleNotification} />, mocks, {
       state: {

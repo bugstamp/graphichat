@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as ReactRouterDOM from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Drawer from '@material-ui/core/Drawer';
@@ -11,7 +12,6 @@ import FullSwipeableDrawerStyled from '../../common/FullWidthSwipeableDrawer';
 import withNotification from '../../common/HOC/withNotification';
 
 import storage from '../../../storage';
-import history from '../../../router/history';
 import gql from '../../../gql';
 
 import { LoginWrapper } from './styled';
@@ -24,6 +24,7 @@ const {
 
 const Login = (props) => {
   const { toggleNotification } = props;
+  const history = ReactRouterDOM.useHistory();
   const [form, toggleForm] = React.useState(false);
   const { data: { sessionExpired } } = useQuery(CHECK_SESSION_EXPIRATION);
   const smUp = useMediaQuery(theme => theme.breakpoints.up('sm'));

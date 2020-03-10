@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as ReactRouterDOM from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Drawer from '@material-ui/core/Drawer';
@@ -24,7 +24,7 @@ const {
 
 const Login = (props) => {
   const { toggleNotification } = props;
-  const history = ReactRouterDOM.useHistory();
+  const history = useHistory();
   const [form, toggleForm] = React.useState(false);
   const { data: { sessionExpired } } = useQuery(CHECK_SESSION_EXPIRATION);
   const smUp = useMediaQuery(theme => theme.breakpoints.up('sm'));
@@ -46,9 +46,13 @@ const Login = (props) => {
     history.push('/reg');
   }
 
-  function handleSuccess({ token, refreshToken }) {
-    storage.setTokens(token, refreshToken);
-    history.push('/');
+  function handleSuccess(dataKey) {
+    return (data) => {
+      const { token, refreshToken } = data[dataKey];
+
+      storage.setTokens(token, refreshToken);
+      history.push('/');
+    };
   }
 
   function handleError(e) {
@@ -67,11 +71,11 @@ const Login = (props) => {
   }
 
   const [signIn, signInResult] = useMutation(SIGN_IN, {
-    onCompleted: data => handleSuccess(data.signIn),
+    onCompleted: handleSuccess('signIn'),
     onError: handleError,
   });
   const [signInBySocial, signInBySocialResult] = useMutation(SIGN_IN_BY_SOCIAL, {
-    onCompleted: data => handleSuccess(data.signInBySocial),
+    onCompleted: handleSuccess('signInBySocial'),
     onError: handleError,
   });
 

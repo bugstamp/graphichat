@@ -14,7 +14,7 @@ import { theme } from '../styles';
 const TestProvider = ({ children, mocks, cache, history }) => (
   <MuiThemeProvider theme={theme}>
     <ThemeProvider theme={theme}>
-      <MockedProvider mocks={mocks} cache={cache}>
+      <MockedProvider mocks={mocks} cache={cache} addTypename={true}>
         <Router history={history}>
           {children}
         </Router>

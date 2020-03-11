@@ -1,7 +1,7 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 // import { shallow } from 'enzyme';
-// import wait from 'waait';
+import wait from 'waait';
 
 import Drawer from '@material-ui/core/Drawer';
 
@@ -16,6 +16,7 @@ import {
   signInBySocialMock,
   checkSessionExpirationMock,
 } from '../../../__mocks__/mockedQueries';
+import { signInForm } from '../../../__mocks__/mockedQueryData';
 import useHookMock from '../../../__mocks__/useHookMock';
 import mockedUseMediaQuery from '../../../__mocks__/@material-ui/core/useMediaQuery';
 
@@ -107,6 +108,26 @@ describe('Login', () => {
 
     await act(async () => {
       expect(wrapper.find(FullWidthSwipeableDrawer)).toHaveLength(1);
+    });
+  });
+  test('signIn mutation', async () => {
+    useHookMock('useState', [true, setStateMock]);
+    const wrapper = mountWrapper();
+
+    await act(async () => {
+      const usernameInput = wrapper.find('input#username');
+      const passwordInput = wrapper.find('input#password');
+      const submitButton = wrapper.find('button[type="submit"]');
+      expect(usernameInput).toHaveLength(1);
+      expect(passwordInput).toHaveLength(1);
+      expect(submitButton).toHaveLength(1);
+      usernameInput.simulate('change', { target: { value: signInForm.username, name: 'username' } });
+      passwordInput.simulate('change', { target: { value: signInForm.password, name: 'password' } });
+      await wait();
+      submitButton.simulate('submit');
+      await wait();
+      wrapper.update();
+      // expect(wrapper.find('Log'));
     });
   });
 });

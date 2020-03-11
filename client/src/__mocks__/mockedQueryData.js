@@ -91,12 +91,12 @@ export const signUpForm = {
 export const socialProfile = {
   id: 123456,
   name: 'google',
-  __typename: 'SocialProfile',
+  // __typename: 'SocialProfile',
 };
 
 export const socialUserProfile = {
   email: 'test@gmail.com',
   firstName: 'test',
   lastName: 'test',
-  __typename: 'SocialUserProfile',
+  // __typename: 'SocialUserProfile',
 };

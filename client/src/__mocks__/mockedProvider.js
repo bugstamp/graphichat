@@ -1,6 +1,6 @@
 import React from 'react';
-import { InMemoryCache } from '@apollo/client';
-import { MockedProvider } from '@apollo/client/testing';
+import { InMemoryCache } from 'apollo-boost';
+import { MockedProvider } from '@apollo/react-testing';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ThemeProvider } from 'styled-components';
 import { Router } from 'react-router-dom';

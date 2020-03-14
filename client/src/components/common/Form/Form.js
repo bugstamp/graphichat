@@ -187,8 +187,7 @@ export default withFormik({
     return initialValues;
   },
   handleSubmit: (form, { props: { mutation } }) => {
-    console.log(form);
-    mutation({ variables: { form: { ...form, __typename: 'SignInForm' } } });
+    mutation({ variables: { form } });
   },
   validationSchema: ({ formId }) => {
     const { validationSchema } = formConfig(formId);

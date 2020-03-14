@@ -1,7 +1,7 @@
-import { ApolloLink, from, split } from '@apollo/client';
-import { getMainDefinition } from '@apollo/client/utilities';
-import { onError } from '@apollo/link-error';
-import { WebSocketLink } from '@apollo/link-ws';
+import { ApolloLink, from, split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
+import { onError } from 'apollo-link-error';
+import { WebSocketLink } from 'apollo-link-ws';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { createUploadLink } from 'apollo-upload-client';
 import { isEmpty } from 'lodash';

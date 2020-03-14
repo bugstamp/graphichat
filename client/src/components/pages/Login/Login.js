@@ -48,7 +48,6 @@ const Login = (props) => {
 
   function handleSuccess(dataKey) {
     return (data) => {
-      console.log(data);
       const { token, refreshToken } = data[dataKey];
 
       storage.setTokens(token, refreshToken);

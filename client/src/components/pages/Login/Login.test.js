@@ -1,7 +1,5 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-// import { shallow } from 'enzyme';
-// import wait from 'waait';
 
 import Drawer from '@material-ui/core/Drawer';
 
@@ -49,16 +47,6 @@ describe('Login', () => {
     storage.removeTokens();
   });
 
-  // test('match to snapshot', () => {
-  //   const wrapper = shallow((
-  //     <Login
-  //       history={historyMock}
-  //       toggleNotification={toggleNotificationMock}
-  //     />
-  //   ));
-  //
-  //   expect(wrapper).toMatchSnapshot();
-  // });
   test('mount should be without errors and intitial form state should be false', async () => {
     const wrapper = mountWrapper();
 
@@ -68,11 +56,12 @@ describe('Login', () => {
     });
   });
   test('form state should be correctly passed to LoginPresentation component', async () => {
-    useHookMock('useState', () => [true, setStateMock]);
+    const state = true;
+    useHookMock('useState', () => [state, setStateMock]);
     const wrapper = mountWrapper();
 
     await act(async () => {
-      expect(wrapper.find(LoginPresentation).prop('stopAnimation')).toBe(true);
+      expect(wrapper.find(LoginPresentation).prop('stopAnimation')).toBe(state);
     });
   });
   test('LoginForm should be rendered when form state is true', async () => {
@@ -84,12 +73,10 @@ describe('Login', () => {
     });
   });
   test('toggleNotification should be called when initial sessionExpired state is true', async () => {
-    const options = {
-      state: {
-        sessionExpired: true,
-      },
+    const state = {
+      sessionExpired: true,
     };
-    mountWrapper(null, options);
+    mountWrapper(null, { state });
 
     await act(async () => {
       expect(toggleNotificationMock).toBeCalledWith('Session time was expired');

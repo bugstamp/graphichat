@@ -11,20 +11,12 @@ import storage from '../../../storage';
 
 import mockedUseMediaQuery from '../../../__mocks__/@material-ui/core/useMediaQuery';
 import { mountMockedProvider } from '../../../__mocks__/mockedProvider';
-import {
-  signInMock,
-  signInBySocialMock,
-  checkSessionExpirationMock,
-} from '../../../__mocks__/mockedQueries';
+import { checkSessionExpirationMock } from '../../../__mocks__/mockedQueries';
 import { tokens } from '../../../__mocks__/mockedQueryData';
 import historyMock, { historyPushMock } from '../../../__mocks__/historyMock';
 import useHookMock from '../../../__mocks__/useHookMock';
 
-const defaultMocks = [
-  checkSessionExpirationMock,
-  signInMock,
-  signInBySocialMock,
-];
+const defaultMocks = [checkSessionExpirationMock];
 
 describe('Login', () => {
   // fix bug with react-facebook-login lib

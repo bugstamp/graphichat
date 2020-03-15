@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useMutation } from '@apollo/react-hooks';
 
 import AccountCircleIcon from '@material-ui/icons/AccountCircleRounded';
 
@@ -8,15 +9,27 @@ import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import TopProgressLine from '../../common/TopProgressLine';
 
 import { LoginFormWrapper, Header, SignUpButton } from './styled';
-import { mutationResultProps } from '../../propTypes';
+
+import gql from '../../../gql';
+
+const {
+  SIGN_IN,
+  SIGN_IN_BY_SOCIAL,
+} = gql;
 
 const LoginForm = ({
-  signIn,
-  signInResult,
-  signInBySocial,
-  signInBySocialResult,
+  onSuccess,
+  onError,
   redirectToSignUp,
 }) => {
+  const [signIn, signInResult] = useMutation(SIGN_IN, {
+    onCompleted: onSuccess('signIn'),
+    onError,
+  });
+  const [signInBySocial, signInBySocialResult] = useMutation(SIGN_IN_BY_SOCIAL, {
+    onCompleted: onSuccess('signInBySocial'),
+    onError,
+  });
   const { loading } = signInResult;
 
   return (
@@ -49,10 +62,8 @@ const LoginForm = ({
 };
 
 LoginForm.propTypes = {
-  signIn: PropTypes.func.isRequired,
-  signInResult: PropTypes.shape(mutationResultProps).isRequired,
-  signInBySocial: PropTypes.func.isRequired,
-  signInBySocialResult: PropTypes.shape(mutationResultProps).isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
   redirectToSignUp: PropTypes.func.isRequired,
 };
 

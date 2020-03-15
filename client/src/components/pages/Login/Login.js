@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery } from '@apollo/react-hooks';
 
 import Drawer from '@material-ui/core/Drawer';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -11,20 +10,15 @@ import LoginPresentation from './LoginPresentation';
 import FullSwipeableDrawerStyled from '../../common/FullWidthSwipeableDrawer';
 import withNotification from '../../common/HOC/withNotification';
 
+import { LoginWrapper } from './styled';
+
 import storage from '../../../storage';
 import gql from '../../../gql';
 
-import { LoginWrapper } from './styled';
-
-const {
-  CHECK_SESSION_EXPIRATION,
-  SIGN_IN,
-  SIGN_IN_BY_SOCIAL,
-} = gql;
+const { CHECK_SESSION_EXPIRATION } = gql;
 
 const Login = (props) => {
-  const { toggleNotification } = props;
-  const history = useHistory();
+  const { history, toggleNotification } = props;
   const [form, toggleForm] = React.useState(false);
   const { data: { sessionExpired } } = useQuery(CHECK_SESSION_EXPIRATION);
   const smUp = useMediaQuery(theme => theme.breakpoints.up('sm'));
@@ -70,15 +64,6 @@ const Login = (props) => {
     }
   }
 
-  const [signIn, signInResult] = useMutation(SIGN_IN, {
-    onCompleted: handleSuccess('signIn'),
-    onError: handleError,
-  });
-  const [signInBySocial, signInBySocialResult] = useMutation(SIGN_IN_BY_SOCIAL, {
-    onCompleted: handleSuccess('signInBySocial'),
-    onError: handleError,
-  });
-
   return (
     <LoginWrapper container>
       <LoginPresentation stopAnimation={form} toggleForm={handleToggleForm} />
@@ -88,10 +73,8 @@ const Login = (props) => {
         anchor="right"
       >
         <LoginForm
-          signIn={signIn}
-          signInResult={signInResult}
-          signInBySocial={signInBySocial}
-          signInBySocialResult={signInBySocialResult}
+          onSuccess={handleSuccess}
+          onError={handleError}
           redirectToSignUp={redirectToSignUp}
         />
       </DrawerComponent>
@@ -100,6 +83,9 @@ const Login = (props) => {
 };
 
 Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   toggleNotification: PropTypes.func.isRequired,
 };
 

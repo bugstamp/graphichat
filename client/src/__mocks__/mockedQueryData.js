@@ -78,14 +78,14 @@ export const tokens = {
 export const signInForm = {
   username: 'test',
   password: 123456,
-  __typename: 'SignInForm',
+  // __typename: 'SignInForm',
 };
 
 export const signUpForm = {
   username: 'test',
   email: 'test@gmail.com',
   password: 123456,
-  __typename: 'SignUpForm',
+  // __typename: 'SignUpForm',
 };
 
 export const socialProfile = {

@@ -35,7 +35,9 @@ export const signInMock = {
     },
   },
   result: {
-    data: tokens,
+    data: {
+      signIn: tokens,
+    },
   },
 };
 export const signInBySocialMock = {
@@ -47,7 +49,9 @@ export const signInBySocialMock = {
     },
   },
   result: {
-    data: tokens,
+    data: {
+      signInBySocial: tokens,
+    },
   },
 };
 export const checkSessionExpirationMock = {

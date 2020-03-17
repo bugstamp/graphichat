@@ -12,6 +12,7 @@ import {
   socialUserProfile,
   tokens,
 } from './mockedQueryData';
+import { BadInputError } from './mockedErrors';
 
 const {
   SIGN_IN,
@@ -40,6 +41,12 @@ export const signInMock = {
     },
   },
 };
+export const signInMockWithErrors = {
+  ...signInMock,
+  result: {
+    errors: [new BadInputError()],
+  },
+};
 export const signInBySocialMock = {
   request: {
     query: SIGN_IN_BY_SOCIAL,
@@ -52,6 +59,12 @@ export const signInBySocialMock = {
     data: {
       signInBySocial: tokens,
     },
+  },
+};
+export const signInBySocialMockWithErrors = {
+  ...signInBySocialMock,
+  result: {
+    errors: [new BadInputError()],
   },
 };
 export const checkSessionExpirationMock = {

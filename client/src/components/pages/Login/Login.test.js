@@ -6,6 +6,7 @@ import Drawer from '@material-ui/core/Drawer';
 import { Login } from './Login';
 import LoginPresentation from './LoginPresentation';
 import FullWidthSwipeableDrawer from '../../common/FullWidthSwipeableDrawer';
+import { LoginWrapper } from './styled';
 
 import storage from '../../../storage';
 
@@ -15,14 +16,12 @@ import { checkSessionExpirationMock } from '../../../__mocks__/mockedQueries';
 import { tokens } from '../../../__mocks__/mockedQueryData';
 import historyMock, { historyPushMock } from '../../../__mocks__/historyMock';
 import useHookMock from '../../../__mocks__/useHookMock';
+import { fixReactFacebookLoginBug } from '../../../__mocks__/testUtils';
 
 const defaultMocks = [checkSessionExpirationMock];
 
 describe('Login', () => {
-  // fix bug with react-facebook-login lib
-  const script = document.createElement('script');
-  script.type = 'text/javascript';
-  document.getElementsByTagName('head')[0].appendChild(script);
+  fixReactFacebookLoginBug();
 
   const toggleNotificationMock = jest.fn();
   const setStateMock = jest.fn();
@@ -45,6 +44,15 @@ describe('Login', () => {
     await act(async () => {
       expect(wrapper.find('Login')).toHaveLength(1);
       expect(wrapper.find('LoginForm')).toHaveLength(0);
+    });
+  });
+  test('LoginWrapper should have container prop', async () => {
+    const wrapper = mountWrapper();
+    const LoginWrapperTest = wrapper.find(LoginWrapper);
+
+    await act(async () => {
+      expect(LoginWrapperTest).toHaveLength(1);
+      expect(LoginWrapperTest.prop('container')).toBeTruthy();
     });
   });
   test('form state should be correctly passed to LoginPresentation component', async () => {
@@ -83,6 +91,18 @@ describe('Login', () => {
       const toggleForm = wrapper.find(LoginPresentation).prop('toggleForm');
       toggleForm();
       expect(setStateMock).toBeCalled();
+    });
+  });
+  test('Drawer should have correct props', async () => {
+    useHookMock('useCallback', useCallbackMock);
+    const wrapper = mountWrapper();
+    const DrawerTest = wrapper.find(Drawer);
+
+    await act(async () => {
+      expect(DrawerTest).toHaveLength(1);
+      expect(DrawerTest.prop('open')).toBeFalsy();
+      expect(DrawerTest.prop('onClose')).toEqual(expect.any(Function));
+      expect(DrawerTest.prop('anchor')).toBe('right');
     });
   });
   test('Drawer should mount initialy and when useMediaQuery returns true', async () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/react-hooks';
 import queryString from 'query-string';
 
 import RegForm from './RegForm';

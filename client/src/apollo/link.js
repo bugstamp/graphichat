@@ -1,4 +1,4 @@
-import { ApolloLink, from, split } from 'apollo-boost';
+import { ApolloLink, from, split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
 import { onError } from 'apollo-link-error';
 import { getMainDefinition } from 'apollo-utilities';

@@ -58,7 +58,7 @@ describe('LoginForm', () => {
   const signInBySocialResult = { signInBySocial: tokens };
   const mutationError = new BadInputError();
 
-  test('mount without errors', async () => {
+  test('should mount without errors', async () => {
     const wrapper = mountWrapper();
 
     expect(wrapper.find('LoginForm')).toHaveLength(1);
@@ -68,38 +68,46 @@ describe('LoginForm', () => {
     const HeaderTest = wrapper.find(Header);
 
     expect(HeaderTest).toHaveLength(1);
-    expect(HeaderTest.prop('variant')).toBe('h1');
-    expect(HeaderTest.prop('color')).toBe('primary');
-    expect(HeaderTest.prop('align')).toBe('center');
-    expect(HeaderTest.prop('gutterBottom')).toBeTruthy();
+    expect(HeaderTest.props()).toMatchObject({
+      variant: 'h1',
+      color: 'primary',
+      align: 'center',
+      gutterBottom: true,
+    });
   });
   test('AccountCircleIcon props', async () => {
     const wrapper = mountWrapper();
     const AccountCircleIconTest = wrapper.find(AccountCircleIcon);
 
     expect(AccountCircleIconTest).toHaveLength(1);
-    expect(AccountCircleIconTest.prop('fontSize')).toBe('inherit');
-    expect(AccountCircleIconTest.prop('color')).toBe('primary');
+    expect(AccountCircleIconTest.props()).toMatchObject({
+      fontSize: 'inherit',
+      color: 'primary',
+    });
   });
   test('Form props', async () => {
     const wrapper = mountWrapper();
     const Form = wrapper.find('Form');
 
     expect(Form).toHaveLength(1);
-    expect(Form.prop('formId')).toBe('signIn');
-    expect(Form.prop('submitButtonText')).toBe('Sign In');
+    expect(Form.props()).toMatchObject({
+      formId: 'signIn',
+      submitButtonText: 'Sign In',
+    });
   });
   test('SignUpButton props', async () => {
     const wrapper = mountWrapper();
     const Button = wrapper.find(SignUpButton);
 
     expect(Button).toHaveLength(1);
-    expect(Button.prop('onClick')).toBe(redirectToSignUpMock);
-    expect(Button.prop('color')).toBe('primary');
-    expect(Button.prop('size')).toBe('large');
-    expect(Button.prop('variant')).toBe('outlined');
-    expect(Button.prop('fullWidth')).toBeTruthy();
-    expect(Button.text()).toBe('Sign Up');
+    expect(Button.props()).toMatchObject({
+      onClick: redirectToSignUpMock,
+      color: 'primary',
+      size: 'large',
+      variant: 'outlined',
+      fullWidth: true,
+      children: 'Sign Up',
+    });
   });
   test('onSuccess should be called initially with correct mutation ids', async () => {
     mountWrapper();

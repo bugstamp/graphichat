@@ -38,7 +38,7 @@ describe('Login', () => {
     storage.removeTokens();
   });
 
-  test('mount should be without errors and intitial form state should be false', async () => {
+  test('should be mount without errors | intitial form state should be false', async () => {
     const wrapper = mountWrapper();
 
     await act(async () => {
@@ -100,9 +100,11 @@ describe('Login', () => {
 
     await act(async () => {
       expect(DrawerTest).toHaveLength(1);
-      expect(DrawerTest.prop('open')).toBeFalsy();
+      expect(DrawerTest.props()).toMatchObject({
+        open: false,
+        anchor: 'right',
+      });
       expect(DrawerTest.prop('onClose')).toEqual(expect.any(Function));
-      expect(DrawerTest.prop('anchor')).toBe('right');
     });
   });
   test('Drawer should mount initialy and when useMediaQuery returns true', async () => {

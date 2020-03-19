@@ -1,29 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'formik';
-import Radio from '@material-ui/core/Radio';
-import MaterialRadioGroup from '@material-ui/core/RadioGroup';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import styled from 'styled-components';
-// import { position } from 'polished';
 import { map } from 'lodash';
 
-const RadioFormControl = styled(FormControl)`
-  && {
-    position: relative;
-    margin-bottom: 1.5em;
-  }
-`;
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-const RadioGroup = styled(MaterialRadioGroup)`
-  && {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-  }
-`;
+import { RadioFormControl, RadioGroup } from './styled';
 
 const FormInputRadio = ({
   name,
@@ -31,32 +14,40 @@ const FormInputRadio = ({
   validate,
   validateField,
   onChange,
-}) => (
-  <Field name={name} validate={value => validate(value, name)}>
-    {({ field }) => (
-      <RadioFormControl variant="standard" fullWidth>
-        <RadioGroup
-          {...field}
-          name={name}
-          onChange={(event) => {
-            validateField(name);
+}) => {
+  function handleValidate(value) {
+    validate(value, name);
+  }
 
-            onChange(event);
-          }}
-        >
-          {map(values, value => (
-            <FormControlLabel
-              key={value}
-              value={value}
-              control={<Radio />}
-              label={value}
-            />
-          ))}
-        </RadioGroup>
-      </RadioFormControl>
-    )}
-  </Field>
-);
+  function handleChange(e) {
+    validateField(name);
+
+    onChange(e);
+  }
+
+  return (
+    <Field name={name} validate={handleValidate}>
+      {({ field }) => (
+        <RadioFormControl variant="standard" fullWidth>
+          <RadioGroup
+            {...field}
+            name={name}
+            onChange={handleChange}
+          >
+            {map(values, value => (
+              <FormControlLabel
+                key={value}
+                value={value}
+                control={<Radio />}
+                label={value}
+              />
+            ))}
+          </RadioGroup>
+        </RadioFormControl>
+      )}
+    </Field>
+  );
+};
 
 FormInputRadio.propTypes = {
   name: PropTypes.string.isRequired,
@@ -66,4 +57,4 @@ FormInputRadio.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default FormInputRadio;
+export default memo(FormInputRadio);

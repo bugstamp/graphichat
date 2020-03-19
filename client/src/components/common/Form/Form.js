@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
 import * as yup from 'yup';
-import { map, find } from 'lodash';
-import styled from 'styled-components';
+import { map } from 'lodash';
 
 import FormInput from './FormInput';
 import FormInputPassword from './FormInputPassword';
@@ -11,177 +10,189 @@ import FormInputRadio from './FormInputRadio';
 import AsyncFormInput from './AsyncFormInput';
 import FormSubmit from './FormSubmit';
 
+import formConfig from './formConfig';
+
+import { FormWrapper } from './styled';
 import {
-  formFieldsProps,
   mutationResultProps,
-  formAsyncValidationFieldsProps,
+  formAsyncFieldsProps,
 } from '../../propTypes';
 
-const FormStyled = styled.form`
-  width: 100%;
-`;
+const Form = (props) => {
+  const {
+    formId,
+    asyncFields,
+    result,
+    submitButtonText,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setFieldValue,
+    setFieldError,
+    validateField,
+  } = props;
+  const { fields } = formConfig(formId);
+  const { loading, error = {} } = result;
 
-class Form extends Component {
-  componentDidUpdate(prevProps) {
-    const { result, setFieldError } = this.props;
+  useEffect(() => {
+    if (error.graphQLErrors) {
+      const { graphQLErrors } = error;
+      const { message, data = null } = graphQLErrors[0];
 
-    if (!prevProps.result.error && result.error) {
-      if (result.error.graphQLErrors) {
-        const { graphQLErrors } = result.error;
-        const { message, data = null } = graphQLErrors[0];
+      if (data) {
+        const { invalidField } = data;
 
-        if (data) {
-          const { invalidField } = data;
-
-          if (invalidField) {
-            setFieldError(invalidField, message);
-          }
+        if (invalidField) {
+          setFieldError(invalidField, message);
         }
       }
     }
-  }
+  }, [error, setFieldError]);
 
-  validate = async (value, field) => {
-    const { validationSchema, asyncValidationFields } = this.props;
-    const asyncValidationField = find(asyncValidationFields, { name: field });
-
+  const validate = useCallback(async (field, value) => {
     try {
+      const { validationSchema } = formConfig(formId);
       await yup.reach(validationSchema, field).validate(value);
 
-      if (asyncValidationField) {
-        const { validation } = asyncValidationField;
+      if (asyncFields[field]) {
+        const { mutation } = asyncFields[field];
 
-        await validation.mutation({ variables: { value, field } });
+        await mutation({ variables: { value, field } });
       }
-    } catch ({ message, graphQLErrors }) {
+    } catch (e) {
+      const { graphQLErrors } = e;
+
       if (graphQLErrors) {
         const { message: graphQlMessage } = graphQLErrors[0];
 
-        throw graphQlMessage;
+        setFieldError(field, graphQlMessage);
+      } else {
+        const { message } = e;
+
+        setFieldError(field, message);
       }
     }
-  }
+  }, [formId]); //eslint-disable-line
 
-  render() {
-    const {
-      fields,
-      errors,
-      touched,
-      handleChange,
-      handleBlur,
-      handleSubmit,
-      result,
-      submitButtonText,
-      validateField,
-      asyncValidationFields,
-    } = this.props;
-    const { loading } = result;
+  return (
+    <FormWrapper onSubmit={handleSubmit} autoComplete="on">
+      {
+        map(fields, (field) => {
+          const {
+            name,
+            type,
+            initialValue,
+            ...fieldValues
+          } = field;
+          const errorMessage = errors[name];
+          const isError = errorMessage && touched[name];
 
-    return (
-      <FormStyled onSubmit={handleSubmit} autoComplete="on">
-        {
-          map(fields, (field) => {
-            const {
-              name,
-              type,
-              initialValue,
-              ...values
-            } = field;
-            const error = errors[name];
-            const isError = error && touched[name];
-            const asyncValidationField = find(asyncValidationFields, { name });
-
-            return (
-              <Choose>
-                <When condition={asyncValidationField}>
-                  <AsyncFormInput
-                    {...values}
-                    key={name}
-                    name={name}
-                    type={type}
-                    error={error}
-                    isError={isError}
-                    result={asyncValidationField.validation.result}
-                    validate={this.validate}
-                    validateField={validateField}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </When>
-                <When condition={type === 'password'}>
-                  <FormInputPassword
-                    {...values}
-                    key={name}
-                    name={name}
-                    type={type}
-                    isError={isError}
-                    error={error}
-                    validateField={validateField}
-                    validate={this.validate}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </When>
-                <When condition={type === 'radio'}>
-                  <FormInputRadio
-                    {...values}
-                    key={name}
-                    name={name}
-                    type={type}
-                    validateField={validateField}
-                    validate={this.validate}
-                    onChange={handleChange}
-                  />
-                </When>
-                <Otherwise>
-                  <FormInput
-                    {...values}
-                    key={name}
-                    name={name}
-                    type={type}
-                    error={error}
-                    isError={isError}
-                    validateField={validateField}
-                    validate={this.validate}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </Otherwise>
-              </Choose>
-            );
-          })
-        }
-        <FormSubmit loading={loading} text={submitButtonText} />
-      </FormStyled>
-    );
-  }
-}
+          return (
+            <Choose>
+              <When condition={asyncFields[name]}>
+                <AsyncFormInput
+                  {...fieldValues}
+                  key={name}
+                  name={name}
+                  type={type}
+                  error={errorMessage}
+                  isError={isError}
+                  result={asyncFields[name].result}
+                  validate={validate}
+                  validateField={validateField}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  setFieldValue={setFieldValue}
+                />
+              </When>
+              <When condition={type === 'password'}>
+                <FormInputPassword
+                  {...fieldValues}
+                  key={name}
+                  name={name}
+                  type={type}
+                  error={errorMessage}
+                  isError={isError}
+                  validate={validate}
+                  validateField={validateField}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  setFieldValue={setFieldValue}
+                />
+              </When>
+              <When condition={type === 'radio'}>
+                <FormInputRadio
+                  {...fieldValues}
+                  key={name}
+                  name={name}
+                  type={type}
+                  validate={validate}
+                  validateField={validateField}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  setFieldValue={setFieldValue}
+                />
+              </When>
+              <Otherwise>
+                <FormInput
+                  {...fieldValues}
+                  key={name}
+                  name={name}
+                  type={type}
+                  error={errorMessage}
+                  isError={isError}
+                  validateField={validateField}
+                  validate={validate}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  setFieldValue={setFieldValue}
+                />
+              </Otherwise>
+            </Choose>
+          );
+        })
+      }
+      <FormSubmit loading={loading} text={submitButtonText} />
+    </FormWrapper>
+  );
+};
 
 Form.defaultProps = {
+  asyncFields: {},
+  submitButtonText: 'Submit',
   errors: {},
   touched: {},
-  submitButtonText: 'Submit',
-  asyncValidationFields: [],
 };
 Form.propTypes = {
-  fields: PropTypes.arrayOf(PropTypes.shape(formFieldsProps)).isRequired,
+  formId: PropTypes.string.isRequired,
+  asyncFields: PropTypes.objectOf(PropTypes.shape(formAsyncFieldsProps)),
+  result: PropTypes.shape(mutationResultProps).isRequired,
+  submitButtonText: PropTypes.string,
   errors: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
   touched: PropTypes.objectOf(PropTypes.bool),
   handleChange: PropTypes.func.isRequired,
   handleBlur: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
   setFieldError: PropTypes.func.isRequired,
-  result: PropTypes.shape(mutationResultProps).isRequired,
-  submitButtonText: PropTypes.string,
   validateField: PropTypes.func.isRequired,
-  validationSchema: PropTypes.objectOf(PropTypes.any).isRequired,
-  asyncValidationFields: PropTypes.arrayOf(PropTypes.shape(formAsyncValidationFieldsProps)),
 };
 
 export default withFormik({
-  mapPropsToValues: ({ initialValues }) => initialValues,
+  mapPropsToValues: ({ formId }) => {
+    const { initialValues } = formConfig(formId);
+
+    return initialValues;
+  },
   handleSubmit: (form, { props: { mutation } }) => {
     mutation({ variables: { form } });
+  },
+  validationSchema: ({ formId }) => {
+    const { validationSchema } = formConfig(formId);
+
+    return validationSchema;
   },
   validateOnChange: false,
   validateOnBlur: false,

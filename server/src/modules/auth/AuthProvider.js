@@ -6,7 +6,7 @@ import { has, delay, isEqual } from 'lodash';
 import DbProvider from '../common/DbProvider';
 
 import {
-  EMAIL_UNCONFIRMED,
+  // EMAIL_UNCONFIRMED,
   COMPLETED,
 } from '../../db/models/enums';
 import {

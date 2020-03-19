@@ -69,3 +69,34 @@ export const chat = {
   messages: [message],
   __typename: 'Chat',
 };
+
+export const tokens = {
+  token: 'token',
+  refreshToken: 'refreshToken',
+};
+
+export const signInForm = {
+  username: 'test',
+  password: 123456,
+  // __typename: 'SignInForm',
+};
+
+export const signUpForm = {
+  username: 'test',
+  email: 'test@gmail.com',
+  password: 123456,
+  // __typename: 'SignUpForm',
+};
+
+export const socialProfile = {
+  id: 123456,
+  name: 'google',
+  // __typename: 'SocialProfile',
+};
+
+export const socialUserProfile = {
+  email: 'test@gmail.com',
+  firstName: 'test',
+  lastName: 'test',
+  // __typename: 'SocialUserProfile',
+};

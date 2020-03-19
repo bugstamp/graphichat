@@ -16,7 +16,7 @@ class PrivateRoute extends Component {
 
     if (token) {
       try {
-        const { regStatus } = checkToken(token, false);
+        const { regStatus = '' } = checkToken(token);
 
         this.setState({
           render: true,

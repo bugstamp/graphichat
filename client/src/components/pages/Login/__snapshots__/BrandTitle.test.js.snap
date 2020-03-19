@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginPresentation should match to snapshot 1`] = `
+<styled__BrandTitleWrapper>
+  <Logo
+    size={35}
+  />
+  <WithStyles(ForwardRef(Typography))
+    align="center"
+    component="p"
+    variant="h3"
+  >
+    GraphiChat
+  </WithStyles(ForwardRef(Typography))>
+</styled__BrandTitleWrapper>
+`;

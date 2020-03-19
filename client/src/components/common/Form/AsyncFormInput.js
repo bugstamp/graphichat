@@ -1,61 +1,43 @@
-import React, { PureComponent } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import CheckIcon from '@material-ui/icons/CheckRounded';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
 import FormInput from './FormInput';
+import AsyncFormInputAdornment from './AsyncFormInputAdornment';
 
 import { mutationResultProps } from '../../propTypes';
 
-class AsyncFormInput extends PureComponent {
-  state = {
-    asyncValid: false,
-  }
+const AsyncFormInput = (props) => {
+  const {
+    result: { loading, data, error },
+    ...rest
+  } = props;
+  const [valid, setValid] = useState(false);
 
-  componentDidUpdate(prevProps) {
-    const { result: { data, error } } = this.props;
-
-    if (!prevProps.result.data && data) {
-      this.setAsyncValid(true);
+  useEffect(() => {
+    if (data) {
+      setValid(true);
     }
-    if (!prevProps.result.error && error) {
-      this.setAsyncValid(false);
+    if (error) {
+      setValid(false);
     }
-  }
+  }, [data, error]);
 
-  setAsyncValid = (valid) => {
-    this.setState({ asyncValid: valid });
-  }
+  const memoizedInputAdornment = useMemo(
+    () => (<AsyncFormInputAdornment loading={loading} isSuccess={valid} />),
+    [loading, valid],
+  );
 
-  render() {
-    const { asyncValid } = this.state;
-    const { result: { loading }, ...rest } = this.props;
-
-    return (
-      <FormInput
-        {...rest}
-        endAdornment={
-          (loading || asyncValid)
-          && (
-            <InputAdornment position="end">
-              <Choose>
-                <When condition={loading}>
-                  <CircularProgress size={18} />
-                </When>
-                <When condition={!loading && asyncValid}>
-                  <CheckIcon color="action" />
-                </When>
-                <Otherwise>{null}</Otherwise>
-              </Choose>
-            </InputAdornment>
-          )
-        }
-      />
-    );
-  }
-}
+  return (
+    <FormInput
+      {...rest}
+      endAdornment={memoizedInputAdornment}
+    />
+  );
+};
 
 AsyncFormInput.propTypes = {
   result: PropTypes.shape(mutationResultProps).isRequired,

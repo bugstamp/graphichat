@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginPresentation should match to snapshot 1`] = `
+<styled__LoginPresentationWrapper>
+  <BrandTitle />
+  <styled__SubTitle
+    stopAnimation={false}
+  >
+    <WithStyles(ForwardRef(Typography))
+      align="center"
+      component="p"
+      paragraph={true}
+      variant="h4"
+    >
+      A lightweight, simple and useful web chat app based on the modern GraphQL API
+    </WithStyles(ForwardRef(Typography))>
+    <button
+      onClick={[MockFunction]}
+      type="button"
+    >
+      <WithStyles(ForwardRef(Typography))
+        align="center"
+        component="p"
+        variant="h4"
+      >
+        Try it now!
+      </WithStyles(ForwardRef(Typography))>
+    </button>
+  </styled__SubTitle>
+</styled__LoginPresentationWrapper>
+`;

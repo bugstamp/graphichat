@@ -1,4 +1,8 @@
-import { transform, forEach, set } from 'lodash';
+import {
+  transform,
+  forEach,
+  set,
+} from 'lodash';
 import * as yup from 'yup';
 
 export const formFields = {
@@ -100,6 +104,15 @@ export const formFields = {
   }],
 };
 
+const testFieldForWhitespaces = {
+  name: 'is not have whitespace',
+  message: 'The field shouldn\'t contain whitespaces',
+  test(value) {
+    const invalid = value.includes(' ');
+    return !invalid;
+  },
+};
+
 export const formValidationSchemas = {
   signIn: yup.object().shape(transform(formFields.signIn, (res, { name }) => {
     // eslint-disable-next-line
@@ -121,15 +134,20 @@ export const formValidationSchemas = {
     // eslint-disable-next-line
     switch (name) {
       case 'username': {
-        res[name] = yup.string().required('*required');
+        res[name] = yup.string()
+          .test(testFieldForWhitespaces)
+          .required('*required');
         break;
       }
       case 'email': {
-        res[name] = yup.string().email().required('*required');
+        res[name] = yup.string()
+          .email()
+          .required('*required');
         break;
       }
       case 'password': {
         res[name] = yup.string()
+          .test(testFieldForWhitespaces)
           .min(6)
           .max(20)
           .required('*required');

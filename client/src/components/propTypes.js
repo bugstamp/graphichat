@@ -23,9 +23,9 @@ export const formFieldsProps = {
   initialValue: PropTypes.string,
 };
 
-export const formAsyncValidationFieldsProps = {
-  name: PropTypes.string,
-  validation: PropTypes.shape(mutationProps),
+export const formAsyncFieldsProps = {
+  mutation: PropTypes.func.isRequired,
+  result: PropTypes.shape(mutationResultProps).isRequired,
 };
 
 export const messageProps = {

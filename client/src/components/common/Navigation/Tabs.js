@@ -1,87 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import { map } from 'lodash';
 
-import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
 
+import { TabsWrapper, TabItem, TabItemIndicator } from './styled';
 import tabs from './navTabs';
-import { getStyledProps } from '../../../styles';
-
-const TabsStyled = styled.div`
-  flex: 1 auto;
-  display: flex;
-  position: relative;
-  ${({ variant }) => {
-    if (variant === 'vertical') {
-      return `
-        flex-flow: column;
-
-        button:first-of-type {
-          margin-top: auto;
-        }
-      `;
-    }
-    return `
-      flex-flow: row nowrap;
-
-      button:first-of-type {
-        margin-left: auto;
-      }
-    `;
-  }};
-`;
-
-const TabItem = styled(({
-  variant,
-  itemSize,
-  attrs,
-  ...rest
-}) => (<Tab {...rest} />)).attrs(({ attrs = {} }) => (attrs))`
-  && {
-    min-width: inherit;
-    border-radius: 50%;
-
-  ${({ variant, itemSize }) => {
-    if (variant === 'vertical') {
-      return `
-        height: ${itemSize}px;
-      `;
-    }
-    return `
-      width: ${itemSize}px;
-    `;
-  }};
-  }
-`;
-
-const TabItemIndicator = styled.span`
-  display: block;
-  position: absolute;
-  background-color: ${getStyledProps('theme.palette.primary.main')};
-  transition: .25s ease;
-
-  ${({ variant, itemSize, activeTab }) => {
-    const offset = `${activeTab * itemSize}px`;
-
-    if (variant === 'vertical') {
-      return `
-        width: 2px;
-        height: ${itemSize}px;
-        top: ${offset};
-        right: 0;
-      `;
-    }
-    return `
-      width: ${itemSize}px;
-      height: 2px;
-      bottom: 0;
-      left: ${offset};
-    `;
-  }};
-`;
 
 const Tabs = ({
   variant,
@@ -109,7 +34,7 @@ const Tabs = ({
   };
 
   return (
-    <TabsStyled variant={variant} role="tablist">
+    <TabsWrapper variant={variant} role="tablist">
       {map(tabs, (
         {
           name,
@@ -131,7 +56,7 @@ const Tabs = ({
             key={name}
             to={to}
             component={component}
-            icon={<Icon color={color} htmlColor={htmlColor} />}
+            icon={(<Icon color={color} htmlColor={htmlColor} />)}
             onClick={onClick}
             itemSize={itemSize}
             variant={variant}
@@ -144,7 +69,7 @@ const Tabs = ({
         itemSize={itemSize}
         activeTab={activeTab}
       />
-    </TabsStyled>
+    </TabsWrapper>
   );
 };
 

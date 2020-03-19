@@ -1,13 +1,13 @@
-import { ApolloLink, from, split } from '@apollo/client';
-import { getMainDefinition } from '@apollo/client/utilities';
-import { onError } from '@apollo/link-error';
-import { WebSocketLink } from '@apollo/link-ws';
+import { ApolloLink, from, split } from 'apollo-boost';
+import { WebSocketLink } from 'apollo-link-ws';
+import { onError } from 'apollo-link-error';
+import { getMainDefinition } from 'apollo-utilities';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { createUploadLink } from 'apollo-upload-client';
 import { isEmpty } from 'lodash';
 
 import storage from '../storage';
-import client from './';
+import { forceLogout } from './utils';
 
 const httpLink = createUploadLink({
   uri: process.env.APOLLO_URL,
@@ -65,8 +65,7 @@ const tokenLink = new ApolloLink((operation, forward) => forward(operation).map(
 
 const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
   if (networkError.statusCode === 401) {
-    client.writeData({ data: { sessionExpired: true } });
-    storage.removeTokens();
+    forceLogout();
   }
   if (!isEmpty(networkError)) {
     console.log(networkError);

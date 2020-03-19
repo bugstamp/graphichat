@@ -2,6 +2,14 @@ import React from 'react';
 import { Query, Mutation, Subscription } from '@apollo/react-components';
 import { get } from 'lodash';
 
+import client from './index';
+import storage from '../storage';
+
+export function forceLogout() {
+  client.writeData({ data: { sessionExpired: true } });
+  storage.removeTokens();
+}
+
 export const createQuery = (name, gqlQuery, queryProps = {}) => (containerProps) => {
   if (!name) {
     throw new Error('name is required');

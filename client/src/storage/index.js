@@ -49,14 +49,14 @@ export const checkToken = (token, set = false) => {
       throw new Error('Token wasn\'t found');
     }
     const secret = tokenSecrets.token;
-    const { data: { regStatus } } = jwt.verify(token, secret);
+    const { data } = jwt.verify(token, secret);
 
     if (set) {
       storage.token.set(token);
     }
-    return { regStatus };
+    return data;
   } catch (e) {
-    return { regStatus: '' };
+    return {};
   }
 };
 

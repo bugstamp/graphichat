@@ -1,122 +1,77 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 
 import Form from '../../common/Form/Form';
-import formConfig from '../../common/Form/formConfig';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import RegFormStepper from './RegFormStepper';
-
 import TopProgressLine from '../../common/TopProgressLine';
 
-import { getSpacing, getStyledProps } from '../../../styles';
-import { mutationProps } from '../../propTypes';
+import {
+  FormWrapper,
+  FormHeader,
+  FormInfo,
+  FormFooter,
+} from './styled';
+import { mutationResultProps } from '../../propTypes';
 
-const Wrapper = styled(Paper)`
-  && {
-    width: 100%;
-    max-height: 100%;
-    max-width: 375px;
-    min-width: 320px;
-    position: relative;
-    margin: auto 0;
-    padding: ${getSpacing(4)} ${getSpacing(3)};
-    overflow-y: auto;
-
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const spacing = getStyledProps('theme.spacing')(props);
-    const smDown = breakpoints.down('sm');
-    const xsDown = breakpoints.down('xs');
-
-    return `
-      ${smDown} {
-        max-width: 100%;
-        height: 100%;
-        border-radius: 0;
-        padding: ${spacing(4)}px ${spacing(20)}px;
-      }
-      ${xsDown} {
-        padding: ${spacing(2)}px;
-      }
-    `;
-  }}
-  }
-`;
-
-const Header = styled(Typography)`
-  && {
-    width: 100%;
-    position: relative;
-  }
-`;
-
-const Info = styled(Typography)`
-  && {
-    text-align: center;
-  }
-`;
-
-const Footer = styled(Typography)`
-  && {
-    width: 100%;
-    margin-top: ${getSpacing(2)};
-  }
-`;
-
-const SignUp = ({
-  steps,
-  activeStep,
-  completed,
-  signUpAsyncValidationUsername,
-  signUpAsyncValidationEmail,
-  signUp,
-  signUpCompletion,
-  signUpBySocial,
-}) => {
-  const loading = signUp.result.loading || signUpCompletion.result.loading;
-  const asyncValidationFields = [{
-    name: 'username',
-    validation: signUpAsyncValidationUsername,
-  }, {
-    name: 'email',
-    validation: signUpAsyncValidationEmail,
-  }];
+const RegForm = (props) => {
+  const {
+    activeStep,
+    isCompleted,
+    signUpAsyncValidationUsername,
+    signUpAsyncValidationUsernameResult,
+    signUpAsyncValidationEmail,
+    signUpAsyncValidationEmailResult,
+    signUp,
+    signUpResult,
+    signUpCompletion,
+    signUpCompletionResult,
+    signUpBySocial,
+    signUpBySocialResult,
+  } = props;
+  const loading = signUpResult.loading || signUpCompletionResult.loading;
+  const asyncFields = {
+    username: {
+      mutation: signUpAsyncValidationUsername,
+      result: signUpAsyncValidationUsernameResult,
+    },
+    email: {
+      mutation: signUpAsyncValidationEmail,
+      result: signUpAsyncValidationEmailResult,
+    },
+  };
 
   return (
-    <Wrapper elevation={8}>
+    <FormWrapper elevation={8}>
       <TopProgressLine loading={loading} />
-      <Header variant="h1" color="primary" align="center" gutterBottom>
-        <RegFormStepper activeStep={activeStep} steps={steps} />
-      </Header>
+      <FormHeader variant="h1" color="primary" align="center" gutterBottom>
+        <RegFormStepper activeStep={activeStep} />
+      </FormHeader>
       <Choose>
-        <When condition={completed}>
-          <Info>
+        <When condition={isCompleted}>
+          <FormInfo>
             Your account had been successfuly completed.Check your email and confirm registration.
-          </Info>
+          </FormInfo>
         </When>
         <When condition={activeStep === 0}>
           <Form
-            {...formConfig('signUpStepOne')}
-            mutation={signUp.mutation}
-            result={signUp.result}
+            formId="signUpStepOne"
+            asyncFields={asyncFields}
+            mutation={signUp}
+            result={signUpResult}
             submitButtonText="Confirm"
-            asyncValidationFields={asyncValidationFields}
           />
           <SocialMedia
-            mutation={signUpBySocial.mutation}
-            result={signUpBySocial.result}
+            mutation={signUpBySocial}
+            result={signUpBySocialResult}
           />
         </When>
         <When condition={activeStep === 1}>
           <Form
-            {...formConfig('signUpStepTwo')}
-            mutation={signUpCompletion.mutation}
-            result={signUpCompletion.result}
+            formId="signUpStepTwo"
+            mutation={signUpCompletion}
+            result={signUpCompletionResult}
             submitButtonText="Confirm"
           />
         </When>
@@ -124,22 +79,26 @@ const SignUp = ({
           {null}
         </Otherwise>
       </Choose>
-      <Footer align="center">
+      <FormFooter align="center">
         <Link to="/login">I already have a account</Link>
-      </Footer>
-    </Wrapper>
+      </FormFooter>
+    </FormWrapper>
   );
 };
 
-SignUp.propTypes = {
-  steps: PropTypes.arrayOf(PropTypes.string).isRequired,
+RegForm.propTypes = {
   activeStep: PropTypes.number.isRequired,
-  completed: PropTypes.bool.isRequired,
-  signUpAsyncValidationUsername: PropTypes.shape(mutationProps).isRequired,
-  signUpAsyncValidationEmail: PropTypes.shape(mutationProps).isRequired,
-  signUp: PropTypes.shape(mutationProps).isRequired,
-  signUpCompletion: PropTypes.shape(mutationProps).isRequired,
-  signUpBySocial: PropTypes.shape(mutationProps).isRequired,
+  isCompleted: PropTypes.bool.isRequired,
+  signUpAsyncValidationUsername: PropTypes.func.isRequired,
+  signUpAsyncValidationUsernameResult: PropTypes.shape(mutationResultProps).isRequired,
+  signUpAsyncValidationEmail: PropTypes.func.isRequired,
+  signUpAsyncValidationEmailResult: PropTypes.shape(mutationResultProps).isRequired,
+  signUp: PropTypes.func.isRequired,
+  signUpResult: PropTypes.shape(mutationResultProps).isRequired,
+  signUpCompletion: PropTypes.func.isRequired,
+  signUpCompletionResult: PropTypes.shape(mutationResultProps).isRequired,
+  signUpBySocial: PropTypes.func.isRequired,
+  signUpBySocialResult: PropTypes.shape(mutationResultProps).isRequired,
 };
 
-export default SignUp;
+export default RegForm;

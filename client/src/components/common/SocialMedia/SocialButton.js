@@ -1,26 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Fab from '@material-ui/core/Fab';
+import { SocialButton as Button } from './styled';
 
-export const Button = styled(Fab)`
-  && {
-    color: #fff;
-  }
-`;
-
-const SocialButton = ({ loading, onClick, icon }) => (
-  <Button disabled={loading} size="small" onClick={onClick} component={Fab}>
+const SocialButton = ({ loading, icon, onClick }) => (
+  <Button disabled={loading} size="small" onClick={onClick}>
     <FontAwesomeIcon icon={icon} size="lg" />
   </Button>
 );
 
 SocialButton.propTypes = {
   loading: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
   icon: PropTypes.oneOfType([PropTypes.node, PropTypes.object]).isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default SocialButton;

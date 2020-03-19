@@ -47,12 +47,23 @@ describe('LoginForm', () => {
     options,
   );
 
-  test('should mount without errors', async () => {
+  const signInVariables = { variables: { form: signInForm } };
+  const signInResult = { signIn: tokens };
+  const signInBySocialVariables = {
+    variables: {
+      social: socialProfile,
+      profile: socialUserProfile,
+    },
+  };
+  const signInBySocialResult = { signInBySocial: tokens };
+  const mutationError = new BadInputError();
+
+  test('mount without errors', async () => {
     const wrapper = mountWrapper();
 
     expect(wrapper.find('LoginForm')).toHaveLength(1);
   });
-  test('Header should have correct props', async () => {
+  test('Header props', async () => {
     const wrapper = mountWrapper();
     const HeaderTest = wrapper.find(Header);
 
@@ -62,7 +73,7 @@ describe('LoginForm', () => {
     expect(HeaderTest.prop('align')).toBe('center');
     expect(HeaderTest.prop('gutterBottom')).toBeTruthy();
   });
-  test('AccountCircleIcon should have correct props', async () => {
+  test('AccountCircleIcon props', async () => {
     const wrapper = mountWrapper();
     const AccountCircleIconTest = wrapper.find(AccountCircleIcon);
 
@@ -70,7 +81,7 @@ describe('LoginForm', () => {
     expect(AccountCircleIconTest.prop('fontSize')).toBe('inherit');
     expect(AccountCircleIconTest.prop('color')).toBe('primary');
   });
-  test('Form should have correct props', async () => {
+  test('Form props', async () => {
     const wrapper = mountWrapper();
     const Form = wrapper.find('Form');
 
@@ -78,7 +89,7 @@ describe('LoginForm', () => {
     expect(Form.prop('formId')).toBe('signIn');
     expect(Form.prop('submitButtonText')).toBe('Sign In');
   });
-  test('SignUpButton should have correct props', async () => {
+  test('SignUpButton props', async () => {
     const wrapper = mountWrapper();
     const Button = wrapper.find(SignUpButton);
 
@@ -90,7 +101,7 @@ describe('LoginForm', () => {
     expect(Button.prop('fullWidth')).toBeTruthy();
     expect(Button.text()).toBe('Sign Up');
   });
-  test('onSuccess should be called twice initially with correct values', async () => {
+  test('onSuccess should be called initially with correct mutation ids', async () => {
     mountWrapper();
 
     expect(onSuccessMock).toHaveBeenCalledTimes(2);
@@ -98,15 +109,13 @@ describe('LoginForm', () => {
   });
   test('signIn mutation', async () => {
     const wrapper = mountWrapper();
-    const signInMutation = wrapper.find('Form').prop('mutation');
-    const data = { form: signInForm };
-    const result = { signIn: tokens };
+    const mutation = wrapper.find('Form').prop('mutation');
 
-    expect(signInMutation).toBeDefined();
+    expect(mutation).toBeDefined();
     expect(wrapper.find('TopProgressLine').prop('loading')).toBeFalsy();
 
     await act(async () => {
-      signInMutation({ variables: data });
+      mutation(signInVariables);
 
       await wait();
       wrapper.update();
@@ -114,18 +123,16 @@ describe('LoginForm', () => {
 
       await wait();
       wrapper.update();
-      expect(onCompletedMock).toBeCalledWith(result);
-      expect(wrapper.find('Form').props().result.data).toMatchObject(result);
+      expect(onCompletedMock).toBeCalledWith(signInResult);
+      expect(wrapper.find('Form').props().result.data).toMatchObject(signInResult);
     });
   });
   test('signIn mutation with errors', async () => {
     const wrapper = mountWrapper([signInMockWithErrors]);
     const mutation = wrapper.find('Form').prop('mutation');
-    const data = { form: signInForm };
-    const error = new BadInputError();
 
     await act(async () => {
-      mutation({ variables: data });
+      mutation(signInVariables);
 
       await wait();
       wrapper.update();
@@ -135,23 +142,18 @@ describe('LoginForm', () => {
       wrapper.update();
       expect(onErrorMock).toBeCalled();
       expect(wrapper.find('Form').prop('result').error).toBeInstanceOf(Error);
-      expect(wrapper.find('Form').prop('result').error.graphQLErrors[0]).toEqual(error);
+      expect(wrapper.find('Form').prop('result').error.graphQLErrors[0]).toEqual(mutationError);
     });
   });
   test('signInBySocial mutation', async () => {
     const wrapper = mountWrapper();
     const mutation = wrapper.find('SocialMedia').prop('mutation');
-    const data = {
-      social: socialProfile,
-      profile: socialUserProfile,
-    };
-    const result = { signInBySocial: tokens };
 
     expect(mutation).toBeDefined();
     expect(wrapper.find('SocialMedia').prop('result').loading).toBeFalsy();
 
     await act(async () => {
-      mutation({ variables: data });
+      mutation(signInBySocialVariables);
 
       await wait();
       wrapper.update();
@@ -159,21 +161,16 @@ describe('LoginForm', () => {
 
       await wait();
       wrapper.update();
-      expect(onCompletedMock).toBeCalledWith(result);
-      expect(wrapper.find('SocialMedia').prop('result').data).toMatchObject(result);
+      expect(onCompletedMock).toBeCalledWith(signInBySocialResult);
+      expect(wrapper.find('SocialMedia').prop('result').data).toMatchObject(signInBySocialResult);
     });
   });
   test('signInBySocial mutation with errors', async () => {
     const wrapper = mountWrapper([signInBySocialMockWithErrors]);
     const mutation = wrapper.find('SocialMedia').prop('mutation');
-    const data = {
-      social: socialProfile,
-      profile: socialUserProfile,
-    };
-    const error = new BadInputError();
 
     await act(async () => {
-      mutation({ variables: data });
+      mutation(signInBySocialVariables);
 
       await wait();
       wrapper.update();
@@ -183,7 +180,7 @@ describe('LoginForm', () => {
       wrapper.update();
       expect(onErrorMock).toBeCalled();
       expect(wrapper.find('SocialMedia').prop('result').error).toBeInstanceOf(Error);
-      expect(wrapper.find('SocialMedia').prop('result').error.graphQLErrors[0]).toEqual(error);
+      expect(wrapper.find('SocialMedia').prop('result').error.graphQLErrors[0]).toEqual(mutationError);
     });
   });
 });

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 
@@ -7,18 +6,17 @@ import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
 import withNotification from '../../common/HOC/withNotification';
 
-import history from '../../../router/history';
 import storage, { checkToken } from '../../../storage';
 
 import { RegWrapper, RegFormWrapper } from './styled';
 
 const Reg = (props) => {
-  const { toggleNotification } = props;
-  const { search } = useLocation();
-  const [isCompleted, setRegStatus] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
+  const { location, history, toggleNotification } = props;
+  const { search } = location;
+  const [isCompleted, setRegStatus] = React.useState(false);
+  const [activeStep, setActiveStep] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const { token } = queryString.parse(search);
 
     if (token) {
@@ -30,15 +28,19 @@ const Reg = (props) => {
         history.push('/reg');
       }
     }
-  }, [search]);
+  }, [search, history]);
 
-  function handleSuccess({ token, refreshToken }) {
-    if (token && refreshToken) {
-      storage.setTokens(token, refreshToken);
-      history.push('/');
-    } else {
-      setRegStatus(true);
-    }
+  function handleSuccess(dataKey) {
+    return (data) => {
+      const { token, refreshToken } = data[dataKey];
+
+      if (token && refreshToken) {
+        storage.setTokens(token, refreshToken);
+        history.push('/');
+      } else {
+        setRegStatus(true);
+      }
+    };
   }
 
   function handleError(e) {
@@ -66,7 +68,15 @@ const Reg = (props) => {
 };
 
 Reg.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired,
+  }).isRequired,
   toggleNotification: PropTypes.func.isRequired,
 };
+
+export { Reg };
 
 export default withNotification(Reg);

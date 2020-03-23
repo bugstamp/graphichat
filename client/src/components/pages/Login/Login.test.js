@@ -1,5 +1,6 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
+import wait from 'waait';
 
 import Drawer from '@material-ui/core/Drawer';
 
@@ -25,7 +26,6 @@ describe('Login', () => {
 
   const toggleNotificationMock = jest.fn();
   const setStateMock = jest.fn();
-  const useCallbackMock = jest.fn(fn => fn);
 
   const mountWrapper = (mocks = defaultMocks, options = {}) => mountMockedProvider(
     <Login history={historyMock} toggleNotification={toggleNotificationMock} />,
@@ -55,59 +55,48 @@ describe('Login', () => {
       expect(LoginWrapperTest.prop('container')).toBeTruthy();
     });
   });
-  test('form state should be correctly passed to LoginPresentation component', async () => {
-    const state = true;
-    useHookMock('useState', () => [state, setStateMock]);
+  test('toggleForm useState', async () => {
     const wrapper = mountWrapper();
 
     await act(async () => {
-      expect(wrapper.find(LoginPresentation).prop('stopAnimation')).toBe(state);
+      expect(wrapper.find(LoginPresentation).prop('stopAnimation')).toBe(false);
+      wrapper.find(LoginPresentation).prop('toggleForm')();
+      await wait();
+      wrapper.update();
+      expect(wrapper.find(LoginPresentation).prop('stopAnimation')).toBe(true);
     });
   });
   test('LoginForm should be rendered when form state is true', async () => {
-    useHookMock('useState', () => [true, setStateMock]);
     const wrapper = mountWrapper();
 
     await act(async () => {
+      wrapper.find(LoginPresentation).prop('toggleForm')();
+      await wait();
+      wrapper.update();
       expect(wrapper.find('LoginForm')).toHaveLength(1);
     });
   });
   test('toggleNotification should be called when initial sessionExpired state is true', async () => {
-    const state = {
-      sessionExpired: true,
-    };
-    mountWrapper(null, { state });
+    mountWrapper(null, { state: { sessionExpired: true } });
 
     await act(async () => {
       expect(toggleNotificationMock).toBeCalledWith('Session time was expired');
     });
   });
-  test('handleToggleForm from useCallback should call toggleForm', async () => {
-    useHookMock('useState', () => [false, setStateMock]);
-    useHookMock('useCallback', useCallbackMock);
-    const wrapper = mountWrapper();
-
-    await act(async () => {
-      const toggleForm = wrapper.find(LoginPresentation).prop('toggleForm');
-      toggleForm();
-      expect(setStateMock).toBeCalled();
-    });
-  });
   test('Drawer should have correct props', async () => {
-    useHookMock('useCallback', useCallbackMock);
     const wrapper = mountWrapper();
-    const DrawerTest = wrapper.find(Drawer);
+    const DrawerWrapper = wrapper.find(Drawer);
 
     await act(async () => {
-      expect(DrawerTest).toHaveLength(1);
-      expect(DrawerTest.props()).toMatchObject({
+      expect(DrawerWrapper).toHaveLength(1);
+      expect(DrawerWrapper.props()).toMatchObject({
         open: false,
         anchor: 'right',
       });
-      expect(DrawerTest.prop('onClose')).toEqual(expect.any(Function));
+      expect(DrawerWrapper.prop('onClose')).toEqual(expect.any(Function));
     });
   });
-  test('Drawer should mount initialy and when useMediaQuery returns true', async () => {
+  test('Drawer should mount when useMediaQuery returns true', async () => {
     const wrapper = mountWrapper();
 
     await act(async () => {
@@ -129,7 +118,9 @@ describe('Login', () => {
     await act(async () => {
       const redirectToSignUp = wrapper.find('LoginForm').prop('redirectToSignUp');
       expect(redirectToSignUp).toEqual(expect.any(Function));
+
       redirectToSignUp();
+
       expect(historyPushMock).toBeCalledWith('/reg');
     });
   });
@@ -140,7 +131,9 @@ describe('Login', () => {
     await act(async () => {
       const onSuccess = wrapper.find('LoginForm').prop('onSuccess');
       expect(onSuccess).toEqual(expect.any(Function));
+
       onSuccess('signIn')({ signIn: tokens });
+
       expect(storage.getTokens()).toMatchObject(tokens);
       expect(historyPushMock).toBeCalledWith('/');
     });
@@ -153,7 +146,9 @@ describe('Login', () => {
     await act(async () => {
       const onError = wrapper.find('LoginForm').prop('onError');
       expect(onError).toEqual(expect.any(Function));
+
       onError({ graphQLErrors: [{ message, data: { invalidField: null } }] });
+
       expect(toggleNotificationMock).toBeCalledWith(message);
     });
   });

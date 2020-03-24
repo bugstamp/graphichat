@@ -1,11 +1,12 @@
 import config from 'config';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
+import { shallow } from 'enzyme';
 import wait from 'waait';
 import jwt from 'jsonwebtoken';
 
 import { Reg } from './Reg';
-import RegPresentation from './RegPresentation';
+import { RegPresentation } from './RegPresentation';
 import { RegWrapper } from './styled';
 
 import { mountMockedProvider } from '../../../__mocks__/mockedProvider';
@@ -48,6 +49,17 @@ describe('Reg', () => {
     storage.removeTokens();
   });
 
+  test('should match to snapshot', () => {
+    const wrapper = shallow((
+      <Reg
+        location={locationMock}
+        history={historyMock}
+        toggleNotification={toggleNotificationMock}
+      />
+    ));
+
+    expect(wrapper).toMatchSnapshot();
+  });
   test('should mount without errors', () => {
     const wrapper = mountWrapper();
 

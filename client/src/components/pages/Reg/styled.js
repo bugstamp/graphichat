@@ -98,7 +98,7 @@ export const SubTitleWord = styled(Typography)`
     margin-right: ${getSpacing(1)};
     font-weight: bold;
     opacity: 0;
-    animation: 1s ${({ even }) => (even === 'even' ? fadeInLeftAnimation : fadeInRightAnimation)};
+    animation: 1s ${({ order }) => (order === 'even' ? fadeInLeftAnimation : fadeInRightAnimation)};
     animation-delay: ${({ delay }) => `${delay}s`};
     animation-fill-mode: forwards;
   }

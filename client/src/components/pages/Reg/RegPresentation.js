@@ -13,7 +13,15 @@ import {
 } from './styled';
 import { isEven } from '../../../helpers';
 
-const words = ['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'];
+export const words = ['Simple.', 'Fun.', 'Fast.', 'Useful.', 'Powerful.'];
+
+export const getWordPropsByIndex = (index) => {
+  const num = index + 1;
+  const order = isEven(num) ? 'even' : 'odd';
+  const delay = (num / words.length) + 1;
+
+  return { order, delay };
+};
 
 const RegPresentation = () => (
   <RegPresentationWrapper>
@@ -21,9 +29,7 @@ const RegPresentation = () => (
     <SubTitle>
       {
         map(words, (word, index) => {
-          const num = index + 1;
-          const even = isEven(num) ? 'even' : 'odd';
-          const delay = (num / words.length) + 1;
+          const wordProps = getWordPropsByIndex(index);
 
           return (
             <SubTitleWord
@@ -31,8 +37,7 @@ const RegPresentation = () => (
               component="p"
               variant="h4"
               align="center"
-              even={even}
-              delay={delay}
+              {...wordProps}
             >
               {word}
             </SubTitleWord>
@@ -52,5 +57,7 @@ const RegPresentation = () => (
     </Enjoy>
   </RegPresentationWrapper>
 );
+
+export { RegPresentation };
 
 export default memo(RegPresentation);

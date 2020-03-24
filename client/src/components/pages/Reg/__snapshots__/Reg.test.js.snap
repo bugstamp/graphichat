@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Reg should match to snapshot 1`] = `
+<styled__RegWrapper
+  container={true}
+>
+  <Memo(RegPresentation) />
+  <styled__RegFormWrapper>
+    <RegForm
+      activeStep={0}
+      isCompleted={false}
+      onError={[Function]}
+      onSuccess={[Function]}
+    />
+  </styled__RegFormWrapper>
+</styled__RegWrapper>
+`;

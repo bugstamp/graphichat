@@ -1,5 +1,6 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
+import { shallow } from 'enzyme';
 import wait from 'waait';
 
 import Drawer from '@material-ui/core/Drawer';
@@ -39,6 +40,16 @@ describe('Login', () => {
     storage.removeTokens();
   });
 
+  // test('should match to snapshot', () => {
+  //   const wrapper = shallow((
+  //     <Login
+  //       history={historyMock}
+  //       toggleNotification={toggleNotificationMock}
+  //     />
+  //   ));
+  //
+  //   expect(wrapper).toMatchSnapshot();
+  // });
   test('should be mount without errors | intitial form state should be false', () => {
     const wrapper = mountWrapper();
 

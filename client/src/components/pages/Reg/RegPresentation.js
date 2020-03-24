@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { map } from 'lodash';
 
 import Typography from '@material-ui/core/Typography';
@@ -58,6 +58,4 @@ const RegPresentation = () => (
   </RegPresentationWrapper>
 );
 
-export { RegPresentation };
-
-export default memo(RegPresentation);
+export default RegPresentation;

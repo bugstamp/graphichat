@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 
 import Typography from '@material-ui/core/Typography';
 
-import { RegPresentation, words, getWordPropsByIndex } from './RegPresentation';
+import RegPresentation, { words, getWordPropsByIndex } from './RegPresentation';
 import BrandTitle from '../Login/BrandTitle';
 import {
   SubTitle,

@@ -8,6 +8,8 @@ import {
   contact,
   chat,
   signInForm,
+  signUpForm,
+  signUpCompletionForm,
   socialProfile,
   socialUserProfile,
   tokens,
@@ -17,6 +19,10 @@ import { BadInputError } from './mockedErrors';
 const {
   SIGN_IN,
   SIGN_IN_BY_SOCIAL,
+  SIGN_UP_ASYNC_VALIDATION,
+  SIGN_UP,
+  SIGN_UP_COMPLETION,
+  SIGN_UP_BY_SOCIAL,
   CHECK_SESSION_EXPIRATION,
   GET_ME,
   GET_INITIAL_DATA,
@@ -65,6 +71,73 @@ export const signInBySocialMockWithErrors = {
   ...signInBySocialMock,
   result: {
     errors: [new BadInputError()],
+  },
+};
+export const signUpMock = {
+  request: {
+    query: SIGN_UP,
+    variables: {
+      form: signUpForm,
+    },
+  },
+  result: {
+    data: {
+      signUp: tokens,
+    },
+  },
+};
+export const signUpCompletionMock = {
+  request: {
+    query: SIGN_UP_COMPLETION,
+    variables: {
+      form: signUpCompletionForm,
+    },
+  },
+  result: {
+    data: {
+      signUpCompletion: tokens,
+    },
+  },
+};
+export const signUpCompletionMockWithErrors = {
+  ...signUpCompletionMock,
+  result: {
+    errors: [new BadInputError()],
+  },
+};
+export const signUpBySocialMock = {
+  request: {
+    query: SIGN_UP_BY_SOCIAL,
+    variables: {
+      social: socialProfile,
+      profile: socialUserProfile,
+    },
+  },
+  result: {
+    data: {
+      signUpBySocial: tokens,
+    },
+  },
+};
+export const signUpBySocialMockWithErrors = {
+  ...signUpBySocialMock,
+  result: {
+    errors: [new BadInputError()],
+  },
+};
+export const signUpAsyncValidationMock = {
+  request: {
+    query: SIGN_UP_ASYNC_VALIDATION,
+    variables: {
+      field: 'username',
+      value: 'username',
+    },
+  },
+  result: {
+    data: {
+      field: 'username',
+      value: 'username',
+    },
   },
 };
 export const checkSessionExpirationMock = {

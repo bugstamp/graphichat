@@ -22,6 +22,7 @@
   ],
   "rules": {
     "import/no-unresolved": [2, { ignore: ['\config'] }],
+    "import/no-named-as-default": 0,
     "linebreak-style": ["error", "windows"],
     "react/jsx-no-undef": 0,
     "react/jsx-filename-extension": 0,

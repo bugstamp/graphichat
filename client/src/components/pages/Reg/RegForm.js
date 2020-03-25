@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useMutation } from '@apollo/react-hooks';
 
 import Form from '../../common/Form/Form';
 import SocialMedia from '../../common/SocialMedia/SocialMedia';
@@ -13,23 +14,40 @@ import {
   FormInfo,
   FormFooter,
 } from './styled';
-import { mutationResultProps } from '../../propTypes';
+import gql from '../../../gql';
+
+const {
+  SIGN_UP_ASYNC_VALIDATION,
+  SIGN_UP,
+  SIGN_UP_COMPLETION,
+  SIGN_UP_BY_SOCIAL,
+} = gql;
 
 const RegForm = (props) => {
   const {
     activeStep,
     isCompleted,
+    onSuccess,
+    onError,
+  } = props;
+  const [
     signUpAsyncValidationUsername,
     signUpAsyncValidationUsernameResult,
+  ] = useMutation(SIGN_UP_ASYNC_VALIDATION);
+  const [
     signUpAsyncValidationEmail,
     signUpAsyncValidationEmailResult,
-    signUp,
-    signUpResult,
-    signUpCompletion,
-    signUpCompletionResult,
-    signUpBySocial,
-    signUpBySocialResult,
-  } = props;
+  ] = useMutation(SIGN_UP_ASYNC_VALIDATION);
+  const [signUp, signUpResult] = useMutation(SIGN_UP, {
+    onCompleted: onSuccess('signUp'),
+  });
+  const [signUpCompletion, signUpCompletionResult] = useMutation(SIGN_UP_COMPLETION, {
+    onCompleted: onSuccess('signUpCompletion'),
+  });
+  const [signUpBySocial, signUpBySocialResult] = useMutation(SIGN_UP_BY_SOCIAL, {
+    onCompleted: onSuccess('signUpBySocial'),
+    onError,
+  });
   const loading = signUpResult.loading || signUpCompletionResult.loading;
   const asyncFields = {
     username: {
@@ -89,16 +107,8 @@ const RegForm = (props) => {
 RegForm.propTypes = {
   activeStep: PropTypes.number.isRequired,
   isCompleted: PropTypes.bool.isRequired,
-  signUpAsyncValidationUsername: PropTypes.func.isRequired,
-  signUpAsyncValidationUsernameResult: PropTypes.shape(mutationResultProps).isRequired,
-  signUpAsyncValidationEmail: PropTypes.func.isRequired,
-  signUpAsyncValidationEmailResult: PropTypes.shape(mutationResultProps).isRequired,
-  signUp: PropTypes.func.isRequired,
-  signUpResult: PropTypes.shape(mutationResultProps).isRequired,
-  signUpCompletion: PropTypes.func.isRequired,
-  signUpCompletionResult: PropTypes.shape(mutationResultProps).isRequired,
-  signUpBySocial: PropTypes.func.isRequired,
-  signUpBySocialResult: PropTypes.shape(mutationResultProps).isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
 
 export default RegForm;

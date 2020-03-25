@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RegPresentation should match to snapshot 1`] = `
+<styled__RegPresentationWrapper>
+  <BrandTitle />
+  <styled__SubTitle>
+    <styled__SubTitleWord
+      align="center"
+      component="p"
+      delay={1.2}
+      key="Simple."
+      order="odd"
+      variant="h4"
+    >
+      Simple.
+    </styled__SubTitleWord>
+    <styled__SubTitleWord
+      align="center"
+      component="p"
+      delay={1.4}
+      key="Fun."
+      order="even"
+      variant="h4"
+    >
+      Fun.
+    </styled__SubTitleWord>
+    <styled__SubTitleWord
+      align="center"
+      component="p"
+      delay={1.6}
+      key="Fast."
+      order="odd"
+      variant="h4"
+    >
+      Fast.
+    </styled__SubTitleWord>
+    <styled__SubTitleWord
+      align="center"
+      component="p"
+      delay={1.8}
+      key="Useful."
+      order="even"
+      variant="h4"
+    >
+      Useful.
+    </styled__SubTitleWord>
+    <styled__SubTitleWord
+      align="center"
+      component="p"
+      delay={2}
+      key="Powerful."
+      order="odd"
+      variant="h4"
+    >
+      Powerful.
+    </styled__SubTitleWord>
+  </styled__SubTitle>
+  <styled__Enjoy>
+    <WithStyles(ForwardRef(Typography))
+      align="center"
+      color="inherit"
+      component="p"
+      variant="h4"
+    >
+      Enjoy!
+    </WithStyles(ForwardRef(Typography))>
+  </styled__Enjoy>
+</styled__RegPresentationWrapper>
+`;

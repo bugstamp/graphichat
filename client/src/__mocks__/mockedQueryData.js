@@ -78,25 +78,27 @@ export const tokens = {
 export const signInForm = {
   username: 'test',
   password: 123456,
-  // __typename: 'SignInForm',
 };
 
 export const signUpForm = {
   username: 'test',
   email: 'test@gmail.com',
   password: 123456,
-  // __typename: 'SignUpForm',
+};
+
+export const signUpCompletionForm = {
+  firstName: 'firstName',
+  lastName: 'lastName',
+  gender: 'male',
 };
 
 export const socialProfile = {
   id: 123456,
   name: 'google',
-  // __typename: 'SocialProfile',
 };
 
 export const socialUserProfile = {
   email: 'test@gmail.com',
   firstName: 'test',
   lastName: 'test',
-  // __typename: 'SocialUserProfile',
 };

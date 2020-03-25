@@ -6,7 +6,7 @@ import wait from 'waait';
 import jwt from 'jsonwebtoken';
 
 import { Reg } from './Reg';
-import { RegPresentation } from './RegPresentation';
+import RegPresentation from './RegPresentation';
 import { RegWrapper } from './styled';
 
 import { mountMockedProvider } from '../../../__mocks__/mockedProvider';

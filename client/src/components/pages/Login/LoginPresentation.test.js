@@ -18,31 +18,22 @@ describe('LoginPresentation', () => {
     />
   );
   const mountWrapper = () => mountMockedProvider(LoginPresentationMock);
+  const wrapper = mountWrapper();
 
   test('should match to snapshot', () => {
-    const wrapper = shallow(LoginPresentationMock);
-
-    expect(wrapper).toMatchSnapshot();
+    expect(shallow(LoginPresentationMock)).toMatchSnapshot();
   });
   test('mount should be without errors', () => {
-    const wrapper = mountWrapper();
-
     expect(wrapper.find(LoginPresentation)).toHaveLength(1);
   });
   test('passed props should be match', () => {
-    const wrapper = mountWrapper();
-
     expect(wrapper.find(LoginPresentation).prop('stopAnimation')).toBe(stopAnimation);
     expect(wrapper.find(LoginPresentation).prop('toggleForm')).toBe(toggleFormMock);
   });
   test('should have BrandTitle', () => {
-    const wrapper = mountWrapper();
-
     expect(wrapper.find('BrandTitle')).toHaveLength(1);
   });
-
   describe('SubTitle', () => {
-    const wrapper = mountWrapper();
     const SubTitleWrapper = wrapper.find(SubTitle);
 
     it('should have stopAnimation prop', () => {

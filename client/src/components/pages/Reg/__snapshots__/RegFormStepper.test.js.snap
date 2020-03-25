@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RegFormStepper should match to snapshot 1`] = `
+<WithStyles(ForwardRef(Stepper))
+  activeStep={0}
+  alternativeLabel={true}
+>
+  <WithStyles(ForwardRef(Step))
+    active={true}
+    completed={false}
+    key="0"
+  >
+    <styled__StepLabelStyled
+      icon={
+        <StepLabelIcon
+          iconColor="primary"
+          isCompleted={false}
+          step={1}
+        />
+      }
+    >
+      <span
+        className="step"
+      >
+        Step 1.
+      </span>
+      <p>
+        Create your account
+      </p>
+    </styled__StepLabelStyled>
+  </WithStyles(ForwardRef(Step))>
+  <WithStyles(ForwardRef(Step))
+    active={false}
+    completed={false}
+    key="1"
+  >
+    <styled__StepLabelStyled
+      icon={
+        <StepLabelIcon
+          iconColor="disabled"
+          isCompleted={false}
+          step={2}
+        />
+      }
+    >
+      <span
+        className="step"
+      >
+        Step 2.
+      </span>
+      <p>
+        Tell us about yourself
+      </p>
+    </styled__StepLabelStyled>
+  </WithStyles(ForwardRef(Step))>
+</WithStyles(ForwardRef(Stepper))>
+`;

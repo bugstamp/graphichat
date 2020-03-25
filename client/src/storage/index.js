@@ -56,7 +56,7 @@ export const checkToken = (token, set = false) => {
     }
     return data;
   } catch (e) {
-    return {};
+    throw e;
   }
 };
 

@@ -1,9 +1,7 @@
-import config from 'config';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { shallow } from 'enzyme';
 import wait from 'waait';
-import jwt from 'jsonwebtoken';
 
 import { Reg } from './Reg';
 import RegPresentation from './RegPresentation';
@@ -17,7 +15,6 @@ import { fixReactFacebookLoginBug } from '../../../__mocks__/testUtils';
 
 import storage from '../../../storage';
 
-const { tokenSecrets } = config;
 const defaultMocks = [checkSessionExpirationMock];
 
 describe('Reg', () => {
@@ -27,12 +24,6 @@ describe('Reg', () => {
     search: '',
   };
   const toggleNotificationMock = jest.fn();
-  const mockToken = {
-    data: {
-      regStatus: 'COMPLETED',
-    },
-  };
-  const token = jwt.sign(mockToken, tokenSecrets.token);
 
   const mountWrapper = (mocks = defaultMocks, options = {}) => mountMockedProvider(
     <Reg
@@ -92,10 +83,10 @@ describe('Reg', () => {
   });
 
   describe('componentDidMount', () => {
-    test('should passed first step when mounted with token in the location search string', async () => {
+    test('should passed first step when mounted with id in the location search string', async () => {
       await act(async () => {
         locationMock = {
-          search: `?token=${token}`,
+          search: '?id=id',
         };
         const wrapper = mountWrapper();
 
@@ -103,17 +94,6 @@ describe('Reg', () => {
         wrapper.update();
 
         expect(wrapper.find('RegForm').prop('activeStep')).toEqual(1);
-      });
-    });
-    test('should redirect to reg page when mounted with invalid token in the location search string', async () => {
-      await act(async () => {
-        locationMock = {
-          search: '?token=234324',
-        };
-        mountWrapper();
-        await wait();
-
-        expect(historyPushMock).toBeCalledWith('/reg');
       });
     });
   });

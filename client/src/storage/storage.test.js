@@ -1,15 +1,4 @@
-import config from 'config';
-import jwt from 'jsonwebtoken';
-
-import storage, { checkToken } from './index';
-
-const { tokenSecrets } = config;
-
-const mockToken = {
-  data: {
-    regStatus: 'COMPLETED',
-  },
-};
+import storage from './index';
 
 describe('test storage', () => {
   it('test set/get methods', () => {
@@ -37,27 +26,5 @@ describe('test storage', () => {
       token: '',
       refreshToken: '',
     });
-  });
-});
-
-describe('test checkToken', () => {
-  const token = jwt.sign(mockToken, tokenSecrets.token);
-
-  afterAll(() => {
-    storage.removeTokens();
-  });
-
-  it('if token doesn\'t exist', () => {
-    expect(checkToken()).toMatchObject({ regStatus: '' });
-  });
-
-  it('verify token', () => {
-    expect(checkToken(token)).toMatchObject({ regStatus: 'COMPLETED' });
-    expect(storage.token.get()).toEqual('');
-  });
-
-  it('verify and set token', () => {
-    expect(checkToken(token, true)).toMatchObject({ regStatus: 'COMPLETED' });
-    expect(storage.token.get()).toEqual(token);
   });
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useMutation } from '@apollo/react-hooks';
@@ -25,6 +25,7 @@ const {
 
 const RegForm = (props) => {
   const {
+    userId,
     activeStep,
     isCompleted,
     onSuccess,
@@ -59,6 +60,9 @@ const RegForm = (props) => {
       result: signUpAsyncValidationEmailResult,
     },
   };
+  const handleSignUpCompletion = useCallback(({ variables }) => {
+    signUpCompletion({ variables: { ...variables, id: userId } });
+  }, [userId, signUpCompletion]);
 
   return (
     <FormWrapper elevation={8}>
@@ -88,7 +92,7 @@ const RegForm = (props) => {
         <When condition={activeStep === 1}>
           <Form
             formId="signUpStepTwo"
-            mutation={signUpCompletion}
+            mutation={handleSignUpCompletion}
             result={signUpCompletionResult}
             submitButtonText="Confirm"
           />
@@ -98,13 +102,17 @@ const RegForm = (props) => {
         </Otherwise>
       </Choose>
       <FormFooter align="center">
-        <Link to="/login">I already have a account</Link>
+        <Link to="/login">I already have an account</Link>
       </FormFooter>
     </FormWrapper>
   );
 };
 
+RegForm.defaultProps = {
+  userId: null,
+};
 RegForm.propTypes = {
+  userId: PropTypes.string,
   activeStep: PropTypes.number.isRequired,
   isCompleted: PropTypes.bool.isRequired,
   onSuccess: PropTypes.func.isRequired,

@@ -25,11 +25,6 @@ const config = {
   },
   tokenName: 'chatkilla_tkn',
   refreshTokenName: 'chatkilla_rfrsh_tkn',
-  tokenSecrets: {
-    token: process.env.TOKEN_SECRET,
-    refresh: process.env.REFRESH_TOKEN_SECRET,
-    register: process.env.REGISTER_TOKEN_SECRET,
-  },
 };
 
 export default Object.freeze(config);

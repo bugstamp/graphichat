@@ -55,10 +55,16 @@ const Login = (props) => {
       const { message, data = null } = graphQLErrors[0];
 
       if (data) {
-        const { invalidField = null } = data;
+        const { invalidField = null, userId = null } = data;
 
         if (!invalidField) {
           toggleNotification(message);
+
+          if (userId) {
+            setTimeout(() => {
+              history.push(`/reg?id=${userId}`);
+            }, 1000);
+          }
         }
       }
     }

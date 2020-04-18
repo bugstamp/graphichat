@@ -90,6 +90,7 @@ export const signUpCompletionMock = {
   request: {
     query: SIGN_UP_COMPLETION,
     variables: {
+      id: 'id',
       form: signUpCompletionForm,
     },
   },

@@ -2,30 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import storage, { checkToken } from '../storage';
+import storage from '../storage';
 
 class PrivateRoute extends Component {
   state = {
     render: false,
     auth: false,
-    status: '',
   }
 
   componentDidMount() {
     const token = storage.token.get();
 
     if (token) {
-      try {
-        const { regStatus = '' } = checkToken(token);
-
-        this.setState({
-          render: true,
-          auth: true,
-          status: regStatus,
-        });
-      } catch (e) {
-        throw e;
-      }
+      this.setState({
+        render: true,
+        auth: true,
+      });
     } else {
       this.setState({
         render: true,
@@ -34,7 +26,7 @@ class PrivateRoute extends Component {
   }
 
   render() {
-    const { render, auth, status } = this.state;
+    const { render, auth } = this.state;
     const { children } = this.props;
 
     return (
@@ -43,9 +35,6 @@ class PrivateRoute extends Component {
           <Choose>
             <When condition={!auth}>
               <Redirect to="login" />
-            </When>
-            <When condition={auth && status === 'UNCOMPLETED'}>
-              <Redirect to={`reg?token=${storage.token.get()}`} />
             </When>
             <Otherwise>
               {children}

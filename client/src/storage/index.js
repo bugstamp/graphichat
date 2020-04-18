@@ -1,7 +1,4 @@
 import config from 'config';
-import jwt from 'jsonwebtoken';
-
-const { tokenSecrets } = config;
 
 export function Storage(tokenName, refreshTokenName) {
   const createTokenMethods = name => ({
@@ -42,22 +39,5 @@ export function Storage(tokenName, refreshTokenName) {
 }
 
 const storage = new Storage(config.tokenName, config.refreshTokenName);
-
-export const checkToken = (token, set = false) => {
-  try {
-    if (!token) {
-      throw new Error('Token wasn\'t found');
-    }
-    const secret = tokenSecrets.token;
-    const { data } = jwt.verify(token, secret);
-
-    if (set) {
-      storage.token.set(token);
-    }
-    return data;
-  } catch (e) {
-    throw e;
-  }
-};
 
 export default storage;

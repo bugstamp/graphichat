@@ -1,9 +1,7 @@
-import config from 'config';
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { shallow } from 'enzyme';
-import jwt from 'jsonwebtoken';
 
 import AppRoute from './AppRoute';
 import PrivateRoute from './PrivateRoute';
@@ -15,7 +13,6 @@ import storage from '../storage';
 import { theme } from '../styles';
 import { mountMockedProvider } from '../__mocks__/mockedProvider';
 
-const { tokenSecrets } = config;
 const history = createMemoryHistory();
 
 const TestComponent = () => (
@@ -87,33 +84,10 @@ describe('test router', () => {
       expect(wrapper.find(Redirect).prop('to')).toEqual('login');
     });
     test('auth render', () => {
-      const mockToken = {
-        data: {
-          regStatus: 'COMPLETED',
-        },
-      };
-      const token = jwt.sign(mockToken, tokenSecrets.token);
-      storage.token.set(token);
-
+      storage.token.set('token');
       const wrapper = mountRouter(<PrivateRoute><TestComponent /></PrivateRoute>);
 
       expect(wrapper.find(TestComponent)).toHaveLength(1);
-      storage.token.remove();
-    });
-    test('redirect to reg', () => {
-      const mockToken = {
-        data: {
-          regStatus: 'UNCOMPLETED',
-        },
-      };
-      const token = jwt.sign(mockToken, tokenSecrets.token);
-      const path = `reg?token=${token}`;
-      storage.token.set(token);
-
-      const wrapper = mountRouter(<PrivateRoute><TestComponent /></PrivateRoute>);
-
-      expect(wrapper.find(Redirect)).toHaveLength(1);
-      expect(wrapper.find(Redirect).prop('to')).toEqual(path);
       storage.token.remove();
     });
   });

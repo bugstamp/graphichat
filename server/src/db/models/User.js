@@ -269,10 +269,9 @@ userSchema.statics = {
   async verifyEmail(regToken) {
     try {
       const { data: { id } } = await this.verifyToken(regToken, 'register');
-      const user = await this.findByIdAndUpdate(id, { regStatus: UNCOMPLETED }, { new: true });
-      const tokens = await user.genTokens();
+      await this.findByIdAndUpdate(id, { regStatus: UNCOMPLETED }, { new: true });
 
-      return tokens;
+      return id;
     } catch (e) {
       throw e;
     }

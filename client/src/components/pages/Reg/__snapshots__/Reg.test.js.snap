@@ -11,6 +11,7 @@ exports[`Reg should match to snapshot 1`] = `
       isCompleted={false}
       onError={[Function]}
       onSuccess={[Function]}
+      userId={null}
     />
   </styled__RegFormWrapper>
 </styled__RegWrapper>

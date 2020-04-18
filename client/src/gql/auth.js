@@ -36,8 +36,8 @@ const SIGN_UP = gql`
 `;
 
 const SIGN_UP_COMPLETION = gql`
-  mutation SignUpCompletion($form: SignUpCompletionForm!) {
-    signUpCompletion(form: $form) {
+  mutation SignUpCompletion($id: String!, $form: SignUpCompletionForm!) {
+    signUpCompletion(id: $id, form: $form) {
       ...tokens
     }
   }

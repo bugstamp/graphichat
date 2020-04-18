@@ -40,13 +40,14 @@ describe('RegForm', () => {
   fixReactFacebookLoginBug();
 
   let activeStep = 0;
-  let isCompleted = false;
+  const isCompleted = false;
   const onCompletedMock = jest.fn(data => data);
   const onSuccessMock = jest.fn(() => onCompletedMock);
   const onErrorMock = jest.fn(error => error);
 
   const mountWrapper = (mocks = defaultMocks, options = {}) => mountMockedProvider(
     <RegForm
+      userId="id"
       activeStep={activeStep}
       isCompleted={isCompleted}
       onSuccess={onSuccessMock}
@@ -58,7 +59,7 @@ describe('RegForm', () => {
 
   const signUpVariables = { variables: { form: signUpForm } };
   const signUpResult = { signUp: tokens };
-  const signUpCompletionVariables = { variables: { form: signUpCompletionForm } };
+  const signUpCompletionVariables = { variables: { id: 'id', form: signUpCompletionForm } };
   const signUpCompletionResult = { signUpCompletion: tokens };
   const signUpBySocialVariables = {
     variables: {

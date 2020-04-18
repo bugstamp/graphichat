@@ -6,7 +6,7 @@ import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
 import withNotification from '../../common/HOC/withNotification';
 
-import storage, { checkToken } from '../../../storage';
+import storage from '../../../storage';
 
 import { RegWrapper, RegFormWrapper } from './styled';
 
@@ -15,20 +15,13 @@ const Reg = (props) => {
   const { search } = location;
   const [isCompleted, setRegStatus] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
+  const { id } = queryString.parse(search);
 
   React.useEffect(() => {
-    const { token } = queryString.parse(search);
-
-    if (token) {
-      try {
-        checkToken(token, true);
-
-        setActiveStep(1);
-      } catch (e) {
-        history.push('/reg');
-      }
+    if (id) {
+      setActiveStep(1);
     }
-  }, [search, history]);
+  }, [id, history]);
 
   function handleSuccess(dataKey) {
     return (data) => {
@@ -57,6 +50,7 @@ const Reg = (props) => {
       <RegPresentation />
       <RegFormWrapper>
         <RegForm
+          userId={id}
           activeStep={activeStep}
           isCompleted={isCompleted}
           onSuccess={handleSuccess}

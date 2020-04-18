@@ -6,7 +6,8 @@ import { has, delay, isEqual } from 'lodash';
 import DbProvider from '../common/DbProvider';
 
 import {
-  // EMAIL_UNCONFIRMED,
+  EMAIL_UNCONFIRMED,
+  UNCOMPLETED,
   COMPLETED,
 } from '../../db/models/enums';
 import {
@@ -97,9 +98,8 @@ class AuthProvider {
           data: { invalidField: 'username' },
         });
       }
-      const { password: hash, regStatus } = user;
+      const { id, password: hash, regStatus } = user;
       const validPassword = await user.comparePassword(password, hash);
-      const validRegistration = regStatus === COMPLETED;
 
       if (!validPassword) {
         throw new BadInputError({
@@ -107,13 +107,22 @@ class AuthProvider {
           data: { invalidField: 'password' },
         });
       }
-      if (!validRegistration) {
-        throw new AuthenticationError({
-          message: 'Your registration isn\'t completed.You need to confirm your email',
-        });
-      }
 
-      return user;
+      switch (regStatus) {
+        case EMAIL_UNCONFIRMED: {
+          throw new AuthenticationError({
+            message: 'Your registration isn\'t completed. You need to confirm your email. We sent verification request to your email. Check it out!.',
+          });
+        }
+        case UNCOMPLETED: {
+          throw new AuthenticationError({
+            message: 'Your registration isn\'t completed.',
+            data: { userId: id },
+          });
+        }
+        default:
+          return user;
+      }
     } catch (e) {
       throw e;
     }
@@ -153,9 +162,8 @@ class AuthProvider {
     }
   }
 
-  signUpCompletion = async (form) => {
+  signUpCompletion = async (id, form) => {
     try {
-      const { id } = this.user;
       const { birthday } = form;
       const user = await this.db.User.findByIdAndUpdate(id, {
         $set: {

@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  find, filter, upperCase, isEqual,
-} from 'lodash';
+import { upperCase } from 'lodash';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import queryString from 'query-string';
 
 import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
+import grey from '@material-ui/core/colors/grey';
 
 import ContactsHeader from './ContactsHeader';
 import ContactsList from './ContactsList';
@@ -14,132 +16,141 @@ import ContactsFooter from './ContactsFooter';
 import SearchDialog from '../SearchDialog';
 import Navigation from '../../../common/Navigation/Navigation';
 
+import gql from '../../../../gql';
 import { getStyledProps } from '../../../../styles';
-import { contactProps, chatProps } from '../../../propTypes';
 
-const Wrapper = styled(Paper)`
+const {
+  GET_ME,
+  GET_MY_CHATS,
+  SELECT_CHAT,
+  GET_SELECTED_CHAT,
+} = gql;
+
+const ChatsStyled = styled(Paper)`
   && {
+    position: relative;
     height: 100%;
     display: flex;
     flex-flow: column;
     background-color: ${getStyledProps('theme.palette.background.default')};
+    border-left: 1px solid ${grey[200]};
+    border-right: 1px solid ${grey[200]};
   }
 `;
 
-class Contacts extends Component {
-  state = {
-    searchDialog: false,
-    searchValue: '',
-    sortedContacts: [],
-  }
+const Chats = (props) => {
+  const {
+    location,
+    history,
+    toggleSettingsDialog,
+    signOut,
+  } = props;
+  const [searchDialog, setSearchDialog] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const { data: { me = {} } = {} } = useQuery(GET_ME);
+  const { loading, data: { myContacts = [], myChats = [] } = {} } = useQuery(GET_MY_CHATS);
+  const { data: { selectedChat = {} } = {} } = useQuery(GET_SELECTED_CHAT);
+  const [selectChat] = useMutation(SELECT_CHAT, {
+    onCompleted({ selectChat: selectChatResult }) {
+      if (selectChatResult) {
+        const { id } = selectChatResult;
 
-  componentDidUpdate(prevProps, prevState) {
-    const { searchValue } = this.state;
-    const { contacts } = this.props;
+        history.push(`/chats?chatId=${id}`);
+      }
+    },
+  });
+  const { search } = location;
+  const { id } = me;
+  const { id: selectedChatId } = selectedChat;
 
-    if (
-      !isEqual(prevState.searchValue, searchValue)
-      ||
-      !isEqual(prevProps.contacts, contacts)
-    ) {
-      this.sortContacts(contacts, searchValue);
+  const toggleSearchDialog = useCallback(() => {
+    setSearchDialog(!searchDialog);
+  }, [searchDialog]);
+
+  const onChangeSearchValue = useCallback((value) => {
+    setSearchValue(value);
+  }, []);
+
+  const getLastChatMessage = useCallback((chatId) => {
+    if (myChats.length) {
+      const chat = myChats.find(c => c.id === chatId);
+
+      if (chat) {
+        const { messages } = chat;
+
+        return messages[messages.length - 1];
+      }
+      return null;
     }
-  }
+    return null;
+  }, [myChats]);
 
-  toggleSearchDialog = () => {
-    this.setState(({ searchDialog }) => ({ searchDialog: !searchDialog }));
-  }
+  const sortData = useCallback((data) => {
+    if (searchValue) {
+      return data.filter(({ userInfo }) => {
+        const upperName = upperCase(userInfo.displayName);
+        const upperSearchValue = upperCase(searchValue);
 
-  onChangeSearchValue = (searchValue) => {
-    this.setState({ searchValue });
-  }
-
-  sortContacts = (contacts, searchValue) => {
-    const sortedContacts = filter(contacts, ({ userInfo }) => {
-      const upperName = upperCase(userInfo.displayName);
-      const upperSearchValue = upperCase(searchValue);
-
-      return upperName.indexOf(upperSearchValue) !== -1;
-    });
-
-    this.setState({ sortedContacts });
-  }
-
-  getLastChatMessage = (chatId) => {
-    const { chats } = this.props;
-    const chat = find(chats, { id: chatId });
-
-    if (chat) {
-      const { messages } = chat;
-
-      return messages[messages.length - 1];
+        return upperName.indexOf(upperSearchValue) !== -1;
+      });
     }
-    return {};
-  }
+    return data;
+  }, [searchValue]);
 
-  render() {
-    const { searchDialog, searchValue, sortedContacts } = this.state;
-    const {
-      title,
-      loading,
-      myId,
-      selectedChatId,
-      changeRoute,
-      toggleSettingsDialog,
-      signOut,
-    } = this.props;
+  const handleSelectChat = useCallback((chatId) => {
+    selectChat({ variables: { chatId } });
+  }, [selectChat]);
 
-    return (
-      <Wrapper square elevation={0}>
-        <ContactsHeader
-          title={title}
-          searchValue={searchValue}
-          onChangeSearchValue={this.onChangeSearchValue}
-          toggleSearchDialog={this.toggleSearchDialog}
+  useEffect(() => {
+    const { chatId } = queryString.parse(search);
+
+    // Select chat if page load with chatId in the url
+    if ((chatId && myChats.length) && !selectedChatId) {
+      handleSelectChat(chatId);
+    }
+  }, [search, selectedChatId, myChats, handleSelectChat]);
+
+  return (
+    <ChatsStyled square elevation={0}>
+      <ContactsHeader
+        title="Chats"
+        searchValue={searchValue}
+        onChangeSearchValue={onChangeSearchValue}
+        toggleSearchDialog={toggleSearchDialog}
+      />
+      <ContactsList
+        loading={loading}
+        data={sortData(myContacts)}
+        myId={id}
+        searchValue={searchValue}
+        selectedChatId={selectedChatId}
+        selectChat={handleSelectChat}
+        getLastChatMessage={getLastChatMessage}
+      />
+      <Hidden smDown implementation="css">
+        <ContactsFooter toggleSearchDialog={toggleSearchDialog} />
+      </Hidden>
+      <Hidden mdUp implementation="css">
+        <Navigation
+          variant="horizontal"
+          toggleSettingsDialog={toggleSettingsDialog}
+          signOut={signOut}
         />
-        <ContactsList
-          loading={loading}
-          data={sortedContacts}
-          myId={myId}
-          searchValue={searchValue}
-          selectedChatId={selectedChatId}
-          changeRoute={changeRoute}
-          getLastChatMessage={this.getLastChatMessage}
-        />
-        <Hidden smDown implementation="css">
-          <ContactsFooter toggleSearchDialog={this.toggleSearchDialog} />
-        </Hidden>
-        <Hidden mdUp implementation="css">
-          <Navigation
-            variant="horizontal"
-            toggleSettingsDialog={toggleSettingsDialog}
-            signOut={signOut}
-          />
-        </Hidden>
-        <If condition={searchDialog}>
-          <SearchDialog open={searchDialog} toggle={this.toggleSearchDialog} />
-        </If>
-      </Wrapper>
-    );
-  }
-}
-
-Contacts.defaultProps = {
-  myId: null,
-  selectedChatId: null,
-  contacts: [],
-  chats: [],
+      </Hidden>
+      <SearchDialog open={searchDialog} toggle={toggleSearchDialog} />
+    </ChatsStyled>
+  );
 };
-Contacts.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  myId: PropTypes.string,
-  selectedChatId: PropTypes.string,
-  contacts: PropTypes.arrayOf(PropTypes.shape(contactProps)),
-  chats: PropTypes.arrayOf(PropTypes.shape(chatProps)),
-  changeRoute: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
+
+Chats.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   toggleSettingsDialog: PropTypes.func.isRequired,
   signOut: PropTypes.func.isRequired,
 };
 
-export default Contacts;
+export default withRouter(Chats);

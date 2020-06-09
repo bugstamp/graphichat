@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import List from '../../../common/List';
@@ -7,14 +7,18 @@ import NoContacts from './NoContacts';
 
 import { getAvatar, messageDateParsers } from '../../../../helpers';
 
-class ContactsList extends Component {
-  rowRenderer = ({ rowIndex, rowData }) => {
-    const {
-      myId,
-      selectedChatId,
-      changeRoute,
-      getLastChatMessage,
-    } = this.props;
+const ContactList = (props) => {
+  const {
+    loading,
+    data,
+    searchValue,
+    myId,
+    selectedChatId,
+    selectChat,
+    getLastChatMessage,
+  } = props;
+
+  const rowRenderer = useCallback(({ rowIndex, rowData }) => {
     const { chatId, userInfo } = rowData;
     const { displayName, status } = userInfo;
     const avatar = getAvatar(userInfo);
@@ -22,8 +26,8 @@ class ContactsList extends Component {
     const { senderId, content, time } = message;
     const parsedTime = messageDateParsers.messageTime(time);
 
+    const isOnline = status === 'ONLINE';
     const isSelected = selectedChatId === chatId;
-    const online = status === 'ONLINE';
     const isMyMessage = senderId === myId;
     const messageText = isMyMessage
       ? `You: ${content}`
@@ -33,45 +37,45 @@ class ContactsList extends Component {
       <Contact
         key={rowIndex}
         myId={myId}
+        chatId={chatId}
         avatar={avatar}
         displayName={displayName}
         message={messageText}
         time={parsedTime}
-        online={online}
+        online={isOnline}
         isSelected={isSelected}
-        onSelect={() => changeRoute(chatId)}
+        onSelect={selectChat}
       />
     );
-  }
+  }, [myId, selectedChatId, selectChat, getLastChatMessage]);
 
-  render() {
-    const { loading, data, searchValue } = this.props;
+  const noContentComponent = useCallback(
+    () => <NoContacts searchValue={searchValue} />,
+    [searchValue],
+  );
 
-    return (
-      <List
-        loading={loading}
-        data={data}
-        rowRenderer={this.rowRenderer}
-        noContentComponent={() => (<NoContacts searchValue={searchValue} />)}
-        spinnerSize={40}
-        listProps={{ gutters: 2, disablePadding: true }}
-      />
-    );
-  }
-}
+  return (
+    <List
+      loading={loading}
+      data={data}
+      rowRenderer={rowRenderer}
+      noContentComponent={noContentComponent}
+    />
+  );
+};
 
-ContactsList.defaultProps = {
+ContactList.defaultProps = {
   myId: null,
   selectedChatId: null,
 };
-ContactsList.propTypes = {
+ContactList.propTypes = {
   loading: PropTypes.bool.isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   myId: PropTypes.string,
   searchValue: PropTypes.string.isRequired,
   selectedChatId: PropTypes.string,
-  changeRoute: PropTypes.func.isRequired,
+  selectChat: PropTypes.func.isRequired,
   getLastChatMessage: PropTypes.func.isRequired,
 };
 
-export default ContactsList;
+export default ContactList;

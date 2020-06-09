@@ -7,7 +7,7 @@ import {
   userInfoFragment,
 } from './fragments';
 
-const GET_INITIAL_DATA = gql`
+export const GET_INITIAL_DATA = gql`
   query GetInitialData {
     me {
       ...myData
@@ -24,7 +24,7 @@ const GET_INITIAL_DATA = gql`
   ${myFragment}
 `;
 
-const GET_ME = gql`
+export const GET_ME = gql`
   query GetMe {
     me @client {
       ...myData
@@ -33,7 +33,7 @@ const GET_ME = gql`
   ${myFragment}
 `;
 
-const GET_MY_CONTACTS = gql`
+export const GET_MY_CONTACTS = gql`
   query GetMyContacts {
     myContacts @client {
       ...myContactData
@@ -42,7 +42,7 @@ const GET_MY_CONTACTS = gql`
   ${myContactFragment}
 `;
 
-const GET_MY_CHATS = gql`
+export const GET_MY_CHATS = gql`
   query GetMyChats {
     myContacts @client {
       ...myContactData
@@ -55,7 +55,7 @@ const GET_MY_CHATS = gql`
   ${myChatFragment}
 `;
 
-const SEARCH_USERS = gql`
+export const SEARCH_USERS = gql`
   query SearchUsers($searchValue: String!) {
     searchUsers(searchValue: $searchValue) {
       ...myData
@@ -64,7 +64,7 @@ const SEARCH_USERS = gql`
   ${myFragment}
 `;
 
-const USER_ACTIVITY_SUBSCRIPTION = gql`
+export const USER_ACTIVITY_SUBSCRIPTION = gql`
   subscription onUserActivityUpdated {
     userActivityUpdated {
       userId
@@ -74,7 +74,7 @@ const USER_ACTIVITY_SUBSCRIPTION = gql`
   }
 `;
 
-const UPDATE_USER = gql`
+export const UPDATE_USER = gql`
   mutation UpdateUser($field: String!, $value: String!) {
     updateUser(field: $field, value: $value) {
       field
@@ -83,7 +83,7 @@ const UPDATE_USER = gql`
   }
 `;
 
-const UPLOAD_AVATAR = gql`
+export const UPLOAD_AVATAR = gql`
   mutation UploadAvatar($file: Upload!) {
     uploadAvatar(file: $file) {
       sm
@@ -92,7 +92,7 @@ const UPLOAD_AVATAR = gql`
   }
 `;
 
-const USER_UPDATE_SUBSCRIPTION = gql`
+export const USER_UPDATE_SUBSCRIPTION = gql`
   subscription onUserUpdated {
     userUpdated {
       ...userInfoData
@@ -100,15 +100,3 @@ const USER_UPDATE_SUBSCRIPTION = gql`
   }
   ${userInfoFragment}
 `;
-
-export default {
-  GET_INITIAL_DATA,
-  GET_ME,
-  GET_MY_CONTACTS,
-  GET_MY_CHATS,
-  SEARCH_USERS,
-  UPDATE_USER,
-  UPLOAD_AVATAR,
-  USER_ACTIVITY_SUBSCRIPTION,
-  USER_UPDATE_SUBSCRIPTION,
-};

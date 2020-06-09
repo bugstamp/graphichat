@@ -2,6 +2,23 @@ import { gql } from 'apollo-boost';
 
 import { myContactFragment, myChatFragment, messageFragment } from './fragments';
 
+export const GET_SELECTED_CHAT = gql`
+  {
+    selectedChat @client {
+      ...myChatData
+    }
+  }
+  ${myChatFragment}
+`;
+
+export const SELECT_CHAT = gql`
+  mutation SelectChat($chatId: String!) {
+    selectChat(chatId: $chatId) @client {
+      selectedChat @client
+    }
+  }
+`;
+
 export const CREATE_CHAT = gql`
   mutation CreateChat($userId: ID!) {
     createChat(userId: $userId) {
@@ -67,11 +84,3 @@ export const MESSAGE_ADDED_SUBSCRIPTION = gql`
   }
   ${messageFragment}
 `;
-
-export default {
-  CREATE_CHAT,
-  CHAT_CREATED_SUBSCRIPTION,
-  GET_CHAT_MESSAGES,
-  ADD_MESSAGE,
-  MESSAGE_ADDED_SUBSCRIPTION,
-};

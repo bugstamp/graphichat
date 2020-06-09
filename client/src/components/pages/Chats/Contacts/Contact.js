@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { position } from 'polished';
 
 import MaterialListItem from '@material-ui/core/ListItem';
+import Zoom from '@material-ui/core/Zoom';
 // import red from '@material-ui/core/colors/red';
 
 import ListItemAvatar from '../../../common/List/ListItemAvatar';
@@ -15,14 +16,18 @@ const ListItem = styled(({ isSelected, ...rest }) => <MaterialListItem {...rest}
   && {
     padding-right: 60px;
     padding-left: ${getSpacing(1)};
+    margin-bottom: ${getSpacing(1)};
+    background-color: #fff;
+    border-radius: ${getStyledProps('theme.shape.borderRadius')};
+    transition: ${getStyledProps('theme.transitions.easing.easeIn')};
+    box-shadow: ${getStyledProps('theme.shadows.1')};
+
     ${({ isSelected }) => isSelected && `
-      background-color: #fff;
-      border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')};
+      background-color: ${getStyledProps('theme.palette.info.light')};
     `};
 
     &&:hover {
-      background-color: #fff;
-      border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')};
+      background-color: ${getStyledProps('theme.palette.action.hover')};
       cursor: pointer;
     }
   }
@@ -59,6 +64,7 @@ const Time = styled.span`
 // `;
 
 const Contact = ({
+  chatId,
   displayName,
   message,
   avatar,
@@ -70,17 +76,20 @@ const Contact = ({
   const { src, text } = avatar;
 
   return (
-    <ListItem isSelected={isSelected} onClick={onSelect}>
-      <ListItemAvatar src={src} text={text} online={online} />
-      <ListItemInfo primary={displayName} secondary={message} />
-      <SecondaryInfo>
-        <Time>{time}</Time>
-      </SecondaryInfo>
-    </ListItem>
+    <Zoom in>
+      <ListItem isSelected={isSelected} onClick={e => onSelect(chatId, e)}>
+        <ListItemAvatar src={src} text={text} online={online} />
+        <ListItemInfo primary={displayName} secondary={message} />
+        <SecondaryInfo>
+          <Time>{time}</Time>
+        </SecondaryInfo>
+      </ListItem>
+    </Zoom>
   );
 };
 
 Contact.propTypes = {
+  chatId: PropTypes.string.isRequired,
   displayName: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
   avatar: PropTypes.shape({
@@ -93,4 +102,4 @@ Contact.propTypes = {
   onSelect: PropTypes.func.isRequired,
 };
 
-export default Contact;
+export default memo(Contact);

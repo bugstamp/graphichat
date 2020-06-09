@@ -77,7 +77,7 @@ class Chat extends Component {
     } = this.props;
 
     fetchMoreMessages(fetchMoreMessagesUpdate(variables));
-  };
+  }
 
   addMessage = (content) => {
     const {

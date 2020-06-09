@@ -92,7 +92,7 @@ const addMessageUpdate = (client, { chatId, message }) => {
 
 const getMe = createQuery('getMe', GET_ME);
 const getMyChats = createQuery('getMyChats', GET_MY_CHATS, {
-  notifyOnNetworkStatusChange: true,
+  // notifyOnNetworkStatusChange: true,
 });
 const addMessage = createMutation('addMessage', ADD_MESSAGE, {
   update(client, { data }) {

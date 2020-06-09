@@ -14,7 +14,8 @@ const Wrapper = styled.div`
   align-items: stretch;
   color: ${getStyledProps('theme.palette.grey.600')};
   background-color: #fff;
-  border-radius: ${getStyledProps('theme.shape.borderRadius', 'px')}
+  border-radius: ${getStyledProps('theme.shape.borderRadius')};
+  box-shadow: ${getStyledProps('theme.shadows.1')};
 `;
 
 const IconWrapper = styled.div`

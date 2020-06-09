@@ -36,12 +36,7 @@ class ChatMessages extends Component {
     }
   }
 
-  rowRenderer = ({
-    ref,
-    index,
-    rowIndex,
-    rowData,
-  }) => {
+  rowRenderer = (props) => {
     const {
       messages,
       optimisticIds,
@@ -49,6 +44,12 @@ class ChatMessages extends Component {
       myAvatar,
       contactAvatar,
     } = this.props;
+    const {
+      ref,
+      index,
+      rowIndex,
+      rowData,
+    } = props;
     const {
       id,
       senderId,

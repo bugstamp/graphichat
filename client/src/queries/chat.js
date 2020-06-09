@@ -26,6 +26,11 @@ const chatCreatedSubscription = createSubscription('chatCreatedSubscription', CH
   },
 });
 
+const getMyChats = createQuery('getMyChats', GET_MY_CHATS, {
+  notifyOnNetworkStatusChange: true,
+});
+
 export {
+  getMyChats,
   chatCreatedSubscription,
 };

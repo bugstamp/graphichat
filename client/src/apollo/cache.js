@@ -1,9 +1,14 @@
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  freezeResults: true,
+});
 
 export const initialState = {
   sessionExpired: false,
+  selectedChat: {
+    __typename: 'Chat',
+  },
   me: {
     __typename: 'User',
   },

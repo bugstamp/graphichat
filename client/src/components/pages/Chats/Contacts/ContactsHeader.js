@@ -15,13 +15,13 @@ import { getSpacing } from '../../../../styles';
 const ContactsHeaderStyled = styled.div`
   display: flex;
   flex-flow: column;
-  padding: ${getSpacing(2)};
+  padding: ${getSpacing(2)} ${getSpacing(1)};
 `;
 
 const AddButton = styled(IconButton)`
   && {
     ${position('absolute', 0, 0, null, null)};
-    padding: 4px;
+    padding: ${getSpacing(0.5)};
   }
 `;
 
@@ -30,29 +30,30 @@ const ContactsHeaderTitle = styled.div`
   margin-bottom: ${getSpacing(1)};
 `;
 
-const ContactsHeader = ({
-  title,
-  searchValue,
-  onChangeSearchValue,
-  toggleSearchDialog,
-}) => (
-  <ContactsHeaderStyled>
-    <ContactsHeaderTitle>
-      <Typography variant="h6" align="center" color="textPrimary">
-        {title}
-      </Typography>
-      <Hidden mdUp implementation="css">
-        <AddButton
-          onClick={toggleSearchDialog}
-          color="primary"
-        >
-          <AddIcon />
-        </AddButton>
-      </Hidden>
-    </ContactsHeaderTitle>
-    <SearchBox value={searchValue} onChange={onChangeSearchValue} />
-  </ContactsHeaderStyled>
-);
+const ContactsHeader = (props) => {
+  const {
+    title,
+    searchValue,
+    onChangeSearchValue,
+    toggleSearchDialog,
+  } = props;
+
+  return (
+    <ContactsHeaderStyled>
+      <ContactsHeaderTitle>
+        <Typography variant="h6" align="center" color="textPrimary">
+          {title}
+        </Typography>
+        <Hidden mdUp implementation="css">
+          <AddButton onClick={toggleSearchDialog} color="primary">
+            <AddIcon />
+          </AddButton>
+        </Hidden>
+      </ContactsHeaderTitle>
+      <SearchBox value={searchValue} onChange={onChangeSearchValue} />
+    </ContactsHeaderStyled>
+  );
+};
 
 ContactsHeader.propTypes = {
   title: PropTypes.string.isRequired,

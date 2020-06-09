@@ -1,6 +1,6 @@
-import auth from './auth';
-import user from './user';
-import chat from './chat';
+import * as auth from './auth';
+import * as user from './user';
+import * as chat from './chat';
 
 export default {
   ...auth,

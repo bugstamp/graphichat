@@ -4,6 +4,8 @@ import reset from 'styled-reset';
 import { size } from 'polished';
 import { get } from 'lodash';
 
+import grey from '@material-ui/core/colors/grey';
+
 export const getStyledProps = (path, unit = '') => (props = {}) => {
   const value = get(props, path, null);
 
@@ -20,7 +22,13 @@ export const getSpacing = (num = 1, unit = 'px') => (props) => {
   return `${padding}${unit}`;
 };
 
-export const theme = createMuiTheme({});
+export const theme = createMuiTheme({
+  palette: {
+    background: {
+      default: grey[50],
+    },
+  },
+});
 
 export const GlobalStyle = createGlobalStyle`
   ${reset}

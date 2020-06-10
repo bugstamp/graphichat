@@ -21,23 +21,11 @@ import Chat from './Chat';
 import { NoContentWrapper } from '../../common/List';
 import FullWidthSwipeableDrawer from '../../common/FullWidthSwipeableDrawer';
 
-import { getStyledProps, getSpacing } from '../../../styles';
-
 const Wrapper = styled.div`
   && {
     ${size('100%')};
     display: flex;
     align-items: stretch;
-  }
-`;
-
-const InfoPanel = styled.div`
-  && {
-    height: 100%;
-    display: flex;
-    flex-flow: column;
-    padding: ${getSpacing(2)};
-    background-color: ${getStyledProps('theme.palette.background.default')};
   }
 `;
 
@@ -148,21 +136,14 @@ class Chats extends Component {
           return (
             <Wrapper>
               <Grid container spacing={0}>
-                <Grid item xs={12} sm={12} md={5} lg={3}>
+                <Grid item xs={12} sm={12} md={4}>
                   <Contacts
-                    title="Chats"
-                    loading={initialLoading}
-                    myId={me.id}
-                    contacts={myContacts}
-                    chats={myChats}
-                    selectedChatId={selectedChatId}
-                    changeRoute={this.changeRoute}
                     toggleSettingsDialog={toggleSettingsDialog}
                     signOut={signOut}
                   />
                 </Grid>
                 <Hidden smDown>
-                  <Grid item md={7} lg={6}>
+                  <Grid item md={8}>
                     <Choose>
                       <When condition={contactsListIsEmpty}>
                         {null}
@@ -178,11 +159,6 @@ class Chats extends Component {
                         {renderChat()}
                       </Otherwise>
                     </Choose>
-                  </Grid>
-                </Hidden>
-                <Hidden mdDown>
-                  <Grid item lg={3}>
-                    <InfoPanel>{null}</InfoPanel>
                   </Grid>
                 </Hidden>
               </Grid>

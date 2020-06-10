@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
-import { getStyledProps } from '../../../styles';
+import { getStyledProps, getSpacing } from '../../../styles';
 
 const AppGrid = styled(Grid)`
   background-color: ${getStyledProps('theme.palette.grey.300')};
@@ -16,13 +16,15 @@ const AppContainer = styled(Paper)`
     overflow: hidden;
 
   ${(props) => {
+    const maxWidth = getStyledProps('theme.breakpoints.values.lg')(props);
     const breakpoints = getStyledProps('theme.breakpoints')(props);
     const lgUp = breakpoints.up('lg');
     const mdDown = breakpoints.down('md');
 
     return `
       ${lgUp} {
-        margin: 20px 40px;
+        max-width: ${maxWidth}px;
+        margin: ${getSpacing(4)(props)} 0;
       }
       ${mdDown} {
         border-radius: 0;

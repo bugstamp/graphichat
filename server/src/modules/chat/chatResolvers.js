@@ -10,7 +10,10 @@ export default {
   Query: {
     chats: (_, args, { injector }) => injector.get(ChatProvider).getChats(),
     myChats: (_, args, { injector }) => injector.get(ChatProvider).getMyChats(),
-    chatMessages: (_, { chatId, skip }, { injector }) => injector.get(ChatProvider).getChatMessages(chatId, skip),
+    chatMessages: (_, { chatId, skip }, { injector }) => injector
+      .get(ChatProvider).getChatMessages(chatId, skip),
+    chatMessagesAll: (_, { chatId }, { injector }) => injector
+      .get(ChatProvider).getChatMessagesAll(chatId),
   },
   Mutation: {
     createChat: (_, { userId }, { injector }) => injector.get(ChatProvider).createChat(userId),

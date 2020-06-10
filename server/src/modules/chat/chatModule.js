@@ -55,6 +55,7 @@ const ChatModule = new GraphQLModule({
       chats: [Chat!]!
       myChats: [Chat!]!
       chatMessages(chatId: String!, skip: Int!): [ChatMessage!]!
+      chatMessagesAll(chatId: String!): [ChatMessage!]!
     }
 
     type Mutation {

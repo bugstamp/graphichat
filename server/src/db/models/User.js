@@ -11,6 +11,7 @@ import {
   ONLINE,
   OFFLINE,
 } from './enums';
+import { getUserDisplayName } from '../../utils/helpers';
 
 const tokensConfig = {
   token: {
@@ -126,7 +127,9 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function preSave(next) {
   if (this.isNew) {
-    await this.updateOne({ createDate: new Date() });
+    const displayName = getUserDisplayName(this);
+
+    this.displayName = displayName;
   }
   if (!this.isModified('password')) {
     next();

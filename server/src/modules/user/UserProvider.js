@@ -6,7 +6,7 @@ import { map, isEmpty, filter } from 'lodash';
 import DbProvider from '../common/DbProvider';
 import AuthProvider from '../auth/AuthProvider';
 
-import { getUserDisplayName, fileToBuffer } from '../../utils/helpers';
+import { fileToBuffer } from '../../utils/helpers';
 import { USER_UPDATED } from '../subscriptions';
 
 @Injectable({
@@ -83,8 +83,7 @@ class UserProvider {
 
   createUser = async (form) => {
     try {
-      const displayName = getUserDisplayName(form);
-      const newUser = await this.db.User.create({ ...form, displayName });
+      const newUser = await this.db.User.create(form);
 
       return newUser;
     } catch (e) {

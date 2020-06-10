@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Tabs from './Tabs';
 import Logo from '../Logo';
 
-import { NavigationWrapper, LogoWrapper } from './styled';
+import { NavigationStyled, LogoWrapper } from './styled';
 
 const Navigation = ({
   itemSize,
@@ -16,8 +16,8 @@ const Navigation = ({
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <NavigationWrapper variant={variant}>
-      <LogoWrapper variant={variant} itemSize={itemSize}>
+    <NavigationStyled position="static" variant={variant} itemSize={itemSize}>
+      <LogoWrapper>
         <Logo size={logoSize} />
       </LogoWrapper>
       <Tabs
@@ -28,13 +28,13 @@ const Navigation = ({
         toggleSettingsDialog={toggleSettingsDialog}
         signOut={signOut}
       />
-    </NavigationWrapper>
+    </NavigationStyled>
   );
 };
 
 Navigation.defaultProps = {
-  itemSize: 60,
-  logoSize: 35,
+  itemSize: 56,
+  logoSize: 40,
   variant: 'vertical',
 };
 Navigation.propTypes = {

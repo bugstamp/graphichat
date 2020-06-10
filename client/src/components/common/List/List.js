@@ -56,7 +56,7 @@ const Scrollable = styled.div`
 `;
 
 const FetchMore = styled.div`
-  order: ${({ startFrom }) => (startFrom === 'bottom' ? 1 : 0)};
+  order: ${({ startFrom }) => (startFrom === 'bottom' ? 0 : 1)};
   height: 30px;
   display: flex;
   justify-content: center;
@@ -226,24 +226,17 @@ class List extends Component {
             </When>
             <Otherwise>
               <Scrollable ref={this.listScrollable}>
-                <Fragment>
-                  <If condition={lazyLoad && startFrom === 'bottom'}>
-                    <FetchMore visible={loading} startFrom={startFrom}>
-                      <CircularProgress size={spinnerSize} color="primary" />
-                    </FetchMore>
-                  </If>
-                  <ListItems
-                    loading={loading}
-                    data={data}
-                    rowRenderer={this._onRowRenderer}
-                    {...listProps}
-                  />
-                  <If condition={lazyLoad && startFrom === 'top'}>
-                    <FetchMore visible={loading}>
-                      <CircularProgress size={spinnerSize} color="primary" />
-                    </FetchMore>
-                  </If>
-                </Fragment>
+                <If condition={loading}>
+                  <FetchMore visible={loading} startFrom={startFrom}>
+                    <CircularProgress size={spinnerSize} color="primary" />
+                  </FetchMore>
+                </If>
+                <ListItems
+                  loading={loading}
+                  data={data}
+                  rowRenderer={this._onRowRenderer}
+                  {...listProps}
+                />
               </Scrollable>
             </Otherwise>
           </Choose>

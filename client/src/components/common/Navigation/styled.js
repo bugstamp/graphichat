@@ -1,43 +1,44 @@
 import React from 'react';
 import styled from 'styled-components';
-import { size } from 'polished';
+// import { size } from 'polished';
 
 import Tab from '@material-ui/core/Tab';
 
-import { getStyledProps } from '../../../styles';
+import { getStyledProps, getSpacing } from '../../../styles';
 
-export const NavigationWrapper = styled.div`
+export const LogoWrapper = styled.div`
   display: flex;
-  background-color: #fff;
+  justify-content: center;
+  align-items: center;
+`;
 
-  ${({ itemSize, variant }) => {
+export const NavigationStyled = styled.aside`
+  display: flex;
+  background-color: ${getStyledProps('theme.palette.primary.main')};
+
+  ${(props) => {
+    const { itemSize, variant } = props;
+
     if (variant === 'vertical') {
       return `
         width: ${itemSize}px;
         height: 100%;
         flex-flow: column;
+
+        ${LogoWrapper} {
+          margin-top: ${getSpacing(2)(props)};
+          margin-bottom: ${getSpacing(4)(props)};
+        }
       `;
     }
     return `
       width: 100%;
       height: ${itemSize}px;
+
+      ${LogoWrapper} {
+        margin: 0 ${getSpacing(2)(props)};
+      }
     `;
-  }}
-`;
-
-export const LogoWrapper = styled.div`
-  ${({ itemSize }) => size(`${itemSize}px`)};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  ${({ itemSize, variant }) => {
-    if (variant === 'vertical') {
-      return `
-        margin-bottom: ${itemSize}px;
-      `;
-    }
-    return '';
   }}
 `;
 
@@ -45,10 +46,14 @@ export const TabsWrapper = styled.div`
   flex: 1 auto;
   display: flex;
   position: relative;
-  ${({ variant }) => {
+
+  ${(props) => {
+    const { variant } = props;
+
     if (variant === 'vertical') {
       return `
         flex-flow: column;
+        margin: ${getSpacing(1)(props)} 0;
 
         button:first-of-type {
           margin-top: auto;
@@ -74,6 +79,7 @@ export const TabItem = styled(({
   && {
     min-width: inherit;
     border-radius: 50%;
+    opacity: 1;
 
   ${({ variant, itemSize }) => {
     if (variant === 'vertical') {
@@ -91,7 +97,7 @@ export const TabItem = styled(({
 export const TabItemIndicator = styled.span`
   display: block;
   position: absolute;
-  background-color: ${getStyledProps('theme.palette.primary.main')};
+  background-color: ${getStyledProps('theme.palette.primary.contrastText')};
   transition: .25s ease;
 
   ${({ variant, itemSize, activeTab }) => {
@@ -102,7 +108,7 @@ export const TabItemIndicator = styled.span`
         width: 2px;
         height: ${itemSize}px;
         top: ${offset};
-        right: 0;
+        left: 0;
       `;
     }
     return `

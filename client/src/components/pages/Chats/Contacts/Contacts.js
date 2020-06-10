@@ -47,6 +47,7 @@ const Chats = (props) => {
   } = props;
   const [searchDialog, setSearchDialog] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+
   const { data: { me = {} } = {} } = useQuery(GET_ME);
   const { loading, data: { myContacts = [], myChats = [] } = {} } = useQuery(GET_MY_CHATS);
   const { data: { selectedChat = {} } = {} } = useQuery(GET_SELECTED_CHAT);
@@ -59,6 +60,7 @@ const Chats = (props) => {
       }
     },
   });
+
   const { search } = location;
   const { id } = me;
   const { id: selectedChatId } = selectedChat;

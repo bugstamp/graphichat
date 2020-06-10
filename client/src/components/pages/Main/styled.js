@@ -6,9 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { getStyledProps } from '../../../styles';
 
 const AppGrid = styled(Grid)`
-  && {
-    background-color: ${getStyledProps('theme.palette.primary.light')};
-  }
+  background-color: ${getStyledProps('theme.palette.grey.300')};
 `;
 
 const AppContainer = styled(Paper)`

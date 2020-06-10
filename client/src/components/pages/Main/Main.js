@@ -22,17 +22,21 @@ const Main = (props) => {
     sessionExpired,
   } = props;
   const [settingsDialog, toggleSettingsDialog] = useState(false);
-  const handleToggleSettingsDialog = () => {
+
+  const handleToggleSettingsDialog = useCallback(() => {
     toggleSettingsDialog(!settingsDialog);
-  };
+  }, [settingsDialog]);
+
   const handleSignOut = useCallback(() => {
     signOut({ variables: { userId } });
   }, [userId, signOut]);
+
   useEffect(() => {
     if (sessionExpired) {
       handleSignOut();
     }
   }, [sessionExpired, handleSignOut]);
+
   const childrenCloneProps = {
     initialLoading: loading,
     toggleSettingsDialog: handleToggleSettingsDialog,
@@ -44,7 +48,7 @@ const Main = (props) => {
 
   return (
     <AppGrid container spacing={0} justify="center">
-      <AppContainer>
+      <AppContainer elevation={5}>
         <Grid container spacing={0}>
           <Hidden smDown>
             <Grid item>

@@ -1,19 +1,21 @@
-import PersonIcon from '@material-ui/icons/PersonRounded';
+import ChatIcon from '@material-ui/icons/ChatRounded';
 // import GroupIcon from '@material-ui/icons/GroupRounded';
 import SettingsIcon from '@material-ui/icons/SettingsRounded';
 import LogoutIcon from '@material-ui/icons/ExitToAppRounded';
+
 import red from '@material-ui/core/colors/red';
 
-const logoutIconColor = red[900];
+const logoutIconColor = red[300];
+
 const tabs = [
   {
     name: 'chats',
-    Icon: PersonIcon,
+    Icon: ChatIcon,
+    htmlColor: '#fff',
     to: 'chats',
     attrs: {
-      'aria-label': 'Link to Chats Page',
+      'aria-label': 'Chats Page',
     },
-    // ariaFlowTo: 'chats',
   },
   // {
   //   name: 'group',
@@ -23,8 +25,9 @@ const tabs = [
   {
     name: 'settings',
     Icon: SettingsIcon,
+    htmlColor: '#fff',
     attrs: {
-      'aria-label': 'Open Settings Dialog',
+      'aria-label': 'Settings Dialog',
     },
   },
   {

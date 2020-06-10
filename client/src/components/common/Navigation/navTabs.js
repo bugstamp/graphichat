@@ -21,6 +21,7 @@ const tabs = [
   //   name: 'group',
   //   Icon: GroupIcon,
   //   to: 'group',
+  //   htmlColor: '#fff',
   // },
   {
     name: 'settings',

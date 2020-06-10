@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { map } from 'lodash';
@@ -10,17 +10,13 @@ import tabs from './navTabs';
 
 const Tabs = ({
   variant,
-  itemSize,
   activeTab,
   setActiveTab,
   toggleSettingsDialog,
   signOut,
 }) => {
-  const defineOnClick = (tabName, tabIndex) => {
+  const handleOnClick = useCallback((tabName, tabIndex) => {
     switch (tabName) {
-      case 'chats': {
-        return () => setActiveTab(tabIndex);
-      }
       case 'settings': {
         return toggleSettingsDialog;
       }
@@ -28,13 +24,13 @@ const Tabs = ({
         return signOut;
       }
       default: {
-        return null;
+        return () => setActiveTab(tabIndex);
       }
     }
-  };
+  }, [toggleSettingsDialog, setActiveTab, signOut]);
 
   return (
-    <TabsWrapper variant={variant} role="tablist">
+    <TabsWrapper variant={variant} activeTab={activeTab} role="tablist">
       {map(tabs, (
         {
           name,
@@ -49,7 +45,7 @@ const Tabs = ({
         const activeColor = (activeTab === index) ? 'primary' : 'action';
         const color = !htmlColor ? activeColor : 'inherit';
         const component = isLink ? Link : Button;
-        const onClick = defineOnClick(name, index);
+        const onClick = handleOnClick(name, index);
 
         return (
           <TabItem
@@ -58,27 +54,17 @@ const Tabs = ({
             component={component}
             icon={(<Icon color={color} htmlColor={htmlColor} />)}
             onClick={onClick}
-            itemSize={itemSize}
-            variant={variant}
             attrs={attrs}
           />
         );
       })}
-      <TabItemIndicator
-        variant={variant}
-        itemSize={itemSize}
-        activeTab={activeTab}
-      />
+      <TabItemIndicator />
     </TabsWrapper>
   );
 };
 
-Tabs.defaultProps = {
-  itemSize: 60,
-};
 Tabs.propTypes = {
   variant: PropTypes.oneOf(['vertical', 'horizontal']).isRequired,
-  itemSize: PropTypes.number,
   activeTab: PropTypes.number.isRequired,
   setActiveTab: PropTypes.func.isRequired,
   toggleSettingsDialog: PropTypes.func.isRequired,

@@ -13,17 +13,30 @@ export const LogoWrapper = styled.div`
 `;
 
 export const NavigationStyled = styled.aside`
+  --nav-size: 60px;
   display: flex;
   background-color: ${getStyledProps('theme.palette.primary.main')};
 
   ${(props) => {
-    const { itemSize, variant } = props;
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const mdDown = breakpoints.down('md');
+
+    return `
+      ${mdDown} {
+        --nav-size: 52px;
+      }
+    `;
+  }}
+
+  ${(props) => {
+    const { variant } = props;
 
     if (variant === 'vertical') {
       return `
-        width: ${itemSize}px;
+        width: var(--nav-size);
         height: 100%;
         flex-flow: column;
+
 
         ${LogoWrapper} {
           margin-top: ${getSpacing(2)(props)};
@@ -33,7 +46,7 @@ export const NavigationStyled = styled.aside`
     }
     return `
       width: 100%;
-      height: ${itemSize}px;
+      height: var(--nav-size);
 
       ${LogoWrapper} {
         margin: 0 ${getSpacing(2)(props)};
@@ -42,13 +55,31 @@ export const NavigationStyled = styled.aside`
   }}
 `;
 
+export const TabItem = styled(({
+  attrs,
+  ...rest
+}) => (<Tab {...rest} />)).attrs(({ attrs = {} }) => (attrs))`
+  && {
+    min-width: inherit;
+    border-radius: 50%;
+    opacity: 1;
+  }
+`;
+
+export const TabItemIndicator = styled.span`
+  display: block;
+  position: absolute;
+  background-color: ${getStyledProps('theme.palette.primary.contrastText')};
+  transition: .25s ease;
+`;
+
 export const TabsWrapper = styled.div`
   flex: 1 auto;
   display: flex;
   position: relative;
 
   ${(props) => {
-    const { variant } = props;
+    const { variant, activeTab } = props;
 
     if (variant === 'vertical') {
       return `
@@ -58,6 +89,17 @@ export const TabsWrapper = styled.div`
         button:first-of-type {
           margin-top: auto;
         }
+
+        ${TabItem} {
+          height: var(--nav-size);
+        }
+
+        ${TabItemIndicator} {
+          width: 2px;
+          height: var(--nav-size);
+          top: calc(${activeTab} * var(--nav-size));
+          left: 0;
+        }
       `;
     }
     return `
@@ -66,56 +108,17 @@ export const TabsWrapper = styled.div`
       button:first-of-type {
         margin-left: auto;
       }
-    `;
-  }};
-`;
 
-export const TabItem = styled(({
-  variant,
-  itemSize,
-  attrs,
-  ...rest
-}) => (<Tab {...rest} />)).attrs(({ attrs = {} }) => (attrs))`
-  && {
-    min-width: inherit;
-    border-radius: 50%;
-    opacity: 1;
+      ${TabItem} {
+        width: var(--nav-size);
+      }
 
-  ${({ variant, itemSize }) => {
-    if (variant === 'vertical') {
-      return `
-        height: ${itemSize}px;
-      `;
-    }
-    return `
-      width: ${itemSize}px;
-    `;
-  }};
-  }
-`;
-
-export const TabItemIndicator = styled.span`
-  display: block;
-  position: absolute;
-  background-color: ${getStyledProps('theme.palette.primary.contrastText')};
-  transition: .25s ease;
-
-  ${({ variant, itemSize, activeTab }) => {
-    const offset = `${activeTab * itemSize}px`;
-
-    if (variant === 'vertical') {
-      return `
-        width: 2px;
-        height: ${itemSize}px;
-        top: ${offset};
-        left: 0;
-      `;
-    }
-    return `
-      width: ${itemSize}px;
-      height: 2px;
-      bottom: 0;
-      left: ${offset};
+      ${TabItemIndicator} {
+        width: var(--nav-size);
+        height: 2px;
+        bottom: 0;
+        left: calc(${activeTab} * var(--nav-size));
+      }
     `;
   }};
 `;

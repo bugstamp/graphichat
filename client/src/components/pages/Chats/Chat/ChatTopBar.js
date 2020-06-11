@@ -39,9 +39,10 @@ const UserStatus = styled.span`
 
 const ChatTopBar = ({
   name,
-  isOnline,
+  status,
   lastDate,
 }) => {
+  const isOnline = status === 'ONLINE';
   const statusText = (isOnline && lastDate)
     ? 'online'
     : messageDateParsers.userLastDate(lastDate);
@@ -69,7 +70,7 @@ ChatTopBar.defaultProps = {
 };
 ChatTopBar.propTypes = {
   name: PropTypes.string.isRequired,
-  isOnline: PropTypes.bool.isRequired,
+  status: PropTypes.string.isRequired,
   lastDate: PropTypes.string,
 };
 

@@ -1,17 +1,29 @@
-import React, { Component } from 'react';
+import React, { useEffect, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { isEqual } from 'lodash';
+import { withRouter } from 'react-router-dom';
+import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
+import queryString from 'query-string';
 import uuid from 'uuid/v4';
+import styled from 'styled-components';
+import { isEqual, isEmpty } from 'lodash';
 
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import ChatTopBar from './ChatTopBar';
 import ChatMessages from './ChatMessages';
 import ChatMessageInput from './ChatMessageInput';
+import useAvatar from '../../../hooks/useAvatar';
 
-import { getAvatar } from '../../../../helpers';
-import { meProps, userInfoProps, chatProps } from '../../../propTypes';
+import gql from '../../../../gql';
+
+const {
+  MESSAGE_ADDED_SUBSCRIPTION,
+  GET_ME,
+  GET_CHAT,
+  GET_CHAT_MESSAGES,
+  ADD_MESSAGE,
+} = gql;
 
 const Wrapper = styled(Paper)`
   && {
@@ -23,147 +35,158 @@ const Wrapper = styled(Paper)`
   }
 `;
 
-class Chat extends Component {
-  fetchSize = 20;
+const Chat = (props) => {
+  const {
+    location,
+    history,
+  } = props;
+  console.count('chat render');
+  const { search } = location;
+  const { chatId: selectedChatId } = queryString.parse(search);
+  // const addMessage = (content) => {
+  //   const {
+  //     me: { id: myId },
+  //     chat: { id: chatId },
+  //     updateOptimisticIds,
+  //     addMessage,
+  //     getOptimisticMessage,
+  //   } = props;
+  //   const time = new Date();
+  //   const optimisticId = uuid();
+  //
+  //   const variables = {
+  //     chatId,
+  //     content,
+  //     time,
+  //     optimisticId,
+  //   };
+  //   const optimisticResponse = getOptimisticMessage({
+  //     chatId,
+  //     optimisticId,
+  //     myId,
+  //     content,
+  //     time,
+  //   });
+  //
+  //   addMessage({ variables, optimisticResponse });
+  //   updateOptimisticIds(optimisticId);
+  // };
+  useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
+    onSubscriptionData({ client, subscriptionData: { data: { messageAdded } } }) {
+      console.log(messageAdded);
+    },
+  });
+  const { data: { me = {} } = {} } = useQuery(GET_ME);
+  const {
+    loading,
+    data = { chat: {}, contact: {} },
+    refetch,
+    fetchMore,
+  } = useQuery(GET_CHAT, {
+    variables: { chatId: selectedChatId },
+    skip: !selectedChatId || isEmpty(me),
+    fetchPolicy: 'cache-first',
+    // notifyOnNetworkStatusChange: true,
+  });
+  // const [addMessage, { loading: adding }] = useMutation(ADD_MESSAGE);
+  const { chat, contact } = data;
+  const { id: myId } = me;
+  const { id: chatId, messages } = chat;
+  const { userInfo = {} } = contact;
+  const {
+    displayName,
+    status,
+    lastDate,
+  } = userInfo;
+  const myAvatar = useAvatar(me);
+  const contactAvatar = useAvatar(userInfo);
 
-  state = {
-    myAvatar: {},
-    contactAvatar: {},
-  }
-
-  componentDidMount() {
-    this.getMessages(false);
-    this.updateAvatars();
-  }
-
-  componentDidUpdate(prevProps) {
-    const { chat: { id: chatId } } = this.props;
-
-    if (!isEqual(prevProps.chat.id, chatId)) {
-      this.getMessages(false);
-      this.updateAvatars();
-    }
-  }
-
-  updateAvatars = () => {
-    const { me, userInfo } = this.props;
-    const myAvatar = getAvatar(me);
-    const contactAvatar = getAvatar(userInfo);
-
-    this.setState({
-      myAvatar,
-      contactAvatar,
+  const fetchMoreMessages = useCallback(() => {
+    fetchMore({
+      query: GET_CHAT_MESSAGES,
+      variables: { chatId: selectedChatId, skip: messages.length },
+      updateQuery(prev, { fetchMoreResult: { chatMessages } }) {
+        return {
+          ...prev,
+          chat: {
+            ...prev.chat,
+            messages: [...prev.chat.messages, ...chatMessages],
+          },
+        };
+      },
     });
+  }, [selectedChatId, messages, fetchMore]);
+
+  let unselectedText = '';
+
+  if (!selectedChatId) {
+    unselectedText = 'Please select a chat to start messaging';
+  } else if (isEmpty(chat)) {
+    unselectedText = 'Selected chat is undefined';
   }
 
-  getMessages = (fetchMore = true) => {
-    const { chat } = this.props;
-    const { id: chatId, messages } = chat;
-    const skip = messages.length;
+  useEffect(() => {
+    refetch();
+  }, [selectedChatId, refetch]);
 
-    if (!fetchMore) {
-      if (skip < this.fetchSize) {
-        this.fetchMoreMessages({ chatId, skip });
-      }
-    } else {
-      this.fetchMoreMessages({ chatId, skip });
+  useEffect(() => {
+    const fetchMoreSize = 20;
+
+    if (chatId && (messages.length < fetchMoreSize)) {
+      fetchMoreMessages();
     }
-  }
+  }, [chatId, selectedChatId, messages, fetchMoreMessages]);
 
-  fetchMoreMessages = (variables) => {
-    const {
-      fetchMoreMessages,
-      fetchMoreMessagesUpdate,
-    } = this.props;
-
-    fetchMoreMessages(fetchMoreMessagesUpdate(variables));
-  }
-
-  addMessage = (content) => {
-    const {
-      me: { id: myId },
-      chat: { id: chatId },
-      updateOptimisticIds,
-      addMessage,
-      getOptimisticMessage,
-    } = this.props;
-    const time = new Date();
-    const optimisticId = uuid();
-
-    const variables = {
-      chatId,
-      content,
-      time,
-      optimisticId,
-    };
-    const optimisticResponse = getOptimisticMessage({
-      chatId,
-      optimisticId,
-      myId,
-      content,
-      time,
-    });
-
-    addMessage({ variables, optimisticResponse });
-    updateOptimisticIds(optimisticId);
-  }
-
-  render() {
-    const { myAvatar, contactAvatar } = this.state;
-    const {
-      loading,
-      adding,
-      me,
-      userInfo,
-      chat,
-      optimisticIds,
-    } = this.props;
-    const { displayName, status, lastDate } = userInfo;
-    const { id: chatId, messages } = chat;
-    const { id: myId } = me;
-    const isOnline = status === 'ONLINE';
-
-    return (
-      <Wrapper square elevation={0}>
-        <ChatTopBar
-          name={displayName}
-          isOnline={isOnline}
-          lastDate={lastDate}
-        />
-        <ChatMessages
-          chatId={chatId}
-          loading={loading}
-          adding={adding}
-          myId={myId}
-          messages={messages}
-          optimisticIds={optimisticIds}
-          getMessages={this.getMessages}
-          myAvatar={myAvatar}
-          contactAvatar={contactAvatar}
-        />
-        <ChatMessageInput
-          myAvatar={myAvatar}
-          contactAvatar={contactAvatar}
-          submit={this.addMessage}
-        />
-      </Wrapper>
-    );
-  }
-}
+  return (
+    <Wrapper square elevation={0}>
+      <Choose>
+        <When condition={isEmpty(me)}>
+          {null}
+        </When>
+        <When condition={unselectedText}>
+          <Typography variant="subtitle2">
+            <p>{unselectedText}</p>
+          </Typography>
+        </When>
+        <Otherwise>
+          <ChatTopBar
+            name={displayName}
+            status={status}
+            lastDate={lastDate}
+          />
+          <ChatMessages
+            chatId={selectedChatId}
+            loading={loading}
+            adding={adding}
+            myId={myId}
+            messages={messages}
+            // optimisticIds={optimisticIds}
+            getMessages={fetchMoreMessages}
+            myAvatar={myAvatar}
+            contactAvatar={contactAvatar}
+          />
+          <ChatMessageInput
+            chatId={chatId}
+            myAvatar={myAvatar}
+            contactAvatar={contactAvatar}
+            // submit={addMessage}
+          />
+        </Otherwise>
+      </Choose>
+    </Wrapper>
+  );
+};
 
 
 Chat.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  adding: PropTypes.bool.isRequired,
-  me: PropTypes.shape(meProps).isRequired,
-  userInfo: PropTypes.shape(userInfoProps).isRequired,
-  chat: PropTypes.shape(chatProps).isRequired,
-  optimisticIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  updateOptimisticIds: PropTypes.func.isRequired,
-  addMessage: PropTypes.func.isRequired,
-  getOptimisticMessage: PropTypes.func.isRequired,
-  fetchMoreMessages: PropTypes.func.isRequired,
-  fetchMoreMessagesUpdate: PropTypes.func.isRequired,
+  // loading: PropTypes.bool.isRequired,
+  // adding: PropTypes.bool.isRequired,
+  // userInfo: PropTypes.shape(userInfoProps).isRequired,
+  // chat: PropTypes.shape(chatProps).isRequired,
+  // optimisticIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  // updateOptimisticIds: PropTypes.func.isRequired,
+  // addMessage: PropTypes.func.isRequired,
+  // getOptimisticMessage: PropTypes.func.isRequired,
 };
 
-export default Chat;
+export default withRouter(memo(Chat));

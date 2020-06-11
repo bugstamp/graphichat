@@ -1,20 +1,23 @@
+import { find } from 'lodash';
+
 import gql from '../gql';
 
 const { GET_MY_CHATS } = gql;
 
 const resolvers = {
-  Mutation: {
-    selectChat: (_root, variables, { cache }) => {
+  Query: {
+    contact(__root, variables, { cache }) {
       const { chatId } = variables;
-      const { myChats } = cache.readQuery({ query: GET_MY_CHATS });
-      const chat = myChats.find(c => c.id === chatId);
+      const { myContacts } = cache.readQuery({ query: GET_MY_CHATS });
 
-      if (chat) {
-        cache.writeData({ data: { selectedChat: chat } });
-        return chat;
-      }
-      return null;
+      return find(myContacts, { chatId });
     },
+    // chat(__root, variables, { cache }) {
+    //   const { chatId } = variables;
+    //   const { myChats } = cache.readQuery({ query: GET_MY_CHATS });
+    //
+    //   return find(myChats, { id: chatId });
+    // },
   },
 };
 

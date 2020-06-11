@@ -2,13 +2,17 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 
 const cache = new InMemoryCache({
   freezeResults: true,
+  cacheRedirects: {
+    Query: {
+      chat(__root, { chatId }, { getCacheKey }) {
+        return getCacheKey({ __typename: 'Chat', id: chatId });
+      },
+    },
+  },
 });
 
 export const initialState = {
   sessionExpired: false,
-  selectedChat: {
-    __typename: 'Chat',
-  },
   me: {
     __typename: 'User',
   },

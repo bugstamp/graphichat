@@ -73,7 +73,6 @@ const Contact = (props) => {
     onSelect,
   } = props;
   const { src, text } = avatar;
-  console.log(isSelected);
 
   return (
     <Zoom in>

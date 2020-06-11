@@ -1,6 +1,6 @@
 import React, { useState, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import { upperCase } from 'lodash';
@@ -16,6 +16,7 @@ import ContactsFooter from './ContactsFooter';
 import SearchDialog from '../SearchDialog';
 import Navigation from '../../../common/Navigation/Navigation';
 
+import history from '../../../../router/history';
 import gql from '../../../../gql';
 import { getStyledProps } from '../../../../styles';
 
@@ -35,19 +36,17 @@ const ChatsStyled = styled(Paper)`
 
 const Chats = (props) => {
   const {
-    location,
-    history,
     toggleSettingsDialog,
     signOut,
   } = props;
-  const { search } = location;
-  const { chatId: selectedChatId } = queryString.parse(search);
   const [searchDialog, setSearchDialog] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 
+  const { search } = useLocation();
   const { data: { me = {} } = {} } = useQuery(GET_ME);
-  const { id } = me;
   const { loading, data: { myContacts = [], myChats = [] } = {} } = useQuery(GET_MY_CHATS);
+  const { chatId: selectedChatId } = queryString.parse(search);
+  const { id } = me;
 
   const toggleSearchDialog = useCallback(() => {
     setSearchDialog(!searchDialog);
@@ -84,8 +83,10 @@ const Chats = (props) => {
   }, [searchValue]);
 
   const handleSelectChat = useCallback((chatId) => {
-    history.push(`/chats?chatId=${chatId}`);
-  }, [history]);
+    if (selectedChatId !== chatId) {
+      history.push(`/chats?chatId=${chatId}`);
+    }
+  }, [selectedChatId]);
 
   return (
     <ChatsStyled square elevation={0}>
@@ -120,14 +121,8 @@ const Chats = (props) => {
 };
 
 Chats.propTypes = {
-  location: PropTypes.shape({
-    search: PropTypes.string,
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func,
-  }).isRequired,
   toggleSettingsDialog: PropTypes.func.isRequired,
   signOut: PropTypes.func.isRequired,
 };
 
-export default withRouter(memo(Chats));
+export default memo(Chats);

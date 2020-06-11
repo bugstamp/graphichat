@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import uuid from 'uuid/v4';
@@ -25,6 +25,33 @@ const {
   ADD_MESSAGE,
 } = gql;
 
+const getOptimisticMessage = ({
+  chatId,
+  myId,
+  optimisticId,
+  content,
+  time,
+}) => ({
+  __typename: 'Mutation',
+  addMessage: {
+    chatId,
+    optimistic: true,
+    optimisticId,
+    message: {
+      id: optimisticId,
+      senderId: myId,
+      content,
+      time,
+      type: 'text',
+      seen: false,
+      edited: false,
+      __typename: 'ChatMessage',
+    },
+    __typename: 'MessageUpdate',
+  },
+});
+
+
 const Wrapper = styled(Paper)`
   && {
     width: 100%;
@@ -36,44 +63,29 @@ const Wrapper = styled(Paper)`
 `;
 
 const Chat = (props) => {
-  const {
-    location,
-    history,
-  } = props;
+  const { search } = useLocation();
   console.count('chat render');
-  const { search } = location;
   const { chatId: selectedChatId } = queryString.parse(search);
-  // const addMessage = (content) => {
-  //   const {
-  //     me: { id: myId },
-  //     chat: { id: chatId },
-  //     updateOptimisticIds,
-  //     addMessage,
-  //     getOptimisticMessage,
-  //   } = props;
-  //   const time = new Date();
-  //   const optimisticId = uuid();
-  //
-  //   const variables = {
-  //     chatId,
-  //     content,
-  //     time,
-  //     optimisticId,
-  //   };
-  //   const optimisticResponse = getOptimisticMessage({
-  //     chatId,
-  //     optimisticId,
-  //     myId,
-  //     content,
-  //     time,
-  //   });
-  //
-  //   addMessage({ variables, optimisticResponse });
-  //   updateOptimisticIds(optimisticId);
-  // };
+
+  const addMessageMutationUpdate = (client, result) => {
+    const { chatId, message } = result;
+    const { chat, contact } = client.readQuery({ query: GET_CHAT, variables: { chatId } });
+
+    client.writeQuery({
+      query: GET_CHAT,
+      data: {
+        contact,
+        chat: {
+          ...chat,
+          messages: [...chat.messages, message],
+        },
+      },
+    });
+  };
+
   useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
     onSubscriptionData({ client, subscriptionData: { data: { messageAdded } } }) {
-      console.log(messageAdded);
+      addMessageMutationUpdate(client, messageAdded);
     },
   });
   const { data: { me = {} } = {} } = useQuery(GET_ME);
@@ -88,7 +100,12 @@ const Chat = (props) => {
     fetchPolicy: 'cache-first',
     // notifyOnNetworkStatusChange: true,
   });
-  // const [addMessage, { loading: adding }] = useMutation(ADD_MESSAGE);
+  const [addMessage, { loading: adding }] = useMutation(ADD_MESSAGE, {
+    update(client, { data: { addMessage: newMessage } }) {
+      addMessageMutationUpdate(client, newMessage);
+    },
+  });
+
   const { chat, contact } = data;
   const { id: myId } = me;
   const { id: chatId, messages } = chat;
@@ -110,12 +127,32 @@ const Chat = (props) => {
           ...prev,
           chat: {
             ...prev.chat,
-            messages: [...prev.chat.messages, ...chatMessages],
+            messages: [...chatMessages, ...prev.chat.messages],
           },
         };
       },
     });
   }, [selectedChatId, messages, fetchMore]);
+
+  const handleAddMessage = useCallback((content) => {
+    const time = new Date();
+    const optimisticId = uuid();
+    const variables = {
+      chatId,
+      content,
+      time,
+      optimisticId,
+    };
+    const optimisticResponse = getOptimisticMessage({
+      chatId,
+      optimisticId,
+      myId,
+      content,
+      time,
+    });
+
+    addMessage({ variables, optimisticResponse });
+  }, [chatId, myId, addMessage]);
 
   let unselectedText = '';
 
@@ -135,7 +172,7 @@ const Chat = (props) => {
     if (chatId && (messages.length < fetchMoreSize)) {
       fetchMoreMessages();
     }
-  }, [chatId, selectedChatId, messages, fetchMoreMessages]);
+  }, [chatId, messages, fetchMoreMessages]);
 
   return (
     <Wrapper square elevation={0}>
@@ -159,17 +196,16 @@ const Chat = (props) => {
             loading={loading}
             adding={adding}
             myId={myId}
-            messages={messages}
-            // optimisticIds={optimisticIds}
-            getMessages={fetchMoreMessages}
             myAvatar={myAvatar}
             contactAvatar={contactAvatar}
+            messages={messages}
+            getMessages={fetchMoreMessages}
           />
           <ChatMessageInput
             chatId={chatId}
             myAvatar={myAvatar}
             contactAvatar={contactAvatar}
-            // submit={addMessage}
+            submit={handleAddMessage}
           />
         </Otherwise>
       </Choose>
@@ -189,4 +225,4 @@ Chat.propTypes = {
   // getOptimisticMessage: PropTypes.func.isRequired,
 };
 
-export default withRouter(memo(Chat));
+export default memo(Chat);

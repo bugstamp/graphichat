@@ -19,7 +19,7 @@ const ListItem = styled(({ isSelected, ...rest }) => <MaterialListItem {...rest}
     margin-bottom: ${getSpacing(1)};
     background-color: ${({ isSelected, ...rest }) => (isSelected
     ? getStyledProps('theme.palette.action.hover')(rest)
-    : 'fff')};
+    : '#fff')};
     border-radius: ${getStyledProps('theme.shape.borderRadius')}px;
     transition: ${getStyledProps('theme.transitions.easing.easeIn')};
     box-shadow: ${getStyledProps('theme.shadows.1')};

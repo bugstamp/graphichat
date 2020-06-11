@@ -1,6 +1,6 @@
 import React from 'react';
 
-import loginBgImage from '../assets/images/login-bg__1920_65.jpg';
+import loginBgImage from '../assets/images/login-bg_1920_80.jpg';
 import regBgImage from '../assets/images/reg-bg__1920_65.jpg';
 
 const ImagePreloader = () => (

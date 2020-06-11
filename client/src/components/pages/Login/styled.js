@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import blue from '@material-ui/core/colors/blue';
 
 import { getStyledProps, getSpacing } from '../../../styles';
-import bgImage from '../../../assets/images/login-bg__1920_65.jpg';
+import bgImage from '../../../assets/images/login-bg_1920_80.jpg';
 
 const fadeInUpAnimation = keyframes`${fadeInUp}`;
 const fadeInAnimation = keyframes`${fadeIn}`;

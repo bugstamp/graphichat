@@ -17,14 +17,12 @@ const ListItem = styled(({ isSelected, ...rest }) => <MaterialListItem {...rest}
     padding-right: 60px;
     padding-left: ${getSpacing(1)};
     margin-bottom: ${getSpacing(1)};
-    background-color: #fff;
-    border-radius: ${getStyledProps('theme.shape.borderRadius')};
+    background-color: ${({ isSelected, ...rest }) => (isSelected
+    ? getStyledProps('theme.palette.action.hover')(rest)
+    : 'fff')};
+    border-radius: ${getStyledProps('theme.shape.borderRadius')}px;
     transition: ${getStyledProps('theme.transitions.easing.easeIn')};
     box-shadow: ${getStyledProps('theme.shadows.1')};
-
-    ${({ isSelected }) => isSelected && `
-      background-color: ${getStyledProps('theme.palette.info.light')};
-    `};
 
     &&:hover {
       background-color: ${getStyledProps('theme.palette.action.hover')};
@@ -63,17 +61,19 @@ const Time = styled.span`
 //   border-radius: 50%;
 // `;
 
-const Contact = ({
-  chatId,
-  displayName,
-  message,
-  avatar,
-  online,
-  time,
-  isSelected,
-  onSelect,
-}) => {
+const Contact = (props) => {
+  const {
+    chatId,
+    displayName,
+    message,
+    avatar,
+    online,
+    time,
+    isSelected,
+    onSelect,
+  } = props;
   const { src, text } = avatar;
+  console.log(isSelected);
 
   return (
     <Zoom in>

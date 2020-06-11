@@ -1,6 +1,5 @@
-import React, { Component, createRef } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { includes, isEqual } from 'lodash';
 
 import List from '../../../common/List';
 import Message from './Message';
@@ -8,48 +7,40 @@ import Message from './Message';
 import { isSameDay } from '../../../../helpers';
 import { userAvatarProps } from '../../../propTypes';
 
-class ChatMessages extends Component {
-  list = createRef();
+const ChatMessages = (props) => {
+  const {
+    myId,
+    chatId,
+    loading,
+    adding,
+    messages,
+    myAvatar,
+    contactAvatar,
+    getMessages,
+  } = props;
+  const listRef = useRef(null);
 
-  componentDidMount() {
-    this.list.current.scrollToBottom();
-  }
+  useEffect(() => {
+    listRef.current.scrollToBottom();
+  }, []);
 
-  getSnapshotBeforeUpdate(nextProps) {
-    const { chatId, adding, messages } = this.props;
+  useEffect(() => {
+    listRef.current.scrollToBottom();
+  }, [chatId]);
 
-    if (!isEqual(nextProps.chatId, chatId)) {
-      return true;
+  useEffect(() => {
+    if (adding) {
+      listRef.current.scrollToBottom();
     }
+  }, [messages, adding]);
 
-    if (!isEqual(nextProps.messages.length, messages.length)) {
-      if (adding) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  componentDidUpdate(prevProps, prevState, shouldScrollToBottom) {
-    if (shouldScrollToBottom) {
-      this.list.current.scrollToBottom();
-    }
-  }
-
-  rowRenderer = (props) => {
-    const {
-      messages,
-      optimisticIds,
-      myId,
-      myAvatar,
-      contactAvatar,
-    } = this.props;
+  const rowRenderer = useCallback((args) => {
     const {
       ref,
       index,
       rowIndex,
       rowData,
-    } = props;
+    } = args;
     const {
       id,
       senderId,
@@ -60,7 +51,6 @@ class ChatMessages extends Component {
     const isSystem = type === 'system';
     const isFirst = messages[0].id === id;
     const isMyMessage = senderId === myId;
-    const isAdding = includes(optimisticIds, id);
     const direction = isMyMessage ? 'start' : 'end';
     const alignItems = isSystem ? 'center' : `flex-${direction}`;
     const avatar = isMyMessage ? myAvatar : contactAvatar;
@@ -76,47 +66,37 @@ class ChatMessages extends Component {
       <Message
         ref={ref}
         rowIndex={rowIndex}
-        alignItems={alignItems}
-        divider={divider}
-        time={time}
         content={content}
+        avatar={avatar}
+        time={time}
         isSystem={isSystem}
         isFirst={isFirst}
         isMyMessage={isMyMessage}
-        isAdding={isAdding}
-        avatar={avatar}
+        divider={divider}
+        alignItems={alignItems}
       />
     );
-  }
+  }, [myId, messages, myAvatar, contactAvatar]);
 
-  render() {
-    const {
-      loading,
-      messages,
-      getMessages,
-    } = this.props;
-
-    return (
-      <List
-        ref={this.list}
-        loading={loading}
-        data={messages}
-        fetchMore={getMessages}
-        fetchMoreThreshold={1}
-        startFrom="bottom"
-        rowRenderer={this.rowRenderer}
-        onResize={this.onResize}
-        lazyLoad
-      />
-    );
-  }
-}
+  return (
+    <List
+      ref={listRef}
+      loading={loading}
+      data={messages}
+      fetchMore={getMessages}
+      fetchMoreThreshold={1}
+      startFrom="bottom"
+      rowRenderer={rowRenderer}
+      lazyLoad
+      dense
+    />
+  );
+};
 
 ChatMessages.defaultProps = {
   chatId: null,
   myId: null,
   messages: [],
-  optimisticIds: [],
 };
 ChatMessages.propTypes = {
   chatId: PropTypes.string,
@@ -125,7 +105,6 @@ ChatMessages.propTypes = {
   adding: PropTypes.bool.isRequired,
   messages: PropTypes.arrayOf(PropTypes.object),
   getMessages: PropTypes.func.isRequired,
-  optimisticIds: PropTypes.arrayOf(PropTypes.string),
   myAvatar: PropTypes.shape(userAvatarProps).isRequired,
   contactAvatar: PropTypes.shape(userAvatarProps).isRequired,
 };

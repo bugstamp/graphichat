@@ -8,7 +8,6 @@ import styled from 'styled-components';
 
 import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
-import grey from '@material-ui/core/colors/grey';
 
 import ContactsHeader from './ContactsHeader';
 import ContactsList from './ContactsList';
@@ -29,8 +28,8 @@ const ChatsStyled = styled(Paper)`
     display: flex;
     flex-flow: column;
     background-color: ${getStyledProps('theme.palette.background.default')};
-    border-left: 1px solid ${grey[200]};
-    border-right: 1px solid ${grey[200]};
+    border-left: 1px solid ${getStyledProps('theme.palette.grey.200')};
+    border-right: 1px solid ${getStyledProps('theme.palette.grey.200')};
   }
 `;
 

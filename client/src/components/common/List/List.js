@@ -57,14 +57,13 @@ const Scrollable = styled.div`
 
 const FetchMore = styled.div`
   order: ${({ startFrom }) => (startFrom === 'bottom' ? 0 : 1)};
-  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   visibility: ${({ visible }) => (visible ? 'visibility' : 'hidden')};
 
-  > div {
-    display: ${({ visible }) => (visible ? 'block' : 'none')};
+  * {
+    animation-play-state: ${({ visible }) => (visible ? 'running' : 'paused')} !important;
   }
 `;
 
@@ -83,7 +82,7 @@ class List extends Component {
       prevScrollHeight: null,
     };
 
-    if (!isEqual(nextProps.data.length, data.length) && lazyLoad) {
+    if (!isEqual(nextProps.data, data) && lazyLoad) {
       const scrollTop = this.getScrollTop();
       const { scrollHeight } = this.listScrollable.current;
 
@@ -142,7 +141,7 @@ class List extends Component {
       fetchMoreThreshold,
       onObserverChange,
     } = this.props;
-    const rowIndex = Number(target.getAttribute('row-index'));
+    const rowIndex = +target.getAttribute('row-index');
     let index = rowIndex;
     let thresholdIndex = data.length - fetchMoreThreshold;
 
@@ -206,7 +205,8 @@ class List extends Component {
       startFrom,
       noContentComponent,
       spinnerSize,
-      listProps,
+      gutters,
+      dense,
     } = this.props;
 
     return (
@@ -233,7 +233,8 @@ class List extends Component {
                   loading={loading}
                   data={data}
                   rowRenderer={this._onRowRenderer}
-                  {...listProps}
+                  gutters={gutters}
+                  dense={dense}
                 />
               </Scrollable>
             </Otherwise>
@@ -252,13 +253,12 @@ List.defaultProps = {
   fetchMore: null,
   fetchMoreThreshold: 5,
   startFrom: 'top',
-  onResize: null,
-  onScroll: null,
+  spinnerSize: 32,
   noContentComponent: null,
-  spinnerSize: 40,
   onObserverChange: null,
-  listProps: {},
-  scrollToBottomAfterMount: false,
+  onScroll: null,
+  gutters: 0,
+  dense: false,
 };
 List.propTypes = {
   className: PropTypes.string,
@@ -269,13 +269,12 @@ List.propTypes = {
   fetchMore: PropTypes.func,
   fetchMoreThreshold: PropTypes.number,
   startFrom: PropTypes.oneOf(['top', 'bottom']),
-  onResize: PropTypes.func,
   onScroll: PropTypes.func,
   noContentComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   spinnerSize: PropTypes.number,
   onObserverChange: PropTypes.func,
-  listProps: PropTypes.objectOf(PropTypes.any),
-  scrollToBottomAfterMount: PropTypes.bool,
+  gutters: PropTypes.number,
+  dense: PropTypes.bool,
 };
 
 export default List;

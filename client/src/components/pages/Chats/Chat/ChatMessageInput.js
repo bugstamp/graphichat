@@ -1,36 +1,31 @@
 import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-// import {} from 'polished';
 import { trim, isEqual } from 'lodash';
 
 import Hidden from '@material-ui/core/Hidden';
 import Input from '@material-ui/core/Input';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/SendRounded';
-
 // import MoodIcon from '@material-ui/icons/MoodRounded';
-// import grey from '@material-ui/core/colors/grey';
-// import orange from '@material-ui/core/colors/orange';
 
-import ListItemAvatar from '../../../common/List/ListItemAvatar';
+import ListItemAvatar, { ListItemAvatarStyled } from '../../../common/List/ListItemAvatar';
 
 import { getStyledProps, getSpacing } from '../../../../styles';
 import { userAvatarProps } from '../../../propTypes';
 
 const Wrapper = styled.div`
-  min-height: 60px;
+  min-height: 52px;
   display: flex;
   flex-flow: row nowrap;
   position: relative;
-  border-top: 1px solid ${getStyledProps('theme.palette.grey.300')};
-`;
+  border-top: 1px solid ${getStyledProps('theme.palette.grey.200')};
+  background-color: #fff;
 
-const UserAvatar = styled.div`
-  display: flex;
-  align-items: flex-start;
-  padding: ${getSpacing(2)};
+  ${ListItemAvatarStyled} {
+    padding: ${getSpacing(1)};
+  }
 `;
 
 const Form = styled.form`
@@ -49,6 +44,7 @@ const Form = styled.form`
       ${smDown} {
         flex-flow: row nowrap;
         align-items: center;
+        padding: ${getSpacing(0.5)(props)};
       }
     `;
   }}
@@ -89,49 +85,19 @@ const FormInput = styled(Input)`
   }
 `;
 
-// const Emoji = styled.div`
-//   ${position('absolute', 0, 0, null, null)}
-//   font-size: 28px;
-//   color: ${grey[500]};
-//   cursor: pointer;
-//   z-index: 10;
-//
-//   &:hover {
-//     color: ${orange[300]};
-//   }
-// `;
-
-const Submit = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  button {
-    text-transform: uppercase;
+const SubmitButton = styled(IconButton)`
+  && {
+    padding: ${getSpacing(1)};
   }
+`;
 
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const spacing = getStyledProps('theme.spacing')(props);
-    const mdUp = breakpoints.up('md');
-    const mdDown = breakpoints.down('md');
-
-    return `
-      ${mdUp} {
-        width: 100%;
-        margin-top: ${spacing(1)}px;
-
-        svg {
-          margin-left: ${spacing(1)}px;
-        }
-      }
-      ${mdDown} {
-        button {
-          margin-left: ${spacing(1)}px;
-        }
-      }
-    `;
-  }}
+const FabSubmitButton = styled(Fab)`
+  && {
+    position: absolute;
+    top: -24px;
+    right: 0;
+    z-index: 30;
+  }
 `;
 
 class ChatMessageInput extends PureComponent {
@@ -196,9 +162,7 @@ class ChatMessageInput extends PureComponent {
     return (
       <Wrapper>
         <Hidden smDown implementation="css">
-          <UserAvatar>
-            <ListItemAvatar {...myAvatar} />
-          </UserAvatar>
+          <ListItemAvatar {...myAvatar} />
         </Hidden>
         <Form onSubmit={this.onSubmit}>
           <FormInput
@@ -210,43 +174,42 @@ class ChatMessageInput extends PureComponent {
             autoFocus
             multiline
           />
-          <Submit>
-            <Hidden smDown implementation="css">
-              <Button
-                ref={this.submitButtonRef}
-                onClick={this.onSubmitClick}
-                variant="text"
-                color="primary"
-              >
-                Send
-                <SendIcon />
-              </Button>
-            </Hidden>
-            <Hidden mdUp implementation="css">
-              <IconButton
-                ref={this.submitButtonRef}
-                onClick={this.onSubmit}
-                size="small"
-                color="primary"
-                type="submit"
-              >
-                <SendIcon />
-              </IconButton>
-            </Hidden>
-          </Submit>
+          <Hidden smDown implementation="css">
+            <FabSubmitButton
+              ref={this.submitButtonRef}
+              onClick={this.onSubmit}
+              size="medium"
+              color="primary"
+              type="submit"
+            >
+              <SendIcon />
+            </FabSubmitButton>
+          </Hidden>
+          <Hidden mdUp implementation="css">
+            <SubmitButton
+              ref={this.submitButtonRef}
+              onClick={this.onSubmit}
+              size="small"
+              color="primary"
+              type="submit"
+            >
+              <SendIcon />
+            </SubmitButton>
+          </Hidden>
         </Form>
         <Hidden smDown implementation="css">
-          <UserAvatar>
-            <ListItemAvatar {...contactAvatar} />
-          </UserAvatar>
+          <ListItemAvatar {...contactAvatar} />
         </Hidden>
       </Wrapper>
     );
   }
 }
 
+ChatMessageInput.defaultProps = {
+  chatId: null,
+};
 ChatMessageInput.propTypes = {
-  chatId: PropTypes.string.isRequired,
+  chatId: PropTypes.string,
   myAvatar: PropTypes.shape(userAvatarProps).isRequired,
   contactAvatar: PropTypes.shape(userAvatarProps).isRequired,
   submit: PropTypes.func.isRequired,

@@ -60,6 +60,7 @@ const ContactList = (props) => {
       data={data}
       rowRenderer={rowRenderer}
       noContentComponent={noContentComponent}
+      gutters={1}
     />
   );
 };

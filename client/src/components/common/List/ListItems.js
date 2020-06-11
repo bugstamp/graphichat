@@ -8,7 +8,7 @@ import MaterialList from '@material-ui/core/List';
 
 import { getSpacing } from '../../../styles';
 
-const List = styled(MaterialList)`
+const ListStyled = styled(MaterialList)`
   && {
     ${({ gutters, ...rest }) => `
       padding: 0 ${getSpacing(gutters)(rest)};
@@ -21,24 +21,24 @@ const ListItems = (props) => {
     data,
     rowRenderer,
     gutters,
-    disablePadding,
     dense,
+    disablePadding,
   } = props;
 
   return (
-    <List
+    <ListStyled
       gutters={gutters}
       disablePadding={disablePadding}
       dense={dense}
     >
       {map(data, (item, index) => rowRenderer(item, index))}
-    </List>
+    </ListStyled>
   );
 };
 
 ListItems.defaultProps = {
   data: [],
-  gutters: 1,
+  gutters: 0,
   disablePadding: true,
   dense: false,
 };
@@ -46,8 +46,8 @@ ListItems.propTypes = {
   data: PropTypes.arrayOf(PropTypes.any),
   rowRenderer: PropTypes.func.isRequired,
   gutters: PropTypes.number,
-  disablePadding: PropTypes.bool,
   dense: PropTypes.bool,
+  disablePadding: PropTypes.bool,
 };
 
 export default ListItems;

@@ -10,13 +10,14 @@ import green from '@material-ui/core/colors/green';
 import { messageDateParsers } from '../../../../helpers';
 import { getStyledProps, getSpacing } from '../../../../styles';
 
-const Wrapper = styled.div`
+const ChatTopBarStyled = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: ${getSpacing(1)};
-  border-bottom: 1px solid ${getStyledProps('theme.palette.grey.300')};
+  background-color: #fff;
+  border-bottom: 1px solid ${getStyledProps('theme.palette.grey.200')};
   z-index: 20;
 `;
 
@@ -37,18 +38,19 @@ const UserStatus = styled.span`
     : getStyledProps('theme.palette.grey.500')(rest))};
 `;
 
-const ChatTopBar = ({
-  name,
-  status,
-  lastDate,
-}) => {
+const ChatTopBar = (props) => {
+  const {
+    name,
+    status,
+    lastDate,
+  } = props;
   const isOnline = status === 'ONLINE';
   const statusText = (isOnline && lastDate)
     ? 'online'
     : messageDateParsers.userLastDate(lastDate);
 
   return (
-    <Wrapper>
+    <ChatTopBarStyled>
       <IconButton size="small">
         <SearchIcon />
       </IconButton>
@@ -61,7 +63,7 @@ const ChatTopBar = ({
       <IconButton size="small">
         <SettingsIcon />
       </IconButton>
-    </Wrapper>
+    </ChatTopBarStyled>
   );
 };
 

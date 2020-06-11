@@ -226,11 +226,9 @@ class List extends Component {
             </When>
             <Otherwise>
               <Scrollable ref={this.listScrollable}>
-                <If condition={loading}>
-                  <FetchMore visible={loading} startFrom={startFrom}>
-                    <CircularProgress size={spinnerSize} color="primary" />
-                  </FetchMore>
-                </If>
+                <FetchMore visible={loading} startFrom={startFrom}>
+                  <CircularProgress size={spinnerSize} color="primary" />
+                </FetchMore>
                 <ListItems
                   loading={loading}
                   data={data}

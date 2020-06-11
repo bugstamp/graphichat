@@ -2,7 +2,7 @@ import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 // import {} from 'polished';
-import { trim } from 'lodash';
+import { trim, isEqual } from 'lodash';
 
 import Hidden from '@material-ui/core/Hidden';
 import Input from '@material-ui/core/Input';
@@ -141,7 +141,15 @@ class ChatMessageInput extends PureComponent {
 
   state = {
     value: '',
-  };
+  }
+
+  componentDidUpdate(prevProps) {
+    const { chatId } = this.props;
+
+    if (!isEqual(prevProps.chatId, chatId)) {
+      this.clearValue();
+    }
+  }
 
   onSubmit = (e) => {
     e.preventDefault();
@@ -238,6 +246,7 @@ class ChatMessageInput extends PureComponent {
 }
 
 ChatMessageInput.propTypes = {
+  chatId: PropTypes.string.isRequired,
   myAvatar: PropTypes.shape(userAvatarProps).isRequired,
   contactAvatar: PropTypes.shape(userAvatarProps).isRequired,
   submit: PropTypes.func.isRequired,

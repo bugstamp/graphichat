@@ -21,7 +21,7 @@
     "jsx-control-statements"
   ],
   "rules": {
-    "import/no-unresolved": [2, { ignore: ['\config'] }],
+    "import/no-unresolved": [2, { ignore: ['\config', '\appHistory'] }],
     "import/no-named-as-default": 0,
     "linebreak-style": ["error", "windows"],
     "react/jsx-no-undef": 0,

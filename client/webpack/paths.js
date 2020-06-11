@@ -15,6 +15,7 @@ const paths = {
   images: path.resolve(__dirname, '../src/assets/images'),
   public: path.resolve(__dirname, '../build'),
   html: path.resolve(__dirname, '../build/index.html'),
+  history: path.resolve(__dirname, '../src/router/history'),
   publicSw: path.resolve(__dirname, '../build/service-worker.js'),
 };
 

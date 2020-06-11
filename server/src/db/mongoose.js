@@ -29,7 +29,16 @@ export const connectToDb = async () => {
             email: 'test@gmail.com',
             password: '123456',
             firstName: 'Test',
-            lastName: 'Test',
+            lastName: 'First',
+            gender: 'male',
+            regStatus: 'COMPLETED',
+          });
+          await mongoose.models.User.create({
+            username: 'test1',
+            email: 'test1@gmail.com',
+            password: '123456',
+            firstName: 'Test',
+            lastName: 'Second',
             gender: 'male',
             regStatus: 'COMPLETED',
           });
@@ -47,10 +56,10 @@ export const connectToDb = async () => {
           await mongoose.models.User.addContact(adminUserId, testUserId, chatId);
           await mongoose.models.User.addContact(testUserId, adminUserId, chatId);
           chat.messages.push({
-            $each: Array.from({ length: 100 }, () => ({
+            $each: Array.from({ length: 100 }, (i, index) => ({
               senderId: testUserId,
               content: 'Test Message',
-              time: Date.now() + 1000,
+              time: Date.now() + (index * (1000 * 60)),
             })),
           });
           await chat.save();

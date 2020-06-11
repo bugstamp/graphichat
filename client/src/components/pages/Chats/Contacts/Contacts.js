@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import styled from 'styled-components';
-import { upperCase } from 'lodash';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import queryString from 'query-string';
+import { upperCase } from 'lodash';
+import styled from 'styled-components';
 
 import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
@@ -19,12 +19,7 @@ import Navigation from '../../../common/Navigation/Navigation';
 import gql from '../../../../gql';
 import { getStyledProps } from '../../../../styles';
 
-const {
-  GET_ME,
-  GET_MY_CHATS,
-  SELECT_CHAT,
-  GET_SELECTED_CHAT,
-} = gql;
+const { GET_ME, GET_MY_CHATS } = gql;
 
 const ChatsStyled = styled(Paper)`
   && {
@@ -45,25 +40,14 @@ const Chats = (props) => {
     toggleSettingsDialog,
     signOut,
   } = props;
+  const { search } = location;
+  const { chatId: selectedChatId } = queryString.parse(search);
   const [searchDialog, setSearchDialog] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 
   const { data: { me = {} } = {} } = useQuery(GET_ME);
-  const { loading, data: { myContacts = [], myChats = [] } = {} } = useQuery(GET_MY_CHATS);
-  const { data: { selectedChat = {} } = {} } = useQuery(GET_SELECTED_CHAT);
-  const [selectChat] = useMutation(SELECT_CHAT, {
-    onCompleted({ selectChat: selectChatResult }) {
-      if (selectChatResult) {
-        const { id } = selectChatResult;
-
-        history.push(`/chats?chatId=${id}`);
-      }
-    },
-  });
-
-  const { search } = location;
   const { id } = me;
-  const { id: selectedChatId } = selectedChat;
+  const { loading, data: { myContacts = [], myChats = [] } = {} } = useQuery(GET_MY_CHATS);
 
   const toggleSearchDialog = useCallback(() => {
     setSearchDialog(!searchDialog);
@@ -100,17 +84,8 @@ const Chats = (props) => {
   }, [searchValue]);
 
   const handleSelectChat = useCallback((chatId) => {
-    selectChat({ variables: { chatId } });
-  }, [selectChat]);
-
-  useEffect(() => {
-    const { chatId } = queryString.parse(search);
-
-    // Select chat if page load with chatId in the url
-    if ((chatId && myChats.length) && !selectedChatId) {
-      handleSelectChat(chatId);
-    }
-  }, [search, selectedChatId, myChats, handleSelectChat]);
+    history.push(`/chats?chatId=${chatId}`);
+  }, [history]);
 
   return (
     <ChatsStyled square elevation={0}>
@@ -155,4 +130,4 @@ Chats.propTypes = {
   signOut: PropTypes.func.isRequired,
 };
 
-export default withRouter(Chats);
+export default withRouter(memo(Chats));

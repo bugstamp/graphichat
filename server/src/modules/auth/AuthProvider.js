@@ -54,9 +54,13 @@ class AuthProvider {
 
   async onDisconnect() {
     if (this.user) {
-      const { id, lastDate } = await this.getMe();
+      const user = await this.getMe();
 
-      await this.logOut(id, lastDate);
+      if (user) {
+        const { id, lastDate } = user;
+
+        await this.logOut(id, lastDate);
+      }
     }
     this.user = null;
   }
@@ -268,7 +272,7 @@ class AuthProvider {
         user = await this.db.User.findById(userId);
       }
       if (!user) {
-        throw new Error('User is undefined');
+        return true;
       }
       const { id, lastDate } = user;
       await this.logOut(id, lastDate);

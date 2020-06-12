@@ -69,7 +69,7 @@ chatSchema.methods = {
 };
 
 chatSchema.statics = {
-  async createChat(id, userId, createdBy, createDate = null) {
+  async createChat(id, userId, createdBy, createDate = new Date()) {
     try {
       const firstMessageTemplate = {
         type: 'system',

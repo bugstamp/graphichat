@@ -1,213 +1,109 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  memo,
+} from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
-import Typography from '@material-ui/core/Typography';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 
-import SearchDialogContainer from '../../../containers/SearchDialogContainer';
-import SearchBox from '../../../common/SearchBox';
 import ResponsiveDialog from '../../../common/ResponsiveDialog';
-import SearchDialogList from './SearchDialogList';
+import SearchDialogTitle from './Title/SearchDialogTitle';
+import SearchDialogContent from './Content/SearchDialogContent';
+import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
 
-import { getStyledProps } from '../../../../styles';
+import { SearchDialogBodyStyled } from './styled';
+import gql from '../../../../gql';
+import { chatCreatedUpdate } from '../../../../gql/updates/chat';
 
-const DialogBody = styled.div`
-  && {
-    display: flex;
-    flex-flow: column;
-    background-color: #fff;
+const {
+  SEARCH_USERS,
+  CREATE_CHAT,
+  GET_MY_CONTACTS,
+} = gql;
 
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const borderRadius = getStyledProps('theme.shape.borderRadius')(props);
-    const shadows = getStyledProps('theme.shadows[1]')(props);
-    const mdUp = breakpoints.up('md');
+const SearchDialog = (props) => {
+  const { open, toggle } = props;
+  const [searchValue, setSearchValue] = useState('');
+  const [confirmDialog, setConfirmDialog] = useState(false);
+  const [user, setUser] = useState({});
+  const { id: selectedUserId, displayName } = user;
 
-    return `
-      ${mdUp} {
-        min-height: 500px;
-        border-radius: ${borderRadius}px;
-        box-shadow: ${shadows};
-      }
-    `;
-  }}
-  }
-`;
+  const { data: getMyContactsData = {} } = useQuery(GET_MY_CONTACTS);
+  const { loading, data: searchUsersData = {}, refetch } = useQuery(SEARCH_USERS, {
+    skip: !searchValue || searchValue === '@',
+    variables: { searchValue },
+    notifyOnNetworkStatusChange: true,
+  });
+  const [createChat, { loading: adding }] = useMutation(CREATE_CHAT, {
+    update: chatCreatedUpdate,
+  });
+  const { myContacts } = getMyContactsData;
+  const { searchUsers = [] } = searchUsersData;
 
-const SearchDialogContentInner = styled.div`
-  flex: 1 auto;
-  display: flex;
-  flex-flow: column;
-`;
+  const onChangeSearchValue = useCallback((value) => {
+    setSearchValue(value);
+  }, []);
 
-const SearchDialogTitle = styled(DialogTitle)`
-  && {
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const spacing = getStyledProps('theme.spacing')(props);
-    const smDown = breakpoints.down('sm');
+  useEffect(() => {
+    if (searchValue && searchValue !== '@') {
+      refetch();
+    }
+  }, [searchValue, refetch]);
 
-    return `
-      ${smDown} {
-        padding: ${spacing(1)}px ${spacing(2)}px;
-      }
-    `;
-  }}
-  }
-`;
+  const toggleConfirmDialog = useCallback((selectedUser) => {
+    setConfirmDialog(!confirmDialog);
 
-const SearchDialogContent = styled(DialogContent)`
-  && {
-    flex: 1 auto;
-    display: flex;
+    if (selectedUser) {
+      setUser(selectedUser);
+    }
+  }, [confirmDialog, setConfirmDialog, setUser]);
 
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const spacing = getStyledProps('theme.spacing')(props);
-    const smDown = breakpoints.down('sm');
+  const handleCreateChat = useCallback(() => {
+    createChat({ variables: { userId: user.id } });
+    toggleConfirmDialog();
+  }, [user, createChat, toggleConfirmDialog]);
 
-    return `
-      ${smDown} {
-        padding: ${spacing(1)}px ${spacing(2)}px;
-      }
-    `;
-  }}
-  }
-`;
-
-class SearchDialog extends PureComponent {
-  state = {
-    searchValue: '',
-    confirmDialog: false,
-    selectedUser: {},
-  }
-
-  onChangeSearchValue = (value, refetch) => {
-    this.setState(
-      () => ({ searchValue: value }),
-      () => {
-        if (value !== '@') {
-          refetch();
-        }
-      },
-    );
-  }
-
-  openConfirmDialog = (user = {}) => {
-    this.setState(({ confirmDialog }) => ({
-      confirmDialog: !confirmDialog,
-      selectedUser: user,
-    }));
-  }
-
-  closeConfirmDialog = () => {
-    this.setState(({ confirmDialog }) => ({
-      confirmDialog: !confirmDialog,
-    }));
-  }
-
-  render() {
-    const { searchValue, confirmDialog, selectedUser } = this.state;
-    const { open, toggle } = this.props;
-
-    return (
-      <SearchDialogContainer
-        searchUsersProps={{
-          variables: { searchValue },
-          skip: !searchValue || searchValue === '@',
-        }}
+  return (
+    <Fragment>
+      <ResponsiveDialog
+        open={open}
+        toggle={toggle}
+        PaperComponent={SearchDialogBodyStyled}
       >
-        {({
-          searchUsers: {
-            loading,
-            data,
-            refetch,
-          },
-          createChat: {
-            mutation: createChat,
-            result: { loading: adding },
-          },
-          getMyContacts: {
-            data: { myContacts },
-          },
-        }) => {
-          return (
-            <Fragment>
-              <ResponsiveDialog
-                open={open}
-                toggle={toggle}
-                PaperComponent={DialogBody}
-              >
-                <SearchDialogTitle disableTypography>
-                  <Typography variant="h6">
-                    Search user
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    Search user by name or use &quot;@&quot; as a first character for searching by username.
-                  </Typography>
-                </SearchDialogTitle>
-                <SearchDialogContent dividers>
-                  <SearchDialogContentInner>
-                    <SearchBox
-                      value={searchValue}
-                      onChange={value => this.onChangeSearchValue(value, refetch)}
-                      autoFocus
-                    />
-                    <SearchDialogList
-                      loading={loading}
-                      data={data && data.searchUsers}
-                      myContacts={myContacts}
-                      adding={adding}
-                      selectedUserId={selectedUser.id}
-                      openConfirmDialog={this.openConfirmDialog}
-                    />
-                  </SearchDialogContentInner>
-                </SearchDialogContent>
-                <DialogActions>
-                  <Button onClick={toggle} color="primary">Close</Button>
-                </DialogActions>
-              </ResponsiveDialog>
-              <If condition={confirmDialog}>
-                <Dialog open={confirmDialog} onClose={toggle}>
-                  <DialogTitle>{`Create chat with ${selectedUser.displayName}?`}</DialogTitle>
-                  <DialogActions>
-                    <Button
-                      color="primary"
-                      size="small"
-                      onClick={this.closeConfirmDialog}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      size="small"
-                      onClick={() => {
-                        createChat({ variables: { userId: selectedUser.id } });
-                        this.closeConfirmDialog();
-                      }}
-                    >
-                      Confirm
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </If>
-            </Fragment>
-          );
-        }}
-      </SearchDialogContainer>
-    );
-  }
-}
+        <SearchDialogTitle />
+        <SearchDialogContent
+          searchValue={searchValue}
+          onChangeSearchValue={onChangeSearchValue}
+          loading={loading}
+          users={searchUsers}
+          adding={adding}
+          myContacts={myContacts}
+          selectedUserId={selectedUserId}
+          toggleConfirmDialog={toggleConfirmDialog}
+        />
+        <DialogActions>
+          <Button onClick={toggle} color="primary">Close</Button>
+        </DialogActions>
+      </ResponsiveDialog>
+      <ConfirmationDialog
+        isOpen={confirmDialog}
+        toggle={toggle}
+        toggleConfirmDialog={toggleConfirmDialog}
+        displayName={displayName}
+        onConfirm={handleCreateChat}
+      />
+    </Fragment>
+  );
+};
 
 SearchDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
 };
 
-export default SearchDialog;
+export default memo(SearchDialog);

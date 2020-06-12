@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import styled from 'styled-components';
 // import {} from 'polished';
 
@@ -6,18 +7,22 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DoneIcon from '@material-ui/icons/DoneRounded';
 
-import ListItem from '../../../common/List/ListItem';
-import ListItemAvatar from '../../../common/List/ListItemAvatar';
-import ListItemInfo from '../../../common/List/ListItemInfo';
+import ListItem from '../../../../common/List/ListItem';
+import ListItemAvatar from '../../../../common/List/ListItemAvatar';
+import ListItemInfo from '../../../../common/List/ListItemInfo';
 
-const SearchDialogListItem = ({
-  avatar,
-  displayName,
-  username,
-  isAdding,
-  isAdded,
-  onClick,
-}) => {
+import { userAvatarProps } from '../../../../propTypes';
+
+const SearchDialogListItem = (props) => {
+  const {
+    avatar,
+    displayName,
+    username,
+    isAdding,
+    isAdded,
+    onClick,
+  } = props;
+
   return (
     <ListItem>
       <ListItemAvatar {...avatar} online={false} />
@@ -43,6 +48,15 @@ const SearchDialogListItem = ({
       </Button>
     </ListItem>
   );
+};
+
+SearchDialogListItem.propTypes = {
+  avatar: PropTypes.shape(userAvatarProps).isRequired,
+  displayName: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  isAdding: PropTypes.bool.isRequired,
+  isAdded: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default SearchDialogListItem;

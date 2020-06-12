@@ -1,4 +1,5 @@
 import { GET_CHAT } from '../chat';
+import { GET_MY_CHATS } from '../user';
 
 export const getOptimisticMessage = ({
   chatId,
@@ -59,4 +60,17 @@ export const messageAddedSubscriptionUpdate = ({
   subscriptionData: { data: { messageAdded } },
 }) => {
   addMessageUpdate(client, messageAdded);
+};
+
+export const chatCreatedUpdate = (client, { data: { createChat } }) => {
+  const { contact, chat } = createChat;
+  const { myContacts, myChats } = client.readQuery({ query: GET_MY_CHATS });
+
+  client.writeQuery({
+    query: GET_MY_CHATS,
+    data: {
+      myContacts: [...myContacts, contact],
+      myChats: [...myChats, chat],
+    },
+  });
 };

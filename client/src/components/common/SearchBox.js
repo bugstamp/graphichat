@@ -7,7 +7,7 @@ import SearchIcon from '@material-ui/icons/SearchRounded';
 
 import { getStyledProps } from '../../styles';
 
-const Wrapper = styled.div`
+export const SearchBoxStyled = styled.div`
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
@@ -34,7 +34,7 @@ const Input = styled(InputBase)`
 `;
 
 const SearchBox = ({ value, onChange, autoFocus }) => (
-  <Wrapper>
+  <SearchBoxStyled>
     <IconWrapper>
       <SearchIcon />
     </IconWrapper>
@@ -49,7 +49,7 @@ const SearchBox = ({ value, onChange, autoFocus }) => (
         'aria-label': 'Search Chat',
       }}
     />
-  </Wrapper>
+  </SearchBoxStyled>
 );
 
 SearchBox.defaultProps = {

@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { find } from 'lodash';
 
-import List from '../../../common/List';
+import List from '../../../../common/List';
 import SearchDialogListItem from './SearchDialogListItem';
 
-import { getAvatar } from '../../../../helpers';
-import { contactProps, userInfoProps } from '../../../propTypes';
+import { getAvatar } from '../../../../../helpers';
+import { contactProps, userInfoProps } from '../../../../propTypes';
 
 class SearchDialogList extends Component {
   rowRenderer = ({ rowIndex, rowData }) => {
@@ -43,7 +43,6 @@ class SearchDialogList extends Component {
         loading={loading}
         data={data}
         rowRenderer={this.rowRenderer}
-        lisProps={{ gutters: 2, disablePadding: true }}
       />
     );
   }

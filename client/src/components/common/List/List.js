@@ -1,4 +1,4 @@
-import React, { Component, Fragment, createRef } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { InView } from 'react-intersection-observer';
 import styled from 'styled-components';
@@ -225,9 +225,11 @@ class List extends Component {
             </When>
             <Otherwise>
               <Scrollable ref={this.listScrollable}>
-                <FetchMore visible={loading} startFrom={startFrom}>
-                  <CircularProgress size={spinnerSize} color="primary" />
-                </FetchMore>
+                <If condition={lazyLoad}>
+                  <FetchMore visible={loading} startFrom={startFrom}>
+                    <CircularProgress size={spinnerSize} color="primary" />
+                  </FetchMore>
+                </If>
                 <ListItems
                   loading={loading}
                   data={data}

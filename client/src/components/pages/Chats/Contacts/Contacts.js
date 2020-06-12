@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import { upperCase } from 'lodash';
+import history from 'appHistory';
 
 import Hidden from '@material-ui/core/Hidden';
 
@@ -15,7 +16,6 @@ import Navigation from '../../../common/Navigation/Navigation';
 
 import { ContactsStyled } from './styled';
 
-import history from '../../../../router/history';
 import gql from '../../../../gql';
 
 const { GET_ME, GET_MY_CHATS } = gql;

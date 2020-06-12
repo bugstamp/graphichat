@@ -5,8 +5,6 @@ import { messageDateParsers } from '../../../../../helpers';
 import { HistoryDividerStyled } from './styled';
 
 const HistoryDivider = ({ time }) => {
-  console.log(typeof time);
-  console.log(time);
   const parsedTime = messageDateParsers.messageHistoryDate(time);
 
   return (

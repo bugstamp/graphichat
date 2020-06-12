@@ -30,18 +30,22 @@ export const connectToDb = async () => {
             email: 'test@gmail.com',
             password: '123456',
             firstName: 'Test',
-            lastName: 'First',
+            lastName: 'Test',
             gender: 'male',
             regStatus: 'COMPLETED',
           });
-          await mongoose.models.User.create({
-            username: 'test1',
-            email: 'test1@gmail.com',
-            password: '123456',
-            firstName: 'Test',
-            lastName: 'Second',
-            gender: 'male',
-            regStatus: 'COMPLETED',
+          Array.from({ length: 10 }, async (u, i) => {
+            const index = i + 1;
+
+            await mongoose.models.User.create({
+              username: `test${index}`,
+              email: `test${index}@gmail.com`,
+              password: '123456',
+              firstName: 'Test',
+              lastName: `${index}`,
+              gender: 'male',
+              regStatus: 'COMPLETED',
+            });
           });
           const { _id: adminUserId, displayName } = await mongoose.models.User.create({
             username: 'admin',

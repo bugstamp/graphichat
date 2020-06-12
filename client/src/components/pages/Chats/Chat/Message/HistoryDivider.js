@@ -5,6 +5,8 @@ import { messageDateParsers } from '../../../../../helpers';
 import { HistoryDividerStyled } from './styled';
 
 const HistoryDivider = ({ time }) => {
+  console.log(typeof time);
+  console.log(time);
   const parsedTime = messageDateParsers.messageHistoryDate(time);
 
   return (
@@ -17,7 +19,7 @@ const HistoryDivider = ({ time }) => {
 };
 
 HistoryDivider.propTypes = {
-  time: PropTypes.string.isRequired,
+  time: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
 };
 
 export default HistoryDivider;

@@ -9,20 +9,13 @@ import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import uuid from 'uuid/v4';
 import { isEmpty } from 'lodash';
-import styled from 'styled-components';
-import { rgba } from 'polished';
-
-import Paper from '@material-ui/core/Paper';
 
 import ChatPlaceholder from './ChatPlaceholder';
-import ChatTopBar from './ChatTopBar';
-import ChatMessages from './ChatMessages';
-import ChatMessageInput from './ChatMessageInput';
+import ChatTopBar from './ChatTopBar/ChatTopBar';
+import ChatMessages from './ChatMessages/ChatMessages';
+import ChatInput from './ChatInput/ChatInput';
 
 import useAvatar from '../../../hooks/useAvatar';
-import { getStyledProps } from '../../../../styles';
-import topography from '../../../../assets/images/topography.svg';
-
 import gql from '../../../../gql';
 import {
   fetchMoreMessagesUpdate,
@@ -31,6 +24,8 @@ import {
   messageAddedSubscriptionUpdate,
 } from '../../../../gql/updates/chat';
 
+import { ChatStyled } from './styled';
+
 const {
   MESSAGE_ADDED_SUBSCRIPTION,
   GET_ME,
@@ -38,22 +33,6 @@ const {
   GET_CHAT_MESSAGES,
   ADD_MESSAGE,
 } = gql;
-
-const Wrapper = styled(Paper)`
-  && {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-flow: column;
-    background-image: ${(props) => {
-    const chatBgClr = getStyledProps('theme.palette.primary.main')(props);
-
-    return `
-      url(${topography}), linear-gradient(0deg, ${rgba(chatBgClr, 1)} 0%, ${rgba(chatBgClr, 0.3)} 100%);
-    `;
-  }};
-  }
-`;
 
 const Chat = () => {
   const { search } = useLocation();
@@ -131,7 +110,7 @@ const Chat = () => {
   }, [chatId, messages, fetchMoreMessages]);
 
   return (
-    <Wrapper square elevation={0}>
+    <ChatStyled square elevation={0}>
       <ChatPlaceholder
         selectedChatId={selectedChatId}
         chatId={chatId}
@@ -152,14 +131,14 @@ const Chat = () => {
           messages={messages}
           getMessages={fetchMoreMessages}
         />
-        <ChatMessageInput
+        <ChatInput
           chatId={chatId}
           myAvatar={myAvatar}
           contactAvatar={contactAvatar}
           submit={handleAddMessage}
         />
       </ChatPlaceholder>
-    </Wrapper>
+    </ChatStyled>
   );
 };
 

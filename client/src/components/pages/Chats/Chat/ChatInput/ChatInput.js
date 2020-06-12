@@ -1,106 +1,23 @@
 import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { trim, isEqual } from 'lodash';
 
 import Hidden from '@material-ui/core/Hidden';
-import Input from '@material-ui/core/Input';
-import Fab from '@material-ui/core/Fab';
-import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/SendRounded';
 // import MoodIcon from '@material-ui/icons/MoodRounded';
 
-import ListItemAvatar, { ListItemAvatarStyled } from '../../../common/List/ListItemAvatar';
+import ListItemAvatar from '../../../../common/List/ListItemAvatar';
 
-import { getStyledProps, getSpacing } from '../../../../styles';
-import { userAvatarProps } from '../../../propTypes';
+import {
+  ChatInputStyled,
+  Form,
+  FormInput,
+  SubmitButton,
+  FabSubmitButton,
+} from './styled';
+import { userAvatarProps } from '../../../../propTypes';
 
-const Wrapper = styled.div`
-  min-height: 52px;
-  display: flex;
-  flex-flow: row nowrap;
-  position: relative;
-  border-top: 1px solid ${getStyledProps('theme.palette.grey.200')};
-  background-color: #fff;
-
-  ${ListItemAvatarStyled} {
-    padding: ${getSpacing(1)};
-  }
-`;
-
-const Form = styled.form`
-  width: 100%;
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
-  position: relative;
-  padding: ${getSpacing(1)};
-
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const smDown = breakpoints.down('sm');
-
-    return `
-      ${smDown} {
-        flex-flow: row nowrap;
-        align-items: center;
-        padding: ${getSpacing(0.5)(props)};
-      }
-    `;
-  }}
-`;
-
-const FormInput = styled(Input)`
-  && {
-    width: 100%;
-    display: inline-flex;
-    align-items: flex-start;
-
-    > div {
-      width: 95%;
-    }
-
-  ${(props) => {
-    const breakpoints = getStyledProps('theme.breakpoints')(props);
-    const spacing = getStyledProps('theme.spacing')(props);
-    const mdUp = breakpoints.up('md');
-    const smDown = breakpoints.down('sm');
-
-    return `
-      ${mdUp} {
-        min-height: 80px;
-      }
-      ${smDown} {
-        padding: ${spacing(1)}px;
-        border: 1px solid ${getStyledProps('theme.palette.grey.400')(props)};
-        border-radius: 20px;
-
-        &:before,
-        &:after {
-          display: none;
-        }
-      }
-    `;
-  }}
-  }
-`;
-
-const SubmitButton = styled(IconButton)`
-  && {
-    padding: ${getSpacing(1)};
-  }
-`;
-
-const FabSubmitButton = styled(Fab)`
-  && {
-    position: absolute;
-    top: -24px;
-    right: 0;
-    z-index: 30;
-  }
-`;
-
-class ChatMessageInput extends PureComponent {
+class ChatInput extends PureComponent {
   submitButtonRef = createRef();
 
   inputRef = createRef();
@@ -160,7 +77,7 @@ class ChatMessageInput extends PureComponent {
     } = this.props;
 
     return (
-      <Wrapper>
+      <ChatInputStyled>
         <Hidden smDown implementation="css">
           <ListItemAvatar {...myAvatar} />
         </Hidden>
@@ -200,19 +117,19 @@ class ChatMessageInput extends PureComponent {
         <Hidden smDown implementation="css">
           <ListItemAvatar {...contactAvatar} />
         </Hidden>
-      </Wrapper>
+      </ChatInputStyled>
     );
   }
 }
 
-ChatMessageInput.defaultProps = {
+ChatInput.defaultProps = {
   chatId: null,
 };
-ChatMessageInput.propTypes = {
+ChatInput.propTypes = {
   chatId: PropTypes.string,
   myAvatar: PropTypes.shape(userAvatarProps).isRequired,
   contactAvatar: PropTypes.shape(userAvatarProps).isRequired,
   submit: PropTypes.func.isRequired,
 };
 
-export default ChatMessageInput;
+export default ChatInput;

@@ -1,15 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
 import Typography from '@material-ui/core/Typography';
 
-const ChatPlaceholderStyled = styled.div`
-  flex: 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import { ChatPlaceholderStyled } from './styled';
 
 const ChatPlaceholder = (props) => {
   const {

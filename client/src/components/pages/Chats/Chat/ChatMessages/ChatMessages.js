@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-import List from '../../../common/List';
-import Message from './Message';
+import List from '../../../../common/List';
+import Message from '../Message/Message';
 
-import { isSameDay } from '../../../../helpers';
-import { userAvatarProps } from '../../../propTypes';
+import { isSameDay } from '../../../../../helpers';
+import { userAvatarProps } from '../../../../propTypes';
 
 const ChatMessages = (props) => {
   const {

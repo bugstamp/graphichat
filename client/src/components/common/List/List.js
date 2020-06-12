@@ -198,7 +198,6 @@ class List extends Component {
 
   render() {
     const {
-      className,
       loading,
       data,
       lazyLoad,
@@ -210,7 +209,7 @@ class List extends Component {
     } = this.props;
 
     return (
-      <Wrapper ref={this.listWrapper} className={className}>
+      <Wrapper ref={this.listWrapper}>
         <View
           ref={this.listView}
           onScroll={this._onScroll}
@@ -246,7 +245,6 @@ class List extends Component {
 }
 
 List.defaultProps = {
-  className: '',
   loading: false,
   data: [],
   lazyLoad: false,
@@ -261,7 +259,6 @@ List.defaultProps = {
   dense: false,
 };
 List.propTypes = {
-  className: PropTypes.string,
   loading: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.any),
   rowRenderer: PropTypes.func.isRequired,

@@ -4,36 +4,23 @@ import { useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import queryString from 'query-string';
 import { upperCase } from 'lodash';
-import styled from 'styled-components';
 
-import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
 
-import ContactsHeader from './ContactsHeader';
+import ContactsHeader from './ContactsHeader/ContactsHeader';
 import ContactsList from './ContactsList';
-import ContactsFooter from './ContactsFooter';
+import ContactsFooter from './ContactsFooter/ContactsFooter';
 import SearchDialog from '../SearchDialog';
 import Navigation from '../../../common/Navigation/Navigation';
 
+import { ContactsStyled } from './styled';
+
 import history from '../../../../router/history';
 import gql from '../../../../gql';
-import { getStyledProps } from '../../../../styles';
 
 const { GET_ME, GET_MY_CHATS } = gql;
 
-const ChatsStyled = styled(Paper)`
-  && {
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-flow: column;
-    background-color: ${getStyledProps('theme.palette.background.default')};
-    border-left: 1px solid ${getStyledProps('theme.palette.grey.200')};
-    border-right: 1px solid ${getStyledProps('theme.palette.grey.200')};
-  }
-`;
-
-const Chats = (props) => {
+const Contacts = (props) => {
   const {
     toggleSettingsDialog,
     signOut,
@@ -88,7 +75,7 @@ const Chats = (props) => {
   }, [selectedChatId]);
 
   return (
-    <ChatsStyled square elevation={0}>
+    <ContactsStyled square elevation={0}>
       <ContactsHeader
         title="Chats"
         searchValue={searchValue}
@@ -115,13 +102,13 @@ const Chats = (props) => {
         />
       </Hidden>
       <SearchDialog open={searchDialog} toggle={toggleSearchDialog} />
-    </ChatsStyled>
+    </ContactsStyled>
   );
 };
 
-Chats.propTypes = {
+Contacts.propTypes = {
   toggleSettingsDialog: PropTypes.func.isRequired,
   signOut: PropTypes.func.isRequired,
 };
 
-export default memo(Chats);
+export default memo(Contacts);

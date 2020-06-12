@@ -84,12 +84,17 @@ const logger = new ApolloLink((operation, forward) => {
   });
 });
 
-const link = from([
+const links = [
   authLink,
   tokenLink,
-  logger,
   errorLink,
   networkLink,
-]);
+];
+
+if (process.env.NODE_ENV === 'development') {
+  links.splice(2, 0, logger);
+}
+
+const link = from(links);
 
 export default link;

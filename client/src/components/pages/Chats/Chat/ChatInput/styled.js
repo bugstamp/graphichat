@@ -27,7 +27,7 @@ export const Form = styled.form`
   flex-flow: column;
   align-items: flex-start;
   position: relative;
-  padding: ${getSpacing(1)};
+  padding: ${getSpacing(1)} 0;
 
   ${(props) => {
     const breakpoints = getStyledProps('theme.breakpoints')(props);

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import List from '../../../common/List';
-import Contact from './Contact';
+import Contact from './Contact/Contact';
 import NoContacts from './NoContacts';
 
 import { getAvatar, messageDateParsers } from '../../../../helpers';

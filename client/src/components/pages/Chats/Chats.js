@@ -1,9 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
-import styled from 'styled-components';
-import { size } from 'polished';
 import history from 'appHistory';
 
 import Grid from '@material-ui/core/Grid';
@@ -13,13 +11,7 @@ import Contacts from './Contacts';
 import Chat from './Chat';
 import FullWidthSwipeableDrawer from '../../common/FullWidthSwipeableDrawer';
 
-const Wrapper = styled.div`
-  && {
-    ${size('100%')};
-    display: flex;
-    align-items: stretch;
-  }
-`;
+import { ChatsStyled } from './styled';
 
 const Chats = (props) => {
   const {
@@ -30,8 +22,12 @@ const Chats = (props) => {
   const { search } = location;
   const { chatId: selectedChatId } = queryString.parse(search);
 
+  const handleOnClose = useCallback(() => {
+    history.goBack();
+  }, []);
+
   return (
-    <Wrapper>
+    <ChatsStyled>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={12} md={4}>
           <Contacts
@@ -48,14 +44,12 @@ const Chats = (props) => {
       <Hidden mdUp>
         <FullWidthSwipeableDrawer
           open={!!selectedChatId}
-          onClose={() => {
-            history.goBack();
-          }}
+          onClose={handleOnClose}
         >
           <Chat />
         </FullWidthSwipeableDrawer>
       </Hidden>
-    </Wrapper>
+    </ChatsStyled>
   );
 };
 

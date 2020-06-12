@@ -1,34 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { position } from 'polished';
 
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import AddIcon from '@material-ui/icons/AddRounded';
 
-import SearchBox from '../../../common/SearchBox';
+import SearchBox from '../../../../common/SearchBox';
 
-import { getSpacing } from '../../../../styles';
-
-const ContactsHeaderStyled = styled.div`
-  display: flex;
-  flex-flow: column;
-  padding: ${getSpacing(2)} ${getSpacing(1)};
-`;
-
-const AddButton = styled(IconButton)`
-  && {
-    ${position('absolute', 0, 0, null, null)};
-    padding: ${getSpacing(0.5)};
-  }
-`;
-
-const ContactsHeaderTitle = styled.div`
-  position: relative;
-  margin-bottom: ${getSpacing(1)};
-`;
+import { ContactsHeaderStyled, ContactsHeaderTitle, AddButton } from './styled';
 
 const ContactsHeader = (props) => {
   const {

@@ -67,11 +67,14 @@ const errorLink = onError(({ networkError = {}, graphQLErrors }) => {
   if (networkError.statusCode === 401) {
     forceLogout();
   }
-  if (!isEmpty(networkError)) {
-    console.log(networkError);
-  }
-  if (!isEmpty(graphQLErrors)) {
-    console.log(graphQLErrors);
+
+  if (process.env.NODE_ENV === 'development') {
+    if (!isEmpty(networkError)) {
+      console.log(networkError);
+    }
+    if (!isEmpty(graphQLErrors)) {
+      console.log(graphQLErrors);
+    }
   }
 });
 

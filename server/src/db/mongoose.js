@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import moment from 'moment';
 
 mongoose.Promise = Promise;
 
@@ -51,15 +52,17 @@ export const connectToDb = async () => {
             gender: 'male',
             regStatus: 'COMPLETED',
           });
-          const chat = await mongoose.models.Chat.createChat(adminUserId, testUserId, displayName);
+          const createDate = moment().subtract(2, 'month').toDate();
+          const chat = await mongoose.models.Chat
+            .createChat(adminUserId, testUserId, displayName, createDate);
           const { id: chatId } = chat;
           await mongoose.models.User.addContact(adminUserId, testUserId, chatId);
           await mongoose.models.User.addContact(testUserId, adminUserId, chatId);
           chat.messages.push({
-            $each: Array.from({ length: 100 }, (i, index) => ({
+            $each: Array.from({ length: 1000 }, (m, index) => ({
               senderId: testUserId,
               content: 'Test Message',
-              time: Date.now() + (index * (1000 * 60)),
+              time: moment(createDate).add(index + 1, 'hour').toDate(),
             })),
           });
           await chat.save();

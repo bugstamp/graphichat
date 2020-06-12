@@ -69,16 +69,18 @@ chatSchema.methods = {
 };
 
 chatSchema.statics = {
-  async createChat(id, userId, createdBy) {
+  async createChat(id, userId, createdBy, createDate = null) {
     try {
       const firstMessageTemplate = {
         type: 'system',
         content: `Chat created by ${createdBy}`,
+        time: createDate,
       };
       const chat = await this.create({
         createdBy: id,
         members: [id, userId],
         messages: [firstMessageTemplate],
+        createDate,
       });
 
       return chat;

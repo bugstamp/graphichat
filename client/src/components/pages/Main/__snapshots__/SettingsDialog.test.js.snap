@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`test SettingsDialog snapshot render 1`] = `
-<Adopt(Unknown)(Unknown)(Unknown)>
-  <Component />
-</Adopt(Unknown)(Unknown)(Unknown)>
-`;

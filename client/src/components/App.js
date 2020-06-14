@@ -1,26 +1,38 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { hot } from 'react-hot-loader';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import { ThemeProvider } from 'styled-components';
+import { Router } from 'react-router-dom';
 
-import AppProvider from './context/AppProvider';
-import Router from '../router';
+import AppProvider from './AppProvider';
+import ImagePreloader from './ImagePreloader';
 
-const App = ({ theme }) => {
+import { GlobalStyle } from '../styles';
+
+const App = (props) => {
+  const {
+    client,
+    theme,
+    history,
+    routes: Routes,
+  } = props;
+
   return (
-    <MuiThemeProvider theme={theme}>
-      <ThemeProvider theme={theme}>
-        <AppProvider>
-          <Router />
-        </AppProvider>
-      </ThemeProvider>
-    </MuiThemeProvider>
+    <AppProvider client={client} theme={theme}>
+      <Fragment>
+        <GlobalStyle />
+        <ImagePreloader />
+        <Router history={history}>
+          <Routes />
+        </Router>
+      </Fragment>
+    </AppProvider>
   );
 };
 
 App.propTypes = {
+  client: PropTypes.objectOf(PropTypes.any).isRequired,
   theme: PropTypes.objectOf(PropTypes.any).isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
+  routes: PropTypes.oneOfType([PropTypes.element, PropTypes.object, PropTypes.func]).isRequired,
 };
 
-export default hot(module)(App);
+export default App;

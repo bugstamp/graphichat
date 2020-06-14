@@ -3,7 +3,7 @@ import { map } from 'lodash';
 
 import Typography from '@material-ui/core/Typography';
 
-import BrandTitle from '../Login/BrandTitle';
+import BrandTitle from '../login/BrandTitle';
 
 import {
   RegPresentationWrapper,

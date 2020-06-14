@@ -1,29 +1,24 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { render } from 'react-dom';
-import { Router } from 'react-router-dom';
-import { ApolloProvider } from '@apollo/react-hooks';
 import registerSW from './registerSW';
 
 import App from './components/App';
-import ImagePreloader from './components/ImagePreloader';
-import polyfill from './polyfill';
 
 import apollo from './apollo';
+import routes from './router';
 import history from './router/history';
-import { GlobalStyle, theme } from './styles';
+import { theme } from './styles';
+import polyfill from './polyfill';
 
 const renderApp = (Component) => {
-  render(
-    <ApolloProvider client={apollo}>
-      <Fragment>
-        <GlobalStyle />
-        <ImagePreloader />
-        <Router history={history}>
-          <Component theme={theme} />
-        </Router>
-      </Fragment>
-    </ApolloProvider>, document.getElementById('root'),
-  );
+  render((
+    <Component
+      client={apollo}
+      routes={routes}
+      history={history}
+      theme={theme}
+    />
+  ), document.getElementById('root'));
 };
 
 polyfill();

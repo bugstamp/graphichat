@@ -268,7 +268,7 @@ class AuthProvider {
       if (this.user) {
         user = await this.db.User.findById(this.user.id);
         this.user = null;
-      } else {
+      } else if (userId) {
         user = await this.db.User.findById(userId);
       }
       if (!user) {

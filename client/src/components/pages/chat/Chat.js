@@ -12,7 +12,7 @@ import ChatMessages from './messages';
 import FullWidthSwipeableDrawer from '../../common/FullWidthSwipeableDrawer';
 
 import gql from '../../../gql';
-import { userUpdate, userActivityUpdate } from '../../../gql/updates/user';
+import { userContactSubscriptionUpdate, userActivityUpdate } from '../../../gql/updates/user';
 import { chatCreatedUpdate, messageAddedSubscriptionUpdate } from '../../../gql/updates/chat';
 
 import { ChatWrapper } from './styled';
@@ -30,7 +30,7 @@ const Chat = () => {
   const { chatId: selectedChatId } = queryString.parse(search);
 
   useSubscription(USER_UPDATE_SUBSCRIPTION, {
-    onSubscriptionData: userUpdate,
+    onSubscriptionData: userContactSubscriptionUpdate,
   });
   useSubscription(USER_ACTIVITY_SUBSCRIPTION, {
     onSubscriptionData: userActivityUpdate,

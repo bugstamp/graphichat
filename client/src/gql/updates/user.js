@@ -1,9 +1,9 @@
 import { find } from 'lodash';
 
-import { GET_MY_CONTACTS } from '../user';
+import { GET_ME, GET_MY_CONTACTS } from '../user';
 import { myContactActivityFragment } from '../fragments';
 
-export const userUpdate = ({ client, subscriptionData: { data: { userUpdated } } }) => {
+export const userContactSubscriptionUpdate = ({ client, subscriptionData: { data: { userUpdated } } }) => {
   const { id: userId } = userUpdated;
   const { myContacts } = client.readQuery({ query: GET_MY_CONTACTS });
   const updatedContacts = myContacts.map((contact) => {
@@ -45,4 +45,22 @@ export const userActivityUpdate = ({ client, subscriptionData: { data: { userAct
       },
     });
   }
+};
+
+export const uploadAvatarUpdate = (client, { data: { uploadAvatar: avatar } }) => {
+  const { me } = client.readQuery({ query: GET_ME });
+
+  client.writeQuery({
+    query: GET_ME,
+    data: { me: { ...me, avatar } },
+  });
+};
+
+export const userUpdate = (client, { data: { updateUser: { field, value } } }) => {
+  const { me } = client.readQuery({ query: GET_ME });
+
+  client.writeQuery({
+    query: GET_ME,
+    data: { me: { ...me, [field]: value } },
+  });
 };

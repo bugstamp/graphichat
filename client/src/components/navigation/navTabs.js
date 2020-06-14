@@ -12,7 +12,7 @@ const tabs = [
     name: 'chats',
     Icon: ChatIcon,
     htmlColor: '#fff',
-    to: 'chats',
+    to: '/',
     attrs: {
       'aria-label': 'Chats Page',
     },

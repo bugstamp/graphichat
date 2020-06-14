@@ -48,7 +48,10 @@ const AppLayout = (props) => {
         <Grid container spacing={0}>
           <Hidden smDown>
             <Grid item>
-              <Navigation signOut={signOut} />
+              <Navigation
+                toggleSettingsDialog={toggleSettingsDialog}
+                signOut={signOut}
+              />
             </Grid>
           </Hidden>
           <Grid item xs>
@@ -57,7 +60,11 @@ const AppLayout = (props) => {
         </Grid>
       </AppContainer>
       <Hidden mdUp implementation="css">
-        <Navigation variant="horizontal" signOut={signOut} />
+        <Navigation
+          variant="horizontal"
+          toggleSettingsDialog={toggleSettingsDialog}
+          signOut={signOut}
+        />
       </Hidden>
       <SettingsDialog
         open={settingsDialog}

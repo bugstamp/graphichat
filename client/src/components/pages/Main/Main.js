@@ -1,5 +1,4 @@
 import React, {
-  cloneElement,
   useState,
   useCallback,
   useEffect,
@@ -37,15 +36,6 @@ const Main = (props) => {
     }
   }, [sessionExpired, handleSignOut]);
 
-  const childrenCloneProps = {
-    initialLoading: loading,
-    toggleSettingsDialog: handleToggleSettingsDialog,
-    signOut: handleSignOut,
-  };
-  const childrenClone = children
-    ? cloneElement(children, childrenCloneProps)
-    : null;
-
   return (
     <AppGrid container spacing={0} justify="center">
       <AppContainer elevation={5}>
@@ -59,10 +49,17 @@ const Main = (props) => {
             </Grid>
           </Hidden>
           <Grid item xs>
-            {childrenClone}
+            {children}
           </Grid>
         </Grid>
       </AppContainer>
+      <Hidden mdUp implementation="css">
+        <Navigation
+          variant="horizontal"
+          toggleSettingsDialog={toggleSettingsDialog}
+          signOut={signOut}
+        />
+      </Hidden>
       <SettingsDialog
         open={settingsDialog}
         toggle={handleToggleSettingsDialog}

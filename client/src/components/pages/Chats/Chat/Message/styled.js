@@ -56,18 +56,6 @@ export const SpinnerWrapper = styled.span`
   margin-left: ${getSpacing(1)};
 `;
 
-export const MessageContentWrapper = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-
-  ${SpinnerWrapper} {
-    * {
-      animation-play-state: ${({ isAdding }) => (isAdding ? 'running' : 'paused')};
-      visibility: ${({ isAdding }) => (isAdding ? 'visibility' : 'hidden')};
-    }
-  }
-`;
-
 export const MessageContent = styled.div`
   flex: 100%;
   display: inline-flex;
@@ -75,12 +63,26 @@ export const MessageContent = styled.div`
   background-color: ${getStyledProps('theme.palette.primary.contrastText')};
   border-radius: ${getStyledProps('theme.shape.borderRadius')}px;
   box-shadow: ${getStyledProps('theme.shadows.3')};
-  opacity: ${({ isAdding }) => (isAdding ? 0.3 : 1)};
 
   p {
     ${getStyledProps('theme.typography.body2')};
     word-wrap: break-word;
     white-space: pre-wrap;
+  }
+`;
+
+export const MessageContentWrapper = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+
+  ${SpinnerWrapper} {
+    * {
+      animation-play-state: ${({ isOptimistic }) => (isOptimistic ? 'running' : 'paused')};
+      visibility: ${({ isOptimistic }) => (isOptimistic ? 'visibility' : 'hidden')};
+    }
+  }
+  ${MessageContent} {
+    opacity: ${({ isOptimistic }) => (isOptimistic ? 0.7 : 1)};
   }
 `;
 

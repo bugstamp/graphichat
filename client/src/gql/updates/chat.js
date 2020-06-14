@@ -36,7 +36,7 @@ export const fetchMoreMessagesUpdate = (prev, { fetchMoreResult: { chatMessages 
 });
 
 export const addMessageUpdate = (client, result) => {
-  const { chatId, message } = result;
+  const { chatId, optimistic, message } = result;
   const { chat, contact } = client.readQuery({ query: GET_CHAT, variables: { chatId } });
 
   client.writeQuery({
@@ -45,7 +45,7 @@ export const addMessageUpdate = (client, result) => {
       contact,
       chat: {
         ...chat,
-        messages: [...chat.messages, message],
+        messages: [...chat.messages, { ...message, isOptimistic: optimistic }],
       },
     },
   });

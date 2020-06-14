@@ -58,6 +58,7 @@ export const messageFragment = gql`
     time
     edited
     seen
+    isOptimistic @client
   }
 `;
 

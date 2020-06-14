@@ -28,7 +28,7 @@ const Message = forwardRef((props, ref) => {
     isFirst,
     isSystem,
     isMyMessage,
-    isAdding,
+    isOptimistic,
     divider,
     time,
     content,
@@ -50,7 +50,7 @@ const Message = forwardRef((props, ref) => {
               <Hidden mdUp>
                 <ListItemAvatar {...avatar} />
               </Hidden>
-              <MessageContentWrapper isAdding={isAdding}>
+              <MessageContentWrapper isOptimistic={isOptimistic}>
                 <MessageContent>
                   <p>{content}</p>
                 </MessageContent>
@@ -69,20 +69,17 @@ const Message = forwardRef((props, ref) => {
   );
 });
 
-Message.defaultProps = {
-  isAdding: false,
-};
 Message.propTypes = {
   rowIndex: PropTypes.number.isRequired,
   alignItems: PropTypes.string.isRequired,
-  isFirst: PropTypes.bool.isRequired,
-  isSystem: PropTypes.bool.isRequired,
-  isAdding: PropTypes.bool,
-  isMyMessage: PropTypes.bool.isRequired,
-  divider: PropTypes.bool.isRequired,
-  time: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
   content: PropTypes.string.isRequired,
   avatar: PropTypes.shape(userAvatarProps).isRequired,
+  time: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
+  divider: PropTypes.bool.isRequired,
+  isSystem: PropTypes.bool.isRequired,
+  isFirst: PropTypes.bool.isRequired,
+  isMyMessage: PropTypes.bool.isRequired,
+  isOptimistic: PropTypes.bool.isRequired,
 };
 
 export default memo(Message);

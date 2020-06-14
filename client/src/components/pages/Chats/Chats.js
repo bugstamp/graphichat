@@ -14,11 +14,7 @@ import FullWidthSwipeableDrawer from '../../common/FullWidthSwipeableDrawer';
 import { ChatsStyled } from './styled';
 
 const Chats = (props) => {
-  const {
-    location,
-    toggleSettingsDialog,
-    signOut,
-  } = props;
+  const { location } = props;
   const { search } = location;
   const { chatId: selectedChatId } = queryString.parse(search);
 
@@ -30,10 +26,7 @@ const Chats = (props) => {
     <ChatsStyled>
       <Grid container spacing={0}>
         <Grid item xs={12} sm={12} md={4}>
-          <Contacts
-            toggleSettingsDialog={toggleSettingsDialog}
-            signOut={signOut}
-          />
+          <Contacts />
         </Grid>
         <Hidden smDown>
           <Grid item md={8}>
@@ -57,8 +50,6 @@ Chats.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string,
   }).isRequired,
-  toggleSettingsDialog: PropTypes.func.isRequired,
-  signOut: PropTypes.func.isRequired,
 };
 
 export default withRouter(Chats);

@@ -6,7 +6,21 @@ import Paper from '@material-ui/core/Paper';
 import { getStyledProps, getSpacing } from '../../../styles';
 
 const AppGrid = styled(Grid)`
-  background-color: ${getStyledProps('theme.palette.grey.300')};
+  &&
+  {
+    background-color: ${getStyledProps('theme.palette.grey.300')};
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const mdDown = breakpoints.down('md');
+
+    return `
+      ${mdDown} {
+        flex-flow: column;
+      }
+    `;
+  }}
+  }
 `;
 
 const AppContainer = styled(Paper)`

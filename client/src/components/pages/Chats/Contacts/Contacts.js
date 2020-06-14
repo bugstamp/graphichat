@@ -1,5 +1,4 @@
 import React, { useState, useCallback, memo } from 'react';
-import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import queryString from 'query-string';
@@ -12,7 +11,6 @@ import ContactsHeader from './ContactsHeader/ContactsHeader';
 import ContactsList from './ContactsList';
 import ContactsFooter from './ContactsFooter/ContactsFooter';
 import SearchDialog from '../SearchDialog';
-import Navigation from '../../../common/Navigation/Navigation';
 
 import { ContactsStyled } from './styled';
 
@@ -20,11 +18,7 @@ import gql from '../../../../gql';
 
 const { GET_ME, GET_MY_CHATS } = gql;
 
-const Contacts = (props) => {
-  const {
-    toggleSettingsDialog,
-    signOut,
-  } = props;
+const Contacts = () => {
   const [searchDialog, setSearchDialog] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 
@@ -94,21 +88,11 @@ const Contacts = (props) => {
       <Hidden smDown implementation="css">
         <ContactsFooter toggleSearchDialog={toggleSearchDialog} />
       </Hidden>
-      <Hidden mdUp implementation="css">
-        <Navigation
-          variant="horizontal"
-          toggleSettingsDialog={toggleSettingsDialog}
-          signOut={signOut}
-        />
-      </Hidden>
       <SearchDialog open={searchDialog} toggle={toggleSearchDialog} />
     </ContactsStyled>
   );
 };
 
-Contacts.propTypes = {
-  toggleSettingsDialog: PropTypes.func.isRequired,
-  signOut: PropTypes.func.isRequired,
-};
+Contacts.propTypes = {};
 
 export default memo(Contacts);

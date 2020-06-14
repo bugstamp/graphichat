@@ -47,6 +47,7 @@ const ChatMessages = (props) => {
       type,
       time,
       content,
+      isOptimistic,
     } = rowData;
     const isSystem = type === 'system';
     const isFirst = messages[0].id === id;
@@ -66,14 +67,16 @@ const ChatMessages = (props) => {
       <Message
         ref={ref}
         rowIndex={rowIndex}
+        id={id}
+        alignItems={alignItems}
         content={content}
         avatar={avatar}
         time={time}
+        divider={divider}
         isSystem={isSystem}
         isFirst={isFirst}
         isMyMessage={isMyMessage}
-        divider={divider}
-        alignItems={alignItems}
+        isOptimistic={isOptimistic}
       />
     );
   }, [myId, messages, myAvatar, contactAvatar]);

@@ -5,6 +5,9 @@ import gql from '../gql';
 const { GET_MY_CHATS } = gql;
 
 const resolvers = {
+  ChatMessage: {
+    isOptimistic: () => false,
+  },
   Query: {
     contact(__root, variables, { cache }) {
       const { chatId } = variables;

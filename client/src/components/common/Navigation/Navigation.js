@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import Tabs from './Tabs';
@@ -6,13 +6,14 @@ import Logo from '../Logo';
 
 import { NavigationStyled, LogoWrapper } from './styled';
 
-const Navigation = ({
-  logoSize,
-  variant,
-  toggleSettingsDialog,
-  signOut,
-}) => {
+const Navigation = (props) => {
+  const { logoSize, variant, signOut } = props;
+  const [settingsDialog, toggleSettingsDialog] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+
+  const handleToggleSettingsDialog = useCallback(() => {
+    toggleSettingsDialog(!settingsDialog);
+  }, [settingsDialog]);
 
   return (
     <NavigationStyled position="static" variant={variant}>
@@ -23,7 +24,7 @@ const Navigation = ({
         variant={variant}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        toggleSettingsDialog={toggleSettingsDialog}
+        toggleSettingsDialog={handleToggleSettingsDialog}
         signOut={signOut}
       />
     </NavigationStyled>
@@ -37,7 +38,6 @@ Navigation.defaultProps = {
 Navigation.propTypes = {
   variant: PropTypes.oneOf(['vertical', 'horizontal']),
   logoSize: PropTypes.number,
-  toggleSettingsDialog: PropTypes.func.isRequired,
   signOut: PropTypes.func.isRequired,
 };
 

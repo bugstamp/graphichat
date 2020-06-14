@@ -32,6 +32,7 @@ const Form = (props) => {
     setFieldValue,
     setFieldError,
     validateField,
+    formInputVariant,
   } = props;
   const { fields } = formConfig(formId);
   const { loading, error = {} } = result;
@@ -105,6 +106,7 @@ const Form = (props) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   setFieldValue={setFieldValue}
+                  formInputVariant={formInputVariant}
                 />
               </When>
               <When condition={type === 'password'}>
@@ -120,6 +122,7 @@ const Form = (props) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   setFieldValue={setFieldValue}
+                  formInputVariant={formInputVariant}
                 />
               </When>
               <When condition={type === 'radio'}>
@@ -148,6 +151,7 @@ const Form = (props) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   setFieldValue={setFieldValue}
+                  formInputVariant={formInputVariant}
                 />
               </Otherwise>
             </Choose>
@@ -164,6 +168,7 @@ Form.defaultProps = {
   submitButtonText: 'Submit',
   errors: {},
   touched: {},
+  formInputVariant: 'standard',
 };
 Form.propTypes = {
   formId: PropTypes.string.isRequired,
@@ -178,6 +183,7 @@ Form.propTypes = {
   setFieldValue: PropTypes.func.isRequired,
   setFieldError: PropTypes.func.isRequired,
   validateField: PropTypes.func.isRequired,
+  formInputVariant: PropTypes.oneOf(['outlined', 'standard']),
 };
 
 export default withFormik({

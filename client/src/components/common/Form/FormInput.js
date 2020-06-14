@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import { Field } from 'formik';
 import { trim } from 'lodash';
 
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-
-import { FormInputWrapper, FormInputError } from './styled';
+import TextField from '@material-ui/core/TextField';
 
 const FormInput = ({
   name,
@@ -22,7 +19,9 @@ const FormInput = ({
   onChange,
   onBlur,
   setFieldValue,
-  ...rest
+  formInputVariant,
+  margin,
+  endAdornment,
 }) => {
   const shrink = type === 'date' || undefined;
   const isPassword = name === 'password';
@@ -59,23 +58,30 @@ const FormInput = ({
   return (
     <Field name={name} validate={handleValidate}>
       {({ field }) => (
-        <FormInputWrapper fullWidth>
-          <InputLabel shrink={shrink} htmlFor={name}>{label}</InputLabel>
-          <Input
-            {...field}
-            id={name}
-            type={type}
-            error={isError}
-            onChange={onChange}
-            onBlur={handleOnBlur}
-            required={required}
-            placeholder={placeholder}
-            autoComplete={autoComplete}
-            inputProps={{ onKeyDown }}
-            {...rest}
-          />
-          <FormInputError error={isError}>{error}</FormInputError>
-        </FormInputWrapper>
+        <TextField
+          {...field}
+          fullWidth
+          variant={formInputVariant}
+          label={label}
+          id={name}
+          type={type}
+          error={isError}
+          onChange={onChange}
+          onBlur={handleOnBlur}
+          required={required}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          InputProps={{
+            endAdornment,
+          }}
+          InputLabelProps={{
+            shrink,
+            htmlFor: name,
+          }}
+          inputProps={{ onKeyDown }} //eslint-disable-line
+          margin={margin}
+          helperText={error}
+        />
       )}
     </Field>
   );
@@ -86,6 +92,9 @@ FormInput.defaultProps = {
   placeholder: '',
   error: undefined,
   isError: false,
+  margin: 'dense',
+  formInputVariant: 'outlined',
+  endAdornment: null,
 };
 FormInput.propTypes = {
   name: PropTypes.string.isRequired,
@@ -101,6 +110,9 @@ FormInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
   setFieldValue: PropTypes.func.isRequired,
+  margin: PropTypes.string,
+  formInputVariant: PropTypes.oneOf(['outlined', 'standard']),
+  endAdornment: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 };
 
 export default memo(FormInput);

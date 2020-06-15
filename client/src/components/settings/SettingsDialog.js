@@ -29,6 +29,8 @@ const SettingsDialog = (props) => {
     if (mode === 'edit') {
       toggle();
       handleToggleMode();
+    } else {
+      toggle();
     }
   }, [mode, toggle, handleToggleMode]);
 

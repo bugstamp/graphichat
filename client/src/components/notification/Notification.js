@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
 import NotificationContent from './NotificationContent';
 
-class Notification extends Component {
+class Notification extends PureComponent {
   onClose = (event, reason) => {
     const { open, toggle } = this.props;
 
@@ -20,7 +20,6 @@ class Notification extends Component {
       type,
       message,
       open,
-      toggle,
       ...rest
     } = this.props;
 
@@ -41,7 +40,7 @@ class Notification extends Component {
         <NotificationContent
           type={type}
           message={message}
-          toggle={() => toggle()}
+          toggle={this.onClose}
         />
       </Snackbar>
     );

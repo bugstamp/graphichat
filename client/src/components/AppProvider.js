@@ -4,15 +4,15 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ThemeProvider } from 'styled-components';
 
-import AppContextProvider from './context/AppProvider';
+import NotificationProvider from './context/NotificationProvider';
 
 const AppProvider = ({ client, theme, children }) => (
   <ApolloProvider client={client}>
     <MuiThemeProvider theme={theme}>
       <ThemeProvider theme={theme}>
-        <AppContextProvider>
+        <NotificationProvider>
           {children}
-        </AppContextProvider>
+        </NotificationProvider>
       </ThemeProvider>
     </MuiThemeProvider>
   </ApolloProvider>

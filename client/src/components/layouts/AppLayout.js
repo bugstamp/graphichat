@@ -9,6 +9,7 @@ import Hidden from '@material-ui/core/Hidden';
 
 import Navigation from '../navigation';
 import SettingsDialog from '../settings';
+import useNotification from '../hooks/useNotification';
 
 import apollo from '../../apollo';
 import storage from '../../storage';
@@ -23,6 +24,7 @@ const {
 
 const AppLayout = (props) => {
   const { children } = props;
+  const toggleNotification = useNotification();
   const [settingsDialog, toggleSettingsDialog] = useState(false);
 
   const { data: { sessionExpired } = {} } = useQuery(CHECK_SESSION_EXPIRATION);
@@ -31,6 +33,7 @@ const AppLayout = (props) => {
       apollo.resetStore();
       storage.removeTokens();
       history.push('/login');
+      toggleNotification('Session time was expired');
     },
   });
 

@@ -4,15 +4,15 @@ import queryString from 'query-string';
 
 import RegForm from './RegForm';
 import RegPresentation from './RegPresentation';
-import withNotification from '../../common/HOC/withNotification';
-
-import storage from '../../../storage';
 
 import { RegWrapper, RegFormWrapper } from './styled';
 
+import useNotification from '../../hooks/useNotification';
+import storage from '../../../storage';
+
 const Reg = (props) => {
-  const { location, history, toggleNotification } = props;
-  const { search } = location;
+  const { location: { search }, history } = props;
+  const toggleNotification = useNotification();
   const [isCompleted, setRegStatus] = React.useState(false);
   const [activeStep, setActiveStep] = React.useState(0);
   const { id } = queryString.parse(search);
@@ -68,9 +68,8 @@ Reg.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string.isRequired,
   }).isRequired,
-  toggleNotification: PropTypes.func.isRequired,
 };
 
 export { Reg };
 
-export default withNotification(Reg);
+export default Reg;

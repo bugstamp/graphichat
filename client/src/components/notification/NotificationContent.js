@@ -8,9 +8,9 @@ import amber from '@material-ui/core/colors/amber';
 import NotificationMessage from './NotificationMessage';
 import NotificationClose from './NotificationClose';
 
-import { getStyledProps } from '../../../styles';
+import { getStyledProps } from '../../styles';
 
-const Wrapper = styled(SnackbarContent)`
+const SnackbarStyled = styled(SnackbarContent)`
   && {
     background-color: ${(props) => {
     const { type } = props;
@@ -23,7 +23,7 @@ const Wrapper = styled(SnackbarContent)`
 `;
 
 const NotificationContent = ({ type, message, toggle }) => (
-  <Wrapper
+  <SnackbarStyled
     type={type}
     aria-describedby="alert-notification"
     message={<NotificationMessage key="message" type={type} message={message} />}

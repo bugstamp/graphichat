@@ -33,19 +33,22 @@ const AppLayout = (props) => {
       apollo.resetStore();
       storage.removeTokens();
       history.push('/login');
-      toggleNotification('Session time was expired');
+
+      if (sessionExpired) {
+        toggleNotification('Session timeout was expired');
+      }
     },
   });
-
-  const handleToggleSettingsDialog = useCallback(() => {
-    toggleSettingsDialog(!settingsDialog);
-  }, [settingsDialog]);
 
   useEffect(() => {
     if (sessionExpired) {
       signOut();
     }
   }, [sessionExpired, signOut]);
+
+  const handleToggleSettingsDialog = useCallback(() => {
+    toggleSettingsDialog(!settingsDialog);
+  }, [settingsDialog]);
 
   return (
     <AppWrapper container spacing={0} justify="center">

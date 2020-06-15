@@ -16,12 +16,12 @@ import { getUserDisplayName } from '../../utils/helpers';
 const tokensConfig = {
   token: {
     secret: process.env.TOKEN_SECRET,
-    expiresIn: '1m',
+    expiresIn: '1000',
     model: ['id', 'regStatus'],
   },
   refresh: {
     secret: process.env.REFRESH_TOKEN_SECRET,
-    expiresIn: '10m',
+    expiresIn: '1000',
     model: ['id', 'regStatus'],
   },
   register: {

@@ -45,13 +45,16 @@ const Form = (props) => {
   useEffect(() => {
     if (error.graphQLErrors) {
       const { graphQLErrors } = error;
-      const { message, data = null } = graphQLErrors[0];
 
-      if (data) {
-        const { invalidField } = data;
+      if (graphQLErrors.length) {
+        const { message, data = null } = graphQLErrors[0];
 
-        if (invalidField) {
-          setFieldError(invalidField, message);
+        if (data) {
+          const { invalidField } = data;
+
+          if (invalidField) {
+            setFieldError(invalidField, message);
+          }
         }
       }
     }

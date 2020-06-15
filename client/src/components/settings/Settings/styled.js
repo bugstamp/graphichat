@@ -8,9 +8,9 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 
 import { getStyledProps, getSpacing } from '../../../styles';
 
-const fadeOutAnimation = keyframes`${fadeOut}`;
+export const fadeOutAnimation = keyframes`${fadeOut}`;
 
-const SettingsWrapper = styled.div`
+export const SettingsWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -28,22 +28,13 @@ const SettingsWrapper = styled.div`
   }}
 `;
 
-const InputCheckIconWrapper = styled(InputAdornment)`
-  && {
-    animation: ${fadeOutAnimation};
-    animation-duration: .5s;
-    animation-delay: 5s;
-    animation-fill-mode: forwards;
-  }
-`;
-
-const AvatarWrapper = styled.div`
+export const AvatarWrapper = styled.div`
   display: flex;
   position: relative;
   margin-right: ${getSpacing(1)};
 `;
 
-const Avatar = styled(MaterialAvatar)`
+export const Avatar = styled(MaterialAvatar)`
   && {
     width: 172px;
     height: 172px;
@@ -66,7 +57,7 @@ const Avatar = styled(MaterialAvatar)`
   }
 `;
 
-const Camera = styled(CameraIcon)`
+export const Camera = styled(CameraIcon)`
   && {
     ${position('absolute', '50%', null, null, '50%')};
     transform: translate(-50%, -50%);
@@ -74,15 +65,6 @@ const Camera = styled(CameraIcon)`
   }
 `;
 
-const FormWrapper = styled.div`
+export const FormWrapper = styled.div`
   width: 100%;
 `;
-
-export {
-  SettingsWrapper,
-  AvatarWrapper,
-  Avatar,
-  Camera,
-  FormWrapper,
-  InputCheckIconWrapper,
-};

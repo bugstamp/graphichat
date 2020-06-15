@@ -10,6 +10,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Navigation from '../navigation';
 import SettingsDialog from '../settings';
 
+import apollo from '../../apollo';
 import storage from '../../storage';
 import gql from '../../gql';
 
@@ -27,6 +28,7 @@ const AppLayout = (props) => {
   const { data: { sessionExpired } = {} } = useQuery(CHECK_SESSION_EXPIRATION);
   const [signOut] = useMutation(SIGN_OUT, {
     onCompleted() {
+      apollo.resetStore();
       storage.removeTokens();
       history.push('/login');
     },
@@ -49,7 +51,7 @@ const AppLayout = (props) => {
           <Hidden smDown>
             <Grid item>
               <Navigation
-                toggleSettingsDialog={toggleSettingsDialog}
+                toggleSettingsDialog={handleToggleSettingsDialog}
                 signOut={signOut}
               />
             </Grid>
@@ -62,7 +64,7 @@ const AppLayout = (props) => {
       <Hidden mdUp implementation="css">
         <Navigation
           variant="horizontal"
-          toggleSettingsDialog={toggleSettingsDialog}
+          toggleSettingsDialog={handleToggleSettingsDialog}
           signOut={signOut}
         />
       </Hidden>

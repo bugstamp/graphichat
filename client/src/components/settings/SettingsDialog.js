@@ -1,49 +1,59 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useQuery, useMutation } from '@apollo/react-hooks';
 
-import ResponsiveDialog from '../common/ResponsiveDialog/ResponsiveDialog';
-import Settings from './Settings/Settings';
+import Typography from '@material-ui/core/Typography';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
 
-import gql from '../../gql';
-import { userUpdate, uploadAvatarUpdate } from '../../gql/updates/user';
-
-const {
-  GET_ME,
-  UPLOAD_AVATAR,
-  UPDATE_USER,
-} = gql;
+import ResponsiveDialog from '../common/ResponsiveDialog';
+import TopProgressLine from '../common/TopProgressLine';
+import Settings from './Settings';
 
 const SettingsDialog = (props) => {
   const { open, toggle } = props;
+  const [mode, setMode] = useState('read');
+  const [loading, setLoading] = useState(false);
+  const buttonText = mode === 'edit' ? 'Cancel' : 'Edit';
 
-  const { data: { me = {} } = {} } = useQuery(GET_ME);
-  const [uploadAvatar, { loading: uploading }] = useMutation(UPLOAD_AVATAR, {
-    update: uploadAvatarUpdate,
-  });
-  const [updateUser, {
-    loading: updating,
-    data: updateUserResult,
-    error,
-  }] = useMutation(UPDATE_USER, {
-    update: userUpdate,
-  });
-  const loading = uploading || updating;
+  const handleToggleMode = useCallback(() => {
+    setMode(mode === 'read' ? 'edit' : 'read');
+  }, [mode]);
 
   return (
     <ResponsiveDialog
       open={open}
       toggle={toggle}
-      loading={loading}
-      title="Settings"
     >
-      <Settings
-        me={me}
-        error={error}
-        updateUser={updateUser}
-        updateUserResult={updateUserResult}
-        uploadAvatar={uploadAvatar}
-      />
+      <TopProgressLine loading={loading} />
+      <DialogTitle disableTypography>
+        <Typography variant="h6">Settings</Typography>
+      </DialogTitle>
+      <DialogContent dividers>
+        <Settings
+          mode={mode}
+          setMode={setMode}
+          setLoading={setLoading}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={toggle}
+          color="primary"
+          type="button"
+        >
+          Close
+        </Button>
+        <Button
+          onClick={handleToggleMode}
+          color="primary"
+          type="button"
+          variant="contained"
+        >
+          {buttonText}
+        </Button>
+      </DialogActions>
     </ResponsiveDialog>
   );
 };

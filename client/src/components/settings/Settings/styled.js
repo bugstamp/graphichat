@@ -38,8 +38,9 @@ const InputCheckIconWrapper = styled(InputAdornment)`
 `;
 
 const AvatarWrapper = styled.div`
-  position: relative;
   display: flex;
+  position: relative;
+  margin-right: ${getSpacing(1)};
 `;
 
 const Avatar = styled(MaterialAvatar)`
@@ -75,7 +76,6 @@ const Camera = styled(CameraIcon)`
 
 const FormWrapper = styled.div`
   width: 100%;
-  padding: ${getSpacing(1)};
 `;
 
 export {

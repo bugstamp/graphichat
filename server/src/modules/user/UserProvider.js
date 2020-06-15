@@ -91,16 +91,41 @@ class UserProvider {
     }
   }
 
-  updateUser = async (field, value) => {
+  updateUser = async (form, userId = null) => {
     try {
       const { id } = this.authProvider.user;
+      const user = await this.db.User.findById(userId || id);
+      const { username, email } = form;
 
-      if (field === 'username') {
+      if (user.username !== username) {
+        await this.db.User.verifyUsername(username);
+      }
+      if (user.email !== email) {
+        await this.db.User.verifyEmail(email);
+      }
+      const updatedUser = await this.db.User.findByIdAndUpdate(user.id, form, { new: true });
+      await this.pubsub.publish(USER_UPDATED, { userUpdated: updatedUser });
+
+      return updatedUser;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  updateUserField = async (field, value, userId = null) => {
+    try {
+      const { id } = this.authProvider.user;
+      const user = await this.db.User.findById(userId || id);
+
+      if (field === 'username' && value !== user.username) {
         await this.db.User.verifyUsername(value);
       }
-
-      const user = await this.db.User.findByIdAndUpdate(id, { [field]: value }, { new: true });
-      await this.pubsub.publish(USER_UPDATED, { userUpdated: user });
+      if (field === 'email' && value !== user.email) {
+        await this.db.User.verifyEmail(value);
+      }
+      const updateUser = await this.db.User
+        .findByIdAndUpdate(user.id, { [field]: value }, { new: true });
+      await this.pubsub.publish(USER_UPDATED, { userUpdated: updateUser });
 
       return {
         field,

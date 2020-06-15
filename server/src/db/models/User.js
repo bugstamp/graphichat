@@ -279,6 +279,21 @@ userSchema.statics = {
       throw e;
     }
   },
+  async verifyUsername(username) {
+    try {
+      const isExist = await this.findOne({ username });
+
+      if (isExist) {
+        throw new BadInputError({
+          message: 'The provided username is already used',
+          data: { invalidField: 'username' },
+        });
+      }
+      return !isExist;
+    } catch (e) {
+      throw e;
+    }
+  },
   async addContact(id, userId, chatId) {
     try {
       const { contacts } = await this.findByIdAndUpdate(id,
@@ -291,21 +306,6 @@ userSchema.statics = {
       const contact = find(contacts, { userId });
 
       return contact;
-    } catch (e) {
-      throw e;
-    }
-  },
-  async verifyUsername(username) {
-    try {
-      const isExist = await this.findOne({ username });
-
-      if (isExist) {
-        throw new BadInputError({
-          message: 'The provided username is already used',
-          data: { invalidField: 'username' },
-        });
-      }
-      return !isExist;
     } catch (e) {
       throw e;
     }

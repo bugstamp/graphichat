@@ -176,6 +176,31 @@ export const formValidationSchemas = {
       }
     }
   }), {}),
+  user: yup.object().shape(transform(formFields.user, (res, { name }) => {
+    // eslint-disable-next-line
+    switch (name) {
+      case 'username': {
+        res[name] = yup.string()
+          .test(testFieldForWhitespaces)
+          .required('*required');
+        break;
+      }
+      case 'email': {
+        res[name] = yup.string()
+          .email()
+          .required('*required');
+        break;
+      }
+      case 'firstName': {
+        res[name] = yup.string().required('*required');
+        break;
+      }
+      case 'lastName': {
+        res[name] = yup.string().required('*required');
+        break;
+      }
+    }
+  }), {}),
 };
 
 export const formInitialValues = transform(formFields, (res, values, formName) => {

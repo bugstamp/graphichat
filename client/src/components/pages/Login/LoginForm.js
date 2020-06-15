@@ -9,6 +9,7 @@ import SocialMedia from '../../common/SocialMedia/SocialMedia';
 import TopProgressLine from '../../common/TopProgressLine';
 
 import { LoginFormWrapper, Header, SignUpButton } from './styled';
+
 import gql from '../../../gql';
 
 const {

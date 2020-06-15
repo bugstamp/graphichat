@@ -20,6 +20,7 @@ const FormInput = ({
   onBlur,
   setFieldValue,
   formInputVariant,
+  readOnly,
   margin,
   endAdornment,
 }) => {
@@ -73,6 +74,7 @@ const FormInput = ({
           autoComplete={autoComplete}
           InputProps={{
             endAdornment,
+            readOnly,
           }}
           InputLabelProps={{
             shrink,
@@ -94,6 +96,7 @@ FormInput.defaultProps = {
   isError: false,
   margin: 'dense',
   formInputVariant: 'outlined',
+  readOnly: false,
   endAdornment: null,
 };
 FormInput.propTypes = {
@@ -112,6 +115,7 @@ FormInput.propTypes = {
   setFieldValue: PropTypes.func.isRequired,
   margin: PropTypes.string,
   formInputVariant: PropTypes.oneOf(['outlined', 'standard']),
+  readOnly: PropTypes.bool,
   endAdornment: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
 };
 

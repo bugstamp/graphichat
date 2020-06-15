@@ -17,14 +17,20 @@ export default {
       return me;
     },
     myContacts: (_, args, { injector }) => injector.get(UserProvider).getMyContacts(),
-    searchUsers: (_, { searchValue }, { injector }) => injector.get(UserProvider).searchUsers(searchValue),
+    searchUsers: (_, { searchValue }, { injector }) => injector
+      .get(UserProvider).searchUsers(searchValue),
   },
   Mutation: {
     createUser: (_, { form }, { injector }) => injector.get(UserProvider).createUser(form),
-    updateUser: (_, { field, value }, { injector }) => injector.get(UserProvider).updateUser(field, value),
+    updateUser: (_, { form, userId }, { injector }) => injector
+      .get(UserProvider).updateUser(form, userId),
+    updateUserField: (_, { field, value, userId }, { injector }) => injector
+      .get(UserProvider).updateUserField(field, value, userId),
     deleteUser: (_, { id }, { injector }) => injector.get(UserProvider).deleteUser(id),
-    removeUserContacts: (_, { userId }, { injector }) => injector.get(UserProvider).removeUserContacts(userId),
-    uploadAvatar: async (_, { file }, { injector }) => injector.get(UserProvider).uploadAvatar(file),
+    removeUserContacts: (_, { userId }, { injector }) => injector
+      .get(UserProvider).removeUserContacts(userId),
+    uploadAvatar: async (_, { file }, { injector }) => injector
+      .get(UserProvider).uploadAvatar(file),
   },
   Subscription: {
     userActivityUpdated: {

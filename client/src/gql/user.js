@@ -75,12 +75,12 @@ export const USER_ACTIVITY_SUBSCRIPTION = gql`
 `;
 
 export const UPDATE_USER = gql`
-  mutation UpdateUser($field: String!, $value: String!) {
-    updateUser(field: $field, value: $value) {
-      field
-      value
+  mutation UpdateUser($form: UserUpdateForm!) {
+    updateUser(form: $form) {
+      ...myData
     }
   }
+  ${myFragment}
 `;
 
 export const UPLOAD_AVATAR = gql`

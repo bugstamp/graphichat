@@ -15,6 +15,7 @@ export const myFragment = gql`
       md
     }
     username
+    email
     displayName
     firstName
     lastName

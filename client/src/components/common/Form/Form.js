@@ -32,7 +32,9 @@ const Form = (props) => {
     setFieldValue,
     setFieldError,
     validateField,
+    resetForm,
     formInputVariant,
+    readOnly,
   } = props;
   const { fields } = formConfig(formId);
   const { loading, error = {} } = result;
@@ -51,6 +53,12 @@ const Form = (props) => {
       }
     }
   }, [error, setFieldError]);
+
+  useEffect(() => {
+    if (readOnly) {
+      resetForm();
+    }
+  }, [readOnly, resetForm]);
 
   const validate = useCallback(async (field, value) => {
     try {
@@ -107,6 +115,7 @@ const Form = (props) => {
                   onBlur={handleBlur}
                   setFieldValue={setFieldValue}
                   formInputVariant={formInputVariant}
+                  readOnly={readOnly}
                 />
               </When>
               <When condition={type === 'password'}>
@@ -123,6 +132,7 @@ const Form = (props) => {
                   onBlur={handleBlur}
                   setFieldValue={setFieldValue}
                   formInputVariant={formInputVariant}
+                  readOnly={readOnly}
                 />
               </When>
               <When condition={type === 'radio'}>
@@ -136,6 +146,7 @@ const Form = (props) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   setFieldValue={setFieldValue}
+                  readOnly={readOnly}
                 />
               </When>
               <Otherwise>
@@ -152,26 +163,32 @@ const Form = (props) => {
                   onBlur={handleBlur}
                   setFieldValue={setFieldValue}
                   formInputVariant={formInputVariant}
+                  readOnly={readOnly}
                 />
               </Otherwise>
             </Choose>
           );
         })
       }
-      <FormSubmit loading={loading} text={submitButtonText} />
+      <If condition={!readOnly}>
+        <FormSubmit loading={loading} text={submitButtonText} />
+      </If>
     </FormWrapper>
   );
 };
 
 Form.defaultProps = {
   asyncFields: {},
+  initialValues: null,
   submitButtonText: 'Submit',
   errors: {},
   touched: {},
   formInputVariant: 'standard',
+  readOnly: false,
 };
 Form.propTypes = {
   formId: PropTypes.string.isRequired,
+  initialValues: PropTypes.objectOf(PropTypes.any),
   asyncFields: PropTypes.objectOf(PropTypes.shape(formAsyncFieldsProps)),
   result: PropTypes.shape(mutationResultProps).isRequired,
   submitButtonText: PropTypes.string,
@@ -183,14 +200,23 @@ Form.propTypes = {
   setFieldValue: PropTypes.func.isRequired,
   setFieldError: PropTypes.func.isRequired,
   validateField: PropTypes.func.isRequired,
+  resetForm: PropTypes.func.isRequired,
   formInputVariant: PropTypes.oneOf(['outlined', 'standard']),
+  readOnly: PropTypes.bool,
 };
 
 export default withFormik({
-  mapPropsToValues: ({ formId }) => {
-    const { initialValues } = formConfig(formId);
+  mapPropsToValues: ({ formId, initialValues }) => {
+    const { fields, initialValues: defaultValues } = formConfig(formId);
 
-    return initialValues;
+    if (initialValues) {
+      return fields.reduce((acc, { name }) => {
+        acc[name] = initialValues[name];
+
+        return acc;
+      }, {});
+    }
+    return defaultValues;
   },
   handleSubmit: (form, { props: { mutation } }) => {
     mutation({ variables: { form } });

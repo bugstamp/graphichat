@@ -45,7 +45,7 @@ const FormInput = ({
     if (!isPassword) {
       setFieldValue(name, trimmedValue);
     }
-    validateField(name);
+    validateField(name, value);
 
     if (onBlur) onBlur(e);
   }

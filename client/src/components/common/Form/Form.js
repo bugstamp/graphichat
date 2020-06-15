@@ -13,10 +13,7 @@ import FormSubmit from './FormSubmit';
 import formConfig from './formConfig';
 
 import { FormWrapper } from './styled';
-import {
-  mutationResultProps,
-  formAsyncFieldsProps,
-} from '../../propTypes';
+import { mutationResultProps } from '../../propTypes';
 
 const Form = (props) => {
   const {
@@ -40,6 +37,12 @@ const Form = (props) => {
   const { loading, error = {} } = result;
 
   useEffect(() => {
+    if (readOnly) {
+      resetForm();
+    }
+  }, [readOnly, resetForm]);
+
+  useEffect(() => {
     if (error.graphQLErrors) {
       const { graphQLErrors } = error;
       const { message, data = null } = graphQLErrors[0];
@@ -54,21 +57,13 @@ const Form = (props) => {
     }
   }, [error, setFieldError]);
 
-  useEffect(() => {
-    if (readOnly) {
-      resetForm();
-    }
-  }, [readOnly, resetForm]);
-
-  const validate = useCallback(async (field, value) => {
+  const validate = useCallback(async (field, value, asyncValidateCb = null) => {
     try {
       const { validationSchema } = formConfig(formId);
       await yup.reach(validationSchema, field).validate(value);
 
-      if (asyncFields[field]) {
-        const { mutation } = asyncFields[field];
-
-        await mutation({ variables: { value, field } });
+      if (asyncFields.includes(field)) {
+        await asyncValidateCb(field, value);
       }
     } catch (e) {
       const { graphQLErrors } = e;
@@ -100,7 +95,7 @@ const Form = (props) => {
 
           return (
             <Choose>
-              <When condition={asyncFields[name]}>
+              <When condition={asyncFields.includes(name)}>
                 <AsyncFormInput
                   {...fieldValues}
                   key={name}
@@ -108,7 +103,6 @@ const Form = (props) => {
                   type={type}
                   error={errorMessage}
                   isError={isError}
-                  result={asyncFields[name].result}
                   validate={validate}
                   validateField={validateField}
                   onChange={handleChange}
@@ -178,7 +172,7 @@ const Form = (props) => {
 };
 
 Form.defaultProps = {
-  asyncFields: {},
+  asyncFields: [],
   initialValues: null,
   submitButtonText: 'Submit',
   errors: {},
@@ -189,7 +183,7 @@ Form.defaultProps = {
 Form.propTypes = {
   formId: PropTypes.string.isRequired,
   initialValues: PropTypes.objectOf(PropTypes.any),
-  asyncFields: PropTypes.objectOf(PropTypes.shape(formAsyncFieldsProps)),
+  asyncFields: PropTypes.arrayOf(PropTypes.string),
   result: PropTypes.shape(mutationResultProps).isRequired,
   submitButtonText: PropTypes.string,
   errors: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),

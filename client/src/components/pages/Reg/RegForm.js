@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useMutation } from '@apollo/react-hooks';
@@ -14,10 +14,10 @@ import {
   FormInfo,
   FormFooter,
 } from './styled';
+
 import gql from '../../../gql';
 
 const {
-  SIGN_UP_ASYNC_VALIDATION,
   SIGN_UP,
   SIGN_UP_COMPLETION,
   SIGN_UP_BY_SOCIAL,
@@ -31,14 +31,7 @@ const RegForm = (props) => {
     onSuccess,
     onError,
   } = props;
-  const [
-    signUpAsyncValidationUsername,
-    signUpAsyncValidationUsernameResult,
-  ] = useMutation(SIGN_UP_ASYNC_VALIDATION);
-  const [
-    signUpAsyncValidationEmail,
-    signUpAsyncValidationEmailResult,
-  ] = useMutation(SIGN_UP_ASYNC_VALIDATION);
+  const asyncFields = useMemo(() => ['username', 'email'], []);
   const [signUp, signUpResult] = useMutation(SIGN_UP, {
     onCompleted: onSuccess('signUp'),
   });
@@ -50,16 +43,7 @@ const RegForm = (props) => {
     onError,
   });
   const loading = signUpResult.loading || signUpCompletionResult.loading;
-  const asyncFields = {
-    username: {
-      mutation: signUpAsyncValidationUsername,
-      result: signUpAsyncValidationUsernameResult,
-    },
-    email: {
-      mutation: signUpAsyncValidationEmail,
-      result: signUpAsyncValidationEmailResult,
-    },
-  };
+
   const handleSignUpCompletion = useCallback(({ variables }) => {
     signUpCompletion({ variables: { ...variables, id: userId } });
   }, [userId, signUpCompletion]);

@@ -1,4 +1,8 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, {
+  memo,
+  useState,
+  useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
@@ -21,10 +25,17 @@ const SettingsDialog = (props) => {
     setMode(mode === 'read' ? 'edit' : 'read');
   }, [mode]);
 
+  const handleToggle = useCallback(() => {
+    if (mode === 'edit') {
+      toggle();
+      handleToggleMode();
+    }
+  }, [mode, toggle, handleToggleMode]);
+
   return (
     <ResponsiveDialog
       open={open}
-      toggle={toggle}
+      toggle={handleToggle}
     >
       <TopProgressLine loading={loading} />
       <DialogTitle disableTypography>
@@ -39,19 +50,19 @@ const SettingsDialog = (props) => {
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={toggle}
-          color="primary"
-          type="button"
-        >
-          Close
-        </Button>
-        <Button
           onClick={handleToggleMode}
           color="primary"
           type="button"
           variant="contained"
         >
           {buttonText}
+        </Button>
+        <Button
+          onClick={handleToggle}
+          color="primary"
+          type="button"
+        >
+          Close
         </Button>
       </DialogActions>
     </ResponsiveDialog>

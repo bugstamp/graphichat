@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { size, position } from 'polished';
 
 import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
 
 import { getStyledProps } from '../../../styles';
 
@@ -18,13 +18,13 @@ const AvatarWrapper = styled.div`
   cursor: pointer;
 `;
 
-const AvatarIndicator = styled.span`
-  ${position('absolute', null, '0px', '15px', null)};
-  ${size('10px')};
-  display: block;
-  background-color: ${getStyledProps('theme.palette.success.main')};
-  border-radius: 50%;
-  visibility: ${({ online }) => !online && 'hidden'};
+const AvatarBadge = styled(Badge)`
+  &&
+  {
+    span {
+      background-color: ${getStyledProps('theme.palette.success.main')};
+    }
+  }
 `;
 
 const ListItemAvatar = (props) => {
@@ -37,12 +37,22 @@ const ListItemAvatar = (props) => {
 
   return (
     <ListItemAvatarStyled>
-      <AvatarWrapper>
-        <Avatar src={src} alt={alt}>
-          {text}
-        </Avatar>
-        <AvatarIndicator online={online} />
-      </AvatarWrapper>
+      <AvatarBadge
+        color="secondary"
+        overlap="circle"
+        variant="dot"
+        invisible={!online}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+      >
+        <AvatarWrapper>
+          <Avatar src={src} alt={alt}>
+            {text}
+          </Avatar>
+        </AvatarWrapper>
+      </AvatarBadge>
     </ListItemAvatarStyled>
   );
 };

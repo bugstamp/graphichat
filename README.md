@@ -1,27 +1,36 @@
-# GraphiChat 
+# GraphiChat
 
-Simple chat app for learning/testing GraphQL API and some other features with the following stack:
+The fullstack chat app for learning GraphQL API, styled components, unit-testing using Jest/Enzyme environment, Docker containerization and other features with the following stack:
 
 #### Server:
-- Node/Express
+- Node (Express)
 - Apollo Server
 - GraphQL Modules
 #### DB:
 - MongoDB
 #### Client:
 - React
-- Apollo Client/React Apollo
+- Apollo Client (React Apollo)
 - Webpack
 #### UI:
-- MaterialUI
+- Material UI
+#### Styles:
 - Styled-Components
 #### Testing:
 - Jest
 - Enzyme
-#### Other features:
-- Social auth
-- List with lazy loading and custom scrollbar implementation
-- Docker
+#### Features:
+- Auth with access and refresh tokens
+- Sign in/sign up with social media
+- Email verification
+- Form validation using Formik and Yup
+- List with lazy loading
+### What was implemented?
+- User sign in/sign up
+- Search users by name or username and create chat with them
+- Edit user information
+- Real-time updates of information and online status of users in your chat list
+- Instant messaging
 
 [View Demo](https://drive.google.com/open?id=19Sw2f1vi4W_qwe_vle-Ldbes99980ucg)
 

@@ -32,6 +32,6 @@ The fullstack chat app for learning GraphQL API, styled components, unit-testing
 - Real-time updates of information and online status of users in your chat list
 - Instant messaging
 
-[View Demo](https://drive.google.com/open?id=19Sw2f1vi4W_qwe_vle-Ldbes99980ucg)
+[View Demo](https://drive.google.com/file/d/19Sw2f1vi4W_qwe_vle-Ldbes99980ucg/view?usp=sharing)
 
 [Go to the site](https://graphichat.herokuapp.com/)

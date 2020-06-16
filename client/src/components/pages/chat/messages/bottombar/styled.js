@@ -9,7 +9,7 @@ import { ListItemAvatarStyled } from '../../../../common/List/ListItemAvatar';
 import { getStyledProps, getSpacing } from '../../../../../styles';
 
 export const ChatBottomBarStyled = styled.div`
-  min-height: 72px;
+  height: 72px;
   display: flex;
   flex-flow: row nowrap;
   position: relative;
@@ -18,6 +18,18 @@ export const ChatBottomBarStyled = styled.div`
 
   ${ListItemAvatarStyled} {
     padding: ${getSpacing(1)};
+  }
+
+  ${(props) => {
+    const breakpoints = getStyledProps('theme.breakpoints')(props);
+    const smDown = breakpoints.down('sm');
+
+    return `
+      ${smDown} {
+        height: 52px;
+      }
+    `;
+  }}
   }
 `;
 

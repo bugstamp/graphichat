@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import history from 'appHistory';
 
 import Grid from '@material-ui/core/Grid';
@@ -86,5 +86,5 @@ AppLayout.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
 };
 
-export default hot(module)(AppLayout);
+export default hot(AppLayout);
 export { AppLayout };

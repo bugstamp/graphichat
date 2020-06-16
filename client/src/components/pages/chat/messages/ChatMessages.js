@@ -1,5 +1,4 @@
 import React, {
-  useEffect,
   useCallback,
   memo,
 } from 'react';
@@ -13,7 +12,7 @@ import { isEmpty } from 'lodash';
 import ChatMessagesPlaceholder from './ChatMessagesPlaceholder';
 import ChatTopbar from './topbar';
 import ChatMessageList from './list';
-import ChatInput from './input';
+import ChatBottomBar from './bottombar';
 
 import useAvatar from '../../../hooks/useAvatar';
 import gql from '../../../../gql';
@@ -113,7 +112,7 @@ const ChatMessages = () => {
           messages={messages}
           getMessages={fetchMoreMessages}
         />
-        <ChatInput
+        <ChatBottomBar
           chatId={chatId}
           myAvatar={myAvatar}
           contactAvatar={contactAvatar}

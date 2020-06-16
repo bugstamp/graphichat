@@ -16,7 +16,8 @@ export const SearchDialogBodyStyled = styled.div`
 
     return `
       ${mdUp} {
-        min-height: 500px;
+        min-height: 50vmin;
+        max-height: 90vmin;
         border-radius: ${borderRadius}px;
         box-shadow: ${shadows};
       }

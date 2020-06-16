@@ -13,7 +13,7 @@ import FullWidthSwipeableDrawer from '../../common/FullWidthSwipeableDrawer';
 
 import gql from '../../../gql';
 import { userContactSubscriptionUpdate, userActivityUpdate } from '../../../gql/updates/user';
-import { chatCreatedUpdate, messageAddedSubscriptionUpdate } from '../../../gql/updates/chat';
+import { chatCreatedSubscriptionUpdate, messageAddedSubscriptionUpdate } from '../../../gql/updates/chat';
 
 import { ChatWrapper } from './styled';
 
@@ -36,7 +36,7 @@ const Chat = () => {
     onSubscriptionData: userActivityUpdate,
   });
   useSubscription(CHAT_CREATED_SUBSCRIPTION, {
-    onSubscriptionData: chatCreatedUpdate,
+    onSubscriptionData: chatCreatedSubscriptionUpdate,
   });
   useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
     onSubscriptionData: messageAddedSubscriptionUpdate,

@@ -62,7 +62,7 @@ export const messageAddedSubscriptionUpdate = ({
   addMessageUpdate(client, messageAdded);
 };
 
-export const chatCreatedUpdate = ({ client, subscriptionData: { data: { createChat } } }) => {
+export const chatCreatedUpdate = (client, { data: { createChat } }) => {
   const { contact, chat } = createChat;
   const { myContacts, myChats } = client.readQuery({ query: GET_MY_CHATS });
 
@@ -74,3 +74,8 @@ export const chatCreatedUpdate = ({ client, subscriptionData: { data: { createCh
     },
   });
 };
+
+export const chatCreatedSubscriptionUpdate = ({
+  client,
+  subscriptionData,
+}) => chatCreatedUpdate(client, subscriptionData);

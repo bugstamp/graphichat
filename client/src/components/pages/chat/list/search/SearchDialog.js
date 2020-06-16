@@ -17,7 +17,7 @@ import SearchDialogContent from './Content/SearchDialogContent';
 import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
 
 import gql from '../../../../../gql';
-import { chatCreatedUpdate } from '../../../../../gql/updates/chat';
+import { createChatMutationUpdate } from '../../../../../gql/updates/chat';
 
 import { SearchDialogBodyStyled } from './styled';
 
@@ -41,7 +41,7 @@ const SearchDialog = (props) => {
     notifyOnNetworkStatusChange: true,
   });
   const [createChat, { loading: adding }] = useMutation(CREATE_CHAT, {
-    update: chatCreatedUpdate,
+    update: createChatMutationUpdate,
   });
   const { myContacts } = getMyContactsData;
   const { searchUsers = [] } = searchUsersData;

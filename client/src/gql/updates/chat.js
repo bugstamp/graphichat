@@ -51,6 +51,25 @@ export const addMessageUpdate = (client, result) => {
   });
 };
 
+export const addMessageSubscriptionUpdate = (client, result) => {
+  const { chatId, message } = result;
+  const { myContacts, myChats } = client.readQuery({ query: GET_MY_CHATS, variables: { chatId } });
+
+  client.writeQuery({
+    query: GET_MY_CHATS,
+    data: {
+      myContacts,
+      myChats: myChats.map((chat) => {
+        const { id, messages } = chat;
+        if (id === chatId) {
+          return { ...chat, messages: [...messages, message] };
+        }
+        return chat;
+      }),
+    },
+  });
+};
+
 export const addMessageMutationUpdate = (client, { data: { addMessage: newMessage } }) => {
   addMessageUpdate(client, newMessage);
 };
@@ -59,11 +78,11 @@ export const messageAddedSubscriptionUpdate = ({
   client,
   subscriptionData: { data: { messageAdded } },
 }) => {
-  addMessageUpdate(client, messageAdded);
+  addMessageSubscriptionUpdate(client, messageAdded);
 };
 
-export const chatCreatedUpdate = (client, { data: { createChat } }) => {
-  const { contact, chat } = createChat;
+export const chatCreatedUpdate = (client, data) => {
+  const { contact, chat } = data;
   const { myContacts, myChats } = client.readQuery({ query: GET_MY_CHATS });
 
   client.writeQuery({
@@ -75,7 +94,11 @@ export const chatCreatedUpdate = (client, { data: { createChat } }) => {
   });
 };
 
+export const createChatMutationUpdate = (client, {
+  data: { createChat },
+}) => chatCreatedUpdate(client, createChat);
+
 export const chatCreatedSubscriptionUpdate = ({
   client,
-  subscriptionData,
-}) => chatCreatedUpdate(client, subscriptionData);
+  subscriptionData: { chatCreated },
+}) => chatCreatedUpdate(client, chatCreated);

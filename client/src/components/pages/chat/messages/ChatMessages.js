@@ -40,7 +40,6 @@ const ChatMessages = () => {
   const {
     loading,
     data = { chat: {}, contact: {} },
-    refetch,
     fetchMore,
   } = useQuery(GET_CHAT, {
     variables: { chatId: selectedChatId },
@@ -91,18 +90,6 @@ const ChatMessages = () => {
 
     addMessage({ variables, optimisticResponse });
   }, [chatId, myId, addMessage]);
-
-  useEffect(() => {
-    refetch();
-  }, [selectedChatId, refetch]);
-
-  useEffect(() => {
-    const fetchMoreSize = 20;
-
-    if (chatId && (messages.length < fetchMoreSize)) {
-      fetchMoreMessages();
-    }
-  }, [chatId, messages, fetchMoreMessages]);
 
   return (
     <ChatMessagesStyled square elevation={0}>

@@ -87,7 +87,6 @@ const MessageList = (props) => {
       loading={loading}
       data={messages}
       fetchMore={getMessages}
-      fetchMoreThreshold={1}
       startFrom="bottom"
       rowRenderer={rowRenderer}
       lazyLoad

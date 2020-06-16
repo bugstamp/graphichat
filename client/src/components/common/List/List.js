@@ -150,7 +150,11 @@ class List extends Component {
       thresholdIndex = fetchMoreThreshold;
     }
 
-    if ((index === thresholdIndex) && inView) {
+    if (data.length < fetchMoreThreshold) {
+      if (index === 0 && inView) {
+        fetchMore();
+      }
+    } else if ((index === thresholdIndex) && inView) {
       fetchMore();
     }
 

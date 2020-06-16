@@ -123,7 +123,7 @@ export const formValidationSchemas = {
       }
       case 'password': {
         res[name] = yup.string()
-          .min(6)
+          .min(5)
           .max(20)
           .required('*required');
         break;
@@ -148,7 +148,7 @@ export const formValidationSchemas = {
       case 'password': {
         res[name] = yup.string()
           .test(testFieldForWhitespaces)
-          .min(6)
+          .min(5)
           .max(20)
           .required('*required');
         break;

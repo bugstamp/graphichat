@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import { SubmitButton } from './styled';
 
-const FormSubmit = ({ loading, text }) => (
+const FormSubmit = ({ loading, text, size }) => (
   <SubmitButton
     type="submit"
-    size="large"
+    size={size}
     color="primary"
     variant="contained"
     disabled={loading}
@@ -18,10 +18,12 @@ const FormSubmit = ({ loading, text }) => (
 
 FormSubmit.defaultProps = {
   loading: false,
+  size: 'large',
 };
 FormSubmit.propTypes = {
   loading: PropTypes.bool,
   text: PropTypes.string.isRequired,
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
 };
 
 export default FormSubmit;

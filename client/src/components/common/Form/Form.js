@@ -32,6 +32,7 @@ const Form = (props) => {
     resetForm,
     formInputVariant,
     readOnly,
+    submitButtonSize,
   } = props;
   const { fields } = formConfig(formId);
   const { loading, error = {} } = result;
@@ -168,7 +169,11 @@ const Form = (props) => {
         })
       }
       <If condition={!readOnly}>
-        <FormSubmit loading={loading} text={submitButtonText} />
+        <FormSubmit
+          loading={loading}
+          text={submitButtonText}
+          size={submitButtonSize}
+        />
       </If>
     </FormWrapper>
   );
@@ -182,6 +187,7 @@ Form.defaultProps = {
   touched: {},
   formInputVariant: 'standard',
   readOnly: false,
+  submitButtonSize: 'large',
 };
 Form.propTypes = {
   formId: PropTypes.string.isRequired,
@@ -200,6 +206,7 @@ Form.propTypes = {
   resetForm: PropTypes.func.isRequired,
   formInputVariant: PropTypes.oneOf(['outlined', 'standard']),
   readOnly: PropTypes.bool,
+  submitButtonSize: PropTypes.oneOf(['small', 'medium', 'large']),
 };
 
 export default withFormik({

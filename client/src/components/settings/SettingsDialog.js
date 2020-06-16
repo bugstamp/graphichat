@@ -7,13 +7,14 @@ import PropTypes from 'prop-types';
 
 import Typography from '@material-ui/core/Typography';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 
 import ResponsiveDialog from '../common/ResponsiveDialog';
 import TopProgressLine from '../common/TopProgressLine';
 import Settings from './Settings';
+
+import { SettingsDialogContent } from './styled';
 
 const SettingsDialog = (props) => {
   const { open, toggle } = props;
@@ -43,13 +44,13 @@ const SettingsDialog = (props) => {
       <DialogTitle disableTypography>
         <Typography variant="h6">Settings</Typography>
       </DialogTitle>
-      <DialogContent dividers>
+      <SettingsDialogContent dividers>
         <Settings
           mode={mode}
           setMode={setMode}
           setLoading={setLoading}
         />
-      </DialogContent>
+      </SettingsDialogContent>
       <DialogActions>
         <Button
           onClick={handleToggleMode}

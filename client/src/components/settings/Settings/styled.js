@@ -4,8 +4,8 @@ import { fadeOut } from 'react-animations';
 
 import MaterialAvatar from '@material-ui/core/Avatar';
 import CameraIcon from '@material-ui/icons/CameraAlt';
-import InputAdornment from '@material-ui/core/InputAdornment';
 
+import { SubmitButton } from '../../common/Form/styled';
 import { getStyledProps, getSpacing } from '../../../styles';
 
 export const fadeOutAnimation = keyframes`${fadeOut}`;
@@ -67,4 +67,8 @@ export const Camera = styled(CameraIcon)`
 
 export const FormWrapper = styled.div`
   width: 100%;
+
+  ${SubmitButton} {
+    width: auto;
+  }
 `;

@@ -31,7 +31,7 @@ const Settings = (props) => {
   });
   const { loading: updating, called, error } = updateUserResult;
   const loading = uploading || updating;
-  const avatar = useAvatar(me);
+  const avatar = useAvatar(me, 'md');
 
   useEffect(() => {
     if (called && !updating && !error) {

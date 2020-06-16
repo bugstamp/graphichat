@@ -27,6 +27,7 @@ const SettingsForm = (props) => {
         submitButtonText="Confirm"
         formInputVariant="outlined"
         readOnly={mode === 'read'}
+        submitButtonSize="medium"
       />
     </FormWrapper>
   );

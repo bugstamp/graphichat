@@ -6,7 +6,7 @@ import { map, isEmpty, filter } from 'lodash';
 import DbProvider from '../common/DbProvider';
 import AuthProvider from '../auth/AuthProvider';
 
-import { fileToBuffer } from '../../utils/helpers';
+import { fileToBuffer, getUserDisplayName } from '../../utils/helpers';
 import { USER_UPDATED } from '../subscriptions';
 
 @Injectable({
@@ -103,7 +103,11 @@ class UserProvider {
       if (user.email !== email) {
         await this.db.User.verifyEmail(email);
       }
-      const updatedUser = await this.db.User.findByIdAndUpdate(user.id, form, { new: true });
+      const displayName = getUserDisplayName(form);
+      const updatedUser = await this.db.User.findByIdAndUpdate(user.id, {
+        ...form,
+        displayName,
+      }, { new: true });
       await this.pubsub.publish(USER_UPDATED, { userUpdated: updatedUser });
 
       return updatedUser;

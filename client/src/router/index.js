@@ -5,8 +5,8 @@ import importedComponent from 'react-imported-component';
 import Login from '../components/pages/login';
 import Reg from '../components/pages/reg';
 import Chat from '../components/pages/chat';
+import NotFound from '../components/pages/NotFound';
 
-import NotFound from '../components/common/NotFound';
 import PageLoader from '../components/common/PageLoader';
 
 import AppRoute from './AppRoute';

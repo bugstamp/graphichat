@@ -1,6 +1,6 @@
 # GraphiChat
 
-The fullstack chat app for learning GraphQL API, styled components, unit-testing using Jest/Enzyme environment, Docker containerization and other features with the following stack:
+The fullstack chat app for learning GraphQL API, React Hooks, Styled-Components, unit-testing using Jest/Enzyme environment, Docker containerization and other features with the following stack:
 
 #### Server:
 - Node (Express)

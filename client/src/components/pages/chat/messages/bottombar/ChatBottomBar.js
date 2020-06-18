@@ -34,6 +34,10 @@ const ChatBottomBar = (props) => {
     inputRef.current.value = '';
   };
 
+  const focus = () => {
+    inputRef.current.focus();
+  };
+
   useEffect(() => {
     clearValue();
   }, [chatId]);
@@ -46,6 +50,7 @@ const ChatBottomBar = (props) => {
     if (trimmedValue) {
       submit(trimmedValue);
     }
+    focus();
     clearValue();
   };
 

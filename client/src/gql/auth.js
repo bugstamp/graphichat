@@ -64,3 +64,9 @@ export const CHECK_SESSION_EXPIRATION = gql`
     sessionExpired @client
   }
 `;
+
+export const RECONNECTION = gql`
+  {
+    reconnection @client
+  }
+`;

@@ -41,7 +41,9 @@ const Chat = () => {
   useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
     onSubscriptionData: messageAddedSubscriptionUpdate,
   });
-  const { loading } = useQuery(GET_INITIAL_DATA);
+  const { loading, networkStatus } = useQuery(GET_INITIAL_DATA, {
+    notifyOnNetworkStatusChange: true,
+  });
 
   const onCloseSwipeableChat = useCallback(() => {
     history.goBack();

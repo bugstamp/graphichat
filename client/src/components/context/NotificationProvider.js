@@ -16,20 +16,27 @@ const NotificationProvider = (props) => {
     message: '',
     type: 'error',
   });
-  const { open } = state;
 
-  const toggleNotification = useCallback((message = '', type = 'error') => {
+  const close = useCallback(() => {
     setState({
-      open: !open,
+      ...state,
+      open: false,
+    });
+  }, [state]);
+
+  const open = useCallback((message = '', type = 'error') => {
+    setState({
+      open: true,
       message,
       type,
     });
-  }, [open]);
+  }, []);
+
 
   return (
-    <NotificationContext.Provider value={toggleNotification}>
+    <NotificationContext.Provider value={open}>
       {children}
-      <Notification {...state} toggle={toggleNotification} />
+      <Notification {...state} close={close} />
     </NotificationContext.Provider>
   );
 };

@@ -4,12 +4,7 @@ import { gql } from 'apollo-boost';
 import link from './link';
 import cache, { initData } from './cache';
 import resolvers from './resolvers';
-
-const typeDefs = gql`
-  extend type ChatMessage {
-    isOptimistic: Boolean
-  }
-`;
+import typeDefs from './typeDefs';
 
 const client = new ApolloClient({
   link,

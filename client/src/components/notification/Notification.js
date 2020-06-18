@@ -7,12 +7,12 @@ import NotificationContent from './NotificationContent';
 
 class Notification extends PureComponent {
   onClose = (event, reason) => {
-    const { open, toggle } = this.props;
+    const { open, close } = this.props;
 
     if (reason === 'timeout' && !open) {
       return;
     }
-    toggle();
+    close();
   }
 
   render() {
@@ -40,7 +40,7 @@ class Notification extends PureComponent {
         <NotificationContent
           type={type}
           message={message}
-          toggle={this.onClose}
+          onClose={this.onClose}
         />
       </Snackbar>
     );
@@ -51,7 +51,7 @@ Notification.propTypes = {
   type: PropTypes.oneOf(['warning', 'error']).isRequired,
   message: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
-  toggle: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
 };
 
 export default Notification;

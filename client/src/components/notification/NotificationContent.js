@@ -22,19 +22,19 @@ const SnackbarStyled = styled(SnackbarContent)`
   }}}
 `;
 
-const NotificationContent = ({ type, message, toggle }) => (
+const NotificationContent = ({ type, message, onClose }) => (
   <SnackbarStyled
     type={type}
     aria-describedby="alert-notification"
     message={<NotificationMessage key="message" type={type} message={message} />}
-    action={[<NotificationClose key="close" toggle={toggle} />]}
+    action={[<NotificationClose key="close" onClose={onClose} />]}
   />
 );
 
 NotificationContent.propTypes = {
   type: PropTypes.oneOf(['warning', 'error']).isRequired,
   message: PropTypes.string.isRequired,
-  toggle: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default NotificationContent;

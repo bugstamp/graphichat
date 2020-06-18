@@ -13,6 +13,7 @@ const cache = new InMemoryCache({
 
 export const initialState = {
   sessionExpired: false,
+  reconnection: 0,
   me: {
     __typename: 'User',
   },

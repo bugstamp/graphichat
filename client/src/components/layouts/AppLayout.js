@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useApolloClient, useQuery, useMutation } from '@apollo/react-hooks';
 import { hot } from 'react-hot-loader/root';
 import history from 'appHistory';
 
@@ -11,7 +11,6 @@ import Navigation from '../navigation';
 import SettingsDialog from '../settings';
 import useNotification from '../hooks/useNotification';
 
-import apollo from '../../apollo';
 import storage from '../../storage';
 import gql from '../../gql';
 
@@ -19,6 +18,7 @@ import { AppWrapper, AppContainer } from './styled';
 
 const {
   CHECK_SESSION_EXPIRATION,
+  RECONNECTION,
   SIGN_OUT,
 } = gql;
 
@@ -27,7 +27,9 @@ const AppLayout = (props) => {
   const toggleNotification = useNotification();
   const [settingsDialog, toggleSettingsDialog] = useState(false);
 
+  const apollo = useApolloClient();
   const { data: { sessionExpired } = {} } = useQuery(CHECK_SESSION_EXPIRATION);
+  const { data: { reconnection } = {} } = useQuery(RECONNECTION);
   const [signOut] = useMutation(SIGN_OUT, {
     onCompleted() {
       apollo.resetStore();
@@ -45,6 +47,12 @@ const AppLayout = (props) => {
       signOut();
     }
   }, [sessionExpired, signOut]);
+
+  useEffect(() => {
+    if (reconnection) {
+      toggleNotification('Connection disconnected. Reconnecting...');
+    }
+  }, [reconnection, toggleNotification]);
 
   const handleToggleSettingsDialog = useCallback(() => {
     toggleSettingsDialog(!settingsDialog);

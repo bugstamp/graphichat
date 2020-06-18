@@ -4,7 +4,6 @@ import { Router } from 'react-router-dom';
 
 import Routes from '../router';
 import AppProvider from './AppProvider';
-import ImagePreloader from './ImagePreloader';
 
 import { GlobalStyle } from '../styles';
 
@@ -19,7 +18,6 @@ const App = (props) => {
     <AppProvider client={client} theme={theme}>
       <Fragment>
         <GlobalStyle />
-        <ImagePreloader />
         <Router history={history}>
           <Routes />
         </Router>

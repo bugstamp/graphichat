@@ -76,6 +76,14 @@ class List extends Component {
     this.listScrollable = createRef();
   }
 
+  componentDidMount() {
+    const { fetchMore, startFrom } = this.props;
+
+    if (fetchMore && startFrom === 'bottom') {
+      this.scrollToBottom();
+    }
+  }
+
   getSnapshotBeforeUpdate(nextProps) {
     const { lazyLoad, data } = this.props;
     const snapshot = {

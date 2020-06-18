@@ -22,10 +22,6 @@ const MessageList = (props) => {
 
   useEffect(() => {
     listRef.current.scrollToBottom();
-  }, []);
-
-  useEffect(() => {
-    listRef.current.scrollToBottom();
   }, [chatId]);
 
   useEffect(() => {

@@ -1,0 +1,22 @@
+{
+  "name": "GraphiChat",
+  "description": "",
+  "icons": [
+    {
+      "src": "/assets/images/chat-png-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/assets/images/chat-png-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "fullscreen",
+  "scope": "/",
+  "theme_color": "#303f9f",
+  "shortcuts": []
+}

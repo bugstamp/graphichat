@@ -1,8 +1,12 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const { InjectManifest } = require('workbox-webpack-plugin');
+const {
+  GenerateSW,
+  // InjectManifest,
+} = require('workbox-webpack-plugin');
 const VisualizerPlugin = require('webpack-visualizer-plugin');
 const Dotenv = require('dotenv-webpack');
 
@@ -48,14 +52,30 @@ module.exports = merge([
         exclude: [],
       }),
       new webpack.HashedModuleIdsPlugin(),
-      new InjectManifest({
-        swSrc: paths.srcSw,
-        swDest: 'service-worker.js',
-        globDirectory: 'build/',
-        globPatterns: [
-          '**/*.{css,html,js}',
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: `${paths.images}/short_icons`,
+            to: 'assets/images',
+          },
+          {
+            from: `${paths.assets}/manifest.webmanifest`,
+            to: '',
+          },
         ],
       }),
+      new GenerateSW({
+        clientsClaim: true,
+        skipWaiting: true,
+      }),
+      // new InjectManifest({
+      //   swSrc: paths.worker,
+      //   swDest: 'worker.js',
+      //   globDirectory: 'build/',
+      //   globPatterns: [
+      //     '**/*.{css,html,js}',
+      //   ],
+      // }),
       new VisualizerPlugin(),
     ],
     devtool: 'source-map',

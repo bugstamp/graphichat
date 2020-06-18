@@ -7,7 +7,7 @@ const paths = {
   envProd: path.resolve(__dirname, '../.env.prod'),
   source: path.resolve(__dirname, '../src'),
   index: path.resolve(__dirname, '../src/index.js'),
-  srcSw: path.resolve(__dirname, '../src/sw.js'),
+  worker: path.resolve(__dirname, '../src/worker.js'),
   assets: path.resolve(__dirname, '../src/assets'),
   template: path.resolve(__dirname, '../src/assets/template.html'),
   favicon: path.resolve(__dirname, '../src/assets/favicon.ico'),
@@ -17,6 +17,7 @@ const paths = {
   html: path.resolve(__dirname, '../build/index.html'),
   history: path.resolve(__dirname, '../src/router/history'),
   publicSw: path.resolve(__dirname, '../build/service-worker.js'),
+  manifest: path.resolve(__dirname, '../build/manifest.webmanifest'),
 };
 
 module.exports = paths;

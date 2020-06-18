@@ -7,6 +7,7 @@ import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { formatError } from 'apollo-errors';
 import cors from 'cors';
+import compression from 'compression';
 
 import './dotenv';
 import middlewares from './middlewares';
@@ -36,6 +37,7 @@ const startServer = ({ schema, subscriptions }) => {
     exposedHeaders: ['x-token', 'x-refresh-token'],
   };
 
+  app.use(compression());
   app.use(express.static(publicPath));
   app.use(cors(corsOptions));
   app.use(verification);

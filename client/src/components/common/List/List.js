@@ -171,7 +171,7 @@ class List extends Component {
     }
   }
 
-  _onRowRenderer = (rowData, index) => {
+  _rowRenderer = (rowData, index) => {
     const {
       lazyLoad,
       startFrom,
@@ -245,7 +245,7 @@ class List extends Component {
                 <ListItems
                   loading={loading}
                   data={data}
-                  rowRenderer={this._onRowRenderer}
+                  rowRenderer={this._rowRenderer}
                   gutters={gutters}
                   dense={dense}
                 />

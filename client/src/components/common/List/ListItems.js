@@ -31,7 +31,7 @@ const ListItems = (props) => {
       disablePadding={disablePadding}
       dense={dense}
     >
-      {map(data, (item, index) => rowRenderer(item, index))}
+      {map(data, rowRenderer)}
     </ListStyled>
   );
 };

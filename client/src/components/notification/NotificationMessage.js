@@ -28,7 +28,7 @@ const MessageIcon = ({ type }) => (
 );
 
 MessageIcon.propTypes = {
-  type: PropTypes.oneOf(['warning', 'error']).isRequired,
+  type: PropTypes.oneOf(['warning', 'error', 'success']).isRequired,
 };
 
 const NotificationMessage = ({ type, message }) => (
@@ -41,7 +41,7 @@ const NotificationMessage = ({ type, message }) => (
 );
 
 NotificationMessage.propTypes = {
-  type: PropTypes.oneOf(['warning', 'error']).isRequired,
+  type: PropTypes.oneOf(['warning', 'error', 'success']).isRequired,
   message: PropTypes.string.isRequired,
 };
 

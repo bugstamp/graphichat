@@ -11,7 +11,7 @@ export const sessionExpired = () => {
 };
 
 export const updateReconnection = (isReconnecting) => {
-  const count = client.readQuery({ query: RECONNECTION });
-  const nextCount = isReconnecting ? count + 1 : 0;
+  const { reconnection } = client.readQuery({ query: RECONNECTION });
+  const nextCount = isReconnecting ? reconnection + 1 : 0;
   client.writeData({ data: { reconnection: nextCount } });
 };

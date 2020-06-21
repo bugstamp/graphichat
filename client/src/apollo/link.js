@@ -31,21 +31,13 @@ const retryLink = new RetryLink();
 const offlineLink = new QueueLink();
 
 wsLink.subscriptionClient.use([subscriptionMiddleware]);
-wsLink.subscriptionClient.on('connected', (cb) => {
-  console.log('connected', cb);
-});
-wsLink.subscriptionClient.on('disconnected', (cb) => {
+wsLink.subscriptionClient.on('disconnected', () => {
   offlineLink.close();
   updateReconnection(true);
-  console.log('disconnected', cb);
 });
-wsLink.subscriptionClient.on('reconnecting', (cb) => {
-  console.log('reconnecting', cb);
-});
-wsLink.subscriptionClient.on('reconnected', (cb) => {
+wsLink.subscriptionClient.on('reconnected', () => {
   offlineLink.open();
   updateReconnection(false);
-  console.log('reconnected', cb);
 });
 
 const networkLink = split(

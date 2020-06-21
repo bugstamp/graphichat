@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-import amber from '@material-ui/core/colors/amber';
 
 import NotificationMessage from './NotificationMessage';
 import NotificationClose from './NotificationClose';
@@ -15,10 +14,7 @@ const SnackbarStyled = styled(SnackbarContent)`
     background-color: ${(props) => {
     const { type } = props;
 
-    if (type === 'error') {
-      return getStyledProps('theme.palette.error.main')(props);
-    }
-    return amber[500];
+    return getStyledProps(`theme.palette.${type}.main`)(props);
   }}}
 `;
 
@@ -32,7 +28,7 @@ const NotificationContent = ({ type, message, onClose }) => (
 );
 
 NotificationContent.propTypes = {
-  type: PropTypes.oneOf(['warning', 'error']).isRequired,
+  type: PropTypes.oneOf(['warning', 'error', 'success']).isRequired,
   message: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
 };

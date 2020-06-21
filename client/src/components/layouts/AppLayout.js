@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useApolloClient, useQuery, useMutation } from '@apollo/react-hooks';
 import { hot } from 'react-hot-loader/root';
@@ -9,6 +14,8 @@ import Hidden from '@material-ui/core/Hidden';
 
 import Navigation from '../navigation';
 import SettingsDialog from '../settings';
+import Notification from '../notification';
+
 import useNotification from '../hooks/useNotification';
 
 import storage from '../../storage';
@@ -41,18 +48,24 @@ const AppLayout = (props) => {
       }
     },
   });
+  const ref = useRef();
+  const prevReconnection = ref.current;
 
   useEffect(() => {
     if (sessionExpired) {
       signOut();
     }
   }, [sessionExpired, signOut]);
-
+  useEffect(() => {
+    ref.current = reconnection;
+  }, [reconnection]);
   useEffect(() => {
     if (reconnection) {
-      toggleNotification('Connection disconnected. Reconnecting...');
+      toggleNotification('Reconnecting...');
+    } else if (prevReconnection) {
+      toggleNotification('Reconnected', 'success');
     }
-  }, [reconnection, toggleNotification]);
+  }, [reconnection, prevReconnection, toggleNotification]);
 
   const handleToggleSettingsDialog = useCallback(() => {
     toggleSettingsDialog(!settingsDialog);
@@ -86,6 +99,7 @@ const AppLayout = (props) => {
         open={settingsDialog}
         toggle={handleToggleSettingsDialog}
       />
+      <Notification />
     </AppWrapper>
   );
 };

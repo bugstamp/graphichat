@@ -1,57 +1,49 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React, { useCallback, useContext } from 'react';
+// import PropTypes from 'prop-types';
 
 import Snackbar from '@material-ui/core/Snackbar';
 
 import NotificationContent from './NotificationContent';
+import { NotificationContext } from '../context/NotificationProvider';
 
-class Notification extends PureComponent {
-  onClose = (event, reason) => {
-    const { open, close } = this.props;
+const Notification = (props) => {
+  const [state, setState] = useContext(NotificationContext);
+  const {
+    type,
+    message,
+    open,
+  } = state;
 
-    if (reason === 'timeout' && !open) {
+  const onClose = useCallback((event, reason) => {
+    if (reason === 'timeout' && !state.open) {
       return;
     }
-    close();
-  }
+    setState({ ...state, open: false });
+  }, [state, setState]);
 
-  render() {
-    const {
-      type,
-      message,
-      open,
-      ...rest
-    } = this.props;
-
-    return (
-      <Snackbar
-        open={open}
-        onClose={this.onClose}
-        anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'top',
-        }}
-        TransitionProps={{
-          direction: 'left',
-        }}
-        autoHideDuration={4000}
-        {...rest}
-      >
-        <NotificationContent
-          type={type}
-          message={message}
-          onClose={this.onClose}
-        />
-      </Snackbar>
-    );
-  }
-}
-
-Notification.propTypes = {
-  type: PropTypes.oneOf(['warning', 'error']).isRequired,
-  message: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  close: PropTypes.func.isRequired,
+  return (
+    <Snackbar
+      open={open}
+      onClose={onClose}
+      anchorOrigin={{
+        horizontal: 'right',
+        vertical: 'top',
+      }}
+      TransitionProps={{
+        direction: 'left',
+      }}
+      autoHideDuration={20000}
+      {...props}
+    >
+      <NotificationContent
+        type={type}
+        message={message}
+        onClose={onClose}
+      />
+    </Snackbar>
+  );
 };
+
+Notification.propTypes = {};
 
 export default Notification;

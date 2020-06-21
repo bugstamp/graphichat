@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Router } from 'react-router-dom';
 
 import Routes from '../router';
-import AppProvider from './AppProvider';
+import AppProvider from './context/AppProvider';
 
 import { GlobalStyle } from '../styles';
 

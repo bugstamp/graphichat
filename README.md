@@ -31,6 +31,7 @@ The fullstack progressive chat app based on React Hooks for learning Apollo Grap
 - Edit user information
 - Real-time updates of information and online status of users in your chat list
 - Instant messaging
+- PWA, it's working offline
 
 [View Demo](https://drive.google.com/file/d/19Sw2f1vi4W_qwe_vle-Ldbes99980ucg/view?usp=sharing)
 

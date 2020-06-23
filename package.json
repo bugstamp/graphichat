@@ -5,7 +5,7 @@
   "author": "Kirill Grischenko",
   "license": "MIT",
   "engines": {
-    "node": "10.14.2",
+    "node": "12.16.3",
     "yarn": ">= 1.17.*"
   },
   "scripts": {
@@ -15,7 +15,7 @@
     "build:client": "cd client && yarn run build",
     "build:server": "cd server && yarn run build",
     "build:all": "yarn run build:client && yarn run build:server",
-    "start": "cd server && yarn run start",
+    "start": "cd server && yarn run start:prod",
     "heroku-postbuild": "yarn run install:dependencies && yarn run build:all"
   },
   "dependencies": {

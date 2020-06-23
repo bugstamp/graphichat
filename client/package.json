@@ -5,7 +5,7 @@
   "author": "Kirill Grischenko",
   "scripts": {
     "build": "webpack --env production",
-    "dev": "webpack-dev-server --env development",
+    "start": "webpack-dev-server --env development",
     "test": "jest --watchAll"
   },
   "dependencies": {

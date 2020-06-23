@@ -4,11 +4,11 @@
   "license": "MIT",
   "author": "Kirill Grischenko",
   "scripts": {
-    "build": "npm run build:pre && babel ./src --out-dir ./build",
-    "build:pre": "rm -rf ./build/*",
-    "dev": "nodemon -L --exec babel-node -- ./src/index.js",
-    "remove:modules": "rm -rf ./node_modules",
-    "start": "node ./build/index.js"
+    "start": "nodemon -L --exec babel-node -- ./src/index.js",
+    "start:prod": "node ./build/index.js",
+    "build": "npm run pre:build && babel ./src --out-dir ./build",
+    "pre:build": "rm -rf ./build/*",
+    "remove:modules": "rm -rf ./node_modules"
   },
   "dependencies": {
     "@babel/cli": "^7.4.4",

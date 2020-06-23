@@ -8,7 +8,7 @@ module.exports = merge([
     host: process.env.DEV_HOST || 'localhost',
     port: process.env.DEV_PORT || '8000',
     proxy: {
-      '/api/**': process.env.API || 'http://localhost:3000',
+      '/api/**': `http://localhost:${process.env.PORT}`,
     },
   }),
   {

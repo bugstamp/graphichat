@@ -1,39 +1,50 @@
 version: '3.7'
 
 services:
-  server:
-    container_name: graphichat-server
-    build:
-      context: .
-      dockerfile: ./server/Dockerfile
-    working_dir: /graphichat/server
-    command: /graphichat/docker-entrypoint.sh server
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/graphichat
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./server:/graphichat/server
-    depends_on:
-      - mongodb
-    networks:
-      - appnetwork
   client:
     container_name: graphichat-client
     build:
       context: .
       dockerfile: ./client/Dockerfile
-    command: /graphichat/docker-entrypoint.sh client
-    working_dir: /graphichat/client
+    working_dir: /home/node/graphichat/client
+    command: yarn start
     environment:
+      - DOTENV_PATH=../.env
       - WEBPACK_DEV_SERVER_POOL=1000
       - DEV_HOST=0.0.0.0
+      - URL_SCHEME=http
+      - URL_DOMAIN=localhost:3000
+      - WS_SCHEME=ws
     ports:
       - '8000:8000'
     volumes:
-      - ./client:/graphichat/client
+      - ./client:/home/node/graphichat/client
+      - /home/node/graphichat/client/node_modules
     networks:
-      - appnetwork
+      - graphichat_network
+  server:
+    container_name: graphichat-server
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    working_dir: /home/node/graphichat/server
+    command: yarn start
+    environment:
+      - DOTENV_PATH=../.env
+      - URL_SCHEME=http
+      - URL_DOMAIN=localhost:3000
+      - WS_SCHEME=ws
+      - MONGO_PORT=27017
+      - MONGO_HOST=mongodb
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./server:/home/node/graphichat/server
+      - /home/node/graphichat/server/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - graphichat_network
   mongodb:
     container_name: graphichat-mongodb
     image: mongo
@@ -43,7 +54,7 @@ services:
       - ./scripts/mongo/:/scripts
       - /data:/data/db
     networks:
-      - appnetwork
+      - graphichat_network
 networks:
-  appnetwork:
+  graphichat_network:
     driver: bridge

@@ -1,26 +1,24 @@
-FROM node:10.14.2
+FROM node:12.18.1-alpine3.12
 
-RUN apt-get update && apt-get install -y bash dos2unix rsync
+RUN apk update && apk add --no-cache bash git
 
-ARG APP_DIR=graphichat
+ARG APP_DIR=/home/node/graphichat
 
-RUN mkdir -p ${APP_DIR}
+RUN mkdir -p ${APP_DIR}/client && chown -R node:node ${APP_DIR}
 WORKDIR ${APP_DIR}
 
 COPY ./.env ./
 COPY ./.browserslistrc ./
-COPY ./scripts/docker-entrypoint.sh ./
 
-RUN dos2unix ./docker-entrypoint.sh
-
-RUN mkdir -p /${APP_DIR}/cache_modules
-WORKDIR /${APP_DIR}/cache_modules
+WORKDIR ${APP_DIR}/client
 
 COPY ./client/package.json ./
+COPY ./client/yarn.lock ./
+
+USER node
 
 RUN yarn install
 
-RUN mkdir -p /${APP_DIR}/client
-WORKDIR /${APP_DIR}/client
+COPY --chown=node:node ./client/. ./
 
-COPY ./client/. ./
+CMD ["yarn", "start"]

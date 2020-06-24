@@ -1,4 +1,5 @@
 const merge = require('webpack-merge');
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -83,6 +84,12 @@ module.exports = merge([
       ],
     },
     plugins: [
+      new Dotenv({
+        path: process.env.DOTENV_PATH || './.env',
+        expand: true,
+        allowEmptyValues: true,
+        systemvars: true,
+      }),
       new HtmlWebpackPlugin({
         template: paths.template,
         favicon: paths.favicon,

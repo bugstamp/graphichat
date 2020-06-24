@@ -8,7 +8,6 @@ const {
   // InjectManifest,
 } = require('workbox-webpack-plugin');
 const VisualizerPlugin = require('webpack-visualizer-plugin');
-const Dotenv = require('dotenv-webpack');
 
 const paths = require('./paths');
 
@@ -43,10 +42,6 @@ module.exports = merge([
       ],
     },
     plugins: [
-      new Dotenv({
-        path: './.env.prod',
-        expand: true,
-      }),
       new CleanWebpackPlugin([`${paths.public}/*`], {
         root: paths.root,
         exclude: [],

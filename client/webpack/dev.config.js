@@ -1,23 +1,20 @@
 const merge = require('webpack-merge');
-const Dotenv = require('dotenv-webpack');
 
 const devServer = require('./devServer');
 
+const host = process.env.DEV_HOST || 'localhost';
+const port = process.env.DEV_PORT || 8000;
+const api = `${process.env.URL_SCHEME || 'http'}://${process.env.URL_DOMAIN || 'localhost:3000'}`;
+
 module.exports = merge([
   devServer({
-    host: process.env.DEV_HOST || 'localhost',
-    port: process.env.DEV_PORT || '8000',
+    host,
+    port,
     proxy: {
-      '/api/**': `http://localhost:${process.env.PORT}`,
+      '/api/**': api,
     },
   }),
   {
-    plugins: [
-      new Dotenv({
-        path: process.env.DOTENV_PATH || '../.env',
-        expand: true,
-      }),
-    ],
     devtool: 'cheap-module-eval-source-map',
   },
 ]);

@@ -1,4 +1,5 @@
 module.exports = (api) => {
+  const isDevelopment = api.env('development');
   api.cache(true);
 
   const presets = [
@@ -8,7 +9,7 @@ module.exports = (api) => {
         version: '3.1.4',
         proposals: true,
       },
-      debug: true,
+      debug: isDevelopment,
     }],
   ];
   const plugins = [

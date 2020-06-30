@@ -9,7 +9,7 @@ module.exports = (api) => {
         version: '3.1.4',
         proposals: true,
       },
-      debug: true,
+      debug: isDevelopment,
     }],
     '@babel/preset-react',
   ];

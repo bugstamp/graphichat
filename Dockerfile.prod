@@ -1,0 +1,38 @@
+FROM node:12.18.1-alpine3.12 AS builder
+
+RUN apk update && apk add --update --no-cache bash git py-pip make g++
+
+ENV NODE_ENV=production
+ARG APP_DIR=/home/node/graphichat
+
+RUN mkdir -p ${APP_DIR} && chown -R node:node ${APP_DIR}
+
+WORKDIR ${APP_DIR}
+
+COPY --chown=node:node . .
+
+USER node
+
+RUN yarn run install:dependencies
+RUN yarn run build:all
+
+FROM node:12.18.1-alpine3.12 AS production
+
+RUN apk add --no-cache bash
+
+ENV NODE_ENV=production
+ARG APP_DIR=/home/node/graphichat
+
+RUN mkdir -p ${APP_DIR}/client && mkdir -p ${APP_DIR}/server && chown -R node:node ${APP_DIR}
+
+WORKDIR ${APP_DIR}
+
+COPY --chown=node:node ./Procfile ./
+COPY --chown=node:node ./.env ./
+COPY --chown=node:node --from=builder ${APP_DIR}/client/build ./client/build
+COPY --chown=node:node --from=builder ${APP_DIR}/server/node_modules ./server/node_modules
+COPY --chown=node:node --from=builder ${APP_DIR}/server/build ./server/build
+
+USER node
+
+CMD ["node", "./server/build/index.js"]

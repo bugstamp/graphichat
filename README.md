@@ -25,6 +25,8 @@ The fullstack progressive chat app based on React Hooks for learning Apollo Grap
 - Email verification
 - Form validation using Formik and Yup
 - List with lazy loading
+- Docker local development environment
+- Deploying with Docker to Heroku
 ### What was implemented?
 - User sign in/sign up
 - Search users by name or username and create chat with them

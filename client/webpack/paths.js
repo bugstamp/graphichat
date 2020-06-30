@@ -4,7 +4,7 @@ const paths = {
   root: path.resolve(__dirname, '../'),
   config: path.resolve(__dirname, '../src/config.js'),
   modules: path.resolve(__dirname, '../node_modules'),
-  envProd: path.resolve(__dirname, '../.env.prod'),
+  env: path.resolve(__dirname, '../../.env'),
   source: path.resolve(__dirname, '../src'),
   index: path.resolve(__dirname, '../src/index.js'),
   worker: path.resolve(__dirname, '../src/worker.js'),

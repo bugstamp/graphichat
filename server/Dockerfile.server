@@ -5,10 +5,11 @@ RUN apk update && apk add --update --no-cache bash git py-pip make g++
 ARG APP_DIR=/home/node/graphichat
 
 RUN mkdir -p ${APP_DIR}/server && chown -R node:node ${APP_DIR}
+
 WORKDIR ${APP_DIR}
 
-COPY ./.env ./
-COPY ./.browserslistrc ./
+COPY --chown=node:node ./.env ./
+COPY --chown=node:node ./.browserslistrc ./
 
 WORKDIR ${APP_DIR}/server
 
@@ -20,5 +21,3 @@ USER node
 RUN yarn install
 
 COPY --chown=node:node ./server/. ./
-
-CMD ["yarn", "start"]

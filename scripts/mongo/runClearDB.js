@@ -1,1 +1,0 @@
-load('./clearDB.js');

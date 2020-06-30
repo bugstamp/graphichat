@@ -6,8 +6,8 @@
   "scripts": {
     "start": "nodemon -L --exec babel-node -- ./src/index.js",
     "start:prod": "node ./build/index.js",
-    "build": "npm run pre:build && babel ./src --out-dir ./build",
     "pre:build": "rm -rf ./build/*",
+    "build": "yarn run pre:build && babel ./src --out-dir ./build",
     "remove:modules": "rm -rf ./node_modules"
   },
   "dependencies": {

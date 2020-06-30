@@ -85,7 +85,7 @@ module.exports = merge([
     },
     plugins: [
       new Dotenv({
-        path: process.env.DOTENV_PATH || './.env',
+        path: paths.env,
         expand: true,
         allowEmptyValues: true,
         systemvars: true,

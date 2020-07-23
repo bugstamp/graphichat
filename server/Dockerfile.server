@@ -14,7 +14,6 @@ COPY --chown=node:node ./.browserslistrc ./
 WORKDIR ${APP_DIR}/server
 
 COPY ./server/package.json ./
-COPY ./server/yarn.lock ./
 
 USER node
 
